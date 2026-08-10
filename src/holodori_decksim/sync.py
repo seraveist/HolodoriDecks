@@ -16,7 +16,13 @@ UPSTREAM_DIR = ROOT / "data" / "upstream"
 GENERATED_DIR = ROOT / "data" / "generated"
 UPSTREAM_META_FILE = ROOT / "data" / "upstream.json"
 STATE_FILE = ROOT / "data" / "sync_state.json"
-GENERATED_FILES = ("cards.json", "characters.json", "master_refs.json", "manifest.json")
+GENERATED_FILES = (
+    "cards.json",
+    "characters.json",
+    "music.json",
+    "master_refs.json",
+    "manifest.json",
+)
 
 
 def _request_text(url: str) -> str:
@@ -159,8 +165,10 @@ def fetch_upstream(force: bool = False) -> dict[str, Any]:
 def normalize(master_version: str, upstream_commit: str) -> dict[str, int]:
     cards = _data_index(_load_json("Card.json"))
     characters = _data_index(_load_json("Character.json"))
+    musics = _data_index(_load_json("Music.json"))
     card_text = _text_index("LangCard_Kor.json")
     character_text = _text_index("LangCharacter_Kor.json")
+    music_text = _text_index("LangMusic_Kor.json")
 
     leader_skills = _data_index(_load_json("LiveLeaderSkill.json"))
     leader_text = _text_index("LangGeneratedLiveLeaderSkill_Kor.json")
@@ -214,6 +222,38 @@ def normalize(master_version: str, upstream_commit: str) -> dict[str, int]:
                 "grouping_ids": data.get("regularCharacterGroupingIds", []),
                 "asset_id": data.get("assetId"),
                 "order": data.get("order"),
+            }
+        )
+
+    music_rows: list[dict[str, Any]] = []
+    for music_id, data in musics.items():
+        title_lang_id = data.get("titleLangId", "")
+        singer_lang_id = data.get("characterGroupDisplayNameLangId", "")
+        music_rows.append(
+            {
+                "id": music_id,
+                "title": music_text.get(title_lang_id, title_lang_id or music_id),
+                "singer_name": music_text.get(singer_lang_id, ""),
+                "character_ids": data.get("characterIds", []),
+                "jacket_asset_id": data.get("jacketAssetId"),
+                "asset_id": data.get("assetId"),
+                "playing_seconds": data.get("playingSeconds"),
+                "category_type": data.get("categoryType"),
+                "release_type": data.get("releaseType"),
+                "live_score_coefficient_permil": data.get("liveScoreCoefficientPermil"),
+                "single_live_score_rank_group_id": data.get(
+                    "singleLiveScoreEvaluationRankGroupId"
+                ),
+                "multi_live_score_rank_group_id": data.get(
+                    "multiLiveScoreEvaluationRankGroupId"
+                ),
+                "mv_url": data.get("mvUrl"),
+                "order": data.get("order"),
+                "_source": {
+                    "repository": UPSTREAM_REPO,
+                    "commit": upstream_commit,
+                    "master_version": master_version,
+                },
             }
         )
 
@@ -298,9 +338,11 @@ def normalize(master_version: str, upstream_commit: str) -> dict[str, int]:
         raise ValueError(f"Cards reference missing skill levels: {missing_skill_refs[:10]}")
 
     character_rows.sort(key=lambda row: (row.get("order") or 999999, row["id"]))
+    music_rows.sort(key=lambda row: (row.get("order") or 999999999, row["id"]))
     normalized_cards.sort(key=lambda row: (row.get("order") or 999999, row["id"]))
 
     _write_json("characters.json", character_rows)
+    _write_json("music.json", music_rows)
     _write_json("cards.json", normalized_cards)
     _write_json(
         "master_refs.json",
@@ -321,6 +363,7 @@ def normalize(master_version: str, upstream_commit: str) -> dict[str, int]:
             "master_version": master_version,
             "character_count": len(character_rows),
             "card_count": len(normalized_cards),
+            "music_count": len(music_rows),
             "leader_card_count": sum(1 for card in normalized_cards if card.get("leader")),
             "raden_card_count": len(raden_cards),
             "raden_leader_card_count": len(raden_leaders),
@@ -330,6 +373,7 @@ def normalize(master_version: str, upstream_commit: str) -> dict[str, int]:
     return {
         "characters": len(character_rows),
         "cards": len(normalized_cards),
+        "music": len(music_rows),
         "leaders": sum(1 for card in normalized_cards if card.get("leader")),
     }
 
