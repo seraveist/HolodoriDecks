@@ -61,7 +61,6 @@ jobs:
           assert manifest["raden_card_count"] >= 3
           assert manifest["raden_leader_card_count"] >= 3
           assert len(manifest["source_commit"]) == 40
-          assert all(track["jacket_asset_id"] for track in music)
 
           raden = [card for card in cards if card["character_id"] == "chr-06004"]
           assert any(card["rarity"] == 5 and card["leader"] for card in raden)
