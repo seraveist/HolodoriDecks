@@ -27,5 +27,7 @@ MASTER_FILES = (
     "LiveSkillTrigger.json",
     "LangGeneratedLiveSkillTrigger_Kor.json",
     "LiveActiveSkillEffect.json",
+    "LangGeneratedLiveActiveSkillEffect_Kor.json",
     "LivePassiveSkillEffect.json",
+    "LangGeneratedLivePassiveSkillEffect_Kor.json",
 )
