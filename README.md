@@ -40,6 +40,21 @@ Generated files:
 
 Every normalized card keeps the original upstream card ID, pinned upstream commit and master version so changes can be diffed reliably.
 
+## Static assets
+
+The project is intended to run as a static GitHub Pages site, so UI images are served directly from this repository rather than through a separate asset API.
+
+```text
+assets/
+  cards/   # card portraits: assets/cards/{card.id}.webp
+  music/   # music jackets: assets/music/{music.id}.webp
+  ui/      # project-owned type marks, rank badges, frame decoration, placeholders
+```
+
+Upstream asset keys such as `Card.assetId` and `Music.jacketAssetId` may be used while acquiring source assets, but committed files are renamed to project-owned stable paths. The front end should never depend directly on AssetBundle-internal names. Missing portraits or jackets must fall back to a project-owned placeholder.
+
+See `assets/README.md` for the detailed naming policy.
+
 ## Local sync
 
 Python 3.11 or newer is required.
