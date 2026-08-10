@@ -1,10 +1,12 @@
 from holodori_decksim.sync import (
     _camel_case,
+    _changed_files,
     _data_index,
     _enum_suffix,
     _group_rows,
     _group_skill_levels,
     _normalize_groups,
+    _sha256,
 )
 
 
@@ -51,3 +53,15 @@ def test_normalize_groups_adds_description() -> None:
     grouped = {"effect-a": [{"number": 1, "descriptionLangId": "desc-a", "value": "100"}]}
     normalized = _normalize_groups(grouped, {"desc-a": "effect description"})
     assert normalized["effect-a"][0]["description"] == "effect description"
+
+
+def test_sha256_is_stable() -> None:
+    assert _sha256("holodori") == _sha256("holodori")
+    assert _sha256("holodori") != _sha256("Holodori")
+
+
+def test_changed_files_only_reports_reference_content_changes(monkeypatch) -> None:
+    monkeypatch.setattr("holodori_decksim.sync.MASTER_FILES", ("Card.json", "Character.json"))
+    current = {"Card.json": "hash-a", "Character.json": "hash-b"}
+    previous = {"fileHashes": {"Card.json": "hash-a", "Character.json": "old-hash"}}
+    assert _changed_files(current, previous) == ["Character.json"]
