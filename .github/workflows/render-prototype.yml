@@ -1,0 +1,55 @@
+name: Render prototype output
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "styles.css"
+      - "app.js"
+      - "data/generated/**"
+      - "assets/cards/**"
+      - "assets/ui/**"
+      - ".github/workflows/render-prototype.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: render-holodori-prototype
+  cancel-in-progress: true
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start static server
+        run: |
+          python3 -m http.server 4173 > /tmp/holodori-http.log 2>&1 &
+          echo $! > /tmp/holodori-http.pid
+          sleep 2
+      - name: Render browser preview
+        run: |
+          google-chrome --headless=new --no-sandbox --disable-gpu --hide-scrollbars \
+            --window-size=1440,2800 \
+            --screenshot=prototype-preview.png \
+            http://127.0.0.1:4173/
+          test -s prototype-preview.png
+      - name: Build static package
+        run: |
+          zip -r Holodori-DeckSim-prototype.zip \
+            index.html styles.css app.js \
+            data/generated \
+            assets/cards \
+            assets/ui
+      - name: Upload prototype output
+        uses: actions/upload-artifact@v4
+        with:
+          name: holodori-prototype-output
+          path: |
+            prototype-preview.png
+            Holodori-DeckSim-prototype.zip
+          if-no-files-found: error
+          retention-days: 14
