@@ -62,7 +62,8 @@ def _changed_files(
     return [
         filename
         for filename in MASTER_FILES
-        if previous_hashes.get(filename) != current_hashes.get(filename)
+        if filename != "version.txt"
+        and previous_hashes.get(filename) != current_hashes.get(filename)
     ]
 
 
