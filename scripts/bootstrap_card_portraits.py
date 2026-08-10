@@ -7,9 +7,9 @@ from urllib.request import Request, urlopen
 ROOT = Path(__file__).resolve().parents[1]
 GENERATED_CARDS = ROOT / "data" / "generated" / "cards.json"
 OUTPUT_DIR = ROOT / "assets" / "cards"
+SUPPORTED_RARITIES = {4, 5}
 
 SOURCE_REPOSITORY = "yandereloveme/hololive-dreams-calc"
-# Pin the snapshot so an initial asset bootstrap is reproducible.
 SOURCE_COMMIT = "49bab989c787a9bde28efa9176d4d5ee4b108f18"
 RAW_ROOT = f"https://raw.githubusercontent.com/{SOURCE_REPOSITORY}/{SOURCE_COMMIT}"
 
@@ -31,7 +31,11 @@ def main() -> None:
         )
 
     current_cards = json.loads(GENERATED_CARDS.read_text(encoding="utf-8"))
-    wanted_ids = {str(card["id"]) for card in current_cards}
+    wanted_ids = {
+        str(card["id"])
+        for card in current_cards
+        if card.get("rarity") in SUPPORTED_RARITIES
+    }
 
     source_cards = json.loads(_fetch(f"{RAW_ROOT}/cards.json").decode("utf-8"))
     source_map: dict[str, str] = {}
@@ -67,6 +71,7 @@ def main() -> None:
     report = {
         "source_repository": SOURCE_REPOSITORY,
         "source_commit": SOURCE_COMMIT,
+        "supported_rarities": sorted(SUPPORTED_RARITIES),
         "source_card_count": len(source_map),
         "target_card_count": len(wanted_ids),
         "imported_count": len(imported),
