@@ -1,26 +1,73 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import os
+import re
 from pathlib import Path
 from typing import Any
 from urllib.request import Request, urlopen
 
-from .sources import MASTER_FILES, RAW_BASE, UPSTREAM_REPO
+from .sources import COMMIT_API, MASTER_FILES, RAW_ROOT, UPSTREAM_REF, UPSTREAM_REPO
 
 ROOT = Path(__file__).resolve().parents[2]
 UPSTREAM_DIR = ROOT / "data" / "upstream"
 GENERATED_DIR = ROOT / "data" / "generated"
+UPSTREAM_META_FILE = ROOT / "data" / "upstream.json"
 STATE_FILE = ROOT / "data" / "sync_state.json"
+GENERATED_FILES = ("cards.json", "characters.json", "master_refs.json", "manifest.json")
 
 
-def _download_text(filename: str) -> str:
-    request = Request(
-        f"{RAW_BASE}/{filename}",
-        headers={"User-Agent": "Holodori-DeckSim/0.1"},
-    )
-    with urlopen(request, timeout=30) as response:  # noqa: S310 - fixed trusted source
+def _request_text(url: str) -> str:
+    token = os.getenv("GITHUB_TOKEN", "")
+    headers = {
+        "User-Agent": "Holodori-DeckSim/0.1",
+        "Accept": "application/vnd.github+json",
+    }
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    request = Request(url, headers=headers)
+    with urlopen(request, timeout=30) as response:  # noqa: S310 - fixed trusted sources
         return response.read().decode("utf-8")
+
+
+def _resolve_upstream_commit() -> str:
+    payload = json.loads(_request_text(COMMIT_API))
+    commit = str(payload.get("sha", "")).lower()
+    if not re.fullmatch(r"[0-9a-f]{40}", commit):
+        raise ValueError("Unable to resolve a valid HolodoriDB upstream commit SHA")
+    return commit
+
+
+def _download_text(filename: str, commit: str) -> str:
+    return _request_text(f"{RAW_ROOT}/{commit}/{filename}")
+
+
+def _sha256(content: str) -> str:
+    return hashlib.sha256(content.encode("utf-8")).hexdigest()
+
+
+def _load_upstream_meta() -> dict[str, Any]:
+    if not UPSTREAM_META_FILE.exists():
+        return {}
+    return json.loads(UPSTREAM_META_FILE.read_text(encoding="utf-8"))
+
+
+def _changed_files(
+    current_hashes: dict[str, str],
+    previous_meta: dict[str, Any],
+) -> list[str]:
+    previous_hashes = previous_meta.get("fileHashes", {})
+    return [
+        filename
+        for filename in MASTER_FILES
+        if previous_hashes.get(filename) != current_hashes.get(filename)
+    ]
+
+
+def _generated_files_present() -> bool:
+    return all((GENERATED_DIR / filename).exists() for filename in GENERATED_FILES)
 
 
 def _load_json(filename: str) -> list[dict[str, Any]]:
@@ -66,33 +113,49 @@ def _enum_suffix(value: str | None) -> int | None:
         return None
 
 
-def _all_raw_files_present() -> bool:
-    return all((UPSTREAM_DIR / filename).exists() for filename in MASTER_FILES)
-
-
-def fetch_upstream(force: bool = False) -> str:
-    """Download selected upstream master tables and return the master version."""
+def fetch_upstream(force: bool = False) -> dict[str, Any]:
+    """Inspect one pinned upstream snapshot and cache it only when references changed."""
     UPSTREAM_DIR.mkdir(parents=True, exist_ok=True)
     GENERATED_DIR.mkdir(parents=True, exist_ok=True)
 
-    version = _download_text("version.txt").strip()
-    previous = None
-    if STATE_FILE.exists():
-        previous = json.loads(STATE_FILE.read_text(encoding="utf-8")).get("master_version")
-
-    # A GitHub Actions checkout contains sync_state.json but intentionally does not
-    # contain data/upstream. Never skip the download unless the full raw cache exists.
-    if previous == version and _all_raw_files_present() and not force:
-        return version
-
+    commit = _resolve_upstream_commit()
+    contents: dict[str, str] = {}
+    hashes: dict[str, str] = {}
     for filename in MASTER_FILES:
-        content = version if filename == "version.txt" else _download_text(filename)
+        content = _download_text(filename, commit)
+        contents[filename] = content
+        hashes[filename] = _sha256(content)
+
+    version = contents["version.txt"].strip()
+    previous_meta = _load_upstream_meta()
+    changed_files = _changed_files(hashes, previous_meta)
+    generated_missing = not _generated_files_present()
+    should_sync = force or bool(changed_files) or generated_missing
+
+    if not should_sync:
+        return {
+            "master_version": version,
+            "upstream_commit": commit,
+            "changed": False,
+            "changed_files": [],
+            "file_hashes": hashes,
+        }
+
+    for filename, content in contents.items():
         (UPSTREAM_DIR / filename).write_text(content, encoding="utf-8")
 
-    return version
+    return {
+        "master_version": version,
+        "upstream_commit": commit,
+        "changed": True,
+        "changed_files": changed_files,
+        "file_hashes": hashes,
+        "forced": force,
+        "generated_missing": generated_missing,
+    }
 
 
-def normalize(master_version: str) -> dict[str, int]:
+def normalize(master_version: str, upstream_commit: str) -> dict[str, int]:
     cards = _data_index(_load_json("Card.json"))
     characters = _data_index(_load_json("Character.json"))
     card_text = _text_index("LangCard_Kor.json")
@@ -222,6 +285,7 @@ def normalize(master_version: str) -> dict[str, int]:
                 ),
                 "_source": {
                     "repository": UPSTREAM_REPO,
+                    "commit": upstream_commit,
                     "master_version": master_version,
                 },
             }
@@ -252,6 +316,7 @@ def normalize(master_version: str) -> dict[str, int]:
         "manifest.json",
         {
             "source_repository": UPSTREAM_REPO,
+            "source_commit": upstream_commit,
             "master_version": master_version,
             "character_count": len(character_rows),
             "card_count": len(normalized_cards),
@@ -261,11 +326,6 @@ def normalize(master_version: str) -> dict[str, int]:
         },
     )
 
-    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    STATE_FILE.write_text(
-        json.dumps({"master_version": master_version}, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
     return {
         "characters": len(character_rows),
         "cards": len(normalized_cards),
@@ -352,15 +412,63 @@ def _write_json(filename: str, payload: Any) -> None:
     )
 
 
+def _write_sync_metadata(snapshot: dict[str, Any]) -> None:
+    upstream_meta = {
+        "repository": UPSTREAM_REPO,
+        "ref": UPSTREAM_REF,
+        "commit": snapshot["upstream_commit"],
+        "master_version": snapshot["master_version"],
+        "files": list(MASTER_FILES),
+        "fileHashes": snapshot["file_hashes"],
+    }
+    UPSTREAM_META_FILE.parent.mkdir(parents=True, exist_ok=True)
+    UPSTREAM_META_FILE.write_text(
+        json.dumps(upstream_meta, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    STATE_FILE.write_text(
+        json.dumps(
+            {
+                "master_version": snapshot["master_version"],
+                "upstream_commit": snapshot["upstream_commit"],
+                "changed_files": snapshot.get("changed_files", []),
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+
 def sync(force: bool = False) -> dict[str, Any]:
-    version = fetch_upstream(force=force)
-    counts = normalize(version)
-    return {"master_version": version, **counts}
+    snapshot = fetch_upstream(force=force)
+    if not snapshot["changed"]:
+        return {
+            "changed": False,
+            "master_version": snapshot["master_version"],
+            "upstream_commit": snapshot["upstream_commit"],
+            "changed_files": [],
+        }
+
+    counts = normalize(snapshot["master_version"], snapshot["upstream_commit"])
+    _write_sync_metadata(snapshot)
+    return {
+        "changed": True,
+        "master_version": snapshot["master_version"],
+        "upstream_commit": snapshot["upstream_commit"],
+        "changed_files": snapshot.get("changed_files", []),
+        **counts,
+    }
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Sync Hololive Dreams master data")
-    parser.add_argument("--force", action="store_true", help="download even if master version is unchanged")
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="normalize the current pinned upstream snapshot even when file hashes are unchanged",
+    )
     args = parser.parse_args()
     result = sync(force=args.force)
     print(json.dumps(result, ensure_ascii=False))
