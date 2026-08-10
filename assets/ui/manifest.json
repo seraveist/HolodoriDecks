@@ -23,12 +23,8 @@
     "A": "assets/ui/rank-a.svg",
     "S": "assets/ui/rank-s.svg"
   },
-  "placeholders": {
-    "card": "assets/ui/card-placeholder.svg",
-    "music": "assets/ui/music-placeholder.svg"
-  },
-  "path_rules": {
-    "card_portrait": "assets/cards/{card.id}.webp",
-    "music_jacket": "assets/music/{music.id}.webp"
+  "card_portrait": {
+    "rarities": [4, 5],
+    "path": "assets/cards/{card.id}.webp"
   }
 }
