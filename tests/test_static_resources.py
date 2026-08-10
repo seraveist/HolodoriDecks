@@ -3,15 +3,21 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "assets"
+GENERATED = ROOT / "data" / "generated"
 
 
-def test_initial_card_portrait_baseline_is_present() -> None:
+def test_rarity_4_and_5_portraits_are_complete() -> None:
     provenance = json.loads((ASSETS / "card-portrait-source.json").read_text(encoding="utf-8"))
-    portraits = list((ASSETS / "cards").glob("*.webp"))
+    cards = json.loads((GENERATED / "cards.json").read_text(encoding="utf-8"))
 
-    assert provenance["imported_count"] == 115
-    assert provenance["missing_count"] == 54
-    assert len(portraits) >= provenance["imported_count"]
+    expected = {card["id"] for card in cards if card.get("rarity") in {4, 5}}
+    excluded_r3 = {card["id"] for card in cards if card.get("rarity") == 3}
+    present = {path.stem for path in (ASSETS / "cards").glob("*.webp")}
+
+    assert provenance["included_rarities"] == [4, 5]
+    assert provenance["portrait_count"] == len(expected) == 115
+    assert present == expected
+    assert present.isdisjoint(excluded_r3)
     assert (ASSETS / "cards" / "card-06004-5-uniq-0060-00.webp").exists()
 
 
@@ -21,7 +27,6 @@ def test_ui_manifest_references_existing_files() -> None:
     paths = []
     paths.extend(item["icon"] for item in manifest["attributes"].values())
     paths.extend(manifest["score_ranks"].values())
-    paths.extend(manifest["placeholders"].values())
 
     for relative_path in paths:
         assert (ROOT / relative_path).exists(), relative_path
@@ -31,3 +36,4 @@ def test_expected_attribute_and_rank_keys_are_available() -> None:
     manifest = json.loads((ASSETS / "ui" / "manifest.json").read_text(encoding="utf-8"))
     assert set(manifest["attributes"]) == {"1", "2", "3"}
     assert set(manifest["score_ranks"]) == {"D", "C", "B", "A", "S"}
+    assert manifest["card_portrait"]["rarities"] == [4, 5]
