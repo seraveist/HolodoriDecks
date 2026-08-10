@@ -24,7 +24,10 @@ def test_candidate_score_prefers_exact_stem() -> None:
 def test_find_candidates_sorts_best_match_first() -> None:
     images = [
         Path("other.png"),
-        Path("img_m0049_jacket.png"),
-        Path("m0049.png"),
+        Path("img_card_06004-5-uniq-0060-00.png"),
+        Path("06004-5-uniq-0060-00.png"),
     ]
-    assert find_candidates(images, "m0049") == [Path("m0049.png"), Path("img_m0049_jacket.png")]
+    assert find_candidates(images, "06004-5-uniq-0060-00") == [
+        Path("06004-5-uniq-0060-00.png"),
+        Path("img_card_06004-5-uniq-0060-00.png"),
+    ]
