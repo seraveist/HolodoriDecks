@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 UPSTREAM_REPO = "HolodoriDB/holodori-db-kor-diff"
-RAW_BASE = "https://raw.githubusercontent.com/HolodoriDB/holodori-db-kor-diff/main"
+UPSTREAM_REF = "main"
+COMMIT_API = f"https://api.github.com/repos/{UPSTREAM_REPO}/commits/{UPSTREAM_REF}"
+RAW_ROOT = f"https://raw.githubusercontent.com/{UPSTREAM_REPO}"
 
 # Keep this list explicit so upstream schema changes are reviewable.
 MASTER_FILES = (
