@@ -25,7 +25,7 @@ Example:
 assets/cards/card-06004-5-uniq-0060-00.webp
 ```
 
-Music thumbnails use the upstream music ID:
+Music thumbnails use the normalized music ID:
 
 ```text
 assets/music/{music.id}.webp
@@ -37,7 +37,9 @@ Example:
 assets/music/m0049.webp
 ```
 
-The source master also exposes `Card.assetId` and `Music.jacketAssetId`; asset acquisition tooling may use those upstream keys, but files committed to this project should be renamed to the stable rules above so the UI does not depend on game-internal bundle names.
+The source master exposes `Card.assetId`, `Music.jacketAssetId`, and `Music.assetId`. Asset acquisition tooling may use those upstream keys to locate source images, but files committed to this project are renamed to the stable rules above so the UI does not depend on game-internal bundle names.
+
+`data/generated/music.json` preserves `jacket_asset_id` and `asset_id` for this acquisition step.
 
 ## UI-owned assets
 
