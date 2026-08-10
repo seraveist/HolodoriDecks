@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Holodori DeckSim</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">HOLODORI DECK SIM</p>
+      <h1>편성 프로토타입</h1>
+      <p class="header-copy">목표, 멤버, 악곡을 순서대로 선택하고 결과 구성을 확인합니다.</p>
+    </div>
+    <span class="prototype-chip">UI Prototype</span>
+  </header>
+
+  <main class="app-shell">
+    <nav class="step-nav" aria-label="편성 단계">
+      <a href="#target-setting"><span>1</span>목표 세팅</a>
+      <a href="#member-setting"><span>2</span>멤버 세팅</a>
+      <a href="#music-setting"><span>3</span>악곡 세팅</a>
+      <a href="#result-setting"><span>4</span>결과 계산</a>
+    </nav>
+
+    <section id="target-setting" class="panel setting-panel">
+      <div class="section-heading">
+        <div>
+          <p class="section-number">01</p>
+          <h2>목표 세팅</h2>
+        </div>
+        <p>계산 목표를 간단히 선택합니다.</p>
+      </div>
+
+      <div class="select-grid target-grid">
+        <label class="field">
+          <span>목표 랭크</span>
+          <select id="target-rank">
+            <option value="S" selected>S</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>목표 점수</span>
+          <select id="target-score">
+            <option value="100000" selected>100,000</option>
+            <option value="300000">300,000</option>
+            <option value="500000">500,000</option>
+            <option value="1000000">1,000,000</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>결과 표시</span>
+          <select id="result-view-mode">
+            <option value="simple" selected>간단히</option>
+            <option value="detail">상세히</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section id="member-setting" class="panel member-panel">
+      <div class="section-heading">
+        <div>
+          <p class="section-number">02</p>
+          <h2>멤버 세팅</h2>
+        </div>
+        <p>슬롯을 클릭해 카드를 선택합니다. 카드 이미지는 ★4/★5만 표시합니다.</p>
+      </div>
+
+      <div id="member-slots" class="member-slots" aria-label="멤버 편성 슬롯"></div>
+    </section>
+
+    <section id="music-setting" class="panel setting-panel">
+      <div class="section-heading">
+        <div>
+          <p class="section-number">03</p>
+          <h2>악곡 세팅</h2>
+        </div>
+        <p>악곡과 난이도를 순서대로 선택합니다.</p>
+      </div>
+
+      <div class="select-grid music-grid">
+        <label class="field field-wide">
+          <span>악곡</span>
+          <select id="music-select">
+            <option value="">악곡 데이터를 불러오는 중...</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>난이도</span>
+          <select id="difficulty-select">
+            <option value="EASY">EASY</option>
+            <option value="NORMAL">NORMAL</option>
+            <option value="HARD">HARD</option>
+            <option value="EXPERT" selected>EXPERT</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section id="result-setting" class="panel result-panel">
+      <div class="section-heading result-heading">
+        <div>
+          <p class="section-number">04</p>
+          <h2>결과 계산</h2>
+        </div>
+        <div class="zoom-controls" aria-label="결과 카드 크기 조절">
+          <button id="zoom-out" type="button" aria-label="축소">−</button>
+          <span id="zoom-value">100%</span>
+          <button id="zoom-in" type="button" aria-label="확대">＋</button>
+        </div>
+      </div>
+
+      <div class="result-scorebar">
+        <div class="rank-lockup">
+          <img id="result-rank-icon" src="assets/ui/rank-s.svg" alt="S 랭크">
+          <div>
+            <span id="result-rank-text" class="result-rank-text">S</span>
+            <strong id="result-score-text">100,000</strong>
+          </div>
+        </div>
+        <div class="result-song">
+          <span>선택 악곡</span>
+          <strong id="result-song-name">미선택</strong>
+          <small id="result-song-difficulty">EXPERT</small>
+        </div>
+      </div>
+
+      <div id="result-members" class="result-members" aria-label="결과 편성"></div>
+
+      <div class="result-badges" aria-label="결과 배지">
+        <span>리더</span>
+        <span>타입</span>
+        <span>스킬</span>
+      </div>
+
+      <div class="skill-result">
+        <div class="skill-result-head">
+          <h3>스킬 발동 정보</h3>
+          <span>계산 로직 연결 전 · 선택 카드 데이터 미리보기</span>
+        </div>
+        <div id="skill-info" class="skill-info">
+          <p class="empty-copy">멤버를 선택하면 스킬 정보가 여기에 표시됩니다.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="card-modal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <section class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="card-modal-title">
+      <header class="modal-header">
+        <div>
+          <p id="card-modal-slot" class="modal-kicker">카드 선택</p>
+          <h2 id="card-modal-title">멤버 카드 선택</h2>
+        </div>
+        <button class="icon-button" type="button" data-close-modal aria-label="닫기">×</button>
+      </header>
+
+      <div class="card-tools">
+        <label class="search-field">
+          <span class="sr-only">카드 검색</span>
+          <input id="card-search" type="search" placeholder="캐릭터명 또는 카드명 검색">
+        </label>
+        <label>
+          <span class="sr-only">희귀도 필터</span>
+          <select id="rarity-filter">
+            <option value="all">희귀도 전체</option>
+            <option value="5">★5</option>
+            <option value="4">★4</option>
+            <option value="3">★3</option>
+          </select>
+        </label>
+        <label>
+          <span class="sr-only">타입 필터</span>
+          <select id="attribute-filter">
+            <option value="all">타입 전체</option>
+            <option value="1">큐트</option>
+            <option value="2">퓨어</option>
+            <option value="3">해피</option>
+          </select>
+        </label>
+        <label>
+          <span class="sr-only">정렬</span>
+          <select id="card-sort">
+            <option value="order" selected>데이터 순서</option>
+            <option value="rarity-desc">희귀도 높은 순</option>
+            <option value="character">캐릭터명 순</option>
+            <option value="name">카드명 순</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="modal-meta">
+        <strong id="filtered-card-count">0</strong>
+        <span>장의 카드</span>
+      </div>
+      <div id="card-list" class="card-list"></div>
+    </section>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
