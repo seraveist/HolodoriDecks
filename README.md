@@ -1,10 +1,10 @@
 # Holodori DeckSim
 
-Hololive Dreams deck simulator and card master-data synchronization project.
+Hololive Dreams deck simulator and master-data synchronization project.
 
 ## Current scope
 
-The first milestone is the data layer for the deck simulator. Card master data is synchronized from `HolodoriDB/holodori-db-kor-diff`, normalized into a stable simulator-facing schema, and validated before it is committed.
+The first milestone is the data layer for the deck simulator. Card and music master data are synchronized from `HolodoriDB/holodori-db-kor-diff`, normalized into stable simulator-facing schemas, and validated before they are committed.
 
 The current sync includes:
 
@@ -16,6 +16,8 @@ The current sync includes:
 - active, passive and special skill levels with Korean descriptions
 - leader skills
 - structured live-skill triggers and effects
+- music metadata and Korean titles
+- music jacket asset IDs and participating characters
 - upstream Git commit and master-version provenance
 - SHA-256 hashes for each watched upstream JSON file
 
@@ -35,10 +37,11 @@ Generated files:
 
 - `data/generated/cards.json`
 - `data/generated/characters.json`
+- `data/generated/music.json`
 - `data/generated/master_refs.json`
 - `data/generated/manifest.json`
 
-Every normalized card keeps the original upstream card ID, pinned upstream commit and master version so changes can be diffed reliably.
+Every normalized card/music row keeps the pinned upstream commit and master version so changes can be diffed reliably.
 
 ## Static assets
 
@@ -67,7 +70,7 @@ holodori-sync
 
 `holodori-sync` first resolves one `HolodoriDB/holodori-db-kor-diff` `main` commit and reads all watched master files from that pinned commit. Their SHA-256 hashes are compared with `data/upstream.json`.
 
-- if all watched card-related files are unchanged, normalization is skipped
+- if all watched card/music files are unchanged, normalization is skipped
 - if one or more watched files changed, the full normalized data set is rebuilt and validated
 - `holodori-sync --force` rebuilds the current pinned snapshot even when the hashes are unchanged
 
@@ -84,7 +87,9 @@ holodori-sync
 Pull requests perform a full upstream download and validate that:
 
 - normalized card data is non-empty
-- card and manifest counts agree
+- normalized music data is non-empty
+- generated counts agree with the manifest
+- every normalized music row has a jacket asset ID
 - leader cards are present
 - Juufuutei Raden (`chr-06004`) has the expected R3/R4/R5 card and leader coverage
 - referenced active skills have level data
