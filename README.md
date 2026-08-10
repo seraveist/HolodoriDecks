@@ -2,26 +2,46 @@
 
 Hololive Dreams deck simulator and master-data synchronization project.
 
-## Current scope
+## Prepared baseline
 
-The first milestone is the data layer for the deck simulator. Card and music master data are synchronized from `HolodoriDB/holodori-db-kor-diff`, normalized into stable simulator-facing schemas, and validated before they are committed.
+The repository now contains the three baseline resource groups needed to start the static GitHub Pages UI:
 
-The current sync includes:
+1. normalized card data
+2. normalized music data
+3. static UI resources and card portrait assets
 
-- playable characters and Korean names
-- cards, rarity, attribute and parameter ratios
-- card level growth tables
+The current committed master snapshot contains **169 cards**, **182 music tracks**, and **62 playable characters**. Card/music master data is synchronized from `HolodoriDB/holodori-db-kor-diff`, normalized into stable simulator-facing schemas, and validated before it is committed.
+
+## Card data
+
+`data/generated/cards.json` includes:
+
+- canonical card/character IDs and Korean names
+- rarity and attribute
+- Performance / Technique / Sense distribution ratios
+- card level growth curves
 - level-limit/limit-break tables
 - card potential effects
 - active, passive and special skill levels with Korean descriptions
-- leader skills
-- structured live-skill triggers and effects
-- music metadata and Korean titles
-- music jacket asset IDs and participating characters
-- upstream Git commit and master-version provenance
-- SHA-256 hashes for each watched upstream JSON file
+- leader skill data
+- structured skill triggers/effects
+- upstream `asset_id`
+- pinned source commit/master version provenance
 
-User-owned card state and the project's separate breakthrough configuration are intentionally kept outside the upstream master-data layer.
+User-owned card state and the project's separate breakthrough configuration intentionally remain outside the canonical master rows.
+
+## Music data
+
+`data/generated/music.json` includes:
+
+- music ID and Korean title
+- singer display name and participating character IDs
+- playback length
+- music category/release type
+- score coefficient and score-rank group IDs
+- MV URL when available
+- `jacket_asset_id` and music `asset_id`
+- pinned source commit/master version provenance
 
 ## Data layout
 
@@ -43,22 +63,60 @@ Generated files:
 
 Every normalized card/music row keeps the pinned upstream commit and master version so changes can be diffed reliably.
 
-## Static assets
+## Static UI resources
 
-The project is intended to run as a static GitHub Pages site, so UI images are served directly from this repository rather than through a separate asset API.
+The project is intended to run as a static GitHub Pages site, so images are served directly from this repository rather than through a separate asset API.
 
 ```text
 assets/
-  cards/   # card portraits: assets/cards/{card.id}.webp
-  music/   # music jackets: assets/music/{music.id}.webp
-  ui/      # project-owned type marks, rank badges, frame decoration, placeholders
+  cards/   # assets/cards/{card.id}.webp
+  music/   # assets/music/{music.id}.webp
+  ui/      # project-created icons, badges and placeholders
 ```
 
-Upstream asset keys such as `Card.assetId` and `Music.jacketAssetId` may be used while acquiring source assets, but committed files are renamed to project-owned stable paths. The front end should never depend directly on AssetBundle-internal names. Missing portraits or jackets must fall back to a project-owned placeholder.
+### Card portrait baseline
 
-See `assets/README.md` for the detailed naming policy.
+An initial pinned community snapshot was used to bootstrap **115 real card WebP portraits** into `assets/cards/`. The current canonical master has 169 cards; the remaining **54 missing portraits are all rarity-3 cards** and fall back to `assets/ui/card-placeholder.svg` until their actual source images are imported locally.
 
-## Local sync
+Portrait bootstrap provenance and the exact missing-card list are stored in `assets/card-portrait-source.json`.
+
+### Project-owned UI assets
+
+The initial UI resource set is:
+
+- Cute / Pure / Happy type SVGs
+- D / C / B / A / S score-rank SVGs
+- card placeholder SVG
+- music placeholder SVG
+- `assets/ui/manifest.json` for frontend mapping
+
+Score-rank `+` variants should be rendered as a text overlay on the base rank badge rather than duplicated image files.
+
+### Music jackets
+
+All 182 music rows already carry their canonical `jacket_asset_id`. The observed game bundle naming convention is:
+
+```text
+assetbundles/img_music_jacket_{music.id}/img_music_jacket_{music.id}
+```
+
+The game CDN rejects catalog requests from GitHub-hosted Actions runners, so music-jacket acquisition is deliberately a local one-time/update task instead of part of scheduled CI. Until a jacket is imported, the UI uses `assets/ui/music-placeholder.svg`.
+
+See `assets/README.md` for extraction/import commands.
+
+## Local asset import
+
+The included importer maps locally extracted game images to stable GitHub Pages paths.
+
+```bash
+python -m pip install -e ".[assets]"
+holodori-assets /path/to/extracted/images --dry-run
+holodori-assets /path/to/extracted/images
+```
+
+It matches card `asset_id` and music `jacket_asset_id`, converts selected images to WebP, and writes them to `assets/cards/` or `assets/music/`. Ambiguous filenames can be overridden with `assets/source-map.json` using `assets/source-map.example.json` as a template.
+
+## Master-data sync
 
 Python 3.11 or newer is required.
 
@@ -72,9 +130,9 @@ holodori-sync
 
 - if all watched card/music files are unchanged, normalization is skipped
 - if one or more watched files changed, the full normalized data set is rebuilt and validated
-- `holodori-sync --force` rebuilds the current pinned snapshot even when the hashes are unchanged
+- `holodori-sync --force` rebuilds the current pinned snapshot even when hashes are unchanged
 
-`version.txt` is kept as provenance for the game master version, but it is not intended to trigger a rebuild by itself because unrelated game master tables may change it.
+`version.txt` is kept for provenance but does not trigger a rebuild by itself.
 
 ## Automated validation
 
@@ -84,21 +142,18 @@ holodori-sync
 - once per day at **00:00 KST** (`15:00 UTC`)
 - by manual dispatch, with an optional force flag
 
-Pull requests perform a full upstream download and validate that:
+Pull requests validate that:
 
-- normalized card data is non-empty
-- normalized music data is non-empty
+- card and music data are non-empty
 - generated counts agree with the manifest
-- every normalized music row has a jacket asset ID
+- every music row has a jacket asset ID
 - leader cards are present
-- Juufuutei Raden (`chr-06004`) has the expected R3/R4/R5 card and leader coverage
+- Juufuutei Raden (`chr-06004`) has R3/R4/R5 card and leader coverage
 - referenced active skills have level data
-- the normalized snapshot records a 40-character upstream commit SHA
+- the normalized snapshot records a valid pinned upstream commit SHA
 
-Scheduled runs only commit when watched upstream JSON content actually changed. Changes to unrelated files in the HolodoriDB repository do not update the generated deck-simulator database.
+Scheduled runs only commit when watched upstream JSON content actually changes. Unrelated HolodoriDB changes do not rebuild the deck-simulator database.
 
-## Upstream boundary
+## Next milestone
 
-The upstream repository is treated as master-data input, not as application code. `src/holodori_decksim/sources.py` contains an explicit file allow-list so upstream schema additions require review before they enter the simulator pipeline.
-
-The next milestone after this bootstrap is to connect the normalized card database to the six-slot deck model (1 leader + 5 members), then layer user-owned breakthrough state and score calculation on top.
+The next milestone is the static UI itself: connect the prepared card/music data and asset conventions to the six-slot deck model (1 leader + 5 members), then layer user-owned breakthrough state and score calculation on top.
