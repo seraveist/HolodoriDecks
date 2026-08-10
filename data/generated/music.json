@@ -1,0 +1,4240 @@
+[
+  {
+    "id": "m0001",
+    "title": "Shiny Smily Story (2022 ver.)",
+    "singer_name": "hololive IDOL PROJECT",
+    "character_ids": [],
+    "jacket_asset_id": "m0001",
+    "asset_id": "m0001",
+    "playing_seconds": 100,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=vQOPE6kHeoU",
+    "order": 10000001,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0002",
+    "title": "Seishun Archive",
+    "singer_name": "hololive IDOL PROJECT",
+    "character_ids": [],
+    "jacket_asset_id": "m0002",
+    "asset_id": "m0002",
+    "playing_seconds": 110,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=YzQCNmk3YYA",
+    "order": 10000002,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0003",
+    "title": "Yumemiru Sora He",
+    "singer_name": "hololive IDOL PROJECT",
+    "character_ids": [],
+    "jacket_asset_id": "m0003",
+    "asset_id": "m0003",
+    "playing_seconds": 102,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 3,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": null,
+    "order": 10000003,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0004",
+    "title": "Kirameki Rider",
+    "singer_name": "hololive IDOL PROJECT",
+    "character_ids": [],
+    "jacket_asset_id": "m0004",
+    "asset_id": "m0004",
+    "playing_seconds": 109,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": null,
+    "order": 10000004,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0005",
+    "title": "Dreaming Days",
+    "singer_name": "hololive IDOL PROJECT",
+    "character_ids": [],
+    "jacket_asset_id": "m0005",
+    "asset_id": "m0005",
+    "playing_seconds": 103,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=vyUYybXWtak",
+    "order": 10000005,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0006",
+    "title": "AsuiroClearSky",
+    "singer_name": "hololive IDOL PROJECT",
+    "character_ids": [],
+    "jacket_asset_id": "m0006",
+    "asset_id": "m0006",
+    "playing_seconds": 108,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=UYyzAlbcw8w",
+    "order": 10000006,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0007",
+    "title": "Prism Melody",
+    "singer_name": "hololive IDOL PROJECT",
+    "character_ids": [],
+    "jacket_asset_id": "m0007",
+    "asset_id": "m0007",
+    "playing_seconds": 110,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": null,
+    "order": 10000007,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0008",
+    "title": "Our Bright Parade",
+    "singer_name": "hololive IDOL PROJECT",
+    "character_ids": [],
+    "jacket_asset_id": "m0008",
+    "asset_id": "m0008",
+    "playing_seconds": 137,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 3,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": null,
+    "order": 10000008,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0135",
+    "title": "Capture the Moment",
+    "singer_name": "hololive IDOL PROJECT",
+    "character_ids": [],
+    "jacket_asset_id": "m0135",
+    "asset_id": "m0135",
+    "playing_seconds": 117,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": null,
+    "order": 10000135,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0136",
+    "title": "Color Rise Harmony",
+    "singer_name": "hololive IDOL PROJECT",
+    "character_ids": [],
+    "jacket_asset_id": "m0136",
+    "asset_id": "m0136",
+    "playing_seconds": 159,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": null,
+    "order": 10000136,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0137",
+    "title": "Ridin' on Dreams",
+    "singer_name": "hololive IDOL PROJECT",
+    "character_ids": [],
+    "jacket_asset_id": "m0137",
+    "asset_id": "m0137",
+    "playing_seconds": 159,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": null,
+    "order": 10000137,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0300",
+    "title": "yumeiro wonder",
+    "singer_name": "hololive IDOL PROJECT",
+    "character_ids": [],
+    "jacket_asset_id": "m0300",
+    "asset_id": "m0300",
+    "playing_seconds": 157,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=y0yJ6HjBrOA",
+    "order": 10000300,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0301",
+    "title": "Gimmick Gimmick Entertainment",
+    "singer_name": "hololive IDOL PROJECT",
+    "character_ids": [],
+    "jacket_asset_id": "m0301",
+    "asset_id": "m0301",
+    "playing_seconds": 152,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=9vv7FBVkY-8",
+    "order": 10000301,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m9999",
+    "title": "Shiny Smily Story (2022 ver.)",
+    "singer_name": "hololive IDOL PROJECT",
+    "character_ids": [],
+    "jacket_asset_id": "m9999",
+    "asset_id": "m9999",
+    "playing_seconds": 40,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=vQOPE6kHeoU",
+    "order": 10009999,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0022",
+    "title": "Dream☆Story",
+    "singer_name": "Tokino Sora",
+    "character_ids": [
+      "chr-00001"
+    ],
+    "jacket_asset_id": "m0022",
+    "asset_id": "m0022",
+    "playing_seconds": 120,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=rbd-m8r5Ujs",
+    "order": 20010022,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0072",
+    "title": "Star,star,start",
+    "singer_name": "Tokino Sora",
+    "character_ids": [
+      "chr-00001"
+    ],
+    "jacket_asset_id": "m0072",
+    "asset_id": "m0072",
+    "playing_seconds": 129,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=VCsWgOMu4_8",
+    "order": 20010072,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0023",
+    "title": "rirubi",
+    "singer_name": "Robocosan",
+    "character_ids": [
+      "chr-00002"
+    ],
+    "jacket_asset_id": "m0023",
+    "asset_id": "m0023",
+    "playing_seconds": 142,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=K8n-pGOrpzc",
+    "order": 20020023,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0073",
+    "title": "ONINO UTAGE",
+    "singer_name": "Robocosan",
+    "character_ids": [
+      "chr-00002"
+    ],
+    "jacket_asset_id": "m0073",
+    "asset_id": "m0073",
+    "playing_seconds": 132,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=zZtIOlu0ZQM",
+    "order": 20020073,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0074",
+    "title": "ω cat",
+    "singer_name": "AZKi",
+    "character_ids": [
+      "chr-00013"
+    ],
+    "jacket_asset_id": "m0074",
+    "asset_id": "m0074",
+    "playing_seconds": 137,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=V4nwy5IUMdg",
+    "order": 20030074,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0189",
+    "title": "Inochi(2024 ver.)",
+    "singer_name": "AZKi",
+    "character_ids": [
+      "chr-00013"
+    ],
+    "jacket_asset_id": "m0189",
+    "asset_id": "m0189",
+    "playing_seconds": 109,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=hQ3rYiaUsUY",
+    "order": 20030189,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0076",
+    "title": "flower rhapsody",
+    "singer_name": "Sakura Miko",
+    "character_ids": [
+      "chr-00015"
+    ],
+    "jacket_asset_id": "m0076",
+    "asset_id": "m0076",
+    "playing_seconds": 117,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=BerwUFzdj4U",
+    "order": 20040076,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0138",
+    "title": "DAI DAI DAI Fantasista",
+    "singer_name": "Sakura Miko",
+    "character_ids": [
+      "chr-00015"
+    ],
+    "jacket_asset_id": "m0138",
+    "asset_id": "m0138",
+    "playing_seconds": 120,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=7wEkDdBa4QQ",
+    "order": 20040138,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0323",
+    "title": "Kyun Kyun MIKO Kyun kyun♡",
+    "singer_name": "Sakura Miko",
+    "character_ids": [
+      "chr-00015"
+    ],
+    "jacket_asset_id": "m0323",
+    "asset_id": "m0323",
+    "playing_seconds": 144,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=WIZSYTAeoF4",
+    "order": 20040323,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0009",
+    "title": "Stellar Stellar",
+    "singer_name": "Hoshimachi Suisei",
+    "character_ids": [
+      "chr-00018"
+    ],
+    "jacket_asset_id": "m0009",
+    "asset_id": "m0009",
+    "playing_seconds": 138,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=a51VH9BYzZA",
+    "order": 20050009,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0075",
+    "title": "BIBBIDIBA",
+    "singer_name": "Hoshimachi Suisei",
+    "character_ids": [
+      "chr-00018"
+    ],
+    "jacket_asset_id": "m0075",
+    "asset_id": "m0075",
+    "playing_seconds": 122,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=8ZP5eqm4JqM",
+    "order": 20050075,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0324",
+    "title": "GHOST",
+    "singer_name": "Hoshimachi Suisei",
+    "character_ids": [
+      "chr-00018"
+    ],
+    "jacket_asset_id": "m0324",
+    "asset_id": "m0324",
+    "playing_seconds": 118,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=IKKar5SS29E",
+    "order": 20050324,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0026",
+    "title": "SHALLYS",
+    "singer_name": "Aki Rosenthal",
+    "character_ids": [
+      "chr-00004"
+    ],
+    "jacket_asset_id": "m0026",
+    "asset_id": "m0026",
+    "playing_seconds": 146,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=Ii7rtNaGlls",
+    "order": 20060026,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0078",
+    "title": "Kimagure Mercy",
+    "singer_name": "Aki Rosenthal",
+    "character_ids": [
+      "chr-00004"
+    ],
+    "jacket_asset_id": "m0078",
+    "asset_id": "m0078",
+    "playing_seconds": 149,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=MSX8QbJR0eQ",
+    "order": 20060078,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0079",
+    "title": "BUTASANDER",
+    "singer_name": "Akai Haato",
+    "character_ids": [
+      "chr-00005"
+    ],
+    "jacket_asset_id": "m0079",
+    "asset_id": "m0079",
+    "playing_seconds": 136,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=GozEv0IruEE",
+    "order": 20070079,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0190",
+    "title": "sensation -KANSHOKU-",
+    "singer_name": "Akai Haato",
+    "character_ids": [
+      "chr-00005"
+    ],
+    "jacket_asset_id": "m0190",
+    "asset_id": "m0190",
+    "playing_seconds": 144,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=sPVnvaBjQI0",
+    "order": 20070190,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0347",
+    "title": "Infinity (Remastered)",
+    "singer_name": "Akai Haato",
+    "character_ids": [
+      "chr-00005"
+    ],
+    "jacket_asset_id": "m0347",
+    "asset_id": "m0347",
+    "playing_seconds": 122,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=9mj2QJE-UOI",
+    "order": 20070347,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0077",
+    "title": "Sʼil vous President",
+    "singer_name": "Shirakami Fubuki",
+    "character_ids": [
+      "chr-00006"
+    ],
+    "jacket_asset_id": "m0077",
+    "asset_id": "m0077",
+    "playing_seconds": 117,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=dPX0_IEXVRo",
+    "order": 20080077,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0184",
+    "title": "SUPERNOVA",
+    "singer_name": "Shirakami Fubuki",
+    "character_ids": [
+      "chr-00006"
+    ],
+    "jacket_asset_id": "m0184",
+    "asset_id": "m0184",
+    "playing_seconds": 118,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=0RG7iNERF4s",
+    "order": 20080184,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0321",
+    "title": "KINGWORLD",
+    "singer_name": "Shirakami Fubuki",
+    "character_ids": [
+      "chr-00006"
+    ],
+    "jacket_asset_id": "m0321",
+    "asset_id": "m0321",
+    "playing_seconds": 128,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=yVaQpUUAzik",
+    "order": 20080321,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0028",
+    "title": "Virtualove",
+    "singer_name": "Natsuiro Matsuri",
+    "character_ids": [
+      "chr-00007"
+    ],
+    "jacket_asset_id": "m0028",
+    "asset_id": "m0028",
+    "playing_seconds": 155,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=a9CWgFuoULU",
+    "order": 20090028,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0080",
+    "title": "DOUTAN KYOHI",
+    "singer_name": "Natsuiro Matsuri",
+    "character_ids": [
+      "chr-00007"
+    ],
+    "jacket_asset_id": "m0080",
+    "asset_id": "m0080",
+    "playing_seconds": 144,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=0iYcUlX9p18",
+    "order": 20090080,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0337",
+    "title": "Pretty Guardian Matsulimit Zero",
+    "singer_name": "Natsuiro Matsuri",
+    "character_ids": [
+      "chr-00007"
+    ],
+    "jacket_asset_id": "m0337",
+    "asset_id": "m0337",
+    "playing_seconds": 117,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": null,
+    "order": 20090337,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0083",
+    "title": "Yoi no Yo, Yoi!",
+    "singer_name": "Nakiri Ayame",
+    "character_ids": [
+      "chr-00010"
+    ],
+    "jacket_asset_id": "m0083",
+    "asset_id": "m0083",
+    "playing_seconds": 100,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 3,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=ECkxzFgbJqQ",
+    "order": 20110083,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0180",
+    "title": "Goodbye Declaration",
+    "singer_name": "Nakiri Ayame",
+    "character_ids": [
+      "chr-00010"
+    ],
+    "jacket_asset_id": "m0180",
+    "asset_id": "m0180",
+    "playing_seconds": 127,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=z1W4c7ym49Y",
+    "order": 20110180,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0031",
+    "title": "NoDistance",
+    "singer_name": "Yuzuki Choco",
+    "character_ids": [
+      "chr-00011"
+    ],
+    "jacket_asset_id": "m0031",
+    "asset_id": "m0031",
+    "playing_seconds": 152,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=X8DuimcnAVA",
+    "order": 20120031,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0084",
+    "title": "Delusion Tax",
+    "singer_name": "Yuzuki Choco",
+    "character_ids": [
+      "chr-00011"
+    ],
+    "jacket_asset_id": "m0084",
+    "asset_id": "m0084",
+    "playing_seconds": 118,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=n9DqvVNBdVI",
+    "order": 20120084,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0032",
+    "title": "Pleiades!",
+    "singer_name": "Oozora Subaru",
+    "character_ids": [
+      "chr-00012"
+    ],
+    "jacket_asset_id": "m0032",
+    "asset_id": "m0032",
+    "playing_seconds": 96,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=RRsw5tT8BJI",
+    "order": 20130032,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0085",
+    "title": "Do my best!",
+    "singer_name": "Oozora Subaru",
+    "character_ids": [
+      "chr-00012"
+    ],
+    "jacket_asset_id": "m0085",
+    "asset_id": "m0085",
+    "playing_seconds": 103,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=qrZtEACCwIU",
+    "order": 20130085,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0310",
+    "title": "HOT DUCK!",
+    "singer_name": "OOZORA SUBARU",
+    "character_ids": [
+      "chr-00012"
+    ],
+    "jacket_asset_id": "m0310",
+    "asset_id": "m0310",
+    "playing_seconds": 136,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=K_IsIE1TS8U",
+    "order": 20130310,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0018",
+    "title": "Howling",
+    "singer_name": "Ookami Mio",
+    "character_ids": [
+      "chr-00014"
+    ],
+    "jacket_asset_id": "m0018",
+    "asset_id": "m0018",
+    "playing_seconds": 100,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=YPm9T622OX0",
+    "order": 20140018,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0188",
+    "title": "Colorful Universe",
+    "singer_name": "Ookami Mio",
+    "character_ids": [
+      "chr-00014"
+    ],
+    "jacket_asset_id": "m0188",
+    "asset_id": "m0188",
+    "playing_seconds": 120,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=NXIDznszQhA",
+    "order": 20140188,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0318",
+    "title": "Natsuyadori",
+    "singer_name": "Ookami Mio",
+    "character_ids": [
+      "chr-00014"
+    ],
+    "jacket_asset_id": "m0318",
+    "asset_id": "m0318",
+    "playing_seconds": 114,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=pKpWdttxPQk",
+    "order": 20140318,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0017",
+    "title": "Mogu Mogu YUMMY！",
+    "singer_name": "Nekomata Okayu",
+    "character_ids": [
+      "chr-00016"
+    ],
+    "jacket_asset_id": "m0017",
+    "asset_id": "m0017",
+    "playing_seconds": 122,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=j6P_m6adkgc",
+    "order": 20150017,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0087",
+    "title": "Neko Kaburi-Na",
+    "singer_name": "Nekomata Okayu",
+    "character_ids": [
+      "chr-00016"
+    ],
+    "jacket_asset_id": "m0087",
+    "asset_id": "m0087",
+    "playing_seconds": 133,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=HOmS6Kn0bn8",
+    "order": 20150087,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0329",
+    "title": "Doku no Oujisama",
+    "singer_name": "Nekomata Okayu",
+    "character_ids": [
+      "chr-00016"
+    ],
+    "jacket_asset_id": "m0329",
+    "asset_id": "m0329",
+    "playing_seconds": 146,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 9,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=M8UmWCeIKyQ",
+    "order": 20150329,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0033",
+    "title": "Doggy god's street",
+    "singer_name": "Inugami Korone",
+    "character_ids": [
+      "chr-00017"
+    ],
+    "jacket_asset_id": "m0033",
+    "asset_id": "m0033",
+    "playing_seconds": 127,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=wLNTAMY1NZA",
+    "order": 20160033,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0086",
+    "title": "Show",
+    "singer_name": "Inugami Korone",
+    "character_ids": [
+      "chr-00017"
+    ],
+    "jacket_asset_id": "m0086",
+    "asset_id": "m0086",
+    "playing_seconds": 101,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 2,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=VN4VqQ5PTDI",
+    "order": 20160086,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0034",
+    "title": "PEKORANDOMBRAIN",
+    "singer_name": "Usada Pekora",
+    "character_ids": [
+      "chr-00019"
+    ],
+    "jacket_asset_id": "m0034",
+    "asset_id": "m0034",
+    "playing_seconds": 113,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=_KTwDH_KQ_g",
+    "order": 20170034,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0089",
+    "title": "ZenjinruiUsagikakeikaku!",
+    "singer_name": "Usada Pekora",
+    "character_ids": [
+      "chr-00019"
+    ],
+    "jacket_asset_id": "m0089",
+    "asset_id": "m0089",
+    "playing_seconds": 141,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=Yzdie2uH0N4",
+    "order": 20170089,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0035",
+    "title": "Zenryoku-Jumping!",
+    "singer_name": "Shiranui Flare",
+    "character_ids": [
+      "chr-00021"
+    ],
+    "jacket_asset_id": "m0035",
+    "asset_id": "m0035",
+    "playing_seconds": 97,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=bPwIwUJKrdU",
+    "order": 20180035,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0091",
+    "title": "Kaibutsu",
+    "singer_name": "Shiranui Flare",
+    "character_ids": [
+      "chr-00021"
+    ],
+    "jacket_asset_id": "m0091",
+    "asset_id": "m0091",
+    "playing_seconds": 135,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=u5r8B1fDB8g",
+    "order": 20180091,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0312",
+    "title": "UNDEAD",
+    "singer_name": "Shiranui Flare",
+    "character_ids": [
+      "chr-00021"
+    ],
+    "jacket_asset_id": "m0312",
+    "asset_id": "m0312",
+    "playing_seconds": 104,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=6Eeb15-SjEU",
+    "order": 20180312,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0092",
+    "title": "Gyu-Don Carnival!",
+    "singer_name": "Shirogane Noel",
+    "character_ids": [
+      "chr-00022"
+    ],
+    "jacket_asset_id": "m0092",
+    "asset_id": "m0092",
+    "playing_seconds": 116,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=65HJRp_GAig",
+    "order": 20190092,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0186",
+    "title": "Waking Yashinoki",
+    "singer_name": "Shirogane Noel",
+    "character_ids": [
+      "chr-00022"
+    ],
+    "jacket_asset_id": "m0186",
+    "asset_id": "m0186",
+    "playing_seconds": 116,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=K7r8CD8k_Ho",
+    "order": 20190186,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0311",
+    "title": "Homenobi",
+    "singer_name": "Shirogane Noel",
+    "character_ids": [
+      "chr-00022"
+    ],
+    "jacket_asset_id": "m0311",
+    "asset_id": "m0311",
+    "playing_seconds": 146,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=LMYIam2RFkg",
+    "order": 20190311,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0010",
+    "title": "Ahoy!! We are Houshou Pirates",
+    "singer_name": "Houshou Marine",
+    "character_ids": [
+      "chr-00023"
+    ],
+    "jacket_asset_id": "m0010",
+    "asset_id": "m0010",
+    "playing_seconds": 108,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=e7VK3pne8N4",
+    "order": 20200010,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0090",
+    "title": "Bishoujyo Muzai♡Pirates",
+    "singer_name": "Houshou Marine",
+    "character_ids": [
+      "chr-00023"
+    ],
+    "jacket_asset_id": "m0090",
+    "asset_id": "m0090",
+    "playing_seconds": 100,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=KfZR9jVP6tw",
+    "order": 20200090,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0302",
+    "title": "Dead Ma’am’s Chest",
+    "singer_name": "Houshou Marine",
+    "character_ids": [
+      "chr-00023"
+    ],
+    "jacket_asset_id": "m0302",
+    "asset_id": "m0302",
+    "playing_seconds": 132,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 3,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=QfGuQELt1Tk",
+    "order": 20200302,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0037",
+    "title": "My song",
+    "singer_name": "Tsunomaki Watame",
+    "character_ids": [
+      "chr-00026"
+    ],
+    "jacket_asset_id": "m0037",
+    "asset_id": "m0037",
+    "playing_seconds": 127,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=6VGkeUaX-zk",
+    "order": 20220037,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0094",
+    "title": "What an amazing swing",
+    "singer_name": "Tsunomaki Watame",
+    "character_ids": [
+      "chr-00026"
+    ],
+    "jacket_asset_id": "m0094",
+    "asset_id": "m0094",
+    "playing_seconds": 128,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=d3UTywBDSW4",
+    "order": 20220094,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0206",
+    "title": "Renai Circulation",
+    "singer_name": "Tsunomaki Watame",
+    "character_ids": [
+      "chr-00026"
+    ],
+    "jacket_asset_id": "m0206",
+    "asset_id": "m0206",
+    "playing_seconds": 90,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=L7MvA9i7byQ",
+    "order": 20220206,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0038",
+    "title": "Palette",
+    "singer_name": "Tokoyami Towa",
+    "character_ids": [
+      "chr-00027"
+    ],
+    "jacket_asset_id": "m0038",
+    "asset_id": "m0038",
+    "playing_seconds": 153,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=Ud73fm4Uoq0",
+    "order": 20230038,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0095",
+    "title": "-ERROR",
+    "singer_name": "Tokoyami Towa",
+    "character_ids": [
+      "chr-00027"
+    ],
+    "jacket_asset_id": "m0095",
+    "asset_id": "m0095",
+    "playing_seconds": 146,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=3UV8OZj2olg",
+    "order": 20230095,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0346",
+    "title": "FACT",
+    "singer_name": "Tokoyami Towa",
+    "character_ids": [
+      "chr-00027"
+    ],
+    "jacket_asset_id": "m0346",
+    "asset_id": "m0346",
+    "playing_seconds": 140,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=Zc05le75CfI",
+    "order": 20230346,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0140",
+    "title": "Escort me! Luknight",
+    "singer_name": "Himemori Luna",
+    "character_ids": [
+      "chr-00028"
+    ],
+    "jacket_asset_id": "m0140",
+    "asset_id": "m0140",
+    "playing_seconds": 111,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 2,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=ua9r5T3WZj8",
+    "order": 20240140,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0181",
+    "title": "FUWAFUWA TIME",
+    "singer_name": "Himemori Luna",
+    "character_ids": [
+      "chr-00028"
+    ],
+    "jacket_asset_id": "m0181",
+    "asset_id": "m0181",
+    "playing_seconds": 130,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=6YrsEak8Ju4",
+    "order": 20240181,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0040",
+    "title": "Asuenokyokaisen",
+    "singer_name": "Yukihana Lamy",
+    "character_ids": [
+      "chr-00030"
+    ],
+    "jacket_asset_id": "m0040",
+    "asset_id": "m0040",
+    "playing_seconds": 133,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=ULtGHb83pTI",
+    "order": 20250040,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0097",
+    "title": "The Brave",
+    "singer_name": "Yukihana Lamy",
+    "character_ids": [
+      "chr-00030"
+    ],
+    "jacket_asset_id": "m0097",
+    "asset_id": "m0097",
+    "playing_seconds": 108,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=BjSIDePerx0",
+    "order": 20250097,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0020",
+    "title": "NENENENENENENENE!DAIBAKUSOU",
+    "singer_name": "Momosuzu Nene",
+    "character_ids": [
+      "chr-00031"
+    ],
+    "jacket_asset_id": "m0020",
+    "asset_id": "m0020",
+    "playing_seconds": 122,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=7P5oggg7aSE",
+    "order": 20260020,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0099",
+    "title": "Chu,Tayousei.",
+    "singer_name": "Momosuzu Nene",
+    "character_ids": [
+      "chr-00031"
+    ],
+    "jacket_asset_id": "m0099",
+    "asset_id": "m0099",
+    "playing_seconds": 123,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=5kpByr6TiIs",
+    "order": 20260099,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0041",
+    "title": "Lioness’ Pride",
+    "singer_name": "Shishiro Botan",
+    "character_ids": [
+      "chr-00032"
+    ],
+    "jacket_asset_id": "m0041",
+    "asset_id": "m0041",
+    "playing_seconds": 120,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=npVP58NvdQ8",
+    "order": 20270041,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0098",
+    "title": "Non-breath oblige",
+    "singer_name": "Shishiro Botan",
+    "character_ids": [
+      "chr-00032"
+    ],
+    "jacket_asset_id": "m0098",
+    "asset_id": "m0098",
+    "playing_seconds": 130,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=vvGvqbAxp6s",
+    "order": 20270098,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0042",
+    "title": "Po",
+    "singer_name": "Omaru Polka",
+    "character_ids": [
+      "chr-00034"
+    ],
+    "jacket_asset_id": "m0042",
+    "asset_id": "m0042",
+    "playing_seconds": 141,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=TGJ9-1LWFtE",
+    "order": 20280042,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0100",
+    "title": "ENVY BABY",
+    "singer_name": "Omaru Polka",
+    "character_ids": [
+      "chr-00034"
+    ],
+    "jacket_asset_id": "m0100",
+    "asset_id": "m0100",
+    "playing_seconds": 135,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=UpoysjZfWrU",
+    "order": 20280100,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0101",
+    "title": "God-ish",
+    "singer_name": "La+ Darknesss",
+    "character_ids": [
+      "chr-00035"
+    ],
+    "jacket_asset_id": "m0101",
+    "asset_id": "m0101",
+    "playing_seconds": 107,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 3,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=yTb_AvLchgY",
+    "order": 20290101,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0185",
+    "title": "Not Interested",
+    "singer_name": "La+ Darknesss",
+    "character_ids": [
+      "chr-00035"
+    ],
+    "jacket_asset_id": "m0185",
+    "asset_id": "m0185",
+    "playing_seconds": 129,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=JaD7H9kavNE",
+    "order": 20290185,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0327",
+    "title": "QUEEN",
+    "singer_name": "La+ Darknesss",
+    "character_ids": [
+      "chr-00035"
+    ],
+    "jacket_asset_id": "m0327",
+    "asset_id": "m0327",
+    "playing_seconds": 141,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=Y6RkFM3G9V4",
+    "order": 20290327,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0021",
+    "title": "Overd",
+    "singer_name": "Takane Lui",
+    "character_ids": [
+      "chr-00036"
+    ],
+    "jacket_asset_id": "m0021",
+    "asset_id": "m0021",
+    "playing_seconds": 112,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=O0aSJdN3mVY",
+    "order": 20300021,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0104",
+    "title": "Owl",
+    "singer_name": "Takane Lui",
+    "character_ids": [
+      "chr-00036"
+    ],
+    "jacket_asset_id": "m0104",
+    "asset_id": "m0104",
+    "playing_seconds": 126,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=5t60NWXXkQI",
+    "order": 20300104,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0044",
+    "title": "WAO!!(2025 ver.)",
+    "singer_name": "Hakui Koyori",
+    "character_ids": [
+      "chr-00037"
+    ],
+    "jacket_asset_id": "m0044",
+    "asset_id": "m0044",
+    "playing_seconds": 159,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=Mt5SB2igQUM",
+    "order": 20310044,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0102",
+    "title": "God knows...",
+    "singer_name": "Hakui Koyori",
+    "character_ids": [
+      "chr-00037"
+    ],
+    "jacket_asset_id": "m0102",
+    "asset_id": "m0102",
+    "playing_seconds": 160,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=3T0wEUW1THE",
+    "order": 20310102,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0046",
+    "title": "IrohaStep!",
+    "singer_name": "Kazama Iroha",
+    "character_ids": [
+      "chr-00039"
+    ],
+    "jacket_asset_id": "m0046",
+    "asset_id": "m0046",
+    "playing_seconds": 130,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=LO8TO2kdftE",
+    "order": 20330046,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0105",
+    "title": "Kyu-kurarin",
+    "singer_name": "Kazama Iroha",
+    "character_ids": [
+      "chr-00039"
+    ],
+    "jacket_asset_id": "m0105",
+    "asset_id": "m0105",
+    "playing_seconds": 126,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=lnlyZlIRO1U",
+    "order": 20330105,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0047",
+    "title": "ALiCE&u",
+    "singer_name": "Ayunda Risu",
+    "character_ids": [
+      "chr-03001"
+    ],
+    "jacket_asset_id": "m0047",
+    "asset_id": "m0047",
+    "playing_seconds": 130,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=IGviVpVE1fA",
+    "order": 20340047,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0107",
+    "title": "Snow halation",
+    "singer_name": "Ayunda Risu",
+    "character_ids": [
+      "chr-03001"
+    ],
+    "jacket_asset_id": "m0107",
+    "asset_id": "m0107",
+    "playing_seconds": 116,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=uw9SUSvWBN0",
+    "order": 20340107,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0306",
+    "title": "1:15 AM",
+    "singer_name": "Ayunda Risu",
+    "character_ids": [
+      "chr-03001"
+    ],
+    "jacket_asset_id": "m0306",
+    "asset_id": "m0306",
+    "playing_seconds": 147,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=lvDNdCBcKJE",
+    "order": 20340306,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0014",
+    "title": "High Tide",
+    "singer_name": "Moona Hoshinova",
+    "character_ids": [
+      "chr-03002"
+    ],
+    "jacket_asset_id": "m0014",
+    "asset_id": "m0014",
+    "playing_seconds": 130,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=stmZAThUl64",
+    "order": 20350014,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0106",
+    "title": "FIRE BIRD",
+    "singer_name": "Moona Hoshinova",
+    "character_ids": [
+      "chr-03002"
+    ],
+    "jacket_asset_id": "m0106",
+    "asset_id": "m0106",
+    "playing_seconds": 136,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=GQKR0APNFKs",
+    "order": 20350106,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0048",
+    "title": "Q&A=E",
+    "singer_name": "Airani Iofifteen",
+    "character_ids": [
+      "chr-03003"
+    ],
+    "jacket_asset_id": "m0048",
+    "asset_id": "m0048",
+    "playing_seconds": 144,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=Rd6kufQ7ONc",
+    "order": 20360048,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0108",
+    "title": "Alien Alien",
+    "singer_name": "Airani Iofifteen",
+    "character_ids": [
+      "chr-03003"
+    ],
+    "jacket_asset_id": "m0108",
+    "asset_id": "m0108",
+    "playing_seconds": 139,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=jaf_SBcDhFU",
+    "order": 20360108,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0331",
+    "title": "Here I am",
+    "singer_name": "Airani Iofifteen",
+    "character_ids": [
+      "chr-03003"
+    ],
+    "jacket_asset_id": "m0331",
+    "asset_id": "m0331",
+    "playing_seconds": 148,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=EVKGLK4NPXU",
+    "order": 20360331,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0052",
+    "title": "JOLLIE JOLLIE",
+    "singer_name": "Kureiji Ollie",
+    "character_ids": [
+      "chr-03004"
+    ],
+    "jacket_asset_id": "m0052",
+    "asset_id": "m0052",
+    "playing_seconds": 119,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=2ZqtRc3fa_s",
+    "order": 20370052,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0114",
+    "title": "Kyouran Hey Kids!!",
+    "singer_name": "Kureiji Ollie",
+    "character_ids": [
+      "chr-03004"
+    ],
+    "jacket_asset_id": "m0114",
+    "asset_id": "m0114",
+    "playing_seconds": 131,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=oLOSu6ocgUU",
+    "order": 20370114,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0053",
+    "title": "Unreal Veil",
+    "singer_name": "Anya Melfissa",
+    "character_ids": [
+      "chr-03005"
+    ],
+    "jacket_asset_id": "m0053",
+    "asset_id": "m0053",
+    "playing_seconds": 123,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=eMxyel5LP8Y",
+    "order": 20380053,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0115",
+    "title": "Marshall Maximizer",
+    "singer_name": "Anya Melfissa",
+    "character_ids": [
+      "chr-03005"
+    ],
+    "jacket_asset_id": "m0115",
+    "asset_id": "m0115",
+    "playing_seconds": 121,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=2UP3DO56dh4",
+    "order": 20380115,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0054",
+    "title": "Gate Open: START!",
+    "singer_name": "Pavolia Reine",
+    "character_ids": [
+      "chr-03006"
+    ],
+    "jacket_asset_id": "m0054",
+    "asset_id": "m0054",
+    "playing_seconds": 145,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=VFpOBazE3rs",
+    "order": 20390054,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0116",
+    "title": "Usseewa",
+    "singer_name": "Pavolia Reine",
+    "character_ids": [
+      "chr-03006"
+    ],
+    "jacket_asset_id": "m0116",
+    "asset_id": "m0116",
+    "playing_seconds": 134,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=dYvQcVG_dVg",
+    "order": 20390116,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0060",
+    "title": "You're Mine",
+    "singer_name": "Vestia Zeta",
+    "character_ids": [
+      "chr-03007"
+    ],
+    "jacket_asset_id": "m0060",
+    "asset_id": "m0060",
+    "playing_seconds": 150,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=KFFtUqQVLrI",
+    "order": 20400060,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0122",
+    "title": "KAWAIKUTE GOMEN",
+    "singer_name": "Vestia Zeta",
+    "character_ids": [
+      "chr-03007"
+    ],
+    "jacket_asset_id": "m0122",
+    "asset_id": "m0122",
+    "playing_seconds": 124,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=WDueRRGIKzw",
+    "order": 20400122,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0123",
+    "title": "Brave Heart",
+    "singer_name": "Kaela Kovalskia",
+    "character_ids": [
+      "chr-03008"
+    ],
+    "jacket_asset_id": "m0123",
+    "asset_id": "m0123",
+    "playing_seconds": 109,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=w2BRM44B8tE",
+    "order": 20410123,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0179",
+    "title": "dahlah.",
+    "singer_name": "Kaela Kovalskia",
+    "character_ids": [
+      "chr-03008"
+    ],
+    "jacket_asset_id": "m0179",
+    "asset_id": "m0179",
+    "playing_seconds": 135,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=XG0WLXP1qLA",
+    "order": 20410179,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0062",
+    "title": "Mantra Hujan",
+    "singer_name": "Kobo Kanaeru",
+    "character_ids": [
+      "chr-03009"
+    ],
+    "jacket_asset_id": "m0062",
+    "asset_id": "m0062",
+    "playing_seconds": 110,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=SF-_47-oCtk",
+    "order": 20420062,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0124",
+    "title": "Overdose",
+    "singer_name": "Kobo Kanaeru",
+    "character_ids": [
+      "chr-03009"
+    ],
+    "jacket_asset_id": "m0124",
+    "asset_id": "m0124",
+    "playing_seconds": 128,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=iiw9Z1I1AcE",
+    "order": 20420124,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0330",
+    "title": "HELP!!",
+    "singer_name": "Kobo Kanaeru",
+    "character_ids": [
+      "chr-03009"
+    ],
+    "jacket_asset_id": "m0330",
+    "asset_id": "m0330",
+    "playing_seconds": 131,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=50Ura_ZcSvY",
+    "order": 20420330,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0012",
+    "title": "Excuse My Rudeness, But Could You Please RIP?",
+    "singer_name": "Mori Calliope",
+    "character_ids": [
+      "chr-04001"
+    ],
+    "jacket_asset_id": "m0012",
+    "asset_id": "m0012",
+    "playing_seconds": 91,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 1,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=5y3xh8gs24c",
+    "order": 20430012,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0109",
+    "title": "DEAD BEATS",
+    "singer_name": "Mori Calliope",
+    "character_ids": [
+      "chr-04001"
+    ],
+    "jacket_asset_id": "m0109",
+    "asset_id": "m0109",
+    "playing_seconds": 120,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=6ydgEipkUEU",
+    "order": 20430109,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0304",
+    "title": "LET'S JUST CRASH",
+    "singer_name": "Mori Calliope",
+    "character_ids": [
+      "chr-04001"
+    ],
+    "jacket_asset_id": "m0304",
+    "asset_id": "m0304",
+    "playing_seconds": 112,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=do8EmK-XoAg",
+    "order": 20430304,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0049",
+    "title": "SPARKS",
+    "singer_name": "Takanashi Kiara",
+    "character_ids": [
+      "chr-04002"
+    ],
+    "jacket_asset_id": "m0049",
+    "asset_id": "m0049",
+    "playing_seconds": 104,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=Lq9eqHDKJPE",
+    "order": 20440049,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0111",
+    "title": "The Vampire",
+    "singer_name": "Takanashi Kiara",
+    "character_ids": [
+      "chr-04002"
+    ],
+    "jacket_asset_id": "m0111",
+    "asset_id": "m0111",
+    "playing_seconds": 121,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=2x86wabH-Qs",
+    "order": 20440111,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0050",
+    "title": "VIOLET",
+    "singer_name": "Ninomae Ina'nis",
+    "character_ids": [
+      "chr-04003"
+    ],
+    "jacket_asset_id": "m0050",
+    "asset_id": "m0050",
+    "playing_seconds": 136,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=8ZdLXELdF9Q",
+    "order": 20450050,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0112",
+    "title": "NAI NAI",
+    "singer_name": "Ninomae Ina'nis",
+    "character_ids": [
+      "chr-04003"
+    ],
+    "jacket_asset_id": "m0112",
+    "asset_id": "m0112",
+    "playing_seconds": 132,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=injd7gHrIGU",
+    "order": 20450112,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0117",
+    "title": "IDOL",
+    "singer_name": "IRyS",
+    "character_ids": [
+      "chr-04007"
+    ],
+    "jacket_asset_id": "m0117",
+    "asset_id": "m0117",
+    "playing_seconds": 126,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=UpbpwXAEJl4",
+    "order": 20480117,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0183",
+    "title": "Carbonated Love",
+    "singer_name": "IRyS",
+    "character_ids": [
+      "chr-04007"
+    ],
+    "jacket_asset_id": "m0183",
+    "asset_id": "m0183",
+    "playing_seconds": 118,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=DjNNpw2x2dU",
+    "order": 20480183,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0326",
+    "title": "TwiLight",
+    "singer_name": "IRyS",
+    "character_ids": [
+      "chr-04007"
+    ],
+    "jacket_asset_id": "m0326",
+    "asset_id": "m0326",
+    "playing_seconds": 120,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=dFZ1oTSFuIE",
+    "order": 20480326,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0058",
+    "title": "Daydream",
+    "singer_name": "Ouro Kronii",
+    "character_ids": [
+      "chr-04010"
+    ],
+    "jacket_asset_id": "m0058",
+    "asset_id": "m0058",
+    "playing_seconds": 97,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 2,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=6W749jRBg-4",
+    "order": 20500058,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0120",
+    "title": "Mafia",
+    "singer_name": "Ouro Kronii",
+    "character_ids": [
+      "chr-04010"
+    ],
+    "jacket_asset_id": "m0120",
+    "asset_id": "m0120",
+    "playing_seconds": 134,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 10,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=iEr1aBephZ8",
+    "order": 20500120,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0121",
+    "title": "PSYCHO",
+    "singer_name": "Hakos Baelz",
+    "character_ids": [
+      "chr-04012"
+    ],
+    "jacket_asset_id": "m0121",
+    "asset_id": "m0121",
+    "playing_seconds": 95,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 3,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=xnX8Lk-iSCo",
+    "order": 20520121,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0182",
+    "title": "Los! Los! Los!",
+    "singer_name": "Hakos Baelz",
+    "character_ids": [
+      "chr-04012"
+    ],
+    "jacket_asset_id": "m0182",
+    "asset_id": "m0182",
+    "playing_seconds": 134,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=oCOGTtxq24k",
+    "order": 20520182,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0064",
+    "title": "Monsters and Men",
+    "singer_name": "Shiori Novella",
+    "character_ids": [
+      "chr-04013"
+    ],
+    "jacket_asset_id": "m0064",
+    "asset_id": "m0064",
+    "playing_seconds": 141,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=NX1ZCKJ67dc",
+    "order": 20530064,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0127",
+    "title": "Kyoufuu All Back",
+    "singer_name": "Shiori Novella",
+    "character_ids": [
+      "chr-04013"
+    ],
+    "jacket_asset_id": "m0127",
+    "asset_id": "m0127",
+    "playing_seconds": 135,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=zKWksk3wBqM",
+    "order": 20530127,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0065",
+    "title": "Prism no Mahou",
+    "singer_name": "Koseki Bijou",
+    "character_ids": [
+      "chr-04014"
+    ],
+    "jacket_asset_id": "m0065",
+    "asset_id": "m0065",
+    "playing_seconds": 139,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=M3pjFfKBonI",
+    "order": 20540065,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0128",
+    "title": "The Mirror’s Ripples",
+    "singer_name": "Koseki Bijou",
+    "character_ids": [
+      "chr-04014"
+    ],
+    "jacket_asset_id": "m0128",
+    "asset_id": "m0128",
+    "playing_seconds": 109,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=Akn_Gdi05Ys",
+    "order": 20540128,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0066",
+    "title": "Say My Name",
+    "singer_name": "Nerissa Ravencroft",
+    "character_ids": [
+      "chr-04015"
+    ],
+    "jacket_asset_id": "m0066",
+    "asset_id": "m0066",
+    "playing_seconds": 137,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 10,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=x_fkTc7Hlp0",
+    "order": 20550066,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0129",
+    "title": "YUKINO HANA",
+    "singer_name": "Nerissa Ravencroft",
+    "character_ids": [
+      "chr-04015"
+    ],
+    "jacket_asset_id": "m0129",
+    "asset_id": "m0129",
+    "playing_seconds": 128,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=SPWsptIhKkM",
+    "order": 20550129,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0063",
+    "title": "Lifetime Showtime",
+    "singer_name": "FUWAMOCO",
+    "character_ids": [
+      "chr-04016",
+      "chr-04017"
+    ],
+    "jacket_asset_id": "m0063",
+    "asset_id": "m0063",
+    "playing_seconds": 128,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 3,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=Nj17tbZP4oA",
+    "order": 20560063,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0191",
+    "title": "Cute Na Kanojo",
+    "singer_name": "FUWAMOCO",
+    "character_ids": [
+      "chr-04016",
+      "chr-04017"
+    ],
+    "jacket_asset_id": "m0191",
+    "asset_id": "m0191",
+    "playing_seconds": 131,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=XYmZUh_YAq0",
+    "order": 20560191,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0192",
+    "title": "Born to be \"BAU\"DOL☆★",
+    "singer_name": "FUWAMOCO",
+    "character_ids": [
+      "chr-04016",
+      "chr-04017"
+    ],
+    "jacket_asset_id": "m0192",
+    "asset_id": "m0192",
+    "playing_seconds": 152,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=aThUfmKQgaY",
+    "order": 20560192,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0193",
+    "title": "Let Me Be With You",
+    "singer_name": "FUWAMOCO",
+    "character_ids": [
+      "chr-04016",
+      "chr-04017"
+    ],
+    "jacket_asset_id": "m0193",
+    "asset_id": "m0193",
+    "playing_seconds": 108,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=93FgkYhAQmI",
+    "order": 20560193,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0068",
+    "title": "GREATEST",
+    "singer_name": "Otonose Kanade",
+    "character_ids": [
+      "chr-06002"
+    ],
+    "jacket_asset_id": "m0068",
+    "asset_id": "m0068",
+    "playing_seconds": 125,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": null,
+    "order": 20590068,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0131",
+    "title": "KANADE",
+    "singer_name": "Otonose Kanade",
+    "character_ids": [
+      "chr-06002"
+    ],
+    "jacket_asset_id": "m0131",
+    "asset_id": "m0131",
+    "playing_seconds": 166,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=VT1on_WaMzw",
+    "order": 20590131,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0524",
+    "title": "You & aIzu",
+    "singer_name": "Otonose Kanade",
+    "character_ids": [
+      "chr-06002"
+    ],
+    "jacket_asset_id": "m0524",
+    "asset_id": "m0524",
+    "playing_seconds": 157,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=_xwOiIMM2a4",
+    "order": 20590524,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0069",
+    "title": "Kyoumodaitensai!",
+    "singer_name": "Ichijou Ririka",
+    "character_ids": [
+      "chr-06003"
+    ],
+    "jacket_asset_id": "m0069",
+    "asset_id": "m0069",
+    "playing_seconds": 112,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=6pY67sEsNWA",
+    "order": 20600069,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0187",
+    "title": "Cherry Pop",
+    "singer_name": "Ichijou Ririka",
+    "character_ids": [
+      "chr-06003"
+    ],
+    "jacket_asset_id": "m0187",
+    "asset_id": "m0187",
+    "playing_seconds": 142,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=GdOjkBz6E2U",
+    "order": 20600187,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0070",
+    "title": "Japan no bijutsushi oboemasho",
+    "singer_name": "Juufuutei Raden",
+    "character_ids": [
+      "chr-06004"
+    ],
+    "jacket_asset_id": "m0070",
+    "asset_id": "m0070",
+    "playing_seconds": 134,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=VTzlMR5YYEg",
+    "order": 20610070,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0133",
+    "title": "PI PIKASO",
+    "singer_name": "Juufuutei Raden",
+    "character_ids": [
+      "chr-06004"
+    ],
+    "jacket_asset_id": "m0133",
+    "asset_id": "m0133",
+    "playing_seconds": 144,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=2J3lEm2TJWA",
+    "order": 20610133,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0071",
+    "title": "Countach",
+    "singer_name": "Todoroki Hajime",
+    "character_ids": [
+      "chr-06005"
+    ],
+    "jacket_asset_id": "m0071",
+    "asset_id": "m0071",
+    "playing_seconds": 144,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=eB2kswPDFaI",
+    "order": 20620071,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0134",
+    "title": "Tsuppari High School Rock'n Roll (Toukou-hen)",
+    "singer_name": "Todoroki Hajime",
+    "character_ids": [
+      "chr-06005"
+    ],
+    "jacket_asset_id": "m0134",
+    "asset_id": "m0134",
+    "playing_seconds": 132,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=YcRCAQ0DHPo",
+    "order": 20620134,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0139",
+    "title": "Myth or Treat",
+    "singer_name": "hololive English -Myth-",
+    "character_ids": [
+      "chr-04001",
+      "chr-04002",
+      "chr-04003"
+    ],
+    "jacket_asset_id": "m0139",
+    "asset_id": "m0139",
+    "playing_seconds": 124,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=VupT9JCJaOY",
+    "order": 30000139,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0153",
+    "title": "Secret Garden",
+    "singer_name": "hololive 1st Generation",
+    "character_ids": [
+      "chr-00004",
+      "chr-00005",
+      "chr-00006",
+      "chr-00007"
+    ],
+    "jacket_asset_id": "m0153",
+    "asset_id": "m0153",
+    "playing_seconds": 137,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=SjACQutMV3A",
+    "order": 30000153,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0154",
+    "title": "BLUE CLAPPER",
+    "singer_name": "hololive IDOL PROJECT",
+    "character_ids": [
+      "chr-00030",
+      "chr-00031",
+      "chr-00032",
+      "chr-00034"
+    ],
+    "jacket_asset_id": "m0154",
+    "asset_id": "m0154",
+    "playing_seconds": 128,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=Gf0iunVGj0I",
+    "order": 30000154,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0155",
+    "title": "Jouya Repaint",
+    "singer_name": "Secret Society holoX",
+    "character_ids": [
+      "chr-00035",
+      "chr-00036",
+      "chr-00037",
+      "chr-00039"
+    ],
+    "jacket_asset_id": "m0155",
+    "asset_id": "m0155",
+    "playing_seconds": 116,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=YTXGwiWBc9k",
+    "order": 30000155,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0156",
+    "title": "Bridal Dream",
+    "singer_name": "Usada Pekora, Houshou Marine",
+    "character_ids": [
+      "chr-00019",
+      "chr-00023"
+    ],
+    "jacket_asset_id": "m0156",
+    "asset_id": "m0156",
+    "playing_seconds": 126,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=UA5JjEePTwU",
+    "order": 30000156,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0157",
+    "title": "Our Promise",
+    "singer_name": "hololive English -Promise-",
+    "character_ids": [
+      "chr-04007",
+      "chr-04010",
+      "chr-04012"
+    ],
+    "jacket_asset_id": "m0157",
+    "asset_id": "m0157",
+    "playing_seconds": 132,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=lcVyYmVOi1U",
+    "order": 30000157,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0158",
+    "title": "Rebellion",
+    "singer_name": "hololive English -Advent-",
+    "character_ids": [
+      "chr-04013",
+      "chr-04014",
+      "chr-04015",
+      "chr-04016",
+      "chr-04017"
+    ],
+    "jacket_asset_id": "m0158",
+    "asset_id": "m0158",
+    "playing_seconds": 113,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=pYNYhSsR8EE",
+    "order": 30000158,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0159",
+    "title": "HI-15",
+    "singer_name": "hololive Indonesia 1st Generation",
+    "character_ids": [
+      "chr-03001",
+      "chr-03002",
+      "chr-03003"
+    ],
+    "jacket_asset_id": "m0159",
+    "asset_id": "m0159",
+    "playing_seconds": 113,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=XSZNNbbVuho",
+    "order": 30000159,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0160",
+    "title": "Slap by Step",
+    "singer_name": "hololive Indonesia 2nd Generation",
+    "character_ids": [
+      "chr-03004",
+      "chr-03005",
+      "chr-03006"
+    ],
+    "jacket_asset_id": "m0160",
+    "asset_id": "m0160",
+    "playing_seconds": 129,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=cZ4Yex_x6ZQ",
+    "order": 30000160,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0161",
+    "title": "save our hearts",
+    "singer_name": "hololive Indonesia 3rd Generation",
+    "character_ids": [
+      "chr-03007",
+      "chr-03008",
+      "chr-03009"
+    ],
+    "jacket_asset_id": "m0161",
+    "asset_id": "m0161",
+    "playing_seconds": 136,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=Wjkc-q4rEGI",
+    "order": 30000161,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0162",
+    "title": "Shunkan Heartbeat",
+    "singer_name": "ReGLOSS",
+    "character_ids": [
+      "chr-06002",
+      "chr-06003",
+      "chr-06004",
+      "chr-06005"
+    ],
+    "jacket_asset_id": "m0162",
+    "asset_id": "m0162",
+    "playing_seconds": 131,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=Ix_uXN_ybxc",
+    "order": 30000162,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0317",
+    "title": "Kibun Joujou↑↑",
+    "singer_name": "Kureiji Ollie,Anya Melfissa,Pavolia Reine",
+    "character_ids": [
+      "chr-03004",
+      "chr-03005",
+      "chr-03006"
+    ],
+    "jacket_asset_id": "m0317",
+    "asset_id": "m0317",
+    "playing_seconds": 138,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=s_HsEltY_O0",
+    "order": 30000317,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0141",
+    "title": "Setsunatick Code",
+    "singer_name": "SorAZ",
+    "character_ids": [
+      "chr-00001",
+      "chr-00013"
+    ],
+    "jacket_asset_id": "m0141",
+    "asset_id": "m0141",
+    "playing_seconds": 105,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=tiTnyZ5QLao",
+    "order": 40000141,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0142",
+    "title": "Suspect",
+    "singer_name": "hololive IDOL PROJECT",
+    "character_ids": [
+      "chr-00002",
+      "chr-00004",
+      "chr-00010"
+    ],
+    "jacket_asset_id": "m0142",
+    "asset_id": "m0142",
+    "playing_seconds": 117,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=6sHk3CYD-IA",
+    "order": 40000142,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0144",
+    "title": "NAKAMAKA",
+    "singer_name": "Shiranui Construction",
+    "character_ids": [
+      "chr-00015",
+      "chr-00018",
+      "chr-00021",
+      "chr-00022",
+      "chr-00034"
+    ],
+    "jacket_asset_id": "m0144",
+    "asset_id": "m0144",
+    "playing_seconds": 131,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=ESsV1gDBqYI",
+    "order": 40000144,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0145",
+    "title": "Wicked feat. Mori Calliope",
+    "singer_name": "Hoshimachi Suisei, Mori Calliope",
+    "character_ids": [
+      "chr-00018",
+      "chr-04001"
+    ],
+    "jacket_asset_id": "m0145",
+    "asset_id": "m0145",
+    "playing_seconds": 124,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": null,
+    "order": 40000145,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0146",
+    "title": "ONIKEMODANCE",
+    "singer_name": "AyaFubuMi",
+    "character_ids": [
+      "chr-00006",
+      "chr-00010",
+      "chr-00014"
+    ],
+    "jacket_asset_id": "m0146",
+    "asset_id": "m0146",
+    "playing_seconds": 146,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=4Hg0Nchl3HU",
+    "order": 40000146,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0147",
+    "title": "zigokudeaouze!subachocolunatan",
+    "singer_name": "subachocolunatan",
+    "character_ids": [
+      "chr-00011",
+      "chr-00012",
+      "chr-00028",
+      "chr-00032"
+    ],
+    "jacket_asset_id": "m0147",
+    "asset_id": "m0147",
+    "playing_seconds": 144,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=ao3DUIEaO4c",
+    "order": 40000147,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0148",
+    "title": "ORANGE PARADE feat. Inugami Korone",
+    "singer_name": "Nekomata Okayu,Inugami Korone",
+    "character_ids": [
+      "chr-00016",
+      "chr-00017"
+    ],
+    "jacket_asset_id": "m0148",
+    "asset_id": "m0148",
+    "playing_seconds": 123,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": null,
+    "order": 40000148,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0149",
+    "title": "I I I",
+    "singer_name": "Houshou Marine & Kobo Kanaeru",
+    "character_ids": [
+      "chr-00023",
+      "chr-03009"
+    ],
+    "jacket_asset_id": "m0149",
+    "asset_id": "m0149",
+    "playing_seconds": 146,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=lUDPjyfmJrs",
+    "order": 40000149,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0150",
+    "title": "Shishi Wata Cooking feat. Shishiro Botan",
+    "singer_name": "Tsunomaki Watame,Shishiro Botan",
+    "character_ids": [
+      "chr-00026",
+      "chr-00032"
+    ],
+    "jacket_asset_id": "m0150",
+    "asset_id": "m0150",
+    "playing_seconds": 119,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=fsPSaFbonGo",
+    "order": 40000150,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0163",
+    "title": "Maware! Setsugetsuka",
+    "singer_name": "AZKi,Shirakami Fubuki,Houshou Marine",
+    "character_ids": [
+      "chr-00006",
+      "chr-00013",
+      "chr-00023"
+    ],
+    "jacket_asset_id": "m0163",
+    "asset_id": "m0163",
+    "playing_seconds": 141,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=zWskZx7Lp2Q",
+    "order": 40000163,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0164",
+    "title": "(Not) A Devil",
+    "singer_name": "AZKi,Kazama Iroha",
+    "character_ids": [
+      "chr-00013",
+      "chr-00039"
+    ],
+    "jacket_asset_id": "m0164",
+    "asset_id": "m0164",
+    "playing_seconds": 132,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=ox3mOwzEBWo",
+    "order": 40000164,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0165",
+    "title": "HAO",
+    "singer_name": "Tsunomaki Watame,Pavolia Reine",
+    "character_ids": [
+      "chr-00026",
+      "chr-03006"
+    ],
+    "jacket_asset_id": "m0165",
+    "asset_id": "m0165",
+    "playing_seconds": 126,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=VAffx0WO9do",
+    "order": 40000165,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0166",
+    "title": "Watashi no Ichiban Kawaiitokoro",
+    "singer_name": "Sakura Miko,Himemori Luna,Airani Iofifteen,Fuwawa Abyssgard,Mococo Abyssgard",
+    "character_ids": [
+      "chr-00015",
+      "chr-00028",
+      "chr-03003",
+      "chr-04016",
+      "chr-04017"
+    ],
+    "jacket_asset_id": "m0166",
+    "asset_id": "m0166",
+    "playing_seconds": 146,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=A4W8K7g4Ujg",
+    "order": 40000166,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0167",
+    "title": "Megitsune",
+    "singer_name": "hololive English -Advent-",
+    "character_ids": [
+      "chr-04013",
+      "chr-04014",
+      "chr-04015",
+      "chr-04016",
+      "chr-04017"
+    ],
+    "jacket_asset_id": "m0167",
+    "asset_id": "m0167",
+    "playing_seconds": 135,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=OffTXFgbn7A",
+    "order": 40000167,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0168",
+    "title": "Hyadain no Jojo Yujo",
+    "singer_name": "Nekomata Okayu,Inugami Korone",
+    "character_ids": [
+      "chr-00016",
+      "chr-00017"
+    ],
+    "jacket_asset_id": "m0168",
+    "asset_id": "m0168",
+    "playing_seconds": 133,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=MiuFIzr8bR0",
+    "order": 40000168,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0171",
+    "title": "Touch the hurt again",
+    "singer_name": "Blue Journey",
+    "character_ids": [
+      "chr-00021",
+      "chr-00027",
+      "chr-00034"
+    ],
+    "jacket_asset_id": "m0171",
+    "asset_id": "m0171",
+    "playing_seconds": 114,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 6,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=UyS1mJ7TD5E",
+    "order": 40000171,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0176",
+    "title": "Stay Blue",
+    "singer_name": "Shiranui Flare & IRyS",
+    "character_ids": [
+      "chr-00021",
+      "chr-04007"
+    ],
+    "jacket_asset_id": "m0176",
+    "asset_id": "m0176",
+    "playing_seconds": 125,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=CYsxFfqtFjk",
+    "order": 40000176,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0177",
+    "title": "Mikkorone×Showtime!!",
+    "singer_name": "Sakura Miko, Inugami Korone",
+    "character_ids": [
+      "chr-00015",
+      "chr-00017"
+    ],
+    "jacket_asset_id": "m0177",
+    "asset_id": "m0177",
+    "playing_seconds": 126,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=5OtgLEKKC_Y",
+    "order": 40000177,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0196",
+    "title": "SAIKAI",
+    "singer_name": "Hoshimachi Suisei,Moona Hoshinova",
+    "character_ids": [
+      "chr-00018",
+      "chr-03002"
+    ],
+    "jacket_asset_id": "m0196",
+    "asset_id": "m0196",
+    "playing_seconds": 130,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=NKQvH78Jv04",
+    "order": 40000196,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0197",
+    "title": "KAMINO MANIMANI",
+    "singer_name": "Yuzuki Choco,Oozora Subaru,Himemori Luna",
+    "character_ids": [
+      "chr-00011",
+      "chr-00012",
+      "chr-00028"
+    ],
+    "jacket_asset_id": "m0197",
+    "asset_id": "m0197",
+    "playing_seconds": 130,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=MQ-QnXZR4mc",
+    "order": 40000197,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0198",
+    "title": "I~ya I~ya I~ya",
+    "singer_name": "Takanashi Kiara,Ninomae Ina'nis",
+    "character_ids": [
+      "chr-04002",
+      "chr-04003"
+    ],
+    "jacket_asset_id": "m0198",
+    "asset_id": "m0198",
+    "playing_seconds": 143,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=R5yfM_UlucY",
+    "order": 40000198,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0201",
+    "title": "Erandekurete Arigatou",
+    "singer_name": "IRyS,Hakos Baelz",
+    "character_ids": [
+      "chr-04007",
+      "chr-04012"
+    ],
+    "jacket_asset_id": "m0201",
+    "asset_id": "m0201",
+    "playing_seconds": 110,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=3pzh6AaXi9s",
+    "order": 40000201,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0303",
+    "title": "A Tale of Six Trillion Years and a Night",
+    "singer_name": "SorAZ",
+    "character_ids": [
+      "chr-00001",
+      "chr-00013"
+    ],
+    "jacket_asset_id": "m0303",
+    "asset_id": "m0303",
+    "playing_seconds": 155,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=FPBmQaq4IeU",
+    "order": 40000303,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0307",
+    "title": "Orange",
+    "singer_name": "Momosuzu Nene,Takanashi Kiara",
+    "character_ids": [
+      "chr-00031",
+      "chr-04002"
+    ],
+    "jacket_asset_id": "m0307",
+    "asset_id": "m0307",
+    "playing_seconds": 133,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=bg9M4KTNnHY",
+    "order": 40000307,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0308",
+    "title": "UFO",
+    "singer_name": "Juufuutei Raden,Todoroki Hajime",
+    "character_ids": [
+      "chr-06004",
+      "chr-06005"
+    ],
+    "jacket_asset_id": "m0308",
+    "asset_id": "m0308",
+    "playing_seconds": 104,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=ywKsX9cXcUg",
+    "order": 40000308,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0309",
+    "title": "Boom! Boom! Tropica Vacation",
+    "singer_name": "Oozora Subaru,Shiranui Flare,Shirogane Noel,Tsunomaki Watame,Otonose Kanade",
+    "character_ids": [
+      "chr-00012",
+      "chr-00021",
+      "chr-00022",
+      "chr-00026",
+      "chr-06002"
+    ],
+    "jacket_asset_id": "m0309",
+    "asset_id": "m0309",
+    "playing_seconds": 136,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=Z3rqP6VmqU4",
+    "order": 40000309,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0319",
+    "title": "Bling-Bang-Bang-Born",
+    "singer_name": "Ninomae Ina'nis,Hakos Baelz",
+    "character_ids": [
+      "chr-04003",
+      "chr-04012"
+    ],
+    "jacket_asset_id": "m0319",
+    "asset_id": "m0319",
+    "playing_seconds": 120,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_SHOP",
+    "live_score_coefficient_permil": 4,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=B3kE_zxORik",
+    "order": 40000319,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  },
+  {
+    "id": "m0325",
+    "title": "Sugar Rush",
+    "singer_name": "miComet",
+    "character_ids": [
+      "chr-00015",
+      "chr-00018"
+    ],
+    "jacket_asset_id": "m0325",
+    "asset_id": "m0325",
+    "playing_seconds": 134,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=gtgME6MJpk4",
+    "order": 40000325,
+    "_source": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3"
+    }
+  }
+]

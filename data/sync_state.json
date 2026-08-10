@@ -1,0 +1,32 @@
+{
+  "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3",
+  "upstream_commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+  "changed_files": [
+    "Card.json",
+    "Character.json",
+    "LangCard_Kor.json",
+    "LangCharacter_Kor.json",
+    "Music.json",
+    "LangMusic_Kor.json",
+    "CardLevel.json",
+    "CardLevelLimit.json",
+    "CardPotential.json",
+    "LiveLeaderSkill.json",
+    "LangGeneratedLiveLeaderSkill_Kor.json",
+    "LiveActiveSkill.json",
+    "LiveActiveSkillLevel.json",
+    "LangGeneratedLiveActiveSkillLevel_Kor.json",
+    "LivePassiveSkill.json",
+    "LivePassiveSkillLevel.json",
+    "LangGeneratedLivePassiveSkillLevel_Kor.json",
+    "LiveSpecialSkill.json",
+    "LiveSpecialSkillLevel.json",
+    "LangGeneratedLiveSpecialSkillLevel_Kor.json",
+    "LiveSkillTrigger.json",
+    "LangGeneratedLiveSkillTrigger_Kor.json",
+    "LiveActiveSkillEffect.json",
+    "LangGeneratedLiveActiveSkillEffect_Kor.json",
+    "LivePassiveSkillEffect.json",
+    "LangGeneratedLivePassiveSkillEffect_Kor.json"
+  ]
+}

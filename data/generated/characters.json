@@ -1,0 +1,747 @@
+[
+  {
+    "id": "chr-00001",
+    "name": "토키노 소라",
+    "short_name": "소라",
+    "name_en": "Tokino Sora",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_0"
+    ],
+    "asset_id": "00001",
+    "order": 101
+  },
+  {
+    "id": "chr-00002",
+    "name": "로보코 씨",
+    "short_name": "로보코 씨",
+    "name_en": "Robocosan",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_0"
+    ],
+    "asset_id": "00002",
+    "order": 102
+  },
+  {
+    "id": "chr-00013",
+    "name": "AZKi",
+    "short_name": "AZKi",
+    "name_en": "AZKi",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_0"
+    ],
+    "asset_id": "00013",
+    "order": 103
+  },
+  {
+    "id": "chr-00015",
+    "name": "사쿠라 미코",
+    "short_name": "미코",
+    "name_en": "Sakura Miko",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_0"
+    ],
+    "asset_id": "00015",
+    "order": 104
+  },
+  {
+    "id": "chr-00018",
+    "name": "호시마치 스이세이",
+    "short_name": "스이세이",
+    "name_en": "Hoshimachi Suisei",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_0"
+    ],
+    "asset_id": "00018",
+    "order": 105
+  },
+  {
+    "id": "chr-00004",
+    "name": "아키 로젠탈",
+    "short_name": "아키",
+    "name_en": "Aki Rosenthal",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_1"
+    ],
+    "asset_id": "00004",
+    "order": 106
+  },
+  {
+    "id": "chr-00005",
+    "name": "아카이 하아토",
+    "short_name": "하아토",
+    "name_en": "Akai Haato",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_1"
+    ],
+    "asset_id": "00005",
+    "order": 107
+  },
+  {
+    "id": "chr-00006",
+    "name": "시라카미 후부키",
+    "short_name": "후부키",
+    "name_en": "Shirakami Fubuki",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gamers",
+      "grp-gen_1"
+    ],
+    "asset_id": "00006",
+    "order": 108
+  },
+  {
+    "id": "chr-00007",
+    "name": "나츠이로 마츠리",
+    "short_name": "마츠리",
+    "name_en": "Natsuiro Matsuri",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_1"
+    ],
+    "asset_id": "00007",
+    "order": 109
+  },
+  {
+    "id": "chr-00009",
+    "name": "무라사키 시온",
+    "short_name": "시온",
+    "name_en": "Murasaki Shion",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_2"
+    ],
+    "asset_id": "00009",
+    "order": 110
+  },
+  {
+    "id": "chr-00010",
+    "name": "나키리 아야메",
+    "short_name": "아야메",
+    "name_en": "Nakiri Ayame",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_2"
+    ],
+    "asset_id": "00010",
+    "order": 111
+  },
+  {
+    "id": "chr-00011",
+    "name": "유즈키 초코",
+    "short_name": "초코",
+    "name_en": "Yuzuki Choco",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_2"
+    ],
+    "asset_id": "00011",
+    "order": 112
+  },
+  {
+    "id": "chr-00012",
+    "name": "오오조라 스바루",
+    "short_name": "스바루",
+    "name_en": "Oozora Subaru",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_2"
+    ],
+    "asset_id": "00012",
+    "order": 113
+  },
+  {
+    "id": "chr-00014",
+    "name": "오오카미 미오",
+    "short_name": "미오",
+    "name_en": "Ookami Mio",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gamers"
+    ],
+    "asset_id": "00014",
+    "order": 114
+  },
+  {
+    "id": "chr-00016",
+    "name": "네코마타 오카유",
+    "short_name": "오카유",
+    "name_en": "Nekomata Okayu",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gamers"
+    ],
+    "asset_id": "00016",
+    "order": 115
+  },
+  {
+    "id": "chr-00017",
+    "name": "이누가미 코로네",
+    "short_name": "코로네",
+    "name_en": "Inugami Korone",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gamers"
+    ],
+    "asset_id": "00017",
+    "order": 116
+  },
+  {
+    "id": "chr-00019",
+    "name": "우사다 페코라",
+    "short_name": "페코라",
+    "name_en": "Usada Pekora",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_3"
+    ],
+    "asset_id": "00019",
+    "order": 117
+  },
+  {
+    "id": "chr-00021",
+    "name": "시라누이 후레아",
+    "short_name": "후레아",
+    "name_en": "Shiranui Flare",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_3"
+    ],
+    "asset_id": "00021",
+    "order": 118
+  },
+  {
+    "id": "chr-00022",
+    "name": "시로가네 노엘",
+    "short_name": "노엘",
+    "name_en": "Shirogane Noel",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_3"
+    ],
+    "asset_id": "00022",
+    "order": 119
+  },
+  {
+    "id": "chr-00023",
+    "name": "호쇼 마린",
+    "short_name": "마린",
+    "name_en": "Houshou Marine",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_3"
+    ],
+    "asset_id": "00023",
+    "order": 120
+  },
+  {
+    "id": "chr-00024",
+    "name": "아마네 카나타",
+    "short_name": "카나타",
+    "name_en": "Amane Kanata",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_4"
+    ],
+    "asset_id": "00024",
+    "order": 121
+  },
+  {
+    "id": "chr-00026",
+    "name": "츠노마키 와타메",
+    "short_name": "와타메",
+    "name_en": "Tsunomaki Watame",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_4"
+    ],
+    "asset_id": "00026",
+    "order": 122
+  },
+  {
+    "id": "chr-00027",
+    "name": "토코야미 토와",
+    "short_name": "토와",
+    "name_en": "Tokoyami Towa",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_4"
+    ],
+    "asset_id": "00027",
+    "order": 123
+  },
+  {
+    "id": "chr-00028",
+    "name": "히메모리 루나",
+    "short_name": "루나",
+    "name_en": "Himemori Luna",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_4"
+    ],
+    "asset_id": "00028",
+    "order": 124
+  },
+  {
+    "id": "chr-00030",
+    "name": "유키하나 라미",
+    "short_name": "라미",
+    "name_en": "Yukihana Lamy",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_5"
+    ],
+    "asset_id": "00030",
+    "order": 125
+  },
+  {
+    "id": "chr-00031",
+    "name": "모모스즈 네네",
+    "short_name": "네네",
+    "name_en": "Momosuzu Nene",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_5"
+    ],
+    "asset_id": "00031",
+    "order": 126
+  },
+  {
+    "id": "chr-00032",
+    "name": "시시로 보탄",
+    "short_name": "보탄",
+    "name_en": "Shishiro Botan",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_5"
+    ],
+    "asset_id": "00032",
+    "order": 127
+  },
+  {
+    "id": "chr-00034",
+    "name": "오마루 폴카",
+    "short_name": "폴카",
+    "name_en": "Omaru Polka",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-gen_5"
+    ],
+    "asset_id": "00034",
+    "order": 128
+  },
+  {
+    "id": "chr-00035",
+    "name": "라플라스 다크니스",
+    "short_name": "라플라스",
+    "name_en": "La+ Darknesss",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-holox"
+    ],
+    "asset_id": "00035",
+    "order": 129
+  },
+  {
+    "id": "chr-00036",
+    "name": "타카네 루이",
+    "short_name": "루이",
+    "name_en": "Takane Lui",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-holox"
+    ],
+    "asset_id": "00036",
+    "order": 130
+  },
+  {
+    "id": "chr-00037",
+    "name": "하쿠이 코요리",
+    "short_name": "코요리",
+    "name_en": "Hakui Koyori",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-holox"
+    ],
+    "asset_id": "00037",
+    "order": 131
+  },
+  {
+    "id": "chr-00038",
+    "name": "사카마타 클로에",
+    "short_name": "클로에",
+    "name_en": "Sakamata Chloe",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-holox"
+    ],
+    "asset_id": "00038",
+    "order": 132
+  },
+  {
+    "id": "chr-00039",
+    "name": "카자마 이로하",
+    "short_name": "이로하",
+    "name_en": "Kazama Iroha",
+    "production_id": "prd-jp",
+    "grouping_ids": [
+      "grp-holox"
+    ],
+    "asset_id": "00039",
+    "order": 133
+  },
+  {
+    "id": "chr-03001",
+    "name": "아윤다 리스",
+    "short_name": "리스",
+    "name_en": "Ayunda Risu",
+    "production_id": "prd-id",
+    "grouping_ids": [
+      "grp-indonesia-gen_1"
+    ],
+    "asset_id": "03001",
+    "order": 134
+  },
+  {
+    "id": "chr-03002",
+    "name": "무나 호시노바",
+    "short_name": "무나",
+    "name_en": "Moona Hoshinova",
+    "production_id": "prd-id",
+    "grouping_ids": [
+      "grp-indonesia-gen_1"
+    ],
+    "asset_id": "03002",
+    "order": 135
+  },
+  {
+    "id": "chr-03003",
+    "name": "아이라니 이오피프틴",
+    "short_name": "이오피",
+    "name_en": "Airani Iofifteen",
+    "production_id": "prd-id",
+    "grouping_ids": [
+      "grp-indonesia-gen_1"
+    ],
+    "asset_id": "03003",
+    "order": 136
+  },
+  {
+    "id": "chr-03004",
+    "name": "쿠레이지 올리",
+    "short_name": "올리",
+    "name_en": "Kureiji Ollie",
+    "production_id": "prd-id",
+    "grouping_ids": [
+      "grp-indonesia-gen_2"
+    ],
+    "asset_id": "03004",
+    "order": 137
+  },
+  {
+    "id": "chr-03005",
+    "name": "아냐 멜핏사",
+    "short_name": "아냐",
+    "name_en": "Anya Melfissa",
+    "production_id": "prd-id",
+    "grouping_ids": [
+      "grp-indonesia-gen_2"
+    ],
+    "asset_id": "03005",
+    "order": 138
+  },
+  {
+    "id": "chr-03006",
+    "name": "파볼리아 레이네",
+    "short_name": "레이네",
+    "name_en": "Pavolia Reine",
+    "production_id": "prd-id",
+    "grouping_ids": [
+      "grp-indonesia-gen_2"
+    ],
+    "asset_id": "03006",
+    "order": 139
+  },
+  {
+    "id": "chr-03007",
+    "name": "베스티아 제타",
+    "short_name": "제타",
+    "name_en": "Vestia Zeta",
+    "production_id": "prd-id",
+    "grouping_ids": [
+      "grp-indonesia-gen_3"
+    ],
+    "asset_id": "03007",
+    "order": 140
+  },
+  {
+    "id": "chr-03008",
+    "name": "카엘라 코발스키아",
+    "short_name": "카엘라",
+    "name_en": "Kaela Kovalskia",
+    "production_id": "prd-id",
+    "grouping_ids": [
+      "grp-indonesia-gen_3"
+    ],
+    "asset_id": "03008",
+    "order": 141
+  },
+  {
+    "id": "chr-03009",
+    "name": "코보 카나에루",
+    "short_name": "코보",
+    "name_en": "Kobo Kanaeru",
+    "production_id": "prd-id",
+    "grouping_ids": [
+      "grp-indonesia-gen_3"
+    ],
+    "asset_id": "03009",
+    "order": 142
+  },
+  {
+    "id": "chr-04001",
+    "name": "모리 칼리오페",
+    "short_name": "칼리오페",
+    "name_en": "Mori Calliope",
+    "production_id": "prd-en",
+    "grouping_ids": [
+      "grp-myth"
+    ],
+    "asset_id": "04001",
+    "order": 143
+  },
+  {
+    "id": "chr-04002",
+    "name": "타카나시 키아라",
+    "short_name": "키아라",
+    "name_en": "Takanashi Kiara",
+    "production_id": "prd-en",
+    "grouping_ids": [
+      "grp-myth"
+    ],
+    "asset_id": "04002",
+    "order": 144
+  },
+  {
+    "id": "chr-04003",
+    "name": "니노마에 이나니스",
+    "short_name": "이나니스",
+    "name_en": "Ninomae Ina'nis",
+    "production_id": "prd-en",
+    "grouping_ids": [
+      "grp-myth"
+    ],
+    "asset_id": "04003",
+    "order": 145
+  },
+  {
+    "id": "chr-04004",
+    "name": "가우르 구라",
+    "short_name": "구라",
+    "name_en": "Gawr Gura",
+    "production_id": "prd-en",
+    "grouping_ids": [
+      "grp-myth"
+    ],
+    "asset_id": "04004",
+    "order": 146
+  },
+  {
+    "id": "chr-04005",
+    "name": "왓슨 아멜리아",
+    "short_name": "아멜리아",
+    "name_en": "Watson Amelia",
+    "production_id": "prd-en",
+    "grouping_ids": [
+      "grp-myth"
+    ],
+    "asset_id": "04005",
+    "order": 147
+  },
+  {
+    "id": "chr-04007",
+    "name": "IRyS",
+    "short_name": "IRyS",
+    "name_en": "IRyS",
+    "production_id": "prd-en",
+    "grouping_ids": [
+      "grp-promise"
+    ],
+    "asset_id": "04007",
+    "order": 148
+  },
+  {
+    "id": "chr-04009",
+    "name": "세레스 파우나",
+    "short_name": "파우나",
+    "name_en": "Ceres Fauna",
+    "production_id": "prd-en",
+    "grouping_ids": [
+      "grp-promise"
+    ],
+    "asset_id": "04009",
+    "order": 149
+  },
+  {
+    "id": "chr-04010",
+    "name": "오로 크로니",
+    "short_name": "크로니",
+    "name_en": "Ouro Kronii",
+    "production_id": "prd-en",
+    "grouping_ids": [
+      "grp-promise"
+    ],
+    "asset_id": "04010",
+    "order": 150
+  },
+  {
+    "id": "chr-04011",
+    "name": "나나시 무메이",
+    "short_name": "무메이",
+    "name_en": "Nanashi Mumei",
+    "production_id": "prd-en",
+    "grouping_ids": [
+      "grp-promise"
+    ],
+    "asset_id": "04011",
+    "order": 151
+  },
+  {
+    "id": "chr-04012",
+    "name": "하코스 벨즈",
+    "short_name": "벨즈",
+    "name_en": "Hakos Baelz",
+    "production_id": "prd-en",
+    "grouping_ids": [
+      "grp-promise"
+    ],
+    "asset_id": "04012",
+    "order": 152
+  },
+  {
+    "id": "chr-04013",
+    "name": "시오리 노벨라",
+    "short_name": "시오리",
+    "name_en": "Shiori Novella",
+    "production_id": "prd-en",
+    "grouping_ids": [
+      "grp-advent"
+    ],
+    "asset_id": "04013",
+    "order": 153
+  },
+  {
+    "id": "chr-04014",
+    "name": "코세키 비쥬",
+    "short_name": "비쥬",
+    "name_en": "Koseki Bijou",
+    "production_id": "prd-en",
+    "grouping_ids": [
+      "grp-advent"
+    ],
+    "asset_id": "04014",
+    "order": 154
+  },
+  {
+    "id": "chr-04015",
+    "name": "네리사 레이븐크로프트",
+    "short_name": "네리사",
+    "name_en": "Nerissa Ravencroft",
+    "production_id": "prd-en",
+    "grouping_ids": [
+      "grp-advent"
+    ],
+    "asset_id": "04015",
+    "order": 155
+  },
+  {
+    "id": "chr-04016",
+    "name": "후와와 어비스가드",
+    "short_name": "후와와",
+    "name_en": "Fuwawa Abyssgard",
+    "production_id": "prd-en",
+    "grouping_ids": [
+      "grp-advent"
+    ],
+    "asset_id": "04016",
+    "order": 156
+  },
+  {
+    "id": "chr-04017",
+    "name": "모코코 어비스가드",
+    "short_name": "모코코",
+    "name_en": "Mococo Abyssgard",
+    "production_id": "prd-en",
+    "grouping_ids": [
+      "grp-advent"
+    ],
+    "asset_id": "04017",
+    "order": 157
+  },
+  {
+    "id": "chr-06001",
+    "name": "히오도시 아오",
+    "short_name": "아오",
+    "name_en": "Hiodoshi Ao",
+    "production_id": "prd-dev_is",
+    "grouping_ids": [
+      "grp-regloss"
+    ],
+    "asset_id": "06001",
+    "order": 158
+  },
+  {
+    "id": "chr-06002",
+    "name": "오토노세 카나데",
+    "short_name": "카나데",
+    "name_en": "Otonose Kanade",
+    "production_id": "prd-dev_is",
+    "grouping_ids": [
+      "grp-regloss"
+    ],
+    "asset_id": "06002",
+    "order": 159
+  },
+  {
+    "id": "chr-06003",
+    "name": "이치조 리리카",
+    "short_name": "리리카",
+    "name_en": "Ichijou Ririka",
+    "production_id": "prd-dev_is",
+    "grouping_ids": [
+      "grp-regloss"
+    ],
+    "asset_id": "06003",
+    "order": 160
+  },
+  {
+    "id": "chr-06004",
+    "name": "주우후테이 라덴",
+    "short_name": "라덴",
+    "name_en": "Juufuutei Raden",
+    "production_id": "prd-dev_is",
+    "grouping_ids": [
+      "grp-regloss"
+    ],
+    "asset_id": "06004",
+    "order": 161
+  },
+  {
+    "id": "chr-06005",
+    "name": "토도로키 하지메",
+    "short_name": "하지메",
+    "name_en": "Todoroki Hajime",
+    "production_id": "prd-dev_is",
+    "grouping_ids": [
+      "grp-regloss"
+    ],
+    "asset_id": "06005",
+    "order": 162
+  }
+]
