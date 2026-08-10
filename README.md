@@ -4,13 +4,34 @@ Hololive Dreams deck simulator and master-data synchronization project.
 
 ## Prepared baseline
 
-The repository contains the baseline resources needed to start the static GitHub Pages UI:
+The repository contains the baseline resources and first static GitHub Pages UI prototype:
 
 1. normalized card data
 2. normalized music data
 3. rarity-4/5 card portraits and project-created UI resources
+4. a framework-free static UI prototype (`index.html`, `styles.css`, `app.js`)
 
 The current committed master snapshot contains **169 cards**, **182 music tracks**, and **62 playable characters**. Card/music master data is synchronized from `HolodoriDB/holodori-db-kor-diff`, normalized into stable simulator-facing schemas, and validated before it is committed.
+
+## UI prototype
+
+The current prototype follows a four-step light-mode layout designed for quick use by game players:
+
+1. **목표 세팅** — compact dropdown controls for target rank, score and result-detail level
+2. **멤버 세팅** — 1 leader + 5 member slots; clicking any slot opens the card picker
+3. **악곡 세팅** — music-name dropdown followed by difficulty dropdown; no jacket thumbnails
+4. **결과 계산** — rank/score header, zoom controls, leader/member strip, status badges and skill-data preview
+
+The card picker uses upstream data order as its default sort and provides:
+
+- character/card-name search
+- rarity filter
+- Cute/Pure/Happy attribute filter
+- alternate sorting by rarity, character name or card name
+
+Rarity-4/5 cards display their committed portraits. Rarity-3 cards remain selectable but intentionally use a simple text tile and never request portrait files.
+
+The result panel currently mirrors the selected deck/music and previews skill descriptions. It is a UI prototype only; the real score/breakthrough calculation engine will be connected in a later step.
 
 ## Card data
 
@@ -22,7 +43,7 @@ All rarity-3/4/5 cards remain in canonical data. User-owned breakthrough state s
 
 `data/generated/music.json` includes music ID/Korean title, singer information, participating characters, playback length, category/release type, score coefficient/rank groups, MV URL and upstream provenance.
 
-**Music jacket thumbnails are not part of the project asset scope.** The music picker/result UI should use textual metadata rather than jacket images.
+**Music jacket thumbnails are not part of the project asset scope.** The music picker/result UI uses textual metadata rather than jacket images.
 
 ## Static UI resources
 
@@ -85,8 +106,14 @@ holodori-sync
 
 `.github/workflows/sync-master-data.yml` runs on pull requests, once per day at **00:00 KST** (`15:00 UTC`), and by manual dispatch.
 
-Validation covers card/music data counts, leader/skill references, Raden R3/R4/R5 coverage, pinned upstream provenance, and the static-resource contract that **every rarity-4/5 card has a portrait while rarity-3 has none**.
+Validation covers:
+
+- Python unit/static-resource/UI-prototype tests
+- JavaScript syntax with `node --check app.js`
+- card/music data counts and pinned upstream provenance
+- leader/skill references and Raden R3/R4/R5 coverage
+- the static-resource contract that **every rarity-4/5 card has a portrait while rarity-3 has none**
 
 ## Next milestone
 
-Connect the prepared card/music data and static resources to the GitHub Pages UI: 1 leader + 5 member slots, card picker, music picker, then layer user-owned breakthrough state and score calculation on top.
+Refine each UI section step by step, then connect user-owned breakthrough state and the actual score/skill calculation engine to the result panel.
