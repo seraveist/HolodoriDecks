@@ -33,18 +33,6 @@ jobs:
         run: python -m pip install -e . pytest
       - name: Run unit tests
         run: pytest
-      - name: Inspect sample asset catalog entries
-        if: github.event_name == 'pull_request'
-        run: |
-          python -m pip install 'git+https://github.com/HolodoriDB/holodori-asset-tools.git'
-          echo '=== Raden R5 card asset candidates ==='
-          python scripts/inspect_asset_catalog.py 06004-5-uniq-0060-00 --limit 100
-          echo '=== m0049 music jacket candidates ==='
-          python scripts/inspect_asset_catalog.py m0049 --limit 100
-          echo '=== generic card image candidates ==='
-          python scripts/inspect_asset_catalog.py card --limit 80
-          echo '=== generic jacket image candidates ==='
-          python scripts/inspect_asset_catalog.py jacket --limit 80
       - name: Inspect and sync upstream master data
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -74,6 +62,8 @@ jobs:
           assert manifest["raden_leader_card_count"] >= 3
           assert len(manifest["source_commit"]) == 40
           assert all(track["jacket_asset_id"] for track in music)
+          assert all(card["portrait_path"].startswith("assets/cards/") for card in cards)
+          assert all(track["jacket_path"].startswith("assets/music/") for track in music)
 
           raden = [card for card in cards if card["character_id"] == "chr-06004"]
           assert any(card["rarity"] == 5 and card["leader"] for card in raden)
