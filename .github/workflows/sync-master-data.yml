@@ -2,6 +2,8 @@ name: Sync master data
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main]
   schedule:
     - cron: "17 */6 * * *"
 
@@ -16,13 +18,35 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install project
-        run: python -m pip install -e .
+      - name: Install project and tests
+        run: python -m pip install -e . pytest
+      - name: Run unit tests
+        run: pytest
       - name: Sync upstream master data
         run: holodori-sync --force
-      - name: Run tests
-        run: python -m pip install pytest && pytest
+      - name: Validate generated data
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("data/generated")
+          cards = json.loads((root / "cards.json").read_text(encoding="utf-8"))
+          manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+
+          assert cards, "cards.json is empty"
+          assert manifest["card_count"] == len(cards)
+          assert manifest["leader_card_count"] > 0
+          assert manifest["raden_card_count"] >= 3
+          assert manifest["raden_leader_card_count"] >= 3
+
+          raden = [card for card in cards if card["character_id"] == "chr-06004"]
+          assert any(card["rarity"] == 5 and card["leader"] for card in raden)
+          assert all(card["skills"]["active"]["levels"] for card in cards if card["skills"]["active"]["id"])
+          print(json.dumps(manifest, ensure_ascii=False, indent=2))
+          PY
       - name: Commit normalized data when changed
+        if: github.event_name != 'pull_request'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
