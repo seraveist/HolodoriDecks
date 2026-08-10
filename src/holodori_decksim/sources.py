@@ -12,6 +12,8 @@ MASTER_FILES = (
     "Character.json",
     "LangCard_Kor.json",
     "LangCharacter_Kor.json",
+    "Music.json",
+    "LangMusic_Kor.json",
     "CardLevel.json",
     "CardLevelLimit.json",
     "CardPotential.json",
