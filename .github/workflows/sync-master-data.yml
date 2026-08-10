@@ -50,14 +50,18 @@ jobs:
 
           root = Path("data/generated")
           cards = json.loads((root / "cards.json").read_text(encoding="utf-8"))
+          music = json.loads((root / "music.json").read_text(encoding="utf-8"))
           manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
 
           assert cards, "cards.json is empty"
+          assert music, "music.json is empty"
           assert manifest["card_count"] == len(cards)
+          assert manifest["music_count"] == len(music)
           assert manifest["leader_card_count"] > 0
           assert manifest["raden_card_count"] >= 3
           assert manifest["raden_leader_card_count"] >= 3
           assert len(manifest["source_commit"]) == 40
+          assert all(track["jacket_asset_id"] for track in music)
 
           raden = [card for card in cards if card["character_id"] == "chr-06004"]
           assert any(card["rarity"] == 5 and card["leader"] for card in raden)
