@@ -41,9 +41,15 @@ The source master exposes `Card.assetId`, `Music.jacketAssetId`, and `Music.asse
 
 `data/generated/music.json` preserves `jacket_asset_id` and `asset_id` for this acquisition step.
 
+## Initial portrait coverage
+
+The initial bootstrap imported 115 card WebP files from a pinned snapshot of `yandereloveme/hololive-dreams-calc`. The source's `cards.json` maps its image filenames to the canonical Holodori card IDs, so the imported files were renamed directly to this project's card-ID naming rule.
+
+At bootstrap time the canonical master contained 169 cards. The source snapshot covered all rarity-4/5 portraits it knew about but did not include 54 rarity-3 portraits. Those entries intentionally use the project placeholder until their actual assets are imported locally. Full bootstrap provenance and the missing IDs are recorded in `assets/card-portrait-source.json`.
+
 ## Local asset preparation
 
-The game CDN currently rejects Octo catalog requests made from GitHub-hosted Actions runners, so binary game-asset acquisition is intentionally **not** part of the scheduled GitHub workflow. Master data stays automated; card portraits and music jackets are prepared locally when needed and then committed as static Pages assets.
+The game CDN currently rejects Octo catalog requests made from GitHub-hosted Actions runners, so binary game-asset acquisition is intentionally **not** part of the scheduled GitHub workflow. Master data stays automated; missing card portraits and music jackets are prepared locally when needed and then committed as static Pages assets.
 
 For local browsing/extraction, the project can use the community `HolodoriDB/holodori-asset-tools` utility:
 
@@ -51,6 +57,14 @@ For local browsing/extraction, the project can use the community `HolodoriDB/hol
 python -m pip install "git+https://github.com/HolodoriDB/holodori-asset-tools.git"
 holodori serve
 ```
+
+Music jacket bundles follow the observed asset naming convention:
+
+```text
+assetbundles/img_music_jacket_{music.id}/img_music_jacket_{music.id}
+```
+
+For example, when preparing `m0049`, search for `img_music_jacket_m0049` in the local asset browser.
 
 After exporting/extracting the relevant image files to a local folder, install this project's optional image tools and run the importer:
 
