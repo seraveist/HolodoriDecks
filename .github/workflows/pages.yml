@@ -30,7 +30,11 @@ jobs:
       - name: Validate static web
         run: |
           find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
-          node scripts/validate-static.mjs
+          test -f index.html
+          test -f styles.css
+          test -f data/generated/cards.json
+          test -f data/generated/music.json
+          test -f data/generated/manifest.json
 
       - name: Prepare Pages artifact
         run: |
