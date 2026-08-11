@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 840" role="img" aria-label="Card image unavailable">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#202638"/><stop offset="1" stop-color="#343c55"/></linearGradient></defs>
+  <rect width="600" height="840" rx="42" fill="url(#g)"/>
+  <rect x="34" y="34" width="532" height="772" rx="32" fill="none" stroke="#ffffff" stroke-opacity=".22" stroke-width="6"/>
+  <circle cx="300" cy="340" r="96" fill="#ffffff" fill-opacity=".08"/>
+  <path d="M255 350c0-30 20-50 48-50 29 0 50 18 50 45 0 25-14 37-34 50-16 10-20 18-20 34" fill="none" stroke="#fff" stroke-width="26" stroke-linecap="round"/>
+  <circle cx="299" cy="473" r="14" fill="#fff"/>
+  <text x="300" y="610" text-anchor="middle" font-family="Arial,sans-serif" font-size="34" font-weight="700" fill="#fff" fill-opacity=".8">NO PORTRAIT</text>
+</svg>

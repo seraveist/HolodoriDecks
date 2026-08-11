@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="해피 타입">
+  <circle cx="32" cy="32" r="30" fill="#ffb34c"/>
+  <circle cx="32" cy="32" r="28.5" fill="none" stroke="#fff" stroke-opacity=".24" stroke-width="1.5"/>
+  <path d="m32 10.2 6.8 13.7 15.1 2.2L43 36.8l2.6 15.1L32 44.8l-13.6 7.1L21 36.8 10.1 26.1l15.1-2.2Z" fill="#fff"/>
+</svg>

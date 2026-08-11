@@ -1,0 +1,11 @@
+{
+  "source_repository": "HolodoriDB/holodori-db-kor-diff",
+  "source_commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+  "master_version": "d42624509e882fc0f09fba8b0c9370e29e5dec578a06d6781a21d455487b9ef3",
+  "character_count": 62,
+  "card_count": 169,
+  "music_count": 182,
+  "leader_card_count": 169,
+  "raden_card_count": 3,
+  "raden_leader_card_count": 3
+}

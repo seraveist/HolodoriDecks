@@ -1,0 +1,378 @@
+@media (max-width: 1080px) {
+  .member-slots {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .card-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .owned-card-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .owned-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .result-members {
+    justify-content: start;
+  }
+
+  .result-context-row {
+    flex-direction: column;
+  }
+
+  .result-metrics {
+    grid-template-columns: repeat(3, minmax(100px, 1fr));
+  }
+
+  .song-projection {
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+  }
+
+  .song-projection p {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 820px) {
+  .app-header,
+  .app-shell,
+  .app-footer {
+    width: min(calc(100% - 28px), var(--max-width));
+  }
+
+  .panel {
+    padding: 26px 22px;
+    border-radius: 20px;
+  }
+
+  .music-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .member-panel .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .member-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: end;
+    gap: 10px;
+  }
+
+  .member-level-field,
+  .member-target-field,
+  .member-separate-toggle,
+  .member-actions > .text-button {
+    width: 100%;
+  }
+
+  .member-separate-toggle,
+  .member-actions > .text-button {
+    justify-content: center;
+  }
+
+  .card-tools {
+    grid-template-columns: 1fr;
+  }
+
+  .card-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .owned-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .owned-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .owned-heading-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .owned-heading-actions #owned-go-deck {
+    margin-left: auto;
+  }
+
+  .owned-toolbar .owned-filters {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .owned-card-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .result-scorebar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .result-song {
+    width: 100%;
+    text-align: left;
+  }
+
+  .result-summary-header {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .result-summary-members {
+    grid-column: 1 / -1;
+  }
+
+  .calculation-breakdown {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .app-header {
+    padding-top: 20px;
+  }
+
+  .header-meta {
+    display: none;
+  }
+
+  .panel {
+    padding: 23px 18px;
+  }
+
+  .section-heading,
+  .result-heading,
+  .skill-result-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .owned-summary {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .owned-heading-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .owned-heading-actions #owned-go-deck {
+    width: 100%;
+    grid-column: 1 / -1;
+    margin-left: 0;
+  }
+
+  .member-slots {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .member-slot,
+  .slot-empty {
+    min-height: 176px;
+  }
+
+  .modal-dialog {
+    top: 2vh;
+    width: calc(100% - 16px);
+    max-height: 96vh;
+    border-radius: 17px;
+  }
+
+  .card-detail-content {
+    padding: 16px;
+  }
+
+  .card-detail-hero,
+  .card-detail-skills {
+    grid-template-columns: 1fr;
+  }
+
+  .card-detail-identity {
+    padding: 0 16px 18px;
+  }
+
+  .card-detail-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .card-detail-leader {
+    grid-column: auto;
+  }
+
+  .modal-header,
+  .card-tools,
+  .card-list {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .filter-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .card-tools .filter-grid .field:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .card-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .owned-card-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .owned-toolbar .owned-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .owned-bulk-actions {
+    align-items: flex-start !important;
+    flex-direction: column;
+    gap: 2px !important;
+  }
+
+  .result-scorebar {
+    padding: 18px;
+  }
+
+  .calculate-row {
+    gap: 10px;
+  }
+
+  .calculate-row output {
+    max-height: 34px;
+    overflow: hidden;
+  }
+
+  .calculate-button {
+    min-width: 148px;
+    padding: 0 10px;
+  }
+
+  .result-summary-header {
+    min-height: 76px;
+    padding: 14px;
+    gap: 11px;
+  }
+
+  .result-top-number {
+    min-width: 56px;
+    padding: 8px 7px;
+  }
+
+  .result-summary-score strong {
+    font-size: 22px;
+  }
+
+  .result-summary-members strong {
+    font-size: 11px;
+  }
+
+  .result-expand-label {
+    font-size: 11px;
+  }
+
+  .recommendation-result-body {
+    padding: 14px;
+  }
+
+  .diagnostic-leader-effect {
+    max-width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .diagnostic-timeline {
+    padding-bottom: 10px;
+  }
+
+  .diagnostic-timeline-columns,
+  .diagnostic-timeline-row,
+  .diagnostic-timeline-scale {
+    grid-template-columns: minmax(90px, 1fr) 86px;
+  }
+
+  .diagnostic-timeline-columns span:nth-child(3) {
+    display: none;
+  }
+
+  .diagnostic-timeline-cell,
+  .diagnostic-timeline-scale > div {
+    grid-column: 1 / -1;
+  }
+
+  .diagnostic-timeline-cell {
+    padding: 10px 14px 12px;
+    border-top: 1px dashed #e2e7ef;
+    border-left: 0;
+  }
+
+  .result-skill-tooltip > span {
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+
+  .result-metrics {
+    grid-template-columns: repeat(2, minmax(100px, 1fr));
+  }
+
+  .song-projection {
+    grid-template-columns: 1fr;
+  }
+
+  .song-projection p {
+    grid-column: auto;
+  }
+
+  .song-projection.is-generic {
+    grid-template-columns: 1fr;
+  }
+
+  .rank-lockup img {
+    width: 54px;
+    height: 54px;
+  }
+
+  .rank-lockup strong {
+    font-size: 25px;
+  }
+
+  .result-members {
+    padding: 16px;
+  }
+
+  .app-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 360px) {
+  .card-list,
+  .owned-card-list {
+    grid-template-columns: 1fr;
+  }
+
+  .member-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

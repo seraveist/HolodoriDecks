@@ -1,0 +1,29 @@
+:root {
+  color-scheme: light;
+  --font-sans: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --ink-950: #162034;
+  --ink-800: #2c3850;
+  --ink-650: #526078;
+  --ink-500: #77839a;
+  --line: #dfe5ee;
+  --line-strong: #cfd8e5;
+  --surface: #ffffff;
+  --surface-soft: #f7f9fc;
+  --surface-blue: #f1f7ff;
+  --brand: #3767e8;
+  --brand-dark: #2450c6;
+  --brand-soft: #eaf0ff;
+  --accent: #17a8a1;
+  --accent-soft: #e7f8f6;
+  --warning: #f3a533;
+  --danger: #d94d67;
+  --cute: #ef718f;
+  --pure: #4fb78d;
+  --happy: #f0a33f;
+  --shadow-sm: 0 6px 18px rgba(32, 48, 78, 0.06);
+  --shadow-md: 0 18px 50px rgba(32, 48, 78, 0.12);
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --max-width: 1240px;
+}

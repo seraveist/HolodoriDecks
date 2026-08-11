@@ -1,0 +1,362 @@
+.owned-view {
+  margin-top: 0;
+}
+
+.owned-heading-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.owned-transfer-button {
+  min-height: 40px;
+  padding: 0 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--brand-dark);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.owned-transfer-button:hover {
+  border-color: #a8bbef;
+  background: var(--brand-soft);
+}
+
+.owned-toolbar {
+  padding: 12px;
+  display: grid;
+  grid-template-columns: minmax(230px, 0.9fr) minmax(0, 2.1fr);
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--surface-soft);
+}
+
+.owned-toolbar .owned-filters {
+  grid-template-columns: minmax(86px, 0.72fr) minmax(96px, 0.82fr) minmax(112px, 1fr) minmax(138px, 1.22fr);
+  gap: 8px;
+}
+
+.owned-toolbar .search-field input,
+.owned-toolbar .compact-field select {
+  min-height: 42px;
+}
+
+.owned-toolbar .compact-field select {
+  padding-right: 34px;
+  background-position:
+    calc(100% - 16px) 18px,
+    calc(100% - 11px) 18px;
+}
+
+.owned-summary {
+  min-height: 58px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.owned-summary > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.owned-summary strong {
+  font-size: 13px;
+}
+
+.owned-summary span {
+  color: var(--ink-500);
+  font-size: 11px;
+}
+
+.owned-bulk-actions {
+  gap: 18px !important;
+}
+
+.owned-card-list {
+  padding-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: start;
+  gap: 10px;
+}
+
+.owned-card-list > .empty-state {
+  grid-column: 1 / -1;
+}
+
+.owned-card,
+.picker-card {
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 5px 15px rgba(29, 44, 72, 0.06);
+  text-align: left;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.owned-card-toggle {
+  width: 100%;
+  padding: 0;
+  display: block;
+  border: 0;
+  background: #fff;
+  color: inherit;
+  text-align: left;
+}
+
+.owned-card:hover,
+.picker-card:hover {
+  z-index: 2;
+  border-color: var(--brand);
+  box-shadow: 0 14px 28px rgba(55, 103, 232, 0.14);
+  transform: translateY(-3px);
+}
+
+.card-detail-button {
+  width: 26px;
+  height: 26px;
+  position: absolute;
+  z-index: 6;
+  top: 7px;
+  right: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.76);
+  border-radius: 50%;
+  background: rgba(21, 31, 50, 0.84);
+  color: #fff;
+  font-family: Georgia, serif;
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 900;
+  box-shadow: 0 3px 9px rgba(15, 24, 40, 0.2);
+  backdrop-filter: blur(4px);
+}
+
+.card-detail-button:hover,
+.card-detail-button:focus-visible {
+  background: var(--brand);
+}
+
+.owned-card .card-detail-button {
+  right: 7px;
+}
+
+.owned-card.is-owned {
+  border: 2px solid var(--brand);
+  box-shadow: 0 8px 22px rgba(55, 103, 232, 0.14);
+}
+
+.owned-card:not(.is-owned) .landscape-card-art > img:not(.attribute-icon) {
+  filter: grayscale(1) saturate(0);
+  opacity: 0.48;
+}
+
+.owned-card .landscape-card-art > img:not(.attribute-icon) {
+  transition: filter 160ms ease, opacity 160ms ease;
+}
+
+.owned-check {
+  position: absolute;
+  z-index: 4;
+  top: 7px;
+  left: 7px;
+  padding: 4px 7px;
+  border-radius: 7px;
+  background: rgba(21, 31, 50, 0.82);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  backdrop-filter: blur(4px);
+}
+
+.owned-card.is-owned .owned-check {
+  background: var(--brand);
+}
+
+.owned-card-settings {
+  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px 6px;
+  border-top: 1px solid var(--line);
+  background: #f8faff;
+}
+
+.owned-card-settings label {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 3px;
+}
+
+.owned-card-settings span {
+  color: var(--ink-500);
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.owned-card-settings input,
+.owned-card-settings select {
+  width: 100%;
+  min-width: 0;
+  height: 30px;
+  padding: 0 7px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink-800);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.owned-card .landscape-card-art .attribute-icon {
+  width: 28px;
+  height: 28px;
+  top: 7px;
+  right: 7px;
+}
+
+.owned-card .landscape-card-art .rarity-badge {
+  left: 7px;
+  bottom: 7px;
+  font-size: 13px;
+}
+
+.owned-card .landscape-card-copy {
+  min-height: 76px;
+  padding: 9px 10px 10px;
+}
+
+.owned-card .landscape-card-title strong {
+  font-size: 11px;
+}
+
+.landscape-card-title-meta {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 5px;
+}
+
+.landscape-card-type-icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+
+.owned-card .landscape-card-title,
+.picker-card .landscape-card-title {
+  justify-content: flex-start;
+  gap: 6px;
+}
+
+.owned-card .landscape-card-title strong,
+.picker-card .landscape-card-title strong {
+  flex: 1 1 auto;
+}
+
+.owned-card .landscape-card-title small,
+.owned-card .landscape-card-copy > small {
+  font-size: 9px;
+}
+
+.owned-card .landscape-card-copy > span:not(.landscape-card-title) {
+  font-size: 10px;
+}
+
+.landscape-card-art {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: linear-gradient(150deg, #e9edf4, #dfe6f0);
+}
+
+.landscape-card-art > img:not(.attribute-icon) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.landscape-card-art .attribute-icon {
+  width: 34px;
+  height: 34px;
+  top: 10px;
+  right: 10px;
+}
+
+.landscape-card-art .rarity-badge {
+  left: 10px;
+  bottom: 9px;
+  font-size: 15px;
+}
+
+.landscape-card-art .r3-art strong {
+  font-size: 30px;
+}
+
+.landscape-card-copy {
+  min-width: 0;
+  min-height: 88px;
+  padding: 12px 13px 13px;
+  display: flex;
+  flex-direction: column;
+  border-top: 3px solid var(--attribute-color, var(--line));
+  background: #fff;
+}
+
+.landscape-card-copy > span:not(.landscape-card-title),
+.landscape-card-copy > small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.landscape-card-title {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.landscape-card-title strong {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.landscape-card-title small,
+.landscape-card-copy > small {
+  flex: 0 0 auto;
+  color: var(--ink-500);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.landscape-card-copy > span:not(.landscape-card-title) {
+  margin-top: 4px;
+  color: var(--ink-650);
+  font-size: 11px;
+}
+
+.landscape-card-copy > small {
+  margin-top: auto;
+  padding-top: 6px;
+}

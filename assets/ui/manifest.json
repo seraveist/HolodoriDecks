@@ -1,0 +1,30 @@
+{
+  "attributes": {
+    "1": {
+      "key": "cute",
+      "label_ko": "큐트",
+      "icon": "assets/ui/type-cute.svg"
+    },
+    "2": {
+      "key": "pure",
+      "label_ko": "퓨어",
+      "icon": "assets/ui/type-pure.svg"
+    },
+    "3": {
+      "key": "happy",
+      "label_ko": "해피",
+      "icon": "assets/ui/type-happy.svg"
+    }
+  },
+  "score_ranks": {
+    "D": "assets/ui/rank-d.svg",
+    "C": "assets/ui/rank-c.svg",
+    "B": "assets/ui/rank-b.svg",
+    "A": "assets/ui/rank-a.svg",
+    "S": "assets/ui/rank-s.svg"
+  },
+  "card_portrait": {
+    "rarities": [4, 5],
+    "path": "assets/cards/{card.id}.webp"
+  }
+}
