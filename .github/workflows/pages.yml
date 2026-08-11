@@ -1,0 +1,49 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      - name: Validate static web
+        run: |
+          find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+          node scripts/validate-static.mjs
+
+      - name: Prepare Pages artifact
+        run: |
+          mkdir -p _site/data _site/assets
+          cp index.html styles.css .nojekyll LOCAL_TEST.md _site/
+          cp -R css js _site/
+          cp -R data/generated _site/data/
+          cp -R assets/cards assets/ui _site/assets/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
