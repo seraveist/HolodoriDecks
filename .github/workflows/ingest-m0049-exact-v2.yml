@@ -1,0 +1,181 @@
+name: Ingest M0049 Exact Chart V2
+
+on:
+  push:
+    branches: [research/m0049-exact-chart]
+    paths:
+      - .github/workflows/ingest-m0049-exact-v2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/m0049-exact-chart
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Fetch and ingest public exact chart
+        run: |
+          curl -fL --retry 3 \
+            'https://raw.githubusercontent.com/asciisyaez/yagoo-dori/6c2c95d52c268862d34fb523d965f09a3108bbbd/packages/core/src/fixtures/chart-m0049-expert.sus' \
+            -o /tmp/chart_m0049_expert.sus
+          python -m pip install --disable-pip-version-check --quiet \
+            'git+https://github.com/HolodoriDB/holodori-scores.git@633e077b826deb86bd0d2fdc06d5bf9799f54161'
+          python scripts/ingest-chart-metadata.py /tmp/chart_m0049_expert.sus
+          node scripts/build-chart-index.mjs
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('data/generated/charts/m0049-EXPERT.json')
+          obj = json.loads(p.read_text(encoding='utf-8'))
+          obj['sourceUrl'] = 'https://github.com/asciisyaez/yagoo-dori/blob/6c2c95d52c268862d34fb523d965f09a3108bbbd/packages/core/src/fixtures/chart-m0049-expert.sus'
+          obj['sourceRepository'] = 'asciisyaez/yagoo-dori'
+          obj['sourceCommit'] = '6c2c95d52c268862d34fb523d965f09a3108bbbd'
+          p.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          assert len(obj['notes']) == 720
+          assert [x['slot'] for x in obj['skills']] == [1,2,3,4,5]
+          print('exact metadata:', len(obj['notes']), 'notes', obj['skills'], 'fever=', obj['fever'])
+          PY
+
+      - name: Run 120-order study
+        run: |
+          node scripts/test-chart-scoring.mjs
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { prepareScoreCards, evaluateDeck } from './js/score.js';
+          import { optimizeOwnedDeck } from './js/recommend.js';
+          import { optimizeRecommendationOrders } from './js/order.js';
+
+          const cards = JSON.parse(fs.readFileSync('data/generated/cards.json', 'utf8'));
+          const characters = JSON.parse(fs.readFileSync('data/generated/characters.json', 'utf8'));
+          const musicRows = JSON.parse(fs.readFileSync('data/generated/music.json', 'utf8'));
+          const chartIndex = JSON.parse(fs.readFileSync('data/generated/chart-index.json', 'utf8'));
+          const metadata = JSON.parse(fs.readFileSync('data/generated/charts/m0049-EXPERT.json', 'utf8'));
+          const scoreRules = JSON.parse(fs.readFileSync('data/generated/live-score-rules.json', 'utf8'));
+          const music = musicRows.find((row) => row.id === 'm0049');
+          const chartRow = chartIndex.charts['m0049:EXPERT'];
+          if (!music || !chartRow) throw new Error('m0049 data missing');
+          if (!String(chartRow.metadataPath ?? '').endsWith('charts/m0049-EXPERT.json')) {
+            throw new Error(`metadataPath not registered: ${chartRow.metadataPath}`);
+          }
+
+          const charactersById = new Map(characters.map((row) => [row.id, row]));
+          const selectable = cards.filter((card) => [4, 5].includes(Number(card.rarity)));
+          const prepared = prepareScoreCards(selectable, charactersById, {}, { levelMode: 'max' });
+          const exactMusic = { ...music, _chart: { ...chartRow, metadata }, _scoreRules: scoreRules };
+          const searchMusic = { ...music, _chart: { ...chartRow, metadata: null }, _scoreRules: scoreRules };
+          const emptyMembers = [null, null, null, null, null, null];
+          const unlocked = [false, false, false, false, false, false];
+
+          let rec = optimizeOwnedDeck({
+            preparedCards: prepared,
+            ownedCardIds: selectable.map((card) => card.id),
+            currentMembers: emptyMembers,
+            lockedSlots: unlocked,
+            music: searchMusic,
+            difficulty: 'EXPERT',
+            playMode: 'manual',
+            simulationTarget: 'score',
+            separateRole: true,
+            resultCount: 10,
+          });
+          if (!rec.ok) throw new Error(rec.reason);
+          const initialSearchMode = rec.searchMode;
+          const initialEvaluatedCount = rec.evaluatedCount;
+
+          rec = optimizeRecommendationOrders({
+            recommendation: rec,
+            preparedCards: prepared,
+            currentMembers: emptyMembers,
+            lockedSlots: unlocked,
+            music: exactMusic,
+            difficulty: 'EXPERT',
+            playMode: 'manual',
+            simulationTarget: 'score',
+            separateRole: true,
+            resultCount: 5,
+          });
+          if (!rec.ok) throw new Error(rec.reason);
+
+          const top = rec.results[0];
+          const leaderId = top.members[0];
+          const five = top.members.slice(1);
+          const leader = prepared.get(leaderId);
+
+          function permutations(values) {
+            const result = [];
+            const used = Array(values.length).fill(false);
+            const current = [];
+            const visit = () => {
+              if (current.length === values.length) return result.push([...current]);
+              for (let i = 0; i < values.length; i++) {
+                if (used[i]) continue;
+                used[i] = true;
+                current.push(values[i]);
+                visit();
+                current.pop();
+                used[i] = false;
+              }
+            };
+            visit();
+            return result;
+          }
+
+          const orders = permutations(five).map((ids) => {
+            const score = evaluateDeck({
+              leader,
+              members: ids.map((id) => prepared.get(id)),
+              music: exactMusic,
+              difficulty: 'EXPERT',
+              playMode: 'manual',
+              separateRole: true,
+            });
+            return { ids, score: score?.rankingScore ?? -Infinity };
+          }).filter((row) => Number.isFinite(row.score)).sort((a, b) => b.score - a.score);
+          if (orders.length !== 120) throw new Error(`expected 120 valid orders, got ${orders.length}`);
+
+          const best = orders[0];
+          const worst = orders.at(-1);
+          const avg = orders.reduce((sum, row) => sum + row.score, 0) / orders.length;
+          const label = (id) => {
+            const c = prepared.get(id);
+            return `${c?.characterName ?? id} / ${c?.raw?.card_name ?? c?.raw?.name ?? id}`;
+          };
+          const report = {
+            assumptions: 'all selectable ★4/★5 cards treated as owned; MAX level; potential 0; Manual FC',
+            chart: { musicId: 'm0049', difficulty: 'EXPERT', notes: metadata.notes.length, skills: metadata.skills, fever: metadata.fever },
+            searchMode: initialSearchMode,
+            evaluatedCount: initialEvaluatedCount,
+            leader: { id: leaderId, name: label(leaderId) },
+            memberSet: five.map((id) => ({ id, name: label(id) })),
+            orderCount: orders.length,
+            best: { score: best.score, order: best.ids.map((id) => ({ id, name: label(id) })) },
+            worst: { score: worst.score, order: worst.ids.map((id) => ({ id, name: label(id) })) },
+            averageScore: Math.round(avg),
+            difference: best.score - worst.score,
+            differencePctVsWorst: Number(((best.score - worst.score) / Math.max(1, worst.score) * 100).toFixed(4)),
+            bestGainPctVsAverage: Number(((best.score - avg) / Math.max(1, avg) * 100).toFixed(4)),
+          };
+          fs.mkdirSync('research', { recursive: true });
+          fs.writeFileSync('research/m0049-order-study.json', JSON.stringify(report, null, 2) + '\n');
+          console.log('ORDER_STUDY_REPORT');
+          console.log(JSON.stringify(report, null, 2));
+          NODE
+
+      - name: Commit exact metadata and study
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/generated/charts/m0049-EXPERT.json data/generated/chart-index.json research/m0049-order-study.json
+          git commit -m 'Ingest exact m0049 EXPERT chart metadata'
+          git push origin HEAD:research/m0049-exact-chart
