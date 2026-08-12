@@ -20,7 +20,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Check JavaScript syntax and module exports
         run: |
@@ -59,14 +59,17 @@ jobs:
             ko: {
               'la-name-chr-00001': '토키노 소라',
               'la-card_name-00001-5-uniq-0000-00': '한결같이 그리는 무지개 노래',
+              'la-card_name-00012-5-uniq-0062-00': 'Energetic 스플래시!',
             },
             en: {
               'la-name-chr-00001': 'Tokino Sora',
               'la-card_name-00001-5-uniq-0000-00': 'Rainbow’s Devotion',
+              'la-card_name-00012-5-uniq-0062-00': 'Vibrant Sun Splash!',
             },
             ja: {
               'la-name-chr-00001': 'ときのそら',
               'la-card_name-00001-5-uniq-0000-00': 'ひたむきに描く虹のうた',
+              'la-card_name-00012-5-uniq-0062-00': 'Energeticスプラッシュ！',
             },
           };
           for (const [locale, samples] of Object.entries(expected)) {
@@ -76,7 +79,9 @@ jobs:
             }
           }
           const manifest = JSON.parse(await readFile('data/generated/i18n/manifest.json', 'utf8'));
-          if (!manifest.required_entry_count || Object.keys(manifest.locales ?? {}).length !== 3) {
+          if (!manifest.required_entry_count
+            || manifest.card_name_alias_count !== 7
+            || Object.keys(manifest.locales ?? {}).length !== 3) {
             throw new Error('invalid i18n manifest');
           }
           console.log(`[validate] ${manifest.required_entry_count} required LangIds validated`);
