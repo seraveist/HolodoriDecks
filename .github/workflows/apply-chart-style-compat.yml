@@ -1,0 +1,52 @@
+name: Apply Chart Style Compatibility
+
+on:
+  push:
+    branches: [feat/chart-timeline-scoring]
+    paths:
+      - .github/workflows/apply-chart-style-compat.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/chart-timeline-scoring
+          fetch-depth: 0
+      - name: Patch stylesheet references
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          index = Path('index.html')
+          text = index.read_text(encoding='utf-8')
+          text = text.replace('./styles.css?v=20260812.6', './styles.css?v=20260812.5')
+          link = '  <link rel="stylesheet" href="./css/chart-timeline.css?v=20260812.4">\n'
+          anchor = '  <link rel="stylesheet" href="./styles.css?v=20260812.5">\n'
+          if link not in text:
+              text = text.replace(anchor, anchor + link, 1)
+          index.write_text(text, encoding='utf-8')
+
+          styles = Path('styles.css')
+          styles.write_text(
+              styles.read_text(encoding='utf-8').replace('./css/components.css?v=20260812.6', './css/components.css?v=20260812.5'),
+              encoding='utf-8',
+          )
+          PY
+      - name: Validate compatibility
+        run: |
+          grep -q 'styles.css?v=20260812.5' index.html
+          grep -q 'chart-timeline.css?v=20260812.4' index.html
+          node --check js/app.js
+          node scripts/test-chart-scoring.mjs
+      - name: Commit source-only patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html styles.css
+          git commit -m "Keep chart timeline styles compatible with existing validation"
+          git push origin HEAD:feat/chart-timeline-scoring
