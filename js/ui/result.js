@@ -10,7 +10,6 @@ import { SLOT_LABELS } from "./member.js?v=20260811.19";
 import { requiredElement } from "./dom.js?v=20260811.19";
 
 const STAT_LABELS = Object.freeze({ p: "퍼포먼스", t: "테크닉", s: "센스" });
-const TARGET_STATS = Object.freeze({ performance: "p", technique: "t", sense: "s" });
 
 function formatNumber(value) {
   return Math.round(Number(value) || 0).toLocaleString("ko-KR");
@@ -322,19 +321,20 @@ function wireDiagnosticTooltips(container) {
 function resultDetails(result, index, data, state, song, open) {
   const cards = result.members.map((cardId) => data.cardsById.get(cardId) ?? null);
   const score = result.score;
-  const rankingScore = score.rankingScore;
-  const scoreLabel = song ? "예상 평균 스코어" : "유닛 스코어";
-  const targetStat = TARGET_STATS[state.simulationTarget] ?? null;
-  const targetLabel = targetStat ? STAT_LABELS[targetStat] : scoreLabel;
-  const targetValue = targetStat ? score.deckStats?.[targetStat] : rankingScore;
+  const expectedScore = score.rankingScore;
+  const potentialScore = score.potentialRankingScore ?? score.estimatedSongMax ?? score.potentialUnitScore ?? expectedScore;
+  const expectedLabel = song ? "예상 평균 스코어" : "유닛 스코어";
+  const potentialLabel = song ? "근사 최대 스코어" : "잠재 스코어";
+  const potentialTarget = state.simulationTarget === "potential";
+  const targetLabel = potentialTarget ? potentialLabel : expectedLabel;
+  const targetValue = potentialTarget ? potentialScore : expectedScore;
   const statMetrics = ["p", "t", "s"].map((stat) => metric(
     STAT_LABELS[stat],
     score.deckStats?.[stat],
-    targetStat === stat ? "is-concept" : "",
   )).join("");
-  const maxSummary = !targetStat && score.estimatedSongMax
-    ? `<small>근사 최대 ${formatNumber(score.estimatedSongMax)}</small>`
-    : "";
+  const comparisonSummary = potentialTarget
+    ? `<small>${escapeHtml(expectedLabel)} ${formatNumber(expectedScore)}</small>`
+    : `<small>${escapeHtml(potentialLabel)} ${formatNumber(potentialScore)}</small>`;
 
   return `
     <details class="recommendation-result-card" data-result-index="${index}"${open ? " open" : ""}>
@@ -344,7 +344,7 @@ function resultDetails(result, index, data, state, song, open) {
           <div class="result-summary-score">
             <span>${escapeHtml(targetLabel)}</span>
             <strong>${formatNumber(targetValue)}</strong>
-            ${maxSummary}
+            ${comparisonSummary}
           </div>
           ${summaryMemberGroups(cards)}
           <span class="result-expand-label" aria-hidden="true"><span class="is-collapsed">+ 상세 보기</span><span class="is-expanded">- 접기</span></span>
@@ -362,8 +362,9 @@ function resultDetails(result, index, data, state, song, open) {
         ${songProjection(score, song, state.difficulty)}
         <div class="result-context-row">
           <div class="result-metrics">
-            ${metric(scoreLabel, rankingScore, targetStat ? "" : "is-concept")}
-            ${song ? metric("근사 최대", score.estimatedSongMax) : ""}
+            ${metric(expectedLabel, expectedScore, potentialTarget ? "" : "is-concept")}
+            ${metric(potentialLabel, potentialScore, potentialTarget ? "is-concept" : "")}
+            ${song ? metric("유닛 스코어", score.unitScore) : ""}
             ${metric("종합력", score.overallPower)}
             ${statMetrics}
           </div>
