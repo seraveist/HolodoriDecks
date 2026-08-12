@@ -21,7 +21,7 @@
 - 카드 상세 정보, 검색, 희귀도·타입 필터, 정렬
 - 보유 카드 JSON 내보내기/가져오기
 - 한국어 / English / 日本語 전환
-- 시스템 / 라이트 / 다크 테마
+- 헤더 아이콘 하나로 전환하는 라이트 / 다크 테마
 - GitHub Pages 정적 배포
 
 ## 시뮬레이션 목표
@@ -39,13 +39,11 @@
 
 ## 테마
 
-화면 우측 상단에서 다음 테마를 선택할 수 있습니다.
+화면 우측 상단의 테마 아이콘을 누르면 **라이트 ↔ 다크** 모드를 즉시 전환합니다. 별도의 테마 셀렉트는 사용하지 않습니다.
 
-- `system`: 운영체제의 `prefers-color-scheme` 설정 추종
-- `light`: 라이트 모드 고정
-- `dark`: 다크 모드 고정
+선택값은 `localStorage`의 `holodori-decksim:theme`에 `light` 또는 `dark`로 저장됩니다. 이전 버전의 `system` 값이나 저장값이 없는 브라우저는 최초 로드 시 운영체제의 `prefers-color-scheme`을 기준으로 라이트/다크 중 하나를 선택해 저장합니다.
 
-선택값은 `localStorage`의 `holodori-decksim:theme`에 저장됩니다. 시스템 테마를 선택한 경우 운영체제 테마가 바뀌면 페이지도 자동으로 따라갑니다.
+좁은 화면에서는 테마 아이콘과 언어 셀렉트를 한 줄에 유지하고, `테마`/`언어` 라벨은 시각적으로 별도 행을 차지하지 않도록 구성합니다.
 
 ## 다국어 지원
 
@@ -187,7 +185,7 @@ feature branch와 pull request에서는 `.github/workflows/validate.yml`이 다�
 - 최고 유닛/잠재 스코어 정렬 함수
 - P/T/S 시뮬레이션 목표가 UI에서 제거되었는지 여부
 - 슬롯 직접 비우기 UI와 모바일 결과 카드 규칙
-- 다크 테마 CSS 존재 여부
+- 라이트/다크 아이콘 토글 및 좁은 헤더 한 줄 배치 규칙
 - pinned KO/EN/JA 언어팩 생성
 - core/locale master version 일치
 - 필수 LangId 누락 여부
@@ -217,14 +215,3 @@ feature branch와 pull request에서는 `.github/workflows/validate.yml`이 다�
 - Manual FC의 집계 노트 기반 콤보 보너스
 
 현재 `music.json`에는 실제 노트 타임라인이 없으므로 악곡별 점수는 집계 채보 근사입니다. 계정별 Holo멤버 보드·메모리 보정도 아직 포함하지 않습니다.
-
-## 배포
-
-`main`이 갱신되면 `.github/workflows/pages.yml`이 다음 순서로 실행됩니다.
-
-1. 정적 JavaScript 및 시뮬레이션 목표 검증
-2. KO/EN/JA 언어팩 생성 및 무결성 검증
-3. Pages artifact 구성
-4. GitHub Pages 배포
-
-모든 웹 경로는 저장소 하위 URL에서도 동작하도록 상대경로로 구성되어 있습니다.

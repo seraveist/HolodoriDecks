@@ -52,7 +52,7 @@ jobs:
             exit 1
           fi
 
-      - name: Validate simulation targets
+      - name: Validate simulation targets and compact header
         run: |
           node --input-type=module <<'NODE'
           import { recommendationValue } from './js/recommend.js';
@@ -65,6 +65,12 @@ jobs:
           if grep -q '<option value="performance"' index.html; then exit 1; fi
           if grep -q '<option value="technique"' index.html; then exit 1; fi
           if grep -q '<option value="sense"' index.html; then exit 1; fi
+          grep -q 'id="theme-toggle"' index.html
+          if grep -q 'id="theme-select"' index.html; then exit 1; fi
+          if grep -q '<option value="system">' index.html; then exit 1; fi
+          grep -q 'theme-toggle-button' css/tweaks.css
+          grep -q 'app-header-actions' css/tweaks.css
+          grep -q 'flex-direction: row' css/tweaks.css
           grep -q 'slot-clear-button' js/ui/member.js
           grep -q 'result-card-width: clamp(145px, 42vw, 168px)' css/tweaks.css
           grep -q 'data-theme="dark"' css/theme.css
@@ -108,8 +114,8 @@ jobs:
 
       - name: Check app version and required files
         run: |
-          grep -q 'data-app-version="20260812.2"' index.html
-          grep -q 'const APP_VERSION = "20260812.2"' js/app.js
+          grep -q 'data-app-version="20260812.3"' index.html
+          grep -q 'const APP_VERSION = "20260812.3"' js/app.js
           test -f data/generated/cards.json
           test -f data/generated/characters.json
           test -f data/generated/music.json
