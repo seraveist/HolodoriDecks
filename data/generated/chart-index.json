@@ -3,7 +3,7 @@
   "source_repository": "HolodoriDB/holodori-db-kor-diff",
   "source_commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
   "chart_count": 728,
-  "exact_metadata_count": 0,
+  "exact_metadata_count": 1,
   "charts": {
     "m0129:EASY": {
       "musicId": "m0129",
@@ -1419,7 +1419,7 @@
       "normalNoteCount": 387,
       "maxComboCountRewardThreshold": 600,
       "chartHash": "a623f990866d4a4839776be4aaed9e23",
-      "metadataPath": null
+      "metadataPath": "./charts/m0049-EXPERT.json"
     },
     "m0049:HARD": {
       "musicId": "m0049",
