@@ -126,8 +126,11 @@ html[data-theme="dark"] .theme-toggle-icon-sun {
   right: 46px;
 }
 
+/* Desktop: keep all six recommendation cards inside the result card without a scroll track. */
 .result-members {
-  grid-template-columns: repeat(6, var(--result-card-width));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  justify-content: stretch;
+  overflow-x: hidden;
 }
 
 @media (max-width: 820px) {
@@ -172,13 +175,21 @@ html[data-theme="dark"] .theme-toggle-icon-sun {
     align-items: flex-start;
   }
 
+  /* Mobile: preserve readable card width and allow horizontal swipe only here. */
   .result-members {
     --result-card-width: clamp(145px, 42vw, 168px);
+    grid-template-columns: repeat(6, var(--result-card-width));
     justify-content: start;
     gap: 10px;
     padding: 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
     scroll-snap-type: x proximity;
     -webkit-overflow-scrolling: touch;
+  }
+
+  .result-members::-webkit-scrollbar {
+    display: none;
   }
 
   .result-card {
