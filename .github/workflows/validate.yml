@@ -75,6 +75,31 @@ jobs:
           grep -q 'result-card-width: clamp(145px, 42vw, 168px)' css/tweaks.css
           grep -q 'data-theme="dark"' css/theme.css
 
+      - name: Validate CSS theme layering
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const neutralFiles = ['css/base.css', 'css/components.css', 'css/owned.css', 'css/modal.css', 'css/tweaks.css'];
+          const neutral = await Promise.all(neutralFiles.map(async (path) => [path, await readFile(path, 'utf8')]));
+          for (const [path, text] of neutral) {
+            if (text.includes('data-theme="dark"')) throw new Error(`dark selector leaked into ${path}`);
+            if (text.split('{').length !== text.split('}').length) throw new Error(`brace mismatch in ${path}`);
+          }
+          const forbiddenSurface = /background(?:-color)?\s*:\s*#(?:fff(?:fff)?|f8faff|f7f9fc|fafbfd|fbfcff|f5f8ff|edf3ff|eef1f6|f9fbfe|e8f7f5|fff0f1|fff5f6)/i;
+          for (const [path, text] of neutral) {
+            if (forbiddenSurface.test(text)) throw new Error(`theme-sensitive light surface literal remains in ${path}`);
+          }
+          const light = await readFile('css/tokens.css', 'utf8');
+          const dark = await readFile('css/theme.css', 'utf8');
+          const requiredTokens = ['ink-900','ink-700','surface-inverse','ink-inverse','brand-line','brand-line-strong','accent-ink','accent-line','warning-ink','danger-soft','danger-line'];
+          for (const token of requiredTokens) {
+            if (!light.includes(`--${token}:`)) throw new Error(`missing light token --${token}`);
+            if (!dark.includes(`--${token}:`)) throw new Error(`missing dark token --${token}`);
+          }
+          console.log('[theme] semantic surface hierarchy validated');
+          NODE
+          grep -q 'styles.css?v=20260812.5' index.html
+
       - name: Build and validate locale packs
         run: |
           node scripts/build-i18n.mjs

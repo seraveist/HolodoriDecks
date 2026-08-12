@@ -30,9 +30,9 @@ body.card-detail-open {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.6);
+  border: 1px solid var(--line);
   border-radius: 22px;
-  background: #fff;
+  background: var(--surface);
   box-shadow: 0 32px 90px rgba(10, 20, 38, 0.28);
   transform: translateX(50%);
 }
@@ -72,7 +72,7 @@ body.card-detail-open {
   grid-template-columns: minmax(260px, 1.2fr) minmax(460px, 2fr);
   gap: 12px;
   border-bottom: 1px solid var(--line);
-  background: #fafbfd;
+  background: var(--surface-soft);
 }
 
 .search-field input {
@@ -80,7 +80,7 @@ body.card-detail-open {
   background:
     radial-gradient(circle, transparent 5px, var(--ink-500) 6px, var(--ink-500) 7px, transparent 8px) 14px 13px / 22px 22px no-repeat,
     linear-gradient(45deg, transparent 47%, var(--ink-500) 48%, var(--ink-500) 54%, transparent 55%) 29px 28px / 7px 7px no-repeat,
-    #fff;
+    var(--surface);
   font-size: 13px;
 }
 
@@ -128,7 +128,7 @@ body.card-detail-open {
   align-content: start;
   gap: 10px;
   overflow-y: auto;
-  background: #f7f9fc;
+  background: var(--surface-soft);
 }
 
 .picker-card.is-unavailable .picker-card-select {
@@ -151,7 +151,7 @@ body.card-detail-open {
   flex: 1 1 auto;
   flex-direction: column;
   border: 0;
-  background: #fff;
+  background: var(--surface);
   color: inherit;
   text-align: left;
 }
@@ -234,7 +234,7 @@ body.card-detail-open {
   min-height: 0;
   padding: 22px 24px 26px;
   overflow-y: auto;
-  background: #f7f9fc;
+  background: var(--surface-soft);
 }
 
 .card-detail-layout {
@@ -250,7 +250,7 @@ body.card-detail-open {
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 15px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .card-detail-art .landscape-card-art {
@@ -306,7 +306,7 @@ body.card-detail-open {
   gap: 2px 10px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .card-detail-stat span {
@@ -338,7 +338,7 @@ body.card-detail-open {
   padding: 14px 15px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .card-detail-skill header {
@@ -384,6 +384,6 @@ body.card-detail-open {
 
 .card-detail-leader {
   grid-column: 1 / -1;
-  border-color: #b9c9f5;
-  background: #f8faff;
+  border-color: var(--brand-line);
+  background: var(--surface-soft);
 }
