@@ -39,6 +39,7 @@ jobs:
           node --input-type=module <<'NODE'
           await Promise.all([
             import('./js/i18n.js'),
+            import('./js/theme.js'),
             import('./js/data.js'),
             import('./js/state.js'),
             import('./js/score.js'),
@@ -50,11 +51,21 @@ jobs:
             import('./js/ui/music.js'),
             import('./js/ui/owned.js'),
             import('./js/ui/result.js'),
+            import('./js/ui/result-target.js'),
             import('./js/ui/target.js'),
             import('./js/ui/card-detail.js'),
           ]);
           console.log('[pages] module imports resolved');
           NODE
+          node --input-type=module <<'NODE'
+          import { recommendationValue } from './js/recommend.js';
+          const probe = { rankingScore: 100, potentialRankingScore: 140 };
+          if (recommendationValue(probe, 'score') !== 100) throw new Error('score target ranking mismatch');
+          if (recommendationValue(probe, 'potential') !== 140) throw new Error('potential target ranking mismatch');
+          NODE
+          grep -q 'data-app-version="20260812.2"' index.html
+          grep -q '<option value="potential">최고 잠재 스코어</option>' index.html
+          grep -q 'data-theme="dark"' css/theme.css
           test -f index.html
           test -f styles.css
           test -f data/generated/cards.json

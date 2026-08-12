@@ -5,20 +5,47 @@
 ## 현재 제공 기능
 
 - 리더 1자리 + 멤버 5자리의 6인 프리셋
+- 채워진 프리셋 슬롯을 팝업 없이 바로 비울 수 있는 슬롯별 `×` 액션
+- 프리셋 초기화를 슬롯 영역과 같은 위계에 배치한 편성 UI
 - 보유 카드 등록 및 카드별 현재 레벨·개화 단계 저장
 - 현재 레벨/MAX 레벨 계산 전환
 - 리더/멤버 동일 홀로멤 분리 옵션
 - 비어 있는 프리셋 슬롯 자동 편성 및 TOP 5 추천
-- 최고 스코어 / 퍼포먼스 / 테크닉 / 센스 시뮬레이션 목표
+- **최고 유닛 스코어 / 최고 잠재 스코어** 2가지 시뮬레이션 목표
 - 악곡·난이도·AUTO/Manual FC 조건 선택
 - 리더·액티브·패시브·스페셜 스킬 및 개화 효과 반영
 - 동일 액티브 주기 충돌 보정
 - 유닛 스코어와 악곡별 예상 평균/근사 최대 스코어 표시
+- 모바일 추천 결과에서 카드 가독성을 유지하는 가로 스크롤/스냅 UI
 - 파라미터·점수 보너스 산식, 스킬 진단표, 발동 타임라인 표시
 - 카드 상세 정보, 검색, 희귀도·타입 필터, 정렬
 - 보유 카드 JSON 내보내기/가져오기
 - 한국어 / English / 日本語 전환
+- 시스템 / 라이트 / 다크 테마
 - GitHub Pages 정적 배포
+
+## 시뮬레이션 목표
+
+시뮬레이션 목표는 P/T/S 파라미터 자체를 최대화하지 않고 실제 점수 계열 두 가지로 단순화했습니다.
+
+- `최고 유닛 스코어`
+  - `전체 평균`: 일반 발동 확률을 반영한 유닛 스코어 기준
+  - 특정 악곡: 해당 악곡의 예상 평균 스코어 기준
+- `최고 잠재 스코어`
+  - `전체 평균`: 유효한 액티브가 모두 성공한다고 가정한 잠재 유닛 스코어 기준
+  - 특정 악곡: 해당 악곡의 모든 유효 액티브 성공 시 근사 최대 스코어 기준
+
+따라서 평균적으로 강한 덱과 발동 운이 이상적으로 따라왔을 때 고점이 높은 덱이 서로 다른 경우 각각 다른 TOP 5를 확인할 수 있습니다.
+
+## 테마
+
+화면 우측 상단에서 다음 테마를 선택할 수 있습니다.
+
+- `system`: 운영체제의 `prefers-color-scheme` 설정 추종
+- `light`: 라이트 모드 고정
+- `dark`: 다크 모드 고정
+
+선택값은 `localStorage`의 `holodori-decksim:theme`에 저장됩니다. 시스템 테마를 선택한 경우 운영체제 테마가 바뀌면 페이지도 자동으로 따라갑니다.
 
 ## 다국어 지원
 
@@ -76,10 +103,13 @@ css/
   owned.css
   modal.css
   responsive.css
+  tweaks.css
+  theme.css
 js/
   app.js
   data.js
   i18n.js
+  theme.js
   recommend.js
   score.js
   state.js
@@ -92,6 +122,7 @@ js/
     music.js
     owned.js
     result.js
+    result-target.js
     target.js
 scripts/
   build-i18n.mjs
@@ -153,18 +184,21 @@ feature branch와 pull request에서는 `.github/workflows/validate.yml`이 다�
 
 - 전체 JavaScript syntax
 - ESM module import/export 연결
-- 폐기된 UI export 참조 여부
+- 최고 유닛/잠재 스코어 정렬 함수
+- P/T/S 시뮬레이션 목표가 UI에서 제거되었는지 여부
+- 슬롯 직접 비우기 UI와 모바일 결과 카드 규칙
+- 다크 테마 CSS 존재 여부
 - pinned KO/EN/JA 언어팩 생성
 - core/locale master version 일치
 - 필수 LangId 누락 여부
 - 대표 카드명·캐릭터명 번역 샘플
 - HTML/JavaScript 앱 버전 일치
 
-`main` 배포 시 `.github/workflows/pages.yml`도 동일한 언어팩 생성/검증을 다시 수행한 뒤 GitHub Pages를 배포합니다.
+`main` 배포 시 `.github/workflows/pages.yml`도 핵심 모듈과 시뮬레이션 목표를 다시 검증하고 언어팩 생성/검증을 수행한 뒤 GitHub Pages를 배포합니다.
 
 ## 계산 엔진 상태
 
-추천 계산은 `Unit Score Engine v0.3` 및 정적 악곡 근사 계층과 경험 상수 `K=2.037342`를 사용합니다. 직접 선택한 리더·멤버 슬롯은 계산 조건으로 고정하지만, 계산 결과가 프리셋 슬롯을 덮어쓰지는 않습니다.
+추천 계산은 `Unit Score Engine v0.4-potential` 및 정적 악곡 근사 계층과 경험 상수 `K=2.037342`를 사용합니다. 직접 선택한 리더·멤버 슬롯은 계산 조건으로 고정하지만, 계산 결과가 프리셋 슬롯을 덮어쓰지는 않습니다.
 
 주요 반영 항목:
 
@@ -172,6 +206,7 @@ feature branch와 pull request에서는 `.github/workflows/validate.yml`이 다�
 - 액티브·패시브·스페셜 스킬
 - 액티브 발동 확률·주기·지속시간
 - 동일 주기 액티브 충돌 보정
+- 일반 기대 스코어와 모든 유효 액티브 성공 기준 잠재 스코어
 - 카드 레벨
 - 개화 1: Active Lv2
 - 개화 2: 전체 파라미터 +10%
@@ -187,7 +222,7 @@ feature branch와 pull request에서는 `.github/workflows/validate.yml`이 다�
 
 `main`이 갱신되면 `.github/workflows/pages.yml`이 다음 순서로 실행됩니다.
 
-1. 정적 JavaScript 검증
+1. 정적 JavaScript 및 시뮬레이션 목표 검증
 2. KO/EN/JA 언어팩 생성 및 무결성 검증
 3. Pages artifact 구성
 4. GitHub Pages 배포

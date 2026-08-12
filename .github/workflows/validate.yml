@@ -29,6 +29,7 @@ jobs:
           node --input-type=module <<'NODE'
           await Promise.all([
             import('./js/i18n.js'),
+            import('./js/theme.js'),
             import('./js/data.js'),
             import('./js/state.js'),
             import('./js/score.js'),
@@ -40,6 +41,7 @@ jobs:
             import('./js/ui/music.js'),
             import('./js/ui/owned.js'),
             import('./js/ui/result.js'),
+            import('./js/ui/result-target.js'),
             import('./js/ui/target.js'),
             import('./js/ui/card-detail.js'),
           ]);
@@ -49,6 +51,23 @@ jobs:
             echo '[validate] obsolete SLOT_LABELS reference found'
             exit 1
           fi
+
+      - name: Validate simulation targets
+        run: |
+          node --input-type=module <<'NODE'
+          import { recommendationValue } from './js/recommend.js';
+          const score = { rankingScore: 100, potentialRankingScore: 140 };
+          if (recommendationValue(score, 'score') !== 100) throw new Error('score target ranking mismatch');
+          if (recommendationValue(score, 'potential') !== 140) throw new Error('potential target ranking mismatch');
+          NODE
+          grep -q '<option value="score" selected>최고 유닛 스코어</option>' index.html
+          grep -q '<option value="potential">최고 잠재 스코어</option>' index.html
+          if grep -q '<option value="performance"' index.html; then exit 1; fi
+          if grep -q '<option value="technique"' index.html; then exit 1; fi
+          if grep -q '<option value="sense"' index.html; then exit 1; fi
+          grep -q 'slot-clear-button' js/ui/member.js
+          grep -q 'result-card-width: clamp(145px, 42vw, 168px)' css/tweaks.css
+          grep -q 'data-theme="dark"' css/theme.css
 
       - name: Build and validate locale packs
         run: |
@@ -89,8 +108,8 @@ jobs:
 
       - name: Check app version and required files
         run: |
-          grep -q 'data-app-version="20260812.1"' index.html
-          grep -q 'const APP_VERSION = "20260812.1"' js/app.js
+          grep -q 'data-app-version="20260812.2"' index.html
+          grep -q 'const APP_VERSION = "20260812.2"' js/app.js
           test -f data/generated/cards.json
           test -f data/generated/characters.json
           test -f data/generated/music.json

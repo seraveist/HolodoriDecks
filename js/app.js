@@ -1,7 +1,7 @@
-import { loadAppData, loadManifest } from "./data.js?v=20260812.1";
-import { createStore } from "./state.js?v=20260811.19";
-import { optimizeOwnedDeck } from "./recommend.js?v=20260811.19";
-import { prepareScoreCards } from "./score.js?v=20260811.19";
+import { loadAppData, loadManifest } from "./data.js?v=20260812.2";
+import { createStore } from "./state.js?v=20260812.2";
+import { optimizeOwnedDeck } from "./recommend.js?v=20260812.2";
+import { prepareScoreCards } from "./score.js?v=20260812.2";
 import {
   getLocale,
   initI18n,
@@ -9,17 +9,47 @@ import {
   saveLocale,
   t,
 } from "./i18n.js?v=20260812.1";
-import { renderMemberSlots } from "./ui/member.js?v=20260812.1";
+import { getThemePreference, initTheme, setThemePreference } from "./theme.js?v=20260812.2";
+import { renderMemberSlots } from "./ui/member.js?v=20260812.2";
 import { createCardPicker } from "./ui/modal.js?v=20260812.1";
 import { mountMusicControls } from "./ui/music.js?v=20260812.1";
 import { createOwnedCardsView } from "./ui/owned.js?v=20260812.1";
 import { renderResult } from "./ui/result.js?v=20260812.1";
+import { applySimulationTargetPresentation } from "./ui/result-target.js?v=20260812.2";
 import { mountMemberOptions } from "./ui/target.js?v=20260812.1";
 import { requiredElement } from "./ui/dom.js?v=20260812.1";
 import { createCardDetail } from "./ui/card-detail.js?v=20260812.1";
 
-const APP_VERSION = "20260812.1";
+const APP_VERSION = "20260812.2";
 const RESULT_COUNT = 5;
+
+const EXTRA_COPY = Object.freeze({
+  ko: {
+    targetScore: "최고 유닛 스코어",
+    targetPotential: "최고 잠재 스코어",
+    themeLabel: "테마",
+    themeSystem: "시스템",
+    themeLight: "라이트",
+    themeDark: "다크",
+  },
+  en: {
+    targetScore: "Highest Unit Score",
+    targetPotential: "Highest Potential Score",
+    themeLabel: "Theme",
+    themeSystem: "System",
+    themeLight: "Light",
+    themeDark: "Dark",
+  },
+  ja: {
+    targetScore: "最高ユニットスコア",
+    targetPotential: "最高潜在スコア",
+    themeLabel: "テーマ",
+    themeSystem: "システム",
+    themeLight: "ライト",
+    themeDark: "ダーク",
+  },
+});
+
 const OPTIMIZER_REASON = Object.freeze({
   "리더 1장과 멤버 5장을 구성하려면 보유 카드가 최소 6장 필요합니다.": {
     ko: "리더 1장과 멤버 5장을 구성하려면 보유 카드가 최소 6장 필요합니다.",
@@ -58,13 +88,41 @@ function localizeOptimizerReason(reason) {
   return translated?.[getLocale()] ?? String(reason ?? "");
 }
 
+function syncExtraStaticCopy() {
+  const copy = EXTRA_COPY[getLocale()] ?? EXTRA_COPY.ko;
+  const target = document.querySelector("#simulation-target");
+  const scoreOption = target?.querySelector('option[value="score"]');
+  const potentialOption = target?.querySelector('option[value="potential"]');
+  if (scoreOption) scoreOption.textContent = copy.targetScore;
+  if (potentialOption) potentialOption.textContent = copy.targetPotential;
+
+  const themeLabel = document.querySelector("#theme-label");
+  const theme = document.querySelector("#theme-select");
+  if (themeLabel) themeLabel.textContent = copy.themeLabel;
+  const systemOption = theme?.querySelector('option[value="system"]');
+  const lightOption = theme?.querySelector('option[value="light"]');
+  const darkOption = theme?.querySelector('option[value="dark"]');
+  if (systemOption) systemOption.textContent = copy.themeSystem;
+  if (lightOption) lightOption.textContent = copy.themeLight;
+  if (darkOption) darkOption.textContent = copy.themeDark;
+  theme?.setAttribute("aria-label", copy.themeLabel);
+}
+
 async function start() {
   if (document.documentElement.dataset.appVersion !== APP_VERSION) {
     throw new Error(t("app.versionMismatch"));
   }
 
+  initTheme();
   const manifest = await loadManifest();
   await initI18n(manifest);
+  syncExtraStaticCopy();
+
+  const themeSelect = requiredElement("#theme-select");
+  themeSelect.value = getThemePreference();
+  themeSelect.addEventListener("change", () => {
+    themeSelect.value = setThemePreference(themeSelect.value);
+  });
 
   const languageSelect = requiredElement("#language-select");
   languageSelect.value = getLocale();
@@ -74,6 +132,7 @@ async function start() {
   });
 
   const memberSlots = requiredElement("#member-slots");
+  const resultContainer = requiredElement("#recommendation-results");
   memberSlots.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><span aria-hidden="true">◌</span><p>${t("app.loadingCards")}</p></div>`;
 
   const data = localizeAppData(await loadAppData(manifest));
@@ -120,6 +179,18 @@ async function start() {
     output.classList.toggle("is-warning", Boolean(warning));
     output.textContent = warning;
     output.hidden = !warning;
+  }
+
+  function clearPresetSlot(index) {
+    const state = store.getState();
+    if (!state.members[index]) return;
+    const members = [...state.members];
+    const lockedSlots = [...state.lockedSlots];
+    members[index] = null;
+    lockedSlots[index] = false;
+    lastRecommendation = null;
+    store.setState({ members, lockedSlots });
+    setRecommendationStatus();
   }
 
   async function applyRecommendation() {
@@ -223,8 +294,9 @@ async function start() {
     syncMemberOptions(state);
     syncMusicControls(state);
     syncPresetStatus(state);
-    renderMemberSlots(memberSlots, data.cardsById, state, picker.open);
+    renderMemberSlots(memberSlots, data.cardsById, state, picker.open, clearPresetSlot);
     renderResult(data, state, lastRecommendation);
+    applySimulationTargetPresentation(resultContainer, state, lastRecommendation);
     ownedCardsView.render(state);
     optimizeButton.disabled = state.ownedCardIds.length < 6;
     picker.refresh();
