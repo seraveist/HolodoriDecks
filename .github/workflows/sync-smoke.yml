@@ -1,0 +1,36 @@
+name: Sync Smoke Test
+
+on:
+  push:
+    branches: [feat/automated-master-sync]
+    paths:
+      - .github/workflows/sync-smoke.yml
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: python -m pip install --disable-pip-version-check -e '.[test]'
+      - name: Rebuild latest aligned upstream snapshot
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          cp data/generated/manifest.json /tmp/baseline.json
+          holodori-sync --force | tee /tmp/sync-result.json
+          node scripts/build-i18n.mjs
+          node scripts/build-chart-index.mjs
+          python scripts/validate-generated-data.py --baseline /tmp/baseline.json
+          python -m pytest -q
+          node scripts/test-chart-scoring.mjs
+          git status --short -- data/generated data/upstream.json data/sync_state.json
