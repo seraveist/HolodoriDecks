@@ -21,20 +21,35 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - uses: actions/configure-pages@v5
 
       - name: Validate static web
         run: |
           find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+          node --check scripts/build-i18n.mjs
           test -f index.html
           test -f styles.css
           test -f data/generated/cards.json
+          test -f data/generated/characters.json
           test -f data/generated/music.json
           test -f data/generated/manifest.json
+
+      - name: Build and validate locale packs
+        run: |
+          node scripts/build-i18n.mjs
+          test -s data/generated/i18n/ko.json
+          test -s data/generated/i18n/en.json
+          test -s data/generated/i18n/ja.json
+          test -s data/generated/i18n/manifest.json
 
       - name: Prepare Pages artifact
         run: |
