@@ -1,5 +1,15 @@
-import { t } from "../i18n.js?v=20260812.1";
-import { renderLandscapeCardArt, renderCardCopy, wirePortraitFallback } from "./cards.js?v=20260812.1";
+import { getLocale, t } from "../i18n.js?v=20260812.2";
+import { renderLandscapeCardArt, renderCardCopy, wirePortraitFallback } from "./cards.js?v=20260812.2";
+
+const CLEAR_COPY = Object.freeze({
+  ko: { change: "카드 변경", clear: "슬롯 비우기" },
+  en: { change: "Change card", clear: "Clear slot" },
+  ja: { change: "カード変更", clear: "スロットを空にする" },
+});
+
+function extraCopy() {
+  return CLEAR_COPY[getLocale()] ?? CLEAR_COPY.ko;
+}
 
 export function getSlotLabel(index) {
   return index === 0 ? t("slot.leader") : t("slot.member", { index });
@@ -31,15 +41,21 @@ function filledSlot(index, card, locked, setting) {
   const status = locked ? t("slot.fixed") : t("slot.recommended");
   const slot = getSlotLabel(index);
   const profile = normalizeCardProfile(card, setting);
+  const changeLabel = `${slot} ${card.character_name} · ${extraCopy().change} · ${status}`;
+  const clearLabel = `${slot} · ${extraCopy().clear}`;
   return `
-    <button class="member-slot filled ${locked ? "is-locked" : "is-recommended"}" type="button" data-member-slot="${index}" aria-label="${t("slot.changeAria", { slot, character: card.character_name, status })}">
+    <article class="member-slot filled ${locked ? "is-locked" : "is-recommended"}">
       <span class="slot-role">${slot} · ${status}</span>
       ${renderLandscapeCardArt(card, { lazy: false })}
       ${renderCardCopy(card, "slot-card-copy", `Lv${profile.level} · ${t("card.potential")} ${profile.potential}`)}
-    </button>`;
+      <button class="member-slot-select" type="button" data-member-slot="${index}" aria-label="${changeLabel}">
+        <span class="sr-only">${extraCopy().change}</span>
+      </button>
+      <button class="slot-clear-button" type="button" data-clear-member-slot="${index}" aria-label="${clearLabel}" title="${clearLabel}">×</button>
+    </article>`;
 }
 
-export function renderMemberSlots(container, cardsById, state, onSlotClick) {
+export function renderMemberSlots(container, cardsById, state, onSlotClick, onSlotClear) {
   container.innerHTML = state.members
     .map((cardId, index) => {
       const card = cardId ? cardsById.get(cardId) : null;
@@ -50,6 +66,12 @@ export function renderMemberSlots(container, cardsById, state, onSlotClick) {
 
   container.querySelectorAll("[data-member-slot]").forEach((button) => {
     button.addEventListener("click", () => onSlotClick(Number(button.dataset.memberSlot), button));
+  });
+  container.querySelectorAll("[data-clear-member-slot]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      onSlotClear?.(Number(button.dataset.clearMemberSlot), button);
+    });
   });
   wirePortraitFallback(container);
 }
