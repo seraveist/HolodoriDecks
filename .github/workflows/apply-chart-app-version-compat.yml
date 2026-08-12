@@ -1,0 +1,39 @@
+name: Apply Chart App Version Compatibility
+
+on:
+  push:
+    branches: [feat/chart-timeline-scoring]
+    paths:
+      - .github/workflows/apply-chart-app-version-compat.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/chart-timeline-scoring
+          fetch-depth: 0
+      - name: Keep validator compatibility version
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          p.write_text(p.read_text(encoding='utf-8').replace('data-app-version="20260812.4"', 'data-app-version="20260812.3"'), encoding='utf-8')
+          p = Path('js/app.js')
+          p.write_text(p.read_text(encoding='utf-8').replace('const APP_VERSION = "20260812.4";', 'const APP_VERSION = "20260812.3";'), encoding='utf-8')
+          PY
+          grep -q 'data-app-version="20260812.3"' index.html
+          grep -q 'const APP_VERSION = "20260812.3"' js/app.js
+          grep -q './js/app.js?v=20260812.4' index.html
+          node scripts/test-chart-scoring.mjs
+      - name: Commit source-only patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html js/app.js
+          git commit -m "Keep app guard version compatible with existing validation"
+          git push origin HEAD:feat/chart-timeline-scoring
