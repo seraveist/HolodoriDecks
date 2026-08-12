@@ -1,27 +1,82 @@
-import { loadAppData } from "./data.js?v=20260811.19";
+import { loadAppData, loadManifest } from "./data.js?v=20260812.1";
 import { createStore } from "./state.js?v=20260811.19";
 import { optimizeOwnedDeck } from "./recommend.js?v=20260811.19";
 import { prepareScoreCards } from "./score.js?v=20260811.19";
-import { renderMemberSlots } from "./ui/member.js?v=20260811.19";
-import { createCardPicker } from "./ui/modal.js?v=20260811.19";
-import { mountMusicControls } from "./ui/music.js?v=20260811.19";
-import { createOwnedCardsView } from "./ui/owned.js?v=20260811.19";
-import { renderResult } from "./ui/result.js?v=20260811.19";
+import {
+  getLocale,
+  initI18n,
+  localizeAppData,
+  saveLocale,
+  t,
+} from "./i18n.js?v=20260812.1";
+import { renderMemberSlots } from "./ui/member.js?v=20260812.1";
+import { createCardPicker } from "./ui/modal.js?v=20260812.1";
+import { mountMusicControls } from "./ui/music.js?v=20260812.1";
+import { createOwnedCardsView } from "./ui/owned.js?v=20260812.1";
+import { renderResult } from "./ui/result.js?v=20260812.1";
 import { mountMemberOptions } from "./ui/target.js?v=20260811.19";
-import { requiredElement } from "./ui/dom.js?v=20260811.19";
-import { createCardDetail } from "./ui/card-detail.js?v=20260811.19";
+import { requiredElement } from "./ui/dom.js?v=20260812.1";
+import { createCardDetail } from "./ui/card-detail.js?v=20260812.1";
 
-const APP_VERSION = "20260811.19";
+const APP_VERSION = "20260812.1";
 const RESULT_COUNT = 5;
+const OPTIMIZER_REASON = Object.freeze({
+  "리더 1장과 멤버 5장을 구성하려면 보유 카드가 최소 6장 필요합니다.": {
+    ko: "리더 1장과 멤버 5장을 구성하려면 보유 카드가 최소 6장 필요합니다.",
+    en: "At least 6 owned cards are required to form 1 leader and 5 members.",
+    ja: "リーダー1枚とメンバー5枚を編成するには、所持カードが6枚以上必要です。",
+  },
+  "같은 카드를 멤버 슬롯에 두 번 고정할 수 없습니다.": {
+    ko: "같은 카드를 멤버 슬롯에 두 번 고정할 수 없습니다.",
+    en: "The same card cannot be locked into multiple member slots.",
+    ja: "同じカードを複数のメンバー枠に固定することはできません。",
+  },
+  "리더/멤버 분리 조건 때문에 고정 리더와 같은 홀로멤을 멤버로 사용할 수 없습니다.": {
+    ko: "리더/멤버 분리 조건 때문에 고정 리더와 같은 홀로멤을 멤버로 사용할 수 없습니다.",
+    en: "With Separate Leader/Member enabled, a member cannot use the same character as the locked leader.",
+    ja: "リーダー/メンバー分離が有効なため、固定リーダーと同じホロメンをメンバーに使用できません。",
+  },
+  "리더로 사용할 수 있는 보유 카드가 없습니다.": {
+    ko: "리더로 사용할 수 있는 보유 카드가 없습니다.",
+    en: "No owned card is available for the leader slot.",
+    ja: "リーダーに使用できる所持カードがありません。",
+  },
+  "고정 멤버가 5장을 초과했습니다.": {
+    ko: "고정 멤버가 5장을 초과했습니다.",
+    en: "More than 5 members are locked.",
+    ja: "固定メンバーが5枚を超えています。",
+  },
+  "고정 프리셋과 리더 발동 조건을 함께 만족하는 편성을 찾지 못했습니다.": {
+    ko: "고정 프리셋과 리더 발동 조건을 함께 만족하는 편성을 찾지 못했습니다.",
+    en: "No deck satisfies both the locked preset and the leader activation conditions.",
+    ja: "固定プリセットとリーダー発動条件の両方を満たす編成が見つかりませんでした。",
+  },
+});
+
+function localizeOptimizerReason(reason) {
+  const translated = OPTIMIZER_REASON[String(reason ?? "")];
+  return translated?.[getLocale()] ?? String(reason ?? "");
+}
 
 async function start() {
   if (document.documentElement.dataset.appVersion !== APP_VERSION) {
-    throw new Error("HTML과 JavaScript 버전이 일치하지 않습니다. 새 ZIP을 빈 폴더에 압축 해제한 뒤 다시 실행해 주세요.");
+    throw new Error(t("app.versionMismatch"));
   }
-  const memberSlots = requiredElement("#member-slots");
-  memberSlots.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><span aria-hidden="true">◌</span><p>카드 데이터를 불러오는 중입니다.</p></div>';
 
-  const data = await loadAppData();
+  const manifest = await loadManifest();
+  await initI18n(manifest);
+
+  const languageSelect = requiredElement("#language-select");
+  languageSelect.value = getLocale();
+  languageSelect.addEventListener("change", () => {
+    saveLocale(languageSelect.value);
+    window.location.reload();
+  });
+
+  const memberSlots = requiredElement("#member-slots");
+  memberSlots.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><span aria-hidden="true">◌</span><p>${t("app.loadingCards")}</p></div>`;
+
+  const data = localizeAppData(await loadAppData(manifest));
   const selectableCards = data.cards.filter((card) => [4, 5].includes(Number(card.rarity)));
   const maxLevelsById = new Map(data.cards.map((card) => [
     card.id,
@@ -59,7 +114,7 @@ async function start() {
     if (state.separateRole && leaderId) {
       const leaderCharacter = data.cardsById.get(leaderId)?.character_id;
       if (memberIds.some((cardId) => data.cardsById.get(cardId)?.character_id === leaderCharacter)) {
-        warning = "리더/멤버 분리 조건과 충돌하는 고정 카드가 있습니다.";
+        warning = t("preset.conflict");
       }
     }
     output.classList.toggle("is-warning", Boolean(warning));
@@ -70,12 +125,12 @@ async function start() {
   async function applyRecommendation() {
     const state = store.getState();
     if (state.ownedCardIds.length < 6) {
-      setRecommendationStatus("점수 조합을 계산하려면 보유 카드를 최소 6장 등록해 주세요.");
+      setRecommendationStatus(t("calc.needSix"));
       return false;
     }
     optimizeButton.disabled = true;
-    optimizeButton.textContent = `TOP ${RESULT_COUNT} 계산 중…`;
-    setRecommendationStatus("계산 중…");
+    optimizeButton.textContent = t("calc.runningTop", { count: RESULT_COUNT });
+    setRecommendationStatus(t("calc.running"));
     await new Promise((resolve) => window.requestAnimationFrame(() => window.setTimeout(resolve, 0)));
 
     const preparedCards = prepareScoreCards(data.cards, data.charactersById, state.ownedCardSettings, {
@@ -93,12 +148,12 @@ async function start() {
       separateRole: state.separateRole,
       resultCount: RESULT_COUNT,
     });
-    optimizeButton.textContent = "추천 편성 계산";
+    optimizeButton.textContent = t("calculate.button");
     optimizeButton.disabled = store.getState().ownedCardIds.length < 6;
 
     if (!result.ok) {
       lastRecommendation = null;
-      setRecommendationStatus(result.reason);
+      setRecommendationStatus(localizeOptimizerReason(result.reason));
       render(store.getState());
       return false;
     }
@@ -163,7 +218,7 @@ async function start() {
   function render(state) {
     if (lastRecommendation && lastRecommendation.signature !== recommendationSignature(state)) {
       lastRecommendation = null;
-      setRecommendationStatus("조건이 변경되었습니다. 추천 편성을 다시 계산해 주세요.");
+      setRecommendationStatus(t("calc.changed"));
     }
     syncMemberOptions(state);
     syncMusicControls(state);
@@ -183,7 +238,7 @@ async function start() {
 start().catch((error) => {
   console.error(error);
   const errorBox = document.querySelector("#app-error");
-  const message = `앱을 시작하지 못했습니다. 새 ZIP을 빈 폴더에 압축 해제하고 로컬 웹 서버를 다시 시작해 주세요. (${error.message})`;
+  const message = t("app.startFailed", { message: error.message });
   if (errorBox) {
     errorBox.hidden = false;
     errorBox.textContent = message;
