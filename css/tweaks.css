@@ -1,0 +1,123 @@
+.preset-slot-toolbar {
+  margin: -10px 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.preset-slot-toolbar .preset-guide {
+  margin: 0;
+}
+
+.preset-clear-button {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface-soft);
+}
+
+.member-slot.filled {
+  position: relative;
+}
+
+.member-slot-select {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.member-slot-select:focus-visible {
+  outline: 3px solid rgba(55, 103, 232, 0.3);
+  outline-offset: -4px;
+}
+
+.slot-clear-button {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  position: absolute;
+  z-index: 6;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(21, 31, 50, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--ink-800);
+  font-size: 19px;
+  line-height: 1;
+  box-shadow: 0 4px 14px rgba(21, 31, 50, 0.16);
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.slot-clear-button:hover {
+  border-color: #e49a9f;
+  background: #fff5f6;
+  color: var(--danger);
+  transform: scale(1.05);
+}
+
+.slot-clear-button:focus-visible {
+  outline: 3px solid rgba(55, 103, 232, 0.3);
+  outline-offset: 2px;
+}
+
+.member-slot.filled .attribute-icon {
+  right: 46px;
+}
+
+.result-members {
+  grid-template-columns: repeat(6, var(--result-card-width));
+}
+
+@media (max-width: 820px) {
+  .member-separate-toggle {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .preset-slot-toolbar {
+    align-items: flex-start;
+  }
+
+  .result-members {
+    --result-card-width: clamp(145px, 42vw, 168px);
+    justify-content: start;
+    gap: 10px;
+    padding: 14px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .result-card {
+    min-width: var(--result-card-width);
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 360px) {
+  .member-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .member-separate-toggle {
+    grid-column: auto;
+  }
+
+  .preset-slot-toolbar {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
