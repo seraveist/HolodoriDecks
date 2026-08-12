@@ -1,5 +1,6 @@
-import { escapeHtml } from "./cards.js?v=20260811.19";
-import { requiredElement } from "./dom.js?v=20260811.19";
+import { t } from "../i18n.js?v=20260812.1";
+import { escapeHtml } from "./cards.js?v=20260812.1";
+import { requiredElement } from "./dom.js?v=20260812.1";
 
 export function mountMusicControls(music, store) {
   const musicSelect = requiredElement("#music-select");
@@ -7,7 +8,7 @@ export function mountMusicControls(music, store) {
   const playModeSelect = requiredElement("#play-mode");
 
   musicSelect.innerHTML = [
-    '<option value="">전체 평균</option>',
+    `<option value="">${escapeHtml(t("music.average"))}</option>`,
     ...music.map((song) => `<option value="${escapeHtml(song.id)}">${escapeHtml(song.title)} · ${escapeHtml(song.singer_name)}</option>`),
   ].join("");
 

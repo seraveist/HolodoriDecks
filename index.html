@@ -1,71 +1,81 @@
 <!doctype html>
-<html lang="ko" data-app-version="20260811.19">
+<html lang="ko" data-app-version="20260812.1">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#f7f9fc">
-  <meta name="description" content="홀로라이브 드림스 6인 편성 UI 프로토타입">
+  <meta name="description" content="홀로라이브 드림스 6인 편성 시뮬레이터">
   <title>Holodori DeckSim</title>
-  <link rel="stylesheet" href="./styles.css?v=20260811.19">
+  <link rel="stylesheet" href="./styles.css?v=20260812.1">
 </head>
 <body>
-  <a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
+  <a class="skip-link" href="#main-content" data-i18n="skip.main">본문으로 건너뛰기</a>
 
   <header class="app-header">
     <div class="brand-lockup">
       <span class="brand-mark" aria-hidden="true">H</span>
       <div>
         <p class="eyebrow">HOLODORI DECK SIM</p>
-        <h1>홀로도리 편성기</h1>
+        <h1 data-i18n="app.name">홀로도리 편성기</h1>
       </div>
+    </div>
+    <div class="app-header-actions">
+      <label class="language-picker" for="language-select">
+        <span data-i18n="language.label">언어</span>
+        <select id="language-select" data-i18n-aria-label="language.label" aria-label="언어">
+          <option value="ko">한국어</option>
+          <option value="en">English</option>
+          <option value="ja">日本語</option>
+        </select>
+      </label>
     </div>
   </header>
 
   <main id="main-content" class="app-shell">
-    <nav class="view-tabs" aria-label="주요 화면" role="tablist">
+    <nav class="view-tabs" data-i18n-aria-label="nav.main" aria-label="주요 화면" role="tablist">
       <button id="deck-tab" class="view-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="deck-view" data-view-tab="deck">
-        <span>편성하기</span>
+        <span data-i18n="tab.deck">편성하기</span>
       </button>
       <button id="owned-tab" class="view-tab" type="button" role="tab" aria-selected="false" aria-controls="owned-view" data-view-tab="owned">
-        <span>내 보유 카드 <em class="view-tab-count">(<strong id="owned-tab-count">0</strong>)</em></span>
+        <span><span data-i18n="tab.owned">내 보유 카드</span> <em class="view-tab-count">(<strong id="owned-tab-count">0</strong>)</em></span>
       </button>
     </nav>
 
     <div id="deck-view" class="app-view" role="tabpanel" aria-labelledby="deck-tab">
-    <section id="member-setting" class="panel member-panel" aria-labelledby="member-title">
+    <section id="member-setting" class="panel member-panel" aria-labelledby="member-title" tabindex="-1">
       <div class="section-heading">
         <div class="section-title-row">
           <span class="section-number">01</span>
-          <h2 id="member-title">프리셋</h2>
+          <h2 id="member-title" data-i18n="preset.title">프리셋</h2>
         </div>
         <div class="member-actions">
           <label class="field member-level-field member-target-field">
-            <span>시뮬레이션 목표</span>
+            <span data-i18n="preset.target">시뮬레이션 목표</span>
             <select id="simulation-target">
-              <option value="score" selected>최고 스코어</option>
-              <option value="performance">퍼포먼스</option>
-              <option value="technique">테크닉</option>
-              <option value="sense">센스</option>
+              <option value="score" selected data-i18n="target.score">최고 스코어</option>
+              <option value="performance" data-i18n="target.performance">퍼포먼스</option>
+              <option value="technique" data-i18n="target.technique">테크닉</option>
+              <option value="sense" data-i18n="target.sense">센스</option>
             </select>
           </label>
           <label class="field member-level-field">
-            <span>육성 반영</span>
+            <span data-i18n="preset.levelMode">육성 반영</span>
             <select id="level-mode">
-              <option value="current" selected>현재 레벨 기준</option>
-              <option value="max">카드 최대 레벨 기준</option>
+              <option value="current" selected data-i18n="level.current">현재 레벨 기준</option>
+              <option value="max" data-i18n="level.max">카드 최대 레벨 기준</option>
             </select>
           </label>
           <label class="member-separate-toggle">
             <input id="separate-role" type="checkbox" checked>
-            <span>리더/멤버 분리</span>
+            <span data-i18n="preset.separate">리더/멤버 분리</span>
           </label>
-          <button id="clear-members" class="text-button" type="button">프리셋 초기화</button>
+          <button id="clear-members" class="text-button" type="button" data-i18n="preset.clear">프리셋 초기화</button>
         </div>
       </div>
 
-      <p class="preset-guide">계산에 고정할 리더나 멤버만 선택하세요. 선택하지 않은 자리는 시뮬레이션 목표에 맞춰 자동 편성됩니다.</p>
-      <div id="member-slots" class="member-slots" aria-label="고정 프리셋 슬롯"></div>
+      <p class="preset-guide" data-i18n="preset.guide">계산에 고정할 리더나 멤버만 선택하세요. 선택하지 않은 자리는 시뮬레이션 목표에 맞춰 자동 편성됩니다.</p>
+      <div id="member-slots" class="member-slots" data-i18n-aria-label="preset.slotsAria" aria-label="고정 프리셋 슬롯"></div>
       <p id="preset-status" class="preset-status" aria-live="polite" hidden></p>
     </section>
 
@@ -73,19 +83,19 @@
       <div class="section-heading">
         <div class="section-title-row">
           <span class="section-number">02</span>
-          <h2 id="music-title">악곡 세팅</h2>
+          <h2 id="music-title" data-i18n="music.title">악곡 세팅</h2>
         </div>
       </div>
 
       <div class="select-grid music-grid">
         <label class="field field-wide">
-          <span>악곡 이름</span>
+          <span data-i18n="music.name">악곡 이름</span>
           <select id="music-select">
-            <option value="">악곡 데이터를 불러오는 중...</option>
+            <option value="" data-i18n="music.loading">악곡 데이터를 불러오는 중...</option>
           </select>
         </label>
         <label class="field">
-          <span>난이도</span>
+          <span data-i18n="music.difficulty">난이도</span>
           <select id="difficulty-select">
             <option value="EASY">EASY</option>
             <option value="NORMAL">NORMAL</option>
@@ -94,17 +104,17 @@
           </select>
         </label>
         <label class="field">
-          <span>플레이 기준</span>
+          <span data-i18n="music.playMode">플레이 기준</span>
           <select id="play-mode">
-            <option value="auto" selected>AUTO 검증</option>
-            <option value="manual">Manual FC 근사</option>
+            <option value="auto" selected data-i18n="play.auto">AUTO 검증</option>
+            <option value="manual" data-i18n="play.manual">Manual FC 근사</option>
           </select>
         </label>
       </div>
 
       <div class="calculate-row">
         <output id="recommendation-status" aria-live="polite" hidden></output>
-        <button id="auto-compose" class="primary-button calculate-button" type="button">추천 편성 계산</button>
+        <button id="auto-compose" class="primary-button calculate-button" type="button" data-i18n="calculate.button">추천 편성 계산</button>
       </div>
     </section>
 
@@ -112,14 +122,14 @@
       <div class="section-heading result-heading">
         <div class="section-title-row">
           <span class="section-number">03</span>
-          <h2 id="result-title">결과 계산</h2>
+          <h2 id="result-title" data-i18n="result.title">결과 계산</h2>
         </div>
       </div>
 
       <div id="recommendation-results" class="recommendation-results" aria-live="polite">
         <div class="empty-state result-empty-state">
           <span aria-hidden="true">✦</span>
-          <p>악곡 아래의 계산 버튼을 누르면 추천 편성 TOP 5가 표시됩니다.</p>
+          <p data-i18n="result.initial">악곡 아래의 계산 버튼을 누르면 추천 편성 TOP 5가 표시됩니다.</p>
         </div>
       </div>
     </section>
@@ -129,55 +139,55 @@
       <div class="section-heading owned-heading">
         <div class="section-title-row">
           <span class="section-number">MY</span>
-          <h2>내 보유 카드 리스트</h2>
+          <h2 data-i18n="owned.title">내 보유 카드 리스트</h2>
         </div>
         <div class="owned-heading-actions">
-          <button id="export-owned-cards" class="owned-transfer-button" type="button">JSON 내보내기</button>
-          <button id="import-owned-cards" class="owned-transfer-button" type="button">JSON 가져오기</button>
-          <button id="owned-go-deck" class="primary-button" type="button">편성으로 돌아가기</button>
+          <button id="export-owned-cards" class="owned-transfer-button" type="button" data-i18n="owned.export">JSON 내보내기</button>
+          <button id="import-owned-cards" class="owned-transfer-button" type="button" data-i18n="owned.import">JSON 가져오기</button>
+          <button id="owned-go-deck" class="primary-button" type="button" data-i18n="owned.back">편성으로 돌아가기</button>
           <input id="owned-import-file" class="sr-only" type="file" accept=".json,application/json">
         </div>
       </div>
 
       <div class="owned-toolbar">
         <label class="search-field owned-search">
-          <span class="sr-only">보유 카드 검색</span>
-          <input id="owned-card-search" type="search" placeholder="캐릭터 또는 카드 이름 검색" autocomplete="off">
+          <span class="sr-only" data-i18n="owned.searchAria">보유 카드 검색</span>
+          <input id="owned-card-search" type="search" data-i18n-placeholder="owned.searchPlaceholder" placeholder="캐릭터 또는 카드 이름 검색" autocomplete="off">
         </label>
         <div class="filter-grid owned-filters">
           <label class="field compact-field">
-            <span>희귀도</span>
-            <select id="owned-rarity-filter" aria-label="희귀도 필터">
-              <option value="all">희귀도 전체</option>
+            <span data-i18n="filter.rarity">희귀도</span>
+            <select id="owned-rarity-filter" data-i18n-aria-label="filter.rarityAria" aria-label="희귀도 필터">
+              <option value="all" data-i18n="filter.rarityAll">희귀도 전체</option>
               <option value="5">★5</option>
               <option value="4">★4</option>
             </select>
           </label>
           <label class="field compact-field">
-            <span>타입</span>
-            <select id="owned-attribute-filter" aria-label="타입 필터">
-              <option value="all">타입 전체</option>
-              <option value="1">큐트</option>
-              <option value="2">퓨어</option>
-              <option value="3">해피</option>
+            <span data-i18n="filter.type">타입</span>
+            <select id="owned-attribute-filter" data-i18n-aria-label="filter.typeAria" aria-label="타입 필터">
+              <option value="all" data-i18n="filter.typeAll">타입 전체</option>
+              <option value="1" data-i18n="attribute.cute">큐트</option>
+              <option value="2" data-i18n="attribute.pure">퓨어</option>
+              <option value="3" data-i18n="attribute.happy">해피</option>
             </select>
           </label>
           <label class="field compact-field">
-            <span>표시</span>
-            <select id="owned-status-filter" aria-label="보유 상태 필터">
-              <option value="all">모든 카드</option>
-              <option value="owned">보유 카드만</option>
-              <option value="unowned">미보유 카드만</option>
+            <span data-i18n="filter.display">표시</span>
+            <select id="owned-status-filter" data-i18n-aria-label="filter.ownedAria" aria-label="보유 상태 필터">
+              <option value="all" data-i18n="filter.allCards">모든 카드</option>
+              <option value="owned" data-i18n="filter.ownedOnly">보유 카드만</option>
+              <option value="unowned" data-i18n="filter.unownedOnly">미보유 카드만</option>
             </select>
           </label>
           <label class="field compact-field">
-            <span>정렬</span>
-            <select id="owned-card-sort" aria-label="카드 정렬">
-              <option value="latest" selected>최신 데이터순</option>
-              <option value="game">인게임 캐릭터순</option>
-              <option value="power">추천력 높은 순</option>
-              <option value="rarity">희귀도 높은 순</option>
-              <option value="character">캐릭터 이름</option>
+            <span data-i18n="filter.sort">정렬</span>
+            <select id="owned-card-sort" data-i18n-aria-label="filter.sortAria" aria-label="카드 정렬">
+              <option value="latest" selected data-i18n="sort.latest">최신 데이터순</option>
+              <option value="game" data-i18n="sort.game">인게임 캐릭터순</option>
+              <option value="power" data-i18n="sort.power">추천력 높은 순</option>
+              <option value="rarity" data-i18n="sort.rarity">희귀도 높은 순</option>
+              <option value="character" data-i18n="sort.character">캐릭터 이름</option>
             </select>
           </label>
         </div>
@@ -189,8 +199,8 @@
           <span id="owned-visible-count">전체 0장</span>
         </div>
         <div class="owned-bulk-actions">
-          <button id="own-visible-cards" class="text-button" type="button">현재 목록 모두 보유</button>
-          <button id="clear-owned-cards" class="text-button danger" type="button">보유 목록 비우기</button>
+          <button id="own-visible-cards" class="text-button" type="button" data-i18n="owned.allVisible">현재 목록 모두 보유</button>
+          <button id="clear-owned-cards" class="text-button danger" type="button" data-i18n="owned.clear">보유 목록 비우기</button>
         </div>
       </div>
       <div id="owned-card-list" class="owned-card-list" aria-live="polite"></div>
@@ -207,42 +217,42 @@
       <header class="modal-header">
         <div>
           <p id="card-modal-slot" class="modal-kicker">MEMBER 01</p>
-          <h2 id="card-modal-title">카드 선택</h2>
+          <h2 id="card-modal-title" data-i18n="picker.title">카드 선택</h2>
         </div>
-        <button class="icon-button" type="button" data-close-modal aria-label="카드 선택 닫기">×</button>
+        <button class="icon-button" type="button" data-close-modal data-i18n-aria-label="picker.close" aria-label="카드 선택 닫기">×</button>
       </header>
 
       <div class="card-tools">
         <label class="search-field">
-          <span class="sr-only">카드 검색</span>
-          <input id="card-search" type="search" placeholder="캐릭터 또는 카드 이름 검색" autocomplete="off">
+          <span class="sr-only" data-i18n="picker.searchAria">카드 검색</span>
+          <input id="card-search" type="search" data-i18n-placeholder="picker.searchPlaceholder" placeholder="캐릭터 또는 카드 이름 검색" autocomplete="off">
         </label>
         <div class="filter-grid">
           <label class="field compact-field">
-            <span>희귀도</span>
+            <span data-i18n="filter.rarity">희귀도</span>
             <select id="rarity-filter">
-              <option value="all">전체</option>
+              <option value="all" data-i18n="picker.all">전체</option>
               <option value="5">★5</option>
               <option value="4">★4</option>
             </select>
           </label>
           <label class="field compact-field">
-            <span>타입</span>
+            <span data-i18n="filter.type">타입</span>
             <select id="attribute-filter">
-              <option value="all">전체</option>
-              <option value="1">큐트</option>
-              <option value="2">퓨어</option>
-              <option value="3">해피</option>
+              <option value="all" data-i18n="picker.all">전체</option>
+              <option value="1" data-i18n="attribute.cute">큐트</option>
+              <option value="2" data-i18n="attribute.pure">퓨어</option>
+              <option value="3" data-i18n="attribute.happy">해피</option>
             </select>
           </label>
           <label class="field compact-field">
-            <span>정렬</span>
+            <span data-i18n="filter.sort">정렬</span>
             <select id="card-sort">
-              <option value="default" selected>데이터 순서</option>
-              <option value="power">추천력 높은 순</option>
-              <option value="rarity">희귀도 높은 순</option>
-              <option value="character">캐릭터 이름</option>
-              <option value="name">카드 이름</option>
+              <option value="default" selected data-i18n="sort.data">데이터 순서</option>
+              <option value="power" data-i18n="sort.power">추천력 높은 순</option>
+              <option value="rarity" data-i18n="sort.rarity">희귀도 높은 순</option>
+              <option value="character" data-i18n="sort.character">캐릭터 이름</option>
+              <option value="name" data-i18n="sort.cardName">카드 이름</option>
             </select>
           </label>
         </div>
@@ -250,7 +260,7 @@
 
       <div class="picker-summary">
         <span id="card-count">보유 카드 0장</span>
-        <button id="clear-slot" class="text-button" type="button">현재 슬롯 비우기</button>
+        <button id="clear-slot" class="text-button" type="button" data-i18n="picker.clearSlot">현재 슬롯 비우기</button>
       </div>
       <div id="card-list" class="card-list" aria-live="polite"></div>
     </section>
@@ -261,16 +271,16 @@
     <section class="modal-dialog card-detail-dialog" role="dialog" aria-modal="true" aria-labelledby="card-detail-title">
       <header class="modal-header">
         <div>
-          <p class="modal-kicker">CARD INFORMATION</p>
-          <h2 id="card-detail-title">카드 상세 정보</h2>
+          <p class="modal-kicker" data-i18n="detail.kicker">CARD INFORMATION</p>
+          <h2 id="card-detail-title" data-i18n="detail.title">카드 상세 정보</h2>
         </div>
-        <button class="icon-button" type="button" data-close-card-detail aria-label="카드 상세 정보 닫기">×</button>
+        <button class="icon-button" type="button" data-close-card-detail data-i18n-aria-label="detail.close" aria-label="카드 상세 정보 닫기">×</button>
       </header>
       <div id="card-detail-content" class="card-detail-content"></div>
     </section>
   </div>
 
   <div id="app-error" class="app-error" role="alert" hidden></div>
-  <script type="module" src="./js/app.js?v=20260811.19"></script>
+  <script type="module" src="./js/app.js?v=20260812.1"></script>
 </body>
 </html>

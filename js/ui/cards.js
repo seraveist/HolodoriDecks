@@ -1,22 +1,24 @@
+import { t } from "../i18n.js?v=20260812.1";
+
 export const ATTRIBUTE_META = Object.freeze({
-  1: {
-    name: "큐트",
+  1: Object.freeze({
+    get name() { return t("attribute.cute"); },
     color: "#ef718f",
     soft: "#fdebf0",
-    icon: "./assets/ui/type-cute.svg?v=20260811.19",
-  },
-  2: {
-    name: "퓨어",
+    icon: "./assets/ui/type-cute.svg?v=20260812.1",
+  }),
+  2: Object.freeze({
+    get name() { return t("attribute.pure"); },
     color: "#4fb78d",
     soft: "#e9f7f1",
-    icon: "./assets/ui/type-pure.svg?v=20260811.19",
-  },
-  3: {
-    name: "해피",
+    icon: "./assets/ui/type-pure.svg?v=20260812.1",
+  }),
+  3: Object.freeze({
+    get name() { return t("attribute.happy"); },
     color: "#f0a33f",
     soft: "#fff3df",
-    icon: "./assets/ui/type-happy.svg?v=20260811.19",
-  },
+    icon: "./assets/ui/type-happy.svg?v=20260812.1",
+  }),
 });
 
 export function escapeHtml(value) {
@@ -50,8 +52,8 @@ export function attributeStyle(card) {
 
 export function renderCardArt(card, { lazy = true } = {}) {
   const meta = ATTRIBUTE_META[Number(card.attribute)] ?? ATTRIBUTE_META[1];
-  const icon = `<img class="attribute-icon" src="${meta.icon}" alt="${meta.name}">`;
-  const rarity = `<span class="rarity-badge" aria-label="희귀도 ${card.rarity}">${"★".repeat(Number(card.rarity))}</span>`;
+  const icon = `<img class="attribute-icon" src="${meta.icon}" alt="${escapeHtml(meta.name)}">`;
+  const rarity = `<span class="rarity-badge" aria-label="${escapeHtml(t("card.rarityAria", { rarity: card.rarity }))}">${"★".repeat(Number(card.rarity))}</span>`;
 
   if (!hasPortrait(card)) {
     return `<div class="card-art" style="${attributeStyle(card)}">${icon}<div class="r3-art"><strong>★3</strong><small>NO IMAGE</small></div></div>`;
@@ -63,13 +65,16 @@ export function renderCardArt(card, { lazy = true } = {}) {
 
 export function renderLandscapeCardArt(card, { lazy = true, showMeta = true } = {}) {
   const meta = ATTRIBUTE_META[Number(card.attribute)] ?? ATTRIBUTE_META[1];
-  const icon = showMeta ? `<img class="attribute-icon" src="${meta.icon}" alt="${meta.name}">` : "";
-  const rarity = showMeta ? `<span class="rarity-badge" aria-label="희귀도 ${card.rarity}">${"★".repeat(Number(card.rarity))}</span>` : "";
+  const icon = showMeta ? `<img class="attribute-icon" src="${meta.icon}" alt="${escapeHtml(meta.name)}">` : "";
+  const rarity = showMeta
+    ? `<span class="rarity-badge" aria-label="${escapeHtml(t("card.rarityAria", { rarity: card.rarity }))}">${"★".repeat(Number(card.rarity))}</span>`
+    : "";
 
   if (!hasPortrait(card)) {
+    const noImage = escapeHtml(t("card.noImage"));
     const placeholder = showMeta
-      ? "<div class=\"r3-art\"><strong>★3</strong><small>이미지 없음</small></div>"
-      : "<div class=\"r3-art clean-card-art\" role=\"img\" aria-label=\"이미지 없음\"></div>";
+      ? `<div class="r3-art"><strong>★3</strong><small>${noImage}</small></div>`
+      : `<div class="r3-art clean-card-art" role="img" aria-label="${noImage}"></div>`;
     return `<div class="landscape-card-art" style="${attributeStyle(card)}">${icon}${placeholder}</div>`;
   }
 
@@ -79,19 +84,19 @@ export function renderLandscapeCardArt(card, { lazy = true, showMeta = true } = 
 
 export function renderLandscapeCardTitle(card) {
   const meta = ATTRIBUTE_META[Number(card.attribute)] ?? ATTRIBUTE_META[1];
-  return `<span class="landscape-card-title"><span class="landscape-card-title-meta"><img class="landscape-card-type-icon" src="${meta.icon}" alt="${escapeHtml(meta.name)} 타입"><small>★${Number(card.rarity)}</small></span><strong>${escapeHtml(card.character_name)}</strong></span>`;
+  return `<span class="landscape-card-title"><span class="landscape-card-title-meta"><img class="landscape-card-type-icon" src="${meta.icon}" alt="${escapeHtml(t("card.typeAria", { type: meta.name }))}"><small>★${Number(card.rarity)}</small></span><strong>${escapeHtml(card.character_name)}</strong></span>`;
 }
 
 export function renderCardCopy(card, className = "slot-card-copy", metaText = "") {
   const meta = metaText ? `<small>${escapeHtml(metaText)}</small>` : "";
-  return `<div class="${className}" style="${attributeStyle(card)}"><strong>${escapeHtml(card.character_name)}</strong><span>${escapeHtml(card.name)}</span>${meta}</div>`;
+  return `<div class="${className}" style="${attributeStyle(card)}"><strong>${escapeHtml(card.character_name)}</strong><span>${escapeHtml(card.name || t("card.noName"))}</span>${meta}</div>`;
 }
 
 export function wirePortraitFallback(container) {
   container.querySelectorAll("[data-card-portrait]").forEach((image) => {
     image.addEventListener("error", () => {
       image.removeAttribute("data-card-portrait");
-      image.src = "./assets/ui/card-placeholder.svg";
+      image.src = "./assets/ui/card-placeholder.svg?v=20260812.1";
       image.classList.add("is-fallback");
     }, { once: true });
   });
@@ -99,6 +104,6 @@ export function wirePortraitFallback(container) {
 
 export function latestSkillDescription(skill) {
   const levels = skill?.levels ?? [];
-  const description = levels.at(-1)?.description ?? "정보 없음";
+  const description = levels.at(-1)?.description ?? t("card.infoNone");
   return cleanGameMarkup(description);
 }

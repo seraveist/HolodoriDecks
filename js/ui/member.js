@@ -1,15 +1,19 @@
-import { renderLandscapeCardArt, renderCardCopy, wirePortraitFallback } from "./cards.js?v=20260811.19";
+import { t } from "../i18n.js?v=20260812.1";
+import { renderLandscapeCardArt, renderCardCopy, wirePortraitFallback } from "./cards.js?v=20260812.1";
 
-const SLOT_LABELS = ["리더", "멤버 1", "멤버 2", "멤버 3", "멤버 4", "멤버 5"];
+export function getSlotLabel(index) {
+  return index === 0 ? t("slot.leader") : t("slot.member", { index });
+}
 
 function emptySlot(index) {
+  const slot = getSlotLabel(index);
   return `
-    <button class="member-slot" type="button" data-member-slot="${index}" aria-label="${SLOT_LABELS[index]} 카드 선택">
-      <span class="slot-role">${SLOT_LABELS[index]}</span>
+    <button class="member-slot" type="button" data-member-slot="${index}" aria-label="${t("slot.selectAria", { slot })}">
+      <span class="slot-role">${slot}</span>
       <span class="slot-empty">
         <span class="slot-plus" aria-hidden="true">＋</span>
-        <strong>카드 선택</strong>
-        <small>슬롯을 눌러주세요</small>
+        <strong>${t("slot.select")}</strong>
+        <small>${t("slot.tap")}</small>
       </span>
     </button>`;
 }
@@ -24,13 +28,14 @@ function normalizeCardProfile(card, setting) {
 }
 
 function filledSlot(index, card, locked, setting) {
-  const status = locked ? "고정" : "추천";
+  const status = locked ? t("slot.fixed") : t("slot.recommended");
+  const slot = getSlotLabel(index);
   const profile = normalizeCardProfile(card, setting);
   return `
-    <button class="member-slot filled ${locked ? "is-locked" : "is-recommended"}" type="button" data-member-slot="${index}" aria-label="${SLOT_LABELS[index]} ${card.character_name} 카드 변경 · ${status}">
-      <span class="slot-role">${SLOT_LABELS[index]} · ${status}</span>
+    <button class="member-slot filled ${locked ? "is-locked" : "is-recommended"}" type="button" data-member-slot="${index}" aria-label="${t("slot.changeAria", { slot, character: card.character_name, status })}">
+      <span class="slot-role">${slot} · ${status}</span>
       ${renderLandscapeCardArt(card, { lazy: false })}
-      ${renderCardCopy(card, "slot-card-copy", `Lv${profile.level} · ${profile.potential}개화`)}
+      ${renderCardCopy(card, "slot-card-copy", `Lv${profile.level} · ${t("card.potential")} ${profile.potential}`)}
     </button>`;
 }
 
@@ -48,5 +53,3 @@ export function renderMemberSlots(container, cardsById, state, onSlotClick) {
   });
   wirePortraitFallback(container);
 }
-
-export { SLOT_LABELS };

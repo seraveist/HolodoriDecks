@@ -7,5 +7,22 @@
   "music_count": 182,
   "leader_card_count": 169,
   "raden_card_count": 3,
-  "raden_leader_card_count": 3
+  "raden_leader_card_count": 3,
+  "locales": {
+    "ko": {
+      "repository": "HolodoriDB/holodori-db-kor-diff",
+      "commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+      "suffix": "Kor"
+    },
+    "en": {
+      "repository": "HolodoriDB/holodori-db-eng-diff",
+      "commit": "8323fb70899ba55fb68bf321d4ae6a80b5afba0a",
+      "suffix": "Eng"
+    },
+    "ja": {
+      "repository": "HolodoriDB/holodori-db-jpn-diff",
+      "commit": "8fe42ddb091a260faf2044e85feb7743a54dcec5",
+      "suffix": "Jpn"
+    }
+  }
 }

@@ -21,20 +21,64 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
 
       - uses: actions/configure-pages@v5
 
       - name: Validate static web
         run: |
           find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+          node --check scripts/build-i18n.mjs
+          node --input-type=module <<'NODE'
+          await Promise.all([
+            import('./js/i18n.js'),
+            import('./js/data.js'),
+            import('./js/state.js'),
+            import('./js/score.js'),
+            import('./js/recommend.js'),
+            import('./js/ui/cards.js'),
+            import('./js/ui/dom.js'),
+            import('./js/ui/member.js'),
+            import('./js/ui/modal.js'),
+            import('./js/ui/music.js'),
+            import('./js/ui/owned.js'),
+            import('./js/ui/result.js'),
+            import('./js/ui/target.js'),
+            import('./js/ui/card-detail.js'),
+          ]);
+          console.log('[pages] module imports resolved');
+          NODE
           test -f index.html
           test -f styles.css
           test -f data/generated/cards.json
+          test -f data/generated/characters.json
           test -f data/generated/music.json
           test -f data/generated/manifest.json
+
+      - name: Build and validate locale packs
+        run: |
+          node scripts/build-i18n.mjs
+          test -s data/generated/i18n/ko.json
+          test -s data/generated/i18n/en.json
+          test -s data/generated/i18n/ja.json
+          test -s data/generated/i18n/manifest.json
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const manifest = JSON.parse(await readFile('data/generated/i18n/manifest.json', 'utf8'));
+          if (!manifest.required_entry_count
+            || manifest.card_name_alias_count !== 7
+            || Object.keys(manifest.locales ?? {}).length !== 3) {
+            throw new Error('invalid i18n manifest');
+          }
+          console.log(`[pages] ${manifest.required_entry_count} required LangIds validated`);
+          NODE
 
       - name: Prepare Pages artifact
         run: |

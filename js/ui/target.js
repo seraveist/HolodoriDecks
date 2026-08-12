@@ -1,4 +1,4 @@
-import { requiredElement } from "./dom.js?v=20260811.19";
+import { requiredElement } from "./dom.js?v=20260812.1";
 
 export function mountMemberOptions(store) {
   const simulationTarget = requiredElement("#simulation-target");
