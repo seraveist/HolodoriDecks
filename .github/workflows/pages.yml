@@ -63,8 +63,10 @@ jobs:
           if (recommendationValue(probe, 'score') !== 100) throw new Error('score target ranking mismatch');
           if (recommendationValue(probe, 'potential') !== 140) throw new Error('potential target ranking mismatch');
           NODE
-          grep -q 'data-app-version="20260812.2"' index.html
+          grep -q 'data-app-version="20260812.3"' index.html
           grep -q '<option value="potential">최고 잠재 스코어</option>' index.html
+          grep -q 'id="theme-toggle"' index.html
+          if grep -q 'id="theme-select"' index.html; then exit 1; fi
           grep -q 'data-theme="dark"' css/theme.css
           test -f index.html
           test -f styles.css
