@@ -27,6 +27,11 @@ html[data-theme="dark"] body {
     var(--surface-soft);
 }
 
+html[data-theme="dark"] .skip-link {
+  background: #e7edf9;
+  color: #111824;
+}
+
 html[data-theme="dark"] .view-tabs,
 html[data-theme="dark"] .panel,
 html[data-theme="dark"] .modal-dialog,
@@ -77,6 +82,11 @@ html[data-theme="dark"] .member-slot {
 
 html[data-theme="dark"] .member-slot.filled {
   background: var(--surface);
+}
+
+html[data-theme="dark"] .member-slot.is-locked .slot-role {
+  background: #0b1018;
+  color: #fff;
 }
 
 html[data-theme="dark"] .slot-plus {
