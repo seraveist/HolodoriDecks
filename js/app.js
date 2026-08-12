@@ -1,17 +1,17 @@
-import { loadAppData } from "./data.js?v=20260812.20";
-import { createStore } from "./state.js?v=20260812.20";
-import { optimizeOwnedDeck } from "./recommend.js?v=20260812.20";
-import { prepareScoreCards } from "./score.js?v=20260812.20";
-import { renderMemberSlots } from "./ui/member.js?v=20260812.20";
-import { createCardPicker } from "./ui/modal.js?v=20260812.20";
-import { mountMusicControls } from "./ui/music.js?v=20260812.20";
-import { createOwnedCardsView } from "./ui/owned.js?v=20260812.20";
-import { renderResult } from "./ui/result.js?v=20260812.20";
-import { mountMemberOptions } from "./ui/target.js?v=20260812.20";
-import { requiredElement } from "./ui/dom.js?v=20260812.20";
-import { createCardDetail } from "./ui/card-detail.js?v=20260812.20";
+import { loadAppData } from "./data.js?v=20260812.21";
+import { createStore } from "./state.js?v=20260812.21";
+import { optimizeOwnedDeck } from "./recommend.js?v=20260812.21";
+import { prepareScoreCards } from "./score.js?v=20260812.21";
+import { renderMemberSlots } from "./ui/member.js?v=20260812.21";
+import { createCardPicker } from "./ui/modal.js?v=20260812.21";
+import { mountMusicControls } from "./ui/music.js?v=20260812.21";
+import { createOwnedCardsView } from "./ui/owned.js?v=20260812.21";
+import { renderResult } from "./ui/result.js?v=20260812.21";
+import { mountMemberOptions } from "./ui/target.js?v=20260812.21";
+import { requiredElement } from "./ui/dom.js?v=20260812.21";
+import { createCardDetail } from "./ui/card-detail.js?v=20260812.21";
 
-const APP_VERSION = "20260812.20";
+const APP_VERSION = "20260812.21";
 const RESULT_COUNT = 5;
 
 async function start() {
@@ -65,6 +65,18 @@ async function start() {
     output.classList.toggle("is-warning", Boolean(warning));
     output.textContent = warning;
     output.hidden = !warning;
+  }
+
+  function clearPresetSlot(index) {
+    const state = store.getState();
+    if (!state.members[index]) return;
+    const members = [...state.members];
+    const lockedSlots = [...state.lockedSlots];
+    members[index] = null;
+    lockedSlots[index] = false;
+    lastRecommendation = null;
+    store.setState({ members, lockedSlots });
+    setRecommendationStatus();
   }
 
   async function applyRecommendation() {
@@ -168,7 +180,7 @@ async function start() {
     syncMemberOptions(state);
     syncMusicControls(state);
     syncPresetStatus(state);
-    renderMemberSlots(memberSlots, data.cardsById, state, picker.open);
+    renderMemberSlots(memberSlots, data.cardsById, state, picker.open, clearPresetSlot);
     renderResult(data, state, lastRecommendation);
     ownedCardsView.render(state);
     optimizeButton.disabled = state.ownedCardIds.length < 6;
