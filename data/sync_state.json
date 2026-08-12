@@ -1,0 +1,23 @@
+{
+  "master_version": "879558f477b498cee415f23b1013af1bf72bf5e1d8468cc6022beecad57240c5",
+  "upstream_commit": "fee804a5a89a6564a38bd5f8dc0d0b48912e0016",
+  "locales": {
+    "ko": "fee804a5a89a6564a38bd5f8dc0d0b48912e0016",
+    "en": "91676d9c842bf67ad0beb27239700b56693020b8",
+    "ja": "22c7ee61f903ecbc264499f76a2cffdda0a016a0"
+  },
+  "changed_refs": [
+    "master_version",
+    "core_master_files",
+    "locale:ko",
+    "locale:en",
+    "locale:ja",
+    "forced"
+  ],
+  "counts": {
+    "characters": 62,
+    "cards": 169,
+    "music": 182,
+    "leaders": 169
+  }
+}
