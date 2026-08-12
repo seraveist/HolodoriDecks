@@ -95,3 +95,15 @@ P/T/S 목표는 없어야 합니다.
 ## 9. 현재 계산 범위
 
 추천 점수는 `Unit Score Engine v0.4-potential`과 정적 악곡 근사 계층을 사용합니다. 카드 레벨·개화·리더/액티브/패시브/스페셜 스킬은 반영하지만, 계정별 Holo멤버 보드·메모리 보정과 실제 노트 타임라인은 아직 포함하지 않습니다.
+
+### Chart timeline data
+
+```bash
+node scripts/build-chart-index.mjs
+node --check js/chart-data.js
+node --check js/chart-score.js
+node --check js/order.js
+python -m py_compile scripts/ingest-chart-metadata.py
+```
+
+실제 `.sus` 채보를 확보한 경우 `python scripts/ingest-chart-metadata.py <chart.sus>` 실행 후 `node scripts/build-chart-index.mjs`를 다시 실행해 `metadataPath`를 등록합니다.

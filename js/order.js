@@ -1,0 +1,149 @@
+import { evaluateDeck } from "./score.js?v=20260812.4";
+
+const finite = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
+
+function rankingValue(score, simulationTarget) {
+  return simulationTarget === "potential"
+    ? finite(score?.potentialRankingScore)
+    : finite(score?.rankingScore);
+}
+
+function compareResults(left, right) {
+  return right.rankingValue - left.rankingValue
+    || finite(right.score?.rankingScore) - finite(left.score?.rankingScore)
+    || finite(right.score?.unitScore) - finite(left.score?.unitScore);
+}
+
+function permutations(values) {
+  if (values.length <= 1) return [values];
+  const result = [];
+  const used = Array(values.length).fill(false);
+  const current = [];
+  function visit() {
+    if (current.length === values.length) {
+      result.push([...current]);
+      return;
+    }
+    for (let index = 0; index < values.length; index += 1) {
+      if (used[index]) continue;
+      used[index] = true;
+      current.push(values[index]);
+      visit();
+      current.pop();
+      used[index] = false;
+    }
+  }
+  visit();
+  return result;
+}
+
+function orderedMemberIds(result, currentMembers, lockedSlots) {
+  const selected = result.members.slice(1, 6);
+  const fixed = new Map();
+  const used = new Set();
+  for (let index = 0; index < 5; index += 1) {
+    const globalSlot = index + 1;
+    const fixedId = lockedSlots?.[globalSlot] ? currentMembers?.[globalSlot] : null;
+    if (!fixedId || !selected.includes(fixedId)) continue;
+    fixed.set(index, fixedId);
+    used.add(fixedId);
+  }
+  const open = Array.from({ length: 5 }, (_, index) => index).filter((index) => !fixed.has(index));
+  const freeIds = selected.filter((id) => !used.has(id));
+  return { fixed, open, freeIds };
+}
+
+function buildSlots(fixed, open, permutation) {
+  const slots = Array(5).fill(null);
+  for (const [index, id] of fixed.entries()) slots[index] = id;
+  open.forEach((index, position) => { slots[index] = permutation[position]; });
+  return slots;
+}
+
+export function optimizeRecommendationOrders({
+  recommendation,
+  preparedCards,
+  currentMembers,
+  lockedSlots,
+  music,
+  difficulty = "EXPERT",
+  playMode = "auto",
+  simulationTarget = "score",
+  separateRole = true,
+  resultCount = 5,
+}) {
+  const exactSkills = music?._chart?.metadata?.skills;
+  if (!recommendation?.ok || !Array.isArray(exactSkills) || exactSkills.length === 0) {
+    if (recommendation?.ok) {
+      recommendation.results = recommendation.results.slice(0, resultCount);
+      recommendation.members = recommendation.results[0]?.members ?? recommendation.members;
+      recommendation.score = recommendation.results[0]?.score ?? recommendation.score;
+      recommendation.orderOptimization = { mode: "skipped", evaluatedCount: 0, shortlistedCount: recommendation.results.length };
+    }
+    return recommendation;
+  }
+
+  let evaluatedCount = 0;
+  const orderedCandidates = [];
+  for (const result of recommendation.results) {
+    const leader = preparedCards.get(result.members[0]);
+    if (!leader) continue;
+    const layout = orderedMemberIds(result, currentMembers, lockedSlots);
+    let best = null;
+    for (const permutation of permutations(layout.freeIds)) {
+      const memberIds = buildSlots(layout.fixed, layout.open, permutation);
+      const members = memberIds.map((id) => preparedCards.get(id));
+      if (members.some((member) => !member)) continue;
+      const score = evaluateDeck({
+        leader,
+        members,
+        music,
+        difficulty,
+        playMode,
+        separateRole,
+      });
+      evaluatedCount += 1;
+      if (!score) continue;
+      const candidate = {
+        members: [leader.id, ...memberIds],
+        score,
+        rankingValue: rankingValue(score, simulationTarget),
+      };
+      if (!best || compareResults(candidate, best) < 0) best = candidate;
+    }
+    if (best) orderedCandidates.push(best);
+  }
+
+  orderedCandidates.sort(compareResults);
+  const finalResults = orderedCandidates.slice(0, Math.max(1, resultCount)).map((result) => {
+    const leader = preparedCards.get(result.members[0]);
+    const members = result.members.slice(1).map((id) => preparedCards.get(id));
+    const score = evaluateDeck({
+      leader,
+      members,
+      music,
+      difficulty,
+      playMode,
+      separateRole,
+      includeDiagnostics: true,
+    });
+    return {
+      ...result,
+      score,
+      rankingValue: rankingValue(score, simulationTarget),
+    };
+  }).sort(compareResults);
+
+  if (!finalResults.length) return recommendation;
+  return {
+    ...recommendation,
+    results: finalResults,
+    members: finalResults[0].members,
+    score: finalResults[0].score,
+    orderOptimization: {
+      mode: "exact",
+      evaluatedCount,
+      shortlistedCount: recommendation.results.length,
+    },
+  };
+}
