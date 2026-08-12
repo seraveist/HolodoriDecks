@@ -1,28 +1,26 @@
 {
-  "source_repository": "HolodoriDB/holodori-db-kor-diff",
-  "source_commit": "fee804a5a89a6564a38bd5f8dc0d0b48912e0016",
   "master_version": "879558f477b498cee415f23b1013af1bf72bf5e1d8468cc6022beecad57240c5",
-  "character_count": 62,
-  "card_count": 169,
-  "music_count": 182,
-  "leader_card_count": 169,
-  "raden_card_count": 3,
-  "raden_leader_card_count": 3,
+  "generated_at": "2026-08-12T16:46:42.014Z",
+  "required_entry_count": 1596,
+  "card_name_alias_count": 7,
   "locales": {
     "ko": {
       "repository": "HolodoriDB/holodori-db-kor-diff",
       "commit": "fee804a5a89a6564a38bd5f8dc0d0b48912e0016",
-      "suffix": "Kor"
+      "source_version": "879558f477b498cee415f23b1013af1bf72bf5e1d8468cc6022beecad57240c5",
+      "entry_count": 4035
     },
     "en": {
       "repository": "HolodoriDB/holodori-db-eng-diff",
       "commit": "91676d9c842bf67ad0beb27239700b56693020b8",
-      "suffix": "Eng"
+      "source_version": "879558f477b498cee415f23b1013af1bf72bf5e1d8468cc6022beecad57240c5",
+      "entry_count": 4035
     },
     "ja": {
       "repository": "HolodoriDB/holodori-db-jpn-diff",
       "commit": "22c7ee61f903ecbc264499f76a2cffdda0a016a0",
-      "suffix": "Jpn"
+      "source_version": "879558f477b498cee415f23b1013af1bf72bf5e1d8468cc6022beecad57240c5",
+      "entry_count": 4027
     }
   }
 }

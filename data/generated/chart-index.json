@@ -1,9 +1,11 @@
 {
   "version": 1,
   "source_repository": "HolodoriDB/holodori-db-kor-diff",
-  "source_commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+  "source_commit": "fee804a5a89a6564a38bd5f8dc0d0b48912e0016",
   "chart_count": 728,
   "exact_metadata_count": 1,
+  "stale_metadata_count": 0,
+  "stale_metadata": [],
   "charts": {
     "m0129:EASY": {
       "musicId": "m0129",
