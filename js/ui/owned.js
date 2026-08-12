@@ -1,14 +1,66 @@
 import { compareByPower } from "../recommend.js?v=20260811.19";
+import { getLocale, localeCompare, t } from "../i18n.js?v=20260812.1";
 import {
   attributeStyle,
   escapeHtml,
   renderLandscapeCardArt,
   renderLandscapeCardTitle,
   wirePortraitFallback,
-} from "./cards.js?v=20260811.19";
-import { requiredElement } from "./dom.js?v=20260811.19";
+} from "./cards.js?v=20260812.1";
+import { requiredElement } from "./dom.js?v=20260812.1";
 
 const OWNED_CARD_RARITIES = new Set([4, 5]);
+const LOCAL_COPY = Object.freeze({
+  ko: {
+    badFormat: "지원하지 않는 보유 카드 JSON 형식입니다.",
+    visibleOf: (total, visible) => `전체 ${total}장 중 ${visible}장 표시`,
+    ownedChip: "✓ 보유",
+    registerChip: "+ 등록",
+    levelAria: (name) => `${name} 레벨`,
+    potentialAria: (name) => `${name} 개화 단계`,
+    potentialOption: (value) => `${value}개화`,
+    clearConfirm: "보유 카드 목록과 현재 편성을 모두 비울까요?",
+    nothingToExport: "내보낼 보유 카드가 없습니다.",
+    noImportable: "가져올 수 있는 ★4·★5 카드가 없습니다.",
+    replaceConfirm: (count) => `가져온 ${count}장의 카드로 현재 보유 목록을 교체할까요?`,
+    imported: (count) => `${count}장의 보유 카드를 가져왔습니다.`,
+    importFailed: (message) => `보유 카드 JSON을 가져오지 못했습니다. (${message})`,
+  },
+  en: {
+    badFormat: "Unsupported owned-card JSON format.",
+    visibleOf: (total, visible) => `${visible} of ${total} cards shown`,
+    ownedChip: "✓ Owned",
+    registerChip: "+ Add",
+    levelAria: (name) => `${name} level`,
+    potentialAria: (name) => `${name} awakening level`,
+    potentialOption: (value) => `Awakening ${value}`,
+    clearConfirm: "Clear the owned-card list and current preset?",
+    nothingToExport: "There are no owned cards to export.",
+    noImportable: "The file contains no importable ★4/★5 cards.",
+    replaceConfirm: (count) => `Replace the current owned-card list with the ${count} imported cards?`,
+    imported: (count) => `Imported ${count} owned cards.`,
+    importFailed: (message) => `Could not import owned-card JSON. (${message})`,
+  },
+  ja: {
+    badFormat: "対応していない所持カード JSON 形式です。",
+    visibleOf: (total, visible) => `全${total}枚中 ${visible}枚表示`,
+    ownedChip: "✓ 所持",
+    registerChip: "+ 登録",
+    levelAria: (name) => `${name} レベル`,
+    potentialAria: (name) => `${name} 覚醒段階`,
+    potentialOption: (value) => `覚醒 ${value}`,
+    clearConfirm: "所持カード一覧と現在のプリセットをすべて削除しますか？",
+    nothingToExport: "エクスポートする所持カードがありません。",
+    noImportable: "インポートできる★4・★5カードがありません。",
+    replaceConfirm: (count) => `現在の所持カード一覧を、インポートした${count}枚に置き換えますか？`,
+    imported: (count) => `${count}枚の所持カードをインポートしました。`,
+    importFailed: (message) => `所持カード JSON をインポートできませんでした。(${message})`,
+  },
+});
+
+function copy() {
+  return LOCAL_COPY[getLocale()] ?? LOCAL_COPY.ko;
+}
 
 function numericOrder(value) {
   const order = Number(value);
@@ -24,14 +76,14 @@ export function compareByGameOrder(a, b, charactersById = new Map()) {
   return Number(b.rarity) - Number(a.rarity)
     || numericOrder(charactersById.get(a.character_id)?.order) - numericOrder(charactersById.get(b.character_id)?.order)
     || numericOrder(a.order) - numericOrder(b.order)
-    || String(a.id).localeCompare(String(b.id), "ko");
+    || localeCompare(a.id, b.id);
 }
 
 export function compareByReleaseOrder(a, b, charactersById = new Map()) {
   return Number(b.rarity) - Number(a.rarity)
     || numericReleaseOrder(b.order) - numericReleaseOrder(a.order)
     || numericOrder(charactersById.get(a.character_id)?.order) - numericOrder(charactersById.get(b.character_id)?.order)
-    || String(b.id).localeCompare(String(a.id), "ko");
+    || localeCompare(b.id, a.id);
 }
 
 export function createOwnedCardsExport(state) {
@@ -53,7 +105,7 @@ export function normalizeOwnedCardsImport(payload, cards) {
   if (!Array.isArray(rows) && Array.isArray(payload?.ownedCardIds)) {
     rows = payload.ownedCardIds.map((id) => ({ id, ...payload.ownedCardSettings?.[id] }));
   }
-  if (!Array.isArray(rows)) throw new Error("지원하지 않는 보유 카드 JSON 형식입니다.");
+  if (!Array.isArray(rows)) throw new Error(copy().badFormat);
   const ownedCardIds = [];
   const ownedCardSettings = {};
   const seen = new Set();
@@ -95,10 +147,10 @@ export function createOwnedCardsView({ cards, charactersById = new Map(), store,
   }
 
   function filteredCards(state) {
-    const query = search.value.trim().toLocaleLowerCase("ko");
+    const query = search.value.trim().toLocaleLowerCase();
     const owned = new Set(state.ownedCardIds);
     const visible = displayCards.filter((card) => {
-      const matchesQuery = !query || `${card.character_name} ${card.name}`.toLocaleLowerCase("ko").includes(query);
+      const matchesQuery = !query || `${card.character_name} ${card.name}`.toLocaleLowerCase().includes(query);
       const matchesRarity = rarity.value === "all" || Number(rarity.value) === Number(card.rarity);
       const matchesAttribute = attribute.value === "all" || Number(attribute.value) === Number(card.attribute);
       const matchesStatus = status.value === "all"
@@ -116,7 +168,7 @@ export function createOwnedCardsView({ cards, charactersById = new Map(), store,
     } else if (sort.value === "rarity") {
       visible.sort((a, b) => Number(b.rarity) - Number(a.rarity) || numericOrder(b.order) - numericOrder(a.order));
     } else if (sort.value === "character") {
-      visible.sort((a, b) => a.character_name.localeCompare(b.character_name, "ko") || Number(a.order) - Number(b.order));
+      visible.sort((a, b) => localeCompare(a.character_name, b.character_name) || Number(a.order) - Number(b.order));
     } else {
       visible.sort((a, b) => compareByReleaseOrder(a, b, charactersById));
     }
@@ -156,12 +208,12 @@ export function createOwnedCardsView({ cards, charactersById = new Map(), store,
     const owned = new Set(state.ownedCardIds);
     const visible = filteredCards(state);
     const ownedDisplayCount = displayCards.reduce((countValue, card) => countValue + Number(owned.has(card.id)), 0);
-    ownedCount.textContent = `${ownedDisplayCount}장 보유`;
-    visibleCount.textContent = `전체 ${displayCards.length}장 중 ${visible.length}장 표시`;
+    ownedCount.textContent = t("owned.count", { count: ownedDisplayCount });
+    visibleCount.textContent = copy().visibleOf(displayCards.length, visible.length);
     tabCount.textContent = String(ownedDisplayCount);
 
     if (!visible.length) {
-      list.innerHTML = '<div class="empty-state"><span aria-hidden="true">⌕</span><p>조건에 맞는 카드가 없습니다.</p></div>';
+      list.innerHTML = `<div class="empty-state"><span aria-hidden="true">⌕</span><p>${t("owned.none")}</p></div>`;
       return;
     }
 
@@ -171,18 +223,18 @@ export function createOwnedCardsView({ cards, charactersById = new Map(), store,
       return `
         <article class="owned-card${isOwned ? " is-owned" : ""}" style="${attributeStyle(card)}">
           <button class="owned-card-toggle" type="button" data-owned-card-id="${escapeHtml(card.id)}" aria-pressed="${isOwned}">
-            <span class="owned-check" aria-hidden="true">${isOwned ? "✓ 보유" : "+ 등록"}</span>
+            <span class="owned-check" aria-hidden="true">${isOwned ? copy().ownedChip : copy().registerChip}</span>
             ${renderLandscapeCardArt(card, { showMeta: false })}
             <span class="landscape-card-copy">
               ${renderLandscapeCardTitle(card)}
               <span>${escapeHtml(card.name)}</span>
-              ${isOwned ? `<small>Lv${setting.level} · ${setting.potential}개화</small>` : ""}
+              ${isOwned ? `<small>Lv${setting.level} · ${t("card.potential")} ${setting.potential}</small>` : ""}
             </span>
           </button>
-          <button class="card-detail-button" type="button" data-card-detail="${escapeHtml(card.id)}" aria-label="${escapeHtml(card.character_name)} 카드 상세 정보">i</button>
+          <button class="card-detail-button" type="button" data-card-detail="${escapeHtml(card.id)}" aria-label="${escapeHtml(t("card.detailsAria", { character: card.character_name }))}">i</button>
           ${isOwned ? `<div class="owned-card-settings">
-            <label><span>레벨</span><input type="number" min="1" max="${maxLevel(card)}" value="${setting.level}" data-owned-level="${escapeHtml(card.id)}" aria-label="${escapeHtml(card.character_name)} 레벨"></label>
-            <label><span>개화</span><select data-owned-potential="${escapeHtml(card.id)}" aria-label="${escapeHtml(card.character_name)} 개화 단계">${Array.from({ length: 6 }, (_, value) => `<option value="${value}"${value === setting.potential ? " selected" : ""}>${value}개화</option>`).join("")}</select></label>
+            <label><span>${t("card.level")}</span><input type="number" min="1" max="${maxLevel(card)}" value="${setting.level}" data-owned-level="${escapeHtml(card.id)}" aria-label="${escapeHtml(copy().levelAria(card.character_name))}"></label>
+            <label><span>${t("card.potential")}</span><select data-owned-potential="${escapeHtml(card.id)}" aria-label="${escapeHtml(copy().potentialAria(card.character_name))}">${Array.from({ length: 6 }, (_, value) => `<option value="${value}"${value === setting.potential ? " selected" : ""}>${copy().potentialOption(value)}</option>`).join("")}</select></label>
           </div>` : ""}
         </article>`;
     }).join("");
@@ -219,14 +271,14 @@ export function createOwnedCardsView({ cards, charactersById = new Map(), store,
     store.setState({ ownedCardIds: [...owned], ownedCardSettings });
   });
   requiredElement("#clear-owned-cards").addEventListener("click", () => {
-    if (!window.confirm("보유 카드 목록과 현재 편성을 모두 비울까요?")) return;
+    if (!window.confirm(copy().clearConfirm)) return;
     store.setState({ ownedCardIds: [] });
   });
   const importInput = requiredElement("#owned-import-file");
   requiredElement("#export-owned-cards").addEventListener("click", () => {
     const state = store.getState();
     if (!state.ownedCardIds.length) {
-      window.alert("내보낼 보유 카드가 없습니다.");
+      window.alert(copy().nothingToExport);
       return;
     }
     const blob = new Blob([`${JSON.stringify(createOwnedCardsExport(state), null, 2)}\n`], { type: "application/json" });
@@ -244,13 +296,13 @@ export function createOwnedCardsView({ cards, charactersById = new Map(), store,
     if (!file) return;
     try {
       const imported = normalizeOwnedCardsImport(JSON.parse(await file.text()), displayCards);
-      if (!imported.ownedCardIds.length) throw new Error("가져올 수 있는 ★4·★5 카드가 없습니다.");
+      if (!imported.ownedCardIds.length) throw new Error(copy().noImportable);
       if (store.getState().ownedCardIds.length
-        && !window.confirm(`가져온 ${imported.ownedCardIds.length}장의 카드로 현재 보유 목록을 교체할까요?`)) return;
+        && !window.confirm(copy().replaceConfirm(imported.ownedCardIds.length))) return;
       store.setState(imported);
-      window.alert(`${imported.ownedCardIds.length}장의 보유 카드를 가져왔습니다.`);
+      window.alert(copy().imported(imported.ownedCardIds.length));
     } catch (error) {
-      window.alert(`보유 카드 JSON을 가져오지 못했습니다. (${error.message})`);
+      window.alert(copy().importFailed(error.message));
     }
   });
   requiredElement("#owned-go-deck").addEventListener("click", onGoDeck);
