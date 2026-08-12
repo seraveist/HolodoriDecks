@@ -1,13 +1,26 @@
 <!doctype html>
-<html lang="ko" data-app-version="20260812.1">
+<html lang="ko" data-app-version="20260812.2">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#f7f9fc">
   <meta name="description" content="홀로라이브 드림스 6인 편성 시뮬레이터">
   <title>Holodori DeckSim</title>
-  <link rel="stylesheet" href="./styles.css?v=20260812.1">
+  <script>
+    (() => {
+      try {
+        const saved = localStorage.getItem("holodori-decksim:theme") || "system";
+        const dark = saved === "dark" || (saved === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.dataset.themePreference = saved;
+        document.documentElement.dataset.theme = dark ? "dark" : "light";
+      } catch {
+        document.documentElement.dataset.themePreference = "system";
+        document.documentElement.dataset.theme = "light";
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="./styles.css?v=20260812.2">
 </head>
 <body>
   <a class="skip-link" href="#main-content" data-i18n="skip.main">본문으로 건너뛰기</a>
@@ -21,6 +34,14 @@
       </div>
     </div>
     <div class="app-header-actions">
+      <label class="theme-picker" for="theme-select">
+        <span id="theme-label">테마</span>
+        <select id="theme-select" aria-labelledby="theme-label">
+          <option value="system">시스템</option>
+          <option value="light">라이트</option>
+          <option value="dark">다크</option>
+        </select>
+      </label>
       <label class="language-picker" for="language-select">
         <span data-i18n="language.label">언어</span>
         <select id="language-select" data-i18n-aria-label="language.label" aria-label="언어">
@@ -53,10 +74,8 @@
           <label class="field member-level-field member-target-field">
             <span data-i18n="preset.target">시뮬레이션 목표</span>
             <select id="simulation-target">
-              <option value="score" selected data-i18n="target.score">최고 스코어</option>
-              <option value="performance" data-i18n="target.performance">퍼포먼스</option>
-              <option value="technique" data-i18n="target.technique">테크닉</option>
-              <option value="sense" data-i18n="target.sense">센스</option>
+              <option value="score" selected>최고 유닛 스코어</option>
+              <option value="potential">최고 잠재 스코어</option>
             </select>
           </label>
           <label class="field member-level-field">
@@ -70,11 +89,13 @@
             <input id="separate-role" type="checkbox" checked>
             <span data-i18n="preset.separate">리더/멤버 분리</span>
           </label>
-          <button id="clear-members" class="text-button" type="button" data-i18n="preset.clear">프리셋 초기화</button>
         </div>
       </div>
 
-      <p class="preset-guide" data-i18n="preset.guide">계산에 고정할 리더나 멤버만 선택하세요. 선택하지 않은 자리는 시뮬레이션 목표에 맞춰 자동 편성됩니다.</p>
+      <div class="preset-slot-toolbar">
+        <p class="preset-guide" data-i18n="preset.guide">계산에 고정할 리더나 멤버만 선택하세요. 선택하지 않은 자리는 시뮬레이션 목표에 맞춰 자동 편성됩니다.</p>
+        <button id="clear-members" class="text-button preset-clear-button" type="button" data-i18n="preset.clear">프리셋 초기화</button>
+      </div>
       <div id="member-slots" class="member-slots" data-i18n-aria-label="preset.slotsAria" aria-label="고정 프리셋 슬롯"></div>
       <p id="preset-status" class="preset-status" aria-live="polite" hidden></p>
     </section>
@@ -281,6 +302,6 @@
   </div>
 
   <div id="app-error" class="app-error" role="alert" hidden></div>
-  <script type="module" src="./js/app.js?v=20260812.1"></script>
+  <script type="module" src="./js/app.js?v=20260812.2"></script>
 </body>
 </html>
