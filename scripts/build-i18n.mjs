@@ -58,6 +58,31 @@ function flattenLanguageRows(rows, target, sourceLabel) {
   }
 }
 
+function buildCardNameAliases(cards, rawCardRows) {
+  const generatedIds = new Set(cards.map((card) => card.id));
+  const aliases = new Map();
+  for (const row of rawCardRows ?? []) {
+    const cardId = String(row?.id ?? row?.data?.id ?? "").trim();
+    if (!generatedIds.has(cardId)) continue;
+    const suffix = cardId.replace(/^card-/, "");
+    const canonicalKey = `la-card_name-${suffix}`;
+    const actualKey = String(row?.data?.nameLangId ?? "").trim();
+    if (actualKey && actualKey !== canonicalKey) aliases.set(canonicalKey, actualKey);
+  }
+  return aliases;
+}
+
+function applyCardNameAliases(pack, aliases, locale) {
+  for (const [canonicalKey, actualKey] of aliases) {
+    if (Object.hasOwn(pack, canonicalKey)) continue;
+    const translated = pack[actualKey];
+    if (typeof translated !== "string" || !translated.trim()) {
+      throw new Error(`${locale} 카드명 원본 LangId 누락: ${actualKey} -> ${canonicalKey}`);
+    }
+    pack[canonicalKey] = translated;
+  }
+}
+
 function requiredLangIds(cards, characters, music) {
   const ids = new Set();
   for (const character of characters) ids.add(`la-name-${character.id}`);
@@ -83,7 +108,7 @@ function requiredLangIds(cards, characters, music) {
   return ids;
 }
 
-async function buildLocale(locale, config, masterVersion, requiredIds) {
+async function buildLocale(locale, config, masterVersion, requiredIds, cardNameAliases) {
   const { repository, commit, suffix } = config ?? {};
   if (!repository || !commit || !suffix) {
     throw new Error(`manifest.locales.${locale} 설정이 불완전합니다.`);
@@ -105,6 +130,7 @@ async function buildLocale(locale, config, masterVersion, requiredIds) {
     const rows = await fetchJson(rawUrl(repository, commit, fileName), `${locale}/${fileName}`);
     flattenLanguageRows(rows, pack, `${locale}/${fileName}`);
   }
+  applyCardNameAliases(pack, cardNameAliases, locale);
 
   const missing = [...requiredIds].filter((id) => !Object.hasOwn(pack, id));
   if (missing.length) {
@@ -140,17 +166,29 @@ async function main() {
   const localeEntries = Object.entries(manifest.locales ?? {});
   if (!localeEntries.length) throw new Error("manifest.locales가 없습니다.");
 
+  const sourceRepository = String(manifest.source_repository ?? "").trim();
+  const sourceCommit = String(manifest.source_commit ?? "").trim();
+  if (!sourceRepository || !sourceCommit) {
+    throw new Error("manifest의 source_repository/source_commit이 없습니다.");
+  }
+  const rawCardRows = await fetchJson(
+    rawUrl(sourceRepository, sourceCommit, "Card.json"),
+    "core/Card.json",
+  );
+  const cardNameAliases = buildCardNameAliases(cards, rawCardRows);
+
   await mkdir(OUTPUT_DIR, { recursive: true });
   const requiredIds = requiredLangIds(cards, characters, music);
   const results = [];
   for (const [locale, config] of localeEntries) {
-    results.push(await buildLocale(locale, config, masterVersion, requiredIds));
+    results.push(await buildLocale(locale, config, masterVersion, requiredIds, cardNameAliases));
   }
 
   const report = {
     master_version: masterVersion,
     generated_at: new Date().toISOString(),
     required_entry_count: requiredIds.size,
+    card_name_alias_count: cardNameAliases.size,
     locales: Object.fromEntries(results.map((result) => [result.locale, {
       repository: result.repository,
       commit: result.commit,
@@ -160,6 +198,7 @@ async function main() {
   };
   await writeFile(path.join(OUTPUT_DIR, "manifest.json"), `${JSON.stringify(report, null, 2)}\n`, "utf8");
 
+  console.log(`[i18n] normalized ${cardNameAliases.size} non-standard card name LangIds`);
   for (const result of results) {
     console.log(`[i18n] ${result.locale}: ${result.entryCount} entries (${result.repository}@${result.commit.slice(0, 8)})`);
   }
