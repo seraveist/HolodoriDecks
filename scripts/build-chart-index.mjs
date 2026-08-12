@@ -16,11 +16,6 @@ const NOTE_TYPE = Object.freeze({
   LIVE_NOTE_TYPE_LONG_FLICK_END: "long_flick_end",
 });
 
-function suffixEnum(value) {
-  const text = String(value ?? "");
-  return text.split("_").slice(-4).join("_");
-}
-
 async function readJson(file) {
   return JSON.parse(await fs.readFile(file, "utf8"));
 }
@@ -40,14 +35,31 @@ function chartKey(musicId, difficulty) {
   return `${musicId}:${difficulty}`;
 }
 
-async function exactMetadataPath(musicId, difficulty) {
+async function exactMetadataStatus(musicId, difficulty, chartHash, fullComboNoteCount) {
   const fileName = `${musicId}-${difficulty}.json`;
   const absolute = path.join(GENERATED, "charts", fileName);
   try {
-    await fs.access(absolute);
-    return `./charts/${fileName}`;
-  } catch {
-    return null;
+    const metadata = await readJson(absolute);
+    if (String(metadata.musicId ?? "") !== musicId) {
+      return { metadataPath: null, stale: `${fileName}: musicId mismatch` };
+    }
+    if (String(metadata.difficulty ?? "").toUpperCase() !== difficulty) {
+      return { metadataPath: null, stale: `${fileName}: difficulty mismatch` };
+    }
+    if (chartHash && metadata.chartHash && String(metadata.chartHash) !== String(chartHash)) {
+      return { metadataPath: null, stale: `${fileName}: chartHash changed` };
+    }
+    const metadataFullCombo = Number(metadata.fullComboNoteCount) || 0;
+    if (fullComboNoteCount && metadataFullCombo && metadataFullCombo !== fullComboNoteCount) {
+      return { metadataPath: null, stale: `${fileName}: fullComboNoteCount changed` };
+    }
+    if (fullComboNoteCount && Array.isArray(metadata.notes) && metadata.notes.length !== fullComboNoteCount) {
+      return { metadataPath: null, stale: `${fileName}: note count changed` };
+    }
+    return { metadataPath: `./charts/${fileName}`, stale: null };
+  } catch (error) {
+    if (error?.code === "ENOENT") return { metadataPath: null, stale: null };
+    throw error;
   }
 }
 
@@ -109,24 +121,33 @@ async function main() {
   ]));
   const charts = {};
   let exactCount = 0;
+  const staleMetadata = [];
   for (const row of difficultyChart) {
     const difficulty = difficultyFromRow(row);
     if (!difficulty || !row.music_id) continue;
     const data = row.data ?? {};
     const detail = difficultyByKey.get(chartKey(row.music_id, difficulty))?.data ?? {};
-    const metadataPath = await exactMetadataPath(row.music_id, difficulty);
-    if (metadataPath) exactCount += 1;
+    const fullComboNoteCount = Number(data.fullComboNoteCount) || 0;
+    const chartHash = data.chartHash ?? null;
+    const metadata = await exactMetadataStatus(
+      row.music_id,
+      difficulty,
+      chartHash,
+      fullComboNoteCount,
+    );
+    if (metadata.metadataPath) exactCount += 1;
+    if (metadata.stale) staleMetadata.push(metadata.stale);
     charts[chartKey(row.music_id, difficulty)] = {
       musicId: row.music_id,
       difficulty,
       difficultyType: Number(row.difficulty_type),
       difficultyLevel: Number(detail.difficultyLevel) || null,
       chartAssetId: detail.chartAssetId ?? null,
-      fullComboNoteCount: Number(data.fullComboNoteCount) || 0,
+      fullComboNoteCount,
       normalNoteCount: Number(data.normalNoteCount) || 0,
       maxComboCountRewardThreshold: Number(data.maxComboCountRewardThreshold) || 0,
-      chartHash: data.chartHash ?? null,
-      metadataPath,
+      chartHash,
+      metadataPath: metadata.metadataPath,
     };
   }
 
@@ -136,6 +157,8 @@ async function main() {
     source_commit: commit,
     chart_count: Object.keys(charts).length,
     exact_metadata_count: exactCount,
+    stale_metadata_count: staleMetadata.length,
+    stale_metadata: staleMetadata,
     charts,
   };
   const scoreRules = {
@@ -150,7 +173,10 @@ async function main() {
   await fs.mkdir(GENERATED, { recursive: true });
   await fs.writeFile(path.join(GENERATED, "chart-index.json"), `${JSON.stringify(index, null, 2)}\n`);
   await fs.writeFile(path.join(GENERATED, "live-score-rules.json"), `${JSON.stringify(scoreRules, null, 2)}\n`);
-  console.log(`chart-index: ${index.chart_count} charts, ${exactCount} exact metadata files`);
+  console.log(`chart-index: ${index.chart_count} charts, ${exactCount} exact metadata files, ${staleMetadata.length} stale metadata files`);
+  if (staleMetadata.length) {
+    for (const item of staleMetadata) console.warn(`[chart-index] stale exact metadata disabled: ${item}`);
+  }
   console.log(`score-rules: ${Object.keys(scoreRules.noteWeights.manual).length} manual note types, ${scoreRules.combo.length} combo thresholds`);
 }
 

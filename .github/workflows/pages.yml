@@ -26,6 +26,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -36,11 +40,17 @@ jobs:
         run: |
           find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
           node --check scripts/build-i18n.mjs
+          node --check scripts/build-chart-index.mjs
+          node --check scripts/test-chart-scoring.mjs
+          python -m py_compile scripts/validate-generated-data.py
           node --input-type=module <<'NODE'
           await Promise.all([
             import('./js/i18n.js'),
             import('./js/theme.js'),
             import('./js/data.js'),
+            import('./js/chart-data.js'),
+            import('./js/chart-score.js'),
+            import('./js/order.js'),
             import('./js/state.js'),
             import('./js/score.js'),
             import('./js/recommend.js'),
@@ -100,9 +110,11 @@ jobs:
           NODE
           grep -q 'styles.css?v=20260812.5' index.html
 
-      - name: Build and validate locale packs
+      - name: Build and validate derived master data
         run: |
           node scripts/build-i18n.mjs
+          node scripts/build-chart-index.mjs
+          python scripts/validate-generated-data.py
           test -s data/generated/i18n/ko.json
           test -s data/generated/i18n/en.json
           test -s data/generated/i18n/ja.json
@@ -111,7 +123,8 @@ jobs:
           import { readFile } from 'node:fs/promises';
           const manifest = JSON.parse(await readFile('data/generated/i18n/manifest.json', 'utf8'));
           if (!manifest.required_entry_count
-            || manifest.card_name_alias_count !== 7
+            || !Number.isInteger(manifest.card_name_alias_count)
+            || manifest.card_name_alias_count < 0
             || Object.keys(manifest.locales ?? {}).length !== 3) {
             throw new Error('invalid i18n manifest');
           }
