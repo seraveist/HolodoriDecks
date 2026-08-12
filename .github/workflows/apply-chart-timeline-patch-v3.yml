@@ -1,0 +1,296 @@
+name: Apply Chart Timeline Patch V3
+
+on:
+  push:
+    branches: [feat/chart-timeline-scoring]
+    paths:
+      - .github/workflows/apply-chart-timeline-patch-v3.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/chart-timeline-scoring
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Patch source integration
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def rw(path):
+              return Path(path).read_text(encoding="utf-8")
+
+          def write(path, text):
+              Path(path).write_text(text, encoding="utf-8")
+
+          def replace_between(path, start, end, replacement):
+              text = rw(path)
+              a = text.find(start)
+              if a < 0:
+                  raise SystemExit(f"start marker missing: {path}: {start}")
+              b = text.find(end, a)
+              if b < 0:
+                  raise SystemExit(f"end marker missing: {path}: {end}")
+              write(path, text[:a] + replacement.rstrip() + "\n\n" + text[b:])
+
+          def append_once(path, marker, block):
+              text = rw(path)
+              if marker not in text:
+                  write(path, text.rstrip() + "\n\n" + block.strip() + "\n")
+
+          # score.js: actual full-combo counts immediately, exact note/SP timeline when metadata exists.
+          text = rw("js/score.js")
+          if not text.startswith('import { buildSongContext'):
+              text = 'import { buildSongContext, songKernel, timelineSongProjection } from "./chart-score.js?v=20260812.4";\n\n' + text
+          text = text.replace(
+              'export const SCORE_ENGINE_VERSION = "unit-score-v0.4-potential + song-score-v0.3-static";',
+              'export const SCORE_ENGINE_VERSION = "unit-score-v0.5-potential + song-score-v0.4-chart-timeline";',
+          )
+          write("js/score.js", text)
+
+          replace_between("js/score.js", "function contextFromMusic(", "function averageComboMultiplier", '''function contextFromMusic(music, difficulty) {
+            if (music) {
+              const context = buildSongContext(music, difficulty, music?._chart ?? null);
+              return { ...context, comboMultiplier: averageComboMultiplier(context.notes) };
+            }
+            const density = DIFFICULTY_NOTE_DENSITY[difficulty] ?? DIFFICULTY_NOTE_DENSITY.EXPERT;
+            return {
+              ...UNIT_CONTEXT,
+              kind: "generic",
+              comboMultiplier: averageComboMultiplier(UNIT_CONTEXT.notes),
+              density,
+              title: "범용 악곡",
+              chartAccuracy: "generic",
+              noteTimeline: [],
+              skillTimeline: [],
+              fever: null,
+            };
+          }''')
+
+          replace_between("js/score.js", "function projectSong(", "function diagnostics", '''function projectSong(unitScore, members, music, difficulty, fullSupportPct, playMode = "auto") {
+            if (!music) return null;
+            const selected = contextFromMusic(music, difficulty);
+            const generic = contextFromMusic(null, difficulty);
+            const scoreRules = music?._scoreRules ?? null;
+            const genericExpected = songSkillMultiplier(members, generic, fullSupportPct);
+            if (selected.chartAccuracy === "exact" && selected.noteTimeline.length) {
+              return timelineSongProjection({
+                unitScore,
+                members,
+                context: selected,
+                genericContext: generic,
+                fullSupportPct,
+                playMode,
+                genericSkillMultiplier: genericExpected.skillMultiplier,
+                scoreRules,
+              });
+            }
+            const selectedExpected = songSkillMultiplier(members, selected, fullSupportPct);
+            const selectedMaximum = songSkillMultiplier(members, selected, fullSupportPct, true);
+            const manual = playMode === "manual";
+            const selectedKernel = songKernel(selected, playMode, scoreRules);
+            const genericKernel = songKernel(generic, playMode, scoreRules);
+            const baseRatio = genericKernel > 0 ? selectedKernel / genericKernel : 1;
+            const skillRatio = genericExpected.skillMultiplier > 0
+              ? selectedExpected.skillMultiplier / genericExpected.skillMultiplier
+              : 1;
+            const maxSkillRatio = genericExpected.skillMultiplier > 0
+              ? selectedMaximum.skillMultiplier / genericExpected.skillMultiplier
+              : 1;
+            const averageScore = Math.max(0, Math.round(unitScore * baseRatio * skillRatio));
+            const maxScore = Math.max(averageScore, Math.round(unitScore * baseRatio * maxSkillRatio));
+            return {
+              averageScore,
+              maxScore,
+              baseRatio,
+              skillRatio,
+              maxSkillRatio,
+              context: selected,
+              playMode: manual ? "manual" : "auto",
+              expected: selectedExpected,
+              maximum: selectedMaximum,
+              specialWindows: [],
+              note: selected.chartAccuracy === "master"
+                ? "Master의 실제 풀콤보 노트 수를 사용하고, SP 타이밍은 집계 기반으로 근사합니다."
+                : manual
+                  ? "Manual FC 근사: 추정 노트와 콤보 보너스를 포함합니다."
+                  : "AUTO 근사: 추정 노트 수를 사용하고 콤보 보너스를 제외합니다.",
+            };
+          }''')
+
+          # app.js: lazy-load exact metadata, two-stage combination -> order optimization.
+          text = rw("js/app.js")
+          if 'loadChartResources, loadSelectedChart' not in text:
+              text = text.replace(
+                  'import { loadAppData, loadManifest } from "./data.js?v=20260812.2";\n',
+                  'import { loadAppData, loadManifest } from "./data.js?v=20260812.2";\nimport { loadChartResources, loadSelectedChart } from "./chart-data.js?v=20260812.4";\n',
+                  1,
+              )
+          text = text.replace('import { optimizeOwnedDeck } from "./recommend.js?v=20260812.2";', 'import { optimizeOwnedDeck } from "./recommend.js?v=20260812.4";')
+          if 'optimizeRecommendationOrders' not in text:
+              text = text.replace('import { prepareScoreCards } from "./score.js?v=20260812.2";', 'import { optimizeRecommendationOrders } from "./order.js?v=20260812.4";\nimport { prepareScoreCards } from "./score.js?v=20260812.4";')
+          else:
+              text = text.replace('import { prepareScoreCards } from "./score.js?v=20260812.2";', 'import { prepareScoreCards } from "./score.js?v=20260812.4";')
+          text = text.replace('import { renderResult } from "./ui/result.js?v=20260812.1";', 'import { renderResult } from "./ui/result.js?v=20260812.4";')
+          text = text.replace('const APP_VERSION = "20260812.3";', 'const APP_VERSION = "20260812.4";')
+          if 'const chartResources = await loadChartResources(manifest);' not in text:
+              text = text.replace(
+                  '  const data = localizeAppData(await loadAppData(manifest));',
+                  '  const data = localizeAppData(await loadAppData(manifest));\n  const chartResources = await loadChartResources(manifest);',
+                  1,
+              )
+          write("js/app.js", text)
+
+          replace_between("js/app.js", "    const preparedCards = prepareScoreCards(", '    optimizeButton.textContent = t("calculate.button");', '''    const preparedCards = prepareScoreCards(data.cards, data.charactersById, state.ownedCardSettings, {
+              levelMode: state.levelMode,
+            });
+            const song = state.musicId ? data.musicById.get(state.musicId) : null;
+            const chart = song ? await loadSelectedChart(chartResources, song.id, state.difficulty) : null;
+            const exactMusic = song ? { ...song, _chart: chart, _scoreRules: chartResources.scoreRules } : null;
+            const searchChart = chart ? { ...chart, metadata: null } : null;
+            const searchMusic = song ? { ...song, _chart: searchChart, _scoreRules: chartResources.scoreRules } : null;
+            const hasExactOrder = Boolean(chart?.metadata?.skills?.length);
+            let result = optimizeOwnedDeck({
+              preparedCards,
+              ownedCardIds: state.ownedCardIds,
+              currentMembers: state.members,
+              lockedSlots: state.lockedSlots,
+              music: searchMusic,
+              difficulty: state.difficulty,
+              playMode: state.playMode,
+              simulationTarget: state.simulationTarget,
+              separateRole: state.separateRole,
+              resultCount: hasExactOrder ? Math.min(10, RESULT_COUNT * 2) : RESULT_COUNT,
+            });
+            if (result.ok) {
+              result = optimizeRecommendationOrders({
+                recommendation: result,
+                preparedCards,
+                currentMembers: state.members,
+                lockedSlots: state.lockedSlots,
+                music: exactMusic,
+                difficulty: state.difficulty,
+                playMode: state.playMode,
+                simulationTarget: state.simulationTarget,
+                separateRole: state.separateRole,
+                resultCount: RESULT_COUNT,
+              });
+            }''')
+
+          # Result copy/UI.
+          text = rw("js/ui/result.js")
+          text = text.replace(
+              '    songMeta: (duration, notes, mode) => `${duration}초 · 약 ${notes}노트 · ${mode === "auto" ? "AUTO (콤보 보너스 없음)" : "Manual FC"}`,',
+              '    songMeta: (duration, notes, mode, accuracy) => `${duration}초 · ${accuracy === "estimated" ? "약 " : ""}${notes}노트 · ${mode === "auto" ? "AUTO (콤보 보너스 없음)" : "Manual FC"}`,\n    chartExact: "실제 채보 노트·SP 순서 반영",\n    chartMaster: "Master 풀콤보 노트 수 반영 · SP 타이밍 근사",\n    chartEstimated: "노트 밀도 추정",\n    specialTimeline: "스페셜 스킬 발동 순서",',
+              1,
+          )
+          text = text.replace(
+              '    songMeta: (duration, notes, mode) => `${duration}s · approx. ${notes} notes · ${mode === "auto" ? "AUTO (no combo bonus)" : "Manual FC"}`,',
+              '    songMeta: (duration, notes, mode, accuracy) => `${duration}s · ${accuracy === "estimated" ? "approx. " : ""}${notes} notes · ${mode === "auto" ? "AUTO (no combo bonus)" : "Manual FC"}`,\n    chartExact: "Exact chart notes and SP order applied",\n    chartMaster: "Master full-combo note count applied · SP timing approximated",\n    chartEstimated: "Estimated from note density",\n    specialTimeline: "Special Skill Order",',
+              1,
+          )
+          text = text.replace(
+              '    songMeta: (duration, notes, mode) => `${duration}秒 · 約${notes}ノーツ · ${mode === "auto" ? "AUTO（コンボボーナスなし）" : "Manual FC"}`,',
+              '    songMeta: (duration, notes, mode, accuracy) => `${duration}秒 · ${accuracy === "estimated" ? "約" : ""}${notes}ノーツ · ${mode === "auto" ? "AUTO（コンボボーナスなし）" : "Manual FC"}`,\n    chartExact: "実譜面ノーツ・SP順序を反映",\n    chartMaster: "Masterのフルコンボ数を反映 · SP時刻は近似",\n    chartEstimated: "ノーツ密度から推定",\n    specialTimeline: "スペシャルスキル発動順",',
+              1,
+          )
+          write("js/ui/result.js", text)
+
+          replace_between("js/ui/result.js", "function songProjection(", "function diagnosticSkillPayload", '''function specialSkillTimeline(projection) {
+            const windows = projection?.specialWindows ?? [];
+            if (!windows.length) return "";
+            return `<div class="special-skill-order"><strong>${escapeHtml(copy().specialTimeline)}</strong><ol>${windows.map((window) => `<li><b>SP ${window.slot}</b><span>${escapeHtml(window.characterName)} · ${formatSeconds(window.start)}–${formatSeconds(window.end)}</span></li>`).join("")}</ol></div>`;
+          }
+
+          function songProjection(score, song, difficulty) {
+            const projection = score.songProjection;
+            if (!projection || !song) {
+              return `<div class="song-projection is-generic"><strong>${t("music.average")}</strong><span>${escapeHtml(copy().genericEvaluation)}</span></div>`;
+            }
+            const accuracy = projection.context.chartAccuracy ?? "estimated";
+            const accuracyText = accuracy === "exact" ? copy().chartExact : accuracy === "master" ? copy().chartMaster : copy().chartEstimated;
+            return `
+              <div class="song-projection">
+                <div class="song-projection-score"><span>${escapeHtml(copy().selectedSongAverage)}</span><strong>${formatNumber(projection.averageScore)}</strong></div>
+                <div class="song-projection-score"><span>${escapeHtml(copy().allActiveMaximum)}</span><strong>${formatNumber(projection.maxScore)}</strong></div>
+                <p><b>${escapeHtml(song.title)} · ${escapeHtml(difficulty)}</b><span>${escapeHtml(copy().songMeta(projection.context.duration, formatNumber(projection.context.notes), projection.playMode, accuracy))}</span></p>
+                <p class="song-projection-accuracy"><span>${escapeHtml(accuracyText)}</span></p>
+                ${specialSkillTimeline(projection)}
+              </div>`;
+          }''')
+
+          append_once("css/components.css", ".special-skill-order {", '''
+          .special-skill-order {
+            grid-column: 1 / -1;
+            margin-top: 10px;
+            padding: 12px 14px;
+            border: 1px solid var(--accent-line);
+            border-radius: var(--radius-sm);
+            background: var(--accent-soft);
+          }
+          .special-skill-order > strong { color: var(--accent-ink); }
+          .special-skill-order ol { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin: 8px 0 0; padding: 0; list-style: none; }
+          .special-skill-order li { display: flex; gap: 8px; align-items: baseline; padding: 8px 10px; border-radius: 8px; background: var(--surface); }
+          .special-skill-order li b { color: var(--brand); white-space: nowrap; }
+          .special-skill-order li span { color: var(--ink-700); font-size: 0.88rem; }
+          .song-projection-accuracy { grid-column: 1 / -1; margin-top: 4px; color: var(--ink-650); font-size: 0.85rem; }
+          ''')
+
+          # Cache/version wiring only, no workflow files.
+          text = rw("index.html").replace('data-app-version="20260812.3"', 'data-app-version="20260812.4"')
+          text = text.replace('./styles.css?v=20260812.5', './styles.css?v=20260812.6')
+          text = text.replace('./js/app.js?v=20260812.3', './js/app.js?v=20260812.4')
+          write("index.html", text)
+          write("styles.css", rw("styles.css").replace('./css/components.css?v=20260812.5', './css/components.css?v=20260812.6'))
+
+          append_once("README.md", "## 실제 채보 타임라인", '''
+          ## 실제 채보 타임라인
+
+          악곡/난이도별 `MusicDifficultyChart`와 `MusicDifficulty`를 기반으로 `data/generated/chart-index.json`을 생성합니다. 이 인덱스가 있으면 실제 풀콤보 노트 수를 사용하며, 추출한 Holodori `.sus` 채보를 `scripts/ingest-chart-metadata.py`로 변환해 `data/generated/charts/`에 추가하면 노트별 시각/종류, SP 슬롯 발동 시각, Fever 구간까지 계산에 반영합니다.
+
+          ```bash
+          node scripts/build-chart-index.mjs
+          pip install git+https://github.com/HolodoriDB/holodori-scores.git
+          python scripts/ingest-chart-metadata.py path/to/chart_m0001_expert.sus
+          node scripts/build-chart-index.mjs
+          ```
+
+          정확한 채보 메타데이터가 있는 악곡은 추천 조합 상위 후보에 대해 잠긴 멤버 슬롯을 유지한 채 남은 슬롯 순열을 재평가하여 SP 발동 순서까지 최적화합니다. 채보 파일이 없는 경우에는 Master의 실제 풀콤보 노트 수를 사용하고 기존 집계형 SP 계산을 fallback으로 유지합니다.
+          ''')
+          append_once("LOCAL_TEST.md", "### Chart timeline data", '''
+          ### Chart timeline data
+
+          ```bash
+          node scripts/build-chart-index.mjs
+          node --check js/chart-data.js
+          node --check js/chart-score.js
+          node --check js/order.js
+          python -m py_compile scripts/ingest-chart-metadata.py
+          ```
+
+          실제 `.sus` 채보를 확보한 경우 `python scripts/ingest-chart-metadata.py <chart.sus>` 실행 후 `node scripts/build-chart-index.mjs`를 다시 실행해 `metadataPath`를 등록합니다.
+          ''')
+          PY
+      - name: Generate pinned master chart data
+        run: node scripts/build-chart-index.mjs
+      - name: Syntax check
+        run: |
+          find js -name '*.js' -print0 | xargs -0 -n1 node --check
+          node --check scripts/build-chart-index.mjs
+          python -m py_compile scripts/ingest-chart-metadata.py
+          rm -rf scripts/__pycache__
+      - name: Commit source and generated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add js css scripts data/generated/chart-index.json data/generated/live-score-rules.json index.html styles.css README.md LOCAL_TEST.md
+          git commit -m "Integrate chart timeline scoring and SP order optimization"
+          git push origin HEAD:feat/chart-timeline-scoring
