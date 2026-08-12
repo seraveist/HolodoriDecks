@@ -24,7 +24,11 @@ const LOCAL_COPY = Object.freeze({
     genericEvaluation: "110초 · 800노트 범용 유닛 평가 기준입니다.",
     selectedSongAverage: "선택 악곡 예상 평균",
     allActiveMaximum: "모든 유효 액티브 성공 시 근사 최대",
-    songMeta: (duration, notes, mode) => `${duration}초 · 약 ${notes}노트 · ${mode === "auto" ? "AUTO (콤보 보너스 없음)" : "Manual FC"}`,
+    songMeta: (duration, notes, mode, accuracy) => `${duration}초 · ${accuracy === "estimated" ? "약 " : ""}${notes}노트 · ${mode === "auto" ? "AUTO (콤보 보너스 없음)" : "Manual FC"}`,
+    chartExact: "실제 채보 노트·SP 순서 반영",
+    chartMaster: "Master 풀콤보 노트 수 반영 · SP 타이밍 근사",
+    chartEstimated: "노트 밀도 추정",
+    specialTimeline: "스페셜 스킬 발동 순서",
     inactivePrefix: "비활성",
     skillInfoAria: (name) => `${name} 스킬 정보 보기`,
     duplicateInterval: "동일 주기 중복",
@@ -60,7 +64,11 @@ const LOCAL_COPY = Object.freeze({
     genericEvaluation: "Generic unit evaluation: 110s · 800 notes.",
     selectedSongAverage: "Selected Song Estimated Avg.",
     allActiveMaximum: "Approx. max if all valid Active Skills succeed",
-    songMeta: (duration, notes, mode) => `${duration}s · approx. ${notes} notes · ${mode === "auto" ? "AUTO (no combo bonus)" : "Manual FC"}`,
+    songMeta: (duration, notes, mode, accuracy) => `${duration}s · ${accuracy === "estimated" ? "approx. " : ""}${notes} notes · ${mode === "auto" ? "AUTO (no combo bonus)" : "Manual FC"}`,
+    chartExact: "Exact chart notes and SP order applied",
+    chartMaster: "Master full-combo note count applied · SP timing approximated",
+    chartEstimated: "Estimated from note density",
+    specialTimeline: "Special Skill Order",
     inactivePrefix: "Inactive",
     skillInfoAria: (name) => `View skill information for ${name}`,
     duplicateInterval: "Duplicate activation cycle",
@@ -96,7 +104,11 @@ const LOCAL_COPY = Object.freeze({
     genericEvaluation: "110秒 · 800ノーツの汎用ユニット評価基準です。",
     selectedSongAverage: "選択楽曲の予想平均",
     allActiveMaximum: "有効なアクティブがすべて成功した場合の近似最大",
-    songMeta: (duration, notes, mode) => `${duration}秒 · 約${notes}ノーツ · ${mode === "auto" ? "AUTO（コンボボーナスなし）" : "Manual FC"}`,
+    songMeta: (duration, notes, mode, accuracy) => `${duration}秒 · ${accuracy === "estimated" ? "約" : ""}${notes}ノーツ · ${mode === "auto" ? "AUTO（コンボボーナスなし）" : "Manual FC"}`,
+    chartExact: "実譜面ノーツ・SP順序を反映",
+    chartMaster: "Masterのフルコンボ数を反映 · SP時刻は近似",
+    chartEstimated: "ノーツ密度から推定",
+    specialTimeline: "スペシャルスキル発動順",
     inactivePrefix: "非発動",
     skillInfoAria: (name) => `${name}のスキル情報を表示`,
     duplicateInterval: "同一周期の重複",
@@ -298,16 +310,26 @@ function calculationBreakdown(score) {
     </div>`;
 }
 
+function specialSkillTimeline(projection) {
+  const windows = projection?.specialWindows ?? [];
+  if (!windows.length) return "";
+  return `<div class="special-skill-order"><strong>${escapeHtml(copy().specialTimeline)}</strong><ol>${windows.map((window) => `<li><b>SP ${window.slot}</b><span>${escapeHtml(window.characterName)} · ${formatSeconds(window.start)}–${formatSeconds(window.end)}</span></li>`).join("")}</ol></div>`;
+}
+
 function songProjection(score, song, difficulty) {
   const projection = score.songProjection;
   if (!projection || !song) {
     return `<div class="song-projection is-generic"><strong>${t("music.average")}</strong><span>${escapeHtml(copy().genericEvaluation)}</span></div>`;
   }
+  const accuracy = projection.context.chartAccuracy ?? "estimated";
+  const accuracyText = accuracy === "exact" ? copy().chartExact : accuracy === "master" ? copy().chartMaster : copy().chartEstimated;
   return `
     <div class="song-projection">
       <div class="song-projection-score"><span>${escapeHtml(copy().selectedSongAverage)}</span><strong>${formatNumber(projection.averageScore)}</strong></div>
       <div class="song-projection-score"><span>${escapeHtml(copy().allActiveMaximum)}</span><strong>${formatNumber(projection.maxScore)}</strong></div>
-      <p><b>${escapeHtml(song.title)} · ${escapeHtml(difficulty)}</b><span>${escapeHtml(copy().songMeta(projection.context.duration, formatNumber(projection.context.notes), projection.playMode))}</span></p>
+      <p><b>${escapeHtml(song.title)} · ${escapeHtml(difficulty)}</b><span>${escapeHtml(copy().songMeta(projection.context.duration, formatNumber(projection.context.notes), projection.playMode, accuracy))}</span></p>
+      <p class="song-projection-accuracy"><span>${escapeHtml(accuracyText)}</span></p>
+      ${specialSkillTimeline(projection)}
     </div>`;
 }
 

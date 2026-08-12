@@ -215,3 +215,16 @@ feature branch와 pull request에서는 `.github/workflows/validate.yml`이 다�
 - Manual FC의 집계 노트 기반 콤보 보너스
 
 현재 `music.json`에는 실제 노트 타임라인이 없으므로 악곡별 점수는 집계 채보 근사입니다. 계정별 Holo멤버 보드·메모리 보정도 아직 포함하지 않습니다.
+
+## 실제 채보 타임라인
+
+악곡/난이도별 `MusicDifficultyChart`와 `MusicDifficulty`를 기반으로 `data/generated/chart-index.json`을 생성합니다. 이 인덱스가 있으면 실제 풀콤보 노트 수를 사용하며, 추출한 Holodori `.sus` 채보를 `scripts/ingest-chart-metadata.py`로 변환해 `data/generated/charts/`에 추가하면 노트별 시각/종류, SP 슬롯 발동 시각, Fever 구간까지 계산에 반영합니다.
+
+```bash
+node scripts/build-chart-index.mjs
+pip install git+https://github.com/HolodoriDB/holodori-scores.git
+python scripts/ingest-chart-metadata.py path/to/chart_m0001_expert.sus
+node scripts/build-chart-index.mjs
+```
+
+정확한 채보 메타데이터가 있는 악곡은 추천 조합 상위 후보에 대해 잠긴 멤버 슬롯을 유지한 채 남은 슬롯 순열을 재평가하여 SP 발동 순서까지 최적화합니다. 채보 파일이 없는 경우에는 Master의 실제 풀콤보 노트 수를 사용하고 기존 집계형 SP 계산을 fallback으로 유지합니다.
