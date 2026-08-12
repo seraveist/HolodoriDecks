@@ -1,4 +1,4 @@
-export const SCORE_ENGINE_VERSION = "unit-score-v0.3 + song-score-v0.3-static";
+export const SCORE_ENGINE_VERSION = "unit-score-v0.4-potential + song-score-v0.3-static";
 export const UNIT_SCORE_K = 2.037342;
 export const CALIBRATION_FIXTURES = Object.freeze([
   { power: 67629, bonus: 106.8, score: 284936 },
@@ -437,10 +437,10 @@ function aggregateActiveScore(details, context) {
   };
 }
 
-function skillEvaluation(members, context, suppressLifeRate = false) {
+function skillEvaluation(members, context, suppressLifeRate = false, maximize = false) {
   const special = specialAverages(members, context, suppressLifeRate);
-  const details = activeDetails(members, context, special.activationRateAveragePct);
-  const noRateDetails = activeDetails(members, context, 0);
+  const details = activeDetails(members, context, special.activationRateAveragePct, maximize);
+  const noRateDetails = activeDetails(members, context, 0, maximize);
   return {
     special,
     details,
@@ -616,14 +616,32 @@ export function evaluateDeck({
   };
   const scoreBonusPct = round1(Object.values(scoreBonusDetail).reduce((sum, value) => sum + value, 0));
   const unitScore = unitScoreFromDisplayed(overallPower, scoreBonusPct);
+
+  const potentialUnitSkill = skillEvaluation(members, UNIT_CONTEXT, true, true);
+  const potentialActive = potentialUnitSkill.active.correctedPct;
+  const potentialActiveBase = potentialUnitSkill.activeBase.correctedPct;
+  const potentialRateGain = Math.max(0, potentialActive - potentialActiveBase);
+  const potentialScoreBonusDetail = {
+    outfit: round1(potentialActive * leaderEffects.support / 100),
+    active: round1(potentialActive),
+    board: 0,
+    passive: round1(potentialActive * passive.supportPoints / 100),
+    special: round1(potentialActiveBase * potentialUnitSkill.special.supportAveragePct / 100 + potentialRateGain),
+  };
+  const potentialScoreBonusPct = round1(Object.values(potentialScoreBonusDetail).reduce((sum, value) => sum + value, 0));
+  const potentialUnitScore = Math.max(unitScore, unitScoreFromDisplayed(overallPower, potentialScoreBonusPct));
+
   const fullSupportPct = leaderEffects.support + passive.supportPoints;
   const songProjection = projectSong(unitScore, members, music, difficulty, fullSupportPct, playMode);
   const rankingScore = songProjection?.averageScore ?? unitScore;
+  const potentialRankingScore = songProjection?.maxScore ?? potentialUnitScore;
   const diagnosticContext = songProjection?.context ?? UNIT_CONTEXT;
 
   return {
     rankingScore,
+    potentialRankingScore,
     unitScore,
+    potentialUnitScore,
     estimatedSongScore: songProjection?.averageScore ?? null,
     estimatedSongMax: songProjection?.maxScore ?? null,
     songProjection,
@@ -631,6 +649,7 @@ export function evaluateDeck({
     baseStats,
     overallPower,
     scoreBonusPct,
+    potentialScoreBonusPct,
     activeScoreBonus: active,
     activeBaseScoreBonus: activeBase,
     activationRateGain: rateGain,
@@ -670,6 +689,13 @@ export function memberIntrinsicValue(member) {
   const parameter = member.stats.p + member.stats.t + member.stats.s;
   const active = member.active.conditionalScoreUp || member.active.baseScoreUp;
   const uptime = member.active.probability * Math.min(member.active.duration / member.active.interval, 1);
+  return parameter * (1 + active * uptime / 100);
+}
+
+export function memberPotentialValue(member) {
+  const parameter = member.stats.p + member.stats.t + member.stats.s;
+  const active = member.active.conditionalScoreUp || member.active.baseScoreUp;
+  const uptime = Math.min(member.active.duration / member.active.interval, 1);
   return parameter * (1 + active * uptime / 100);
 }
 

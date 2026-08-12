@@ -63,7 +63,7 @@ function normalizedState(candidate, validCardIds, maxLevelsById) {
     lockedSlots,
     ownedCardIds,
     ownedCardSettings,
-    simulationTarget: ["score", "performance", "technique", "sense"].includes(candidate.simulationTarget)
+    simulationTarget: ["score", "potential"].includes(candidate.simulationTarget)
       ? candidate.simulationTarget
       : INITIAL_STATE.simulationTarget,
     levelMode: ["current", "max"].includes(candidate.levelMode) ? candidate.levelMode : INITIAL_STATE.levelMode,
