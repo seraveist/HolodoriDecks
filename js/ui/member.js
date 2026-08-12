@@ -1,4 +1,4 @@
-import { renderLandscapeCardArt, renderCardCopy, wirePortraitFallback } from "./cards.js?v=20260811.19";
+import { renderLandscapeCardArt, renderCardCopy, wirePortraitFallback } from "./cards.js?v=20260812.21";
 
 const SLOT_LABELS = ["리더", "멤버 1", "멤버 2", "멤버 3", "멤버 4", "멤버 5"];
 
@@ -27,14 +27,18 @@ function filledSlot(index, card, locked, setting) {
   const status = locked ? "고정" : "추천";
   const profile = normalizeCardProfile(card, setting);
   return `
-    <button class="member-slot filled ${locked ? "is-locked" : "is-recommended"}" type="button" data-member-slot="${index}" aria-label="${SLOT_LABELS[index]} ${card.character_name} 카드 변경 · ${status}">
+    <article class="member-slot filled ${locked ? "is-locked" : "is-recommended"}">
       <span class="slot-role">${SLOT_LABELS[index]} · ${status}</span>
       ${renderLandscapeCardArt(card, { lazy: false })}
       ${renderCardCopy(card, "slot-card-copy", `Lv${profile.level} · ${profile.potential}개화`)}
-    </button>`;
+      <button class="member-slot-select" type="button" data-member-slot="${index}" aria-label="${SLOT_LABELS[index]} ${card.character_name} 카드 변경 · ${status}">
+        <span class="sr-only">${SLOT_LABELS[index]} 카드 변경</span>
+      </button>
+      <button class="slot-clear-button" type="button" data-clear-member-slot="${index}" aria-label="${SLOT_LABELS[index]} 슬롯 비우기" title="${SLOT_LABELS[index]} 슬롯 비우기">×</button>
+    </article>`;
 }
 
-export function renderMemberSlots(container, cardsById, state, onSlotClick) {
+export function renderMemberSlots(container, cardsById, state, onSlotClick, onSlotClear) {
   container.innerHTML = state.members
     .map((cardId, index) => {
       const card = cardId ? cardsById.get(cardId) : null;
@@ -45,6 +49,9 @@ export function renderMemberSlots(container, cardsById, state, onSlotClick) {
 
   container.querySelectorAll("[data-member-slot]").forEach((button) => {
     button.addEventListener("click", () => onSlotClick(Number(button.dataset.memberSlot), button));
+  });
+  container.querySelectorAll("[data-clear-member-slot]").forEach((button) => {
+    button.addEventListener("click", () => onSlotClear(Number(button.dataset.clearMemberSlot), button));
   });
   wirePortraitFallback(container);
 }
