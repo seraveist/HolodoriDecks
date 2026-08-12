@@ -1,0 +1,56 @@
+name: Initial Master Sync Run
+
+on:
+  push:
+    branches: [research/initial-master-sync]
+    paths:
+      - .github/workflows/initial-master-sync-run.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/initial-master-sync
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install sync tooling
+        run: python -m pip install --disable-pip-version-check -e '.[test]'
+
+      - name: Synchronize current version-aligned upstream snapshot
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          cp data/generated/manifest.json /tmp/manifest-before.json
+          holodori-sync --force | tee /tmp/sync-result.json
+          node scripts/build-i18n.mjs
+          node scripts/build-chart-index.mjs
+          python scripts/validate-generated-data.py --baseline /tmp/manifest-before.json
+          python -m pytest -q
+          node scripts/test-chart-scoring.mjs
+          find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+
+      - name: Commit synchronized data only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/generated data/upstream.json data/sync_state.json
+          if git diff --cached --quiet; then
+            echo 'No synchronized data diff.'
+            exit 0
+          fi
+          git commit -m 'Sync current Holodori master data'
+          git push origin HEAD:research/initial-master-sync
