@@ -1,0 +1,27 @@
+name: Run Chart Timeline Tests
+
+on:
+  push:
+    branches: [feat/chart-timeline-scoring]
+    paths:
+      - .github/workflows/run-chart-timeline-tests.yml
+      - scripts/test-chart-scoring.mjs
+      - js/chart-score.js
+      - js/order.js
+      - js/score.js
+      - data/generated/live-score-rules.json
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/chart-timeline-scoring
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - run: node scripts/test-chart-scoring.mjs
