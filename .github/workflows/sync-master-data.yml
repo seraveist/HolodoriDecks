@@ -1,0 +1,184 @@
+name: Sync Holodori master data
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Rebuild even when the resolved upstream snapshot is unchanged
+        required: false
+        default: false
+        type: boolean
+      dry_run:
+        description: Validate changes without pushing the sync branch or PR
+        required: false
+        default: false
+        type: boolean
+  schedule:
+    # 00:15 KST every day.
+    - cron: "15 15 * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: holodori-master-data-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install sync tooling
+        run: python -m pip install --disable-pip-version-check -e '.[test]'
+
+      - name: Preserve baseline manifest
+        run: cp data/generated/manifest.json /tmp/manifest-before.json
+
+      - name: Resolve and normalize upstream snapshot
+        id: sync
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          args=()
+          if [ "${{ inputs.force || false }}" = "true" ]; then
+            args+=(--force)
+          fi
+          holodori-sync "${args[@]}" | tee /tmp/sync-result.json
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          result = json.load(open('/tmp/sync-result.json', encoding='utf-8'))
+          print(f"changed={str(bool(result.get('changed'))).lower()}")
+          print(f"master_version={result.get('master_version', '')}")
+          print(f"upstream_commit={result.get('upstream_commit', '')}")
+          PY
+
+      - name: Rebuild locale and chart derived data
+        if: steps.sync.outputs.changed == 'true'
+        run: |
+          node scripts/build-i18n.mjs
+          node scripts/build-chart-index.mjs
+
+      - name: Validate synchronized data
+        if: steps.sync.outputs.changed == 'true'
+        run: |
+          python scripts/validate-generated-data.py --baseline /tmp/manifest-before.json
+          python -m pytest -q
+          node scripts/test-chart-scoring.mjs
+          find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+          node --check scripts/build-i18n.mjs
+          node --check scripts/build-chart-index.mjs
+
+      - name: Detect generated diff
+        id: diff
+        if: steps.sync.outputs.changed == 'true'
+        run: |
+          if [ -n "$(git status --porcelain -- data/generated data/upstream.json data/sync_state.json)" ]; then
+            echo "has_diff=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_diff=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Show dry-run summary
+        if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run == true
+        run: |
+          git status --short -- data/generated data/upstream.json data/sync_state.json
+          git diff --stat -- data/generated data/upstream.json data/sync_state.json
+
+      - name: Commit sync branch
+        if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run != true
+        env:
+          SYNC_BRANCH: automation/master-data-sync
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$SYNC_BRANCH"
+          git add data/generated data/upstream.json data/sync_state.json
+          git commit -m "Sync Holodori master data to ${{ steps.sync.outputs.master_version }}"
+          git push --force origin "$SYNC_BRANCH"
+
+      - name: Create or refresh sync pull request
+        if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SYNC_BRANCH: automation/master-data-sync
+          MASTER_VERSION: ${{ steps.sync.outputs.master_version }}
+          UPSTREAM_COMMIT: ${{ steps.sync.outputs.upstream_commit }}
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          state = json.loads(Path('data/sync_state.json').read_text(encoding='utf-8'))
+          manifest = json.loads(Path('data/generated/manifest.json').read_text(encoding='utf-8'))
+          chart = json.loads(Path('data/generated/chart-index.json').read_text(encoding='utf-8'))
+          locale_text = '\n'.join(
+              f"- {name}: `{config['commit']}` ({config['repository']})"
+              for name, config in manifest['locales'].items()
+          )
+          changed = ', '.join(state.get('changed_refs', [])) or 'generated normalization'
+          counts = state.get('counts', {})
+          body = f"""## Automated Holodori master-data sync
+
+          This PR was generated from version-aligned upstream snapshots and is intentionally **not auto-merged**.
+
+          - Master version: `{manifest['master_version']}`
+          - Core snapshot: `{manifest['source_repository']}@{manifest['source_commit']}`
+          - Change triggers: {changed}
+          - Cards: {counts.get('cards', manifest['card_count'])}
+          - Characters: {counts.get('characters', manifest['character_count'])}
+          - Music: {counts.get('music', manifest['music_count'])}
+          - Difficulty charts: {chart.get('chart_count', 0)}
+          - Exact chart metadata enabled: {chart.get('exact_metadata_count', 0)}
+          - Stale exact chart metadata disabled: {chart.get('stale_metadata_count', 0)}
+
+          ### Locale snapshots
+          {locale_text}
+
+          ### Validation performed before this PR
+          - KO/EN/JA `version.txt` aligned to the same master version
+          - generated-data structural and catastrophic-drop validation
+          - locale pack completeness validation
+          - chart hash/note-count validation for exact SUS metadata
+          - Python sync unit tests
+          - chart-scoring regression tests
+          - JavaScript syntax checks
+          """
+          Path('/tmp/sync-pr-body.md').write_text('\n'.join(line.strip() for line in body.splitlines()) + '\n', encoding='utf-8')
+          PY
+
+          short="${MASTER_VERSION:0:12}"
+          title="Sync Holodori master data (${short})"
+          number="$(gh pr list --base main --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number // empty')"
+          if [ -n "$number" ]; then
+            gh pr edit "$number" --title "$title" --body-file /tmp/sync-pr-body.md
+            echo "Updated sync PR #$number"
+          else
+            gh pr create --base main --head "$SYNC_BRANCH" --title "$title" --body-file /tmp/sync-pr-body.md
+          fi
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "## Holodori master sync"
+            echo "- upstream change detected: ${{ steps.sync.outputs.changed || 'unknown' }}"
+            echo "- generated diff: ${{ steps.diff.outputs.has_diff || 'false' }}"
+            echo "- master version: ${{ steps.sync.outputs.master_version || 'n/a' }}"
+            echo "- dry run: ${{ inputs.dry_run || false }}"
+          } >> "$GITHUB_STEP_SUMMARY"
