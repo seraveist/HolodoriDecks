@@ -1,3 +1,5 @@
+import { t } from "./i18n.js?v=20260812.1";
+
 const DATA_URLS = {
   manifest: new URL("../data/generated/manifest.json", import.meta.url),
   cards: new URL("../data/generated/cards.json", import.meta.url),
@@ -8,7 +10,10 @@ const DATA_URLS = {
 async function fetchJson(url) {
   const response = await fetch(url, { cache: "no-store" });
   if (!response.ok) {
-    throw new Error(`${url.pathname} 요청 실패 (${response.status})`);
+    throw new Error(t("data.requestFailed", {
+      path: new URL(url, window.location.href).pathname,
+      status: response.status,
+    }));
   }
   return response.json();
 }
@@ -23,8 +28,12 @@ function indexById(rows) {
   return new Map(rows.map((row) => [row.id, row]));
 }
 
-export async function loadAppData() {
-  const manifest = await fetchJson(DATA_URLS.manifest);
+export async function loadManifest() {
+  return fetchJson(DATA_URLS.manifest);
+}
+
+export async function loadAppData(providedManifest = null) {
+  const manifest = providedManifest ?? await loadManifest();
   const dataVersion = manifest.source_commit || manifest.master_version || Date.now();
   const [cards, characters, music] = await Promise.all([
     fetchJson(versionedUrl(DATA_URLS.cards, dataVersion)),
@@ -33,12 +42,12 @@ export async function loadAppData() {
   ]);
 
   if (!Array.isArray(cards) || !Array.isArray(characters) || !Array.isArray(music)) {
-    throw new Error("카드, 캐릭터 또는 악곡 데이터 형식이 올바르지 않습니다.");
+    throw new Error(t("data.invalid"));
   }
   if (Number(manifest.card_count) !== cards.length
     || Number(manifest.character_count) !== characters.length
     || Number(manifest.music_count) !== music.length) {
-    throw new Error("동기화 manifest와 카드·캐릭터·악곡 데이터 개수가 일치하지 않습니다.");
+    throw new Error(t("data.countMismatch"));
   }
 
   return {
