@@ -1,7 +1,9 @@
 import { loadAppData, loadManifest } from "./data.js?v=20260812.2";
+import { loadChartResources, loadSelectedChart } from "./chart-data.js?v=20260812.4";
 import { createStore } from "./state.js?v=20260812.2";
-import { optimizeOwnedDeck } from "./recommend.js?v=20260812.2";
-import { prepareScoreCards } from "./score.js?v=20260812.2";
+import { optimizeOwnedDeck } from "./recommend.js?v=20260812.4";
+import { optimizeRecommendationOrders } from "./order.js?v=20260812.4";
+import { prepareScoreCards } from "./score.js?v=20260812.4";
 import {
   getLocale,
   initI18n,
@@ -14,7 +16,7 @@ import { renderMemberSlots } from "./ui/member.js?v=20260812.2";
 import { createCardPicker } from "./ui/modal.js?v=20260812.1";
 import { mountMusicControls } from "./ui/music.js?v=20260812.1";
 import { createOwnedCardsView } from "./ui/owned.js?v=20260812.1";
-import { renderResult } from "./ui/result.js?v=20260812.1";
+import { renderResult } from "./ui/result.js?v=20260812.4";
 import { applySimulationTargetPresentation } from "./ui/result-target.js?v=20260812.2";
 import { mountMemberOptions } from "./ui/target.js?v=20260812.1";
 import { requiredElement } from "./ui/dom.js?v=20260812.1";
@@ -128,6 +130,7 @@ async function start() {
   memberSlots.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><span aria-hidden="true">◌</span><p>${t("app.loadingCards")}</p></div>`;
 
   const data = localizeAppData(await loadAppData(manifest));
+  const chartResources = await loadChartResources(manifest);
   const selectableCards = data.cards.filter((card) => [4, 5].includes(Number(card.rarity)));
   const maxLevelsById = new Map(data.cards.map((card) => [
     card.id,
@@ -197,20 +200,41 @@ async function start() {
     await new Promise((resolve) => window.requestAnimationFrame(() => window.setTimeout(resolve, 0)));
 
     const preparedCards = prepareScoreCards(data.cards, data.charactersById, state.ownedCardSettings, {
-      levelMode: state.levelMode,
-    });
-    const result = optimizeOwnedDeck({
+    levelMode: state.levelMode,
+  });
+  const song = state.musicId ? data.musicById.get(state.musicId) : null;
+  const chart = song ? await loadSelectedChart(chartResources, song.id, state.difficulty) : null;
+  const exactMusic = song ? { ...song, _chart: chart, _scoreRules: chartResources.scoreRules } : null;
+  const searchChart = chart ? { ...chart, metadata: null } : null;
+  const searchMusic = song ? { ...song, _chart: searchChart, _scoreRules: chartResources.scoreRules } : null;
+  const hasExactOrder = Boolean(chart?.metadata?.skills?.length);
+  let result = optimizeOwnedDeck({
+    preparedCards,
+    ownedCardIds: state.ownedCardIds,
+    currentMembers: state.members,
+    lockedSlots: state.lockedSlots,
+    music: searchMusic,
+    difficulty: state.difficulty,
+    playMode: state.playMode,
+    simulationTarget: state.simulationTarget,
+    separateRole: state.separateRole,
+    resultCount: hasExactOrder ? Math.min(10, RESULT_COUNT * 2) : RESULT_COUNT,
+  });
+  if (result.ok) {
+    result = optimizeRecommendationOrders({
+      recommendation: result,
       preparedCards,
-      ownedCardIds: state.ownedCardIds,
       currentMembers: state.members,
       lockedSlots: state.lockedSlots,
-      music: state.musicId ? data.musicById.get(state.musicId) : null,
+      music: exactMusic,
       difficulty: state.difficulty,
       playMode: state.playMode,
       simulationTarget: state.simulationTarget,
       separateRole: state.separateRole,
       resultCount: RESULT_COUNT,
     });
+  }
+
     optimizeButton.textContent = t("calculate.button");
     optimizeButton.disabled = store.getState().ownedCardIds.length < 6;
 

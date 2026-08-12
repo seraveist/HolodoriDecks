@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "source_repository": "HolodoriDB/holodori-db-kor-diff",
+  "source_commit": "8a0a2236e6c47c3abf5fba03a56a781e85ea74d9",
+  "noteWeights": {
+    "manual": {
+      "flick": 1.05,
+      "long_flick_end": 1,
+      "long_start": 1,
+      "tap": 1,
+      "long_continuation": 0.1,
+      "long_end": 1,
+      "long_relay": 0.1
+    },
+    "auto": {
+      "flick": 0.8,
+      "long_end": 0.8,
+      "long_flick_end": 0.8,
+      "long_start": 0.8,
+      "tap": 0.8,
+      "long_continuation": 0.1,
+      "long_relay": 0.1
+    }
+  },
+  "combo": [
+    {
+      "from": 0,
+      "scoreUpPct": 0
+    },
+    {
+      "from": 100,
+      "scoreUpPct": 1
+    },
+    {
+      "from": 200,
+      "scoreUpPct": 2
+    },
+    {
+      "from": 300,
+      "scoreUpPct": 3
+    },
+    {
+      "from": 400,
+      "scoreUpPct": 4
+    },
+    {
+      "from": 500,
+      "scoreUpPct": 5
+    },
+    {
+      "from": 600,
+      "scoreUpPct": 6
+    },
+    {
+      "from": 700,
+      "scoreUpPct": 7
+    },
+    {
+      "from": 800,
+      "scoreUpPct": 8
+    },
+    {
+      "from": 900,
+      "scoreUpPct": 9
+    },
+    {
+      "from": 1000,
+      "scoreUpPct": 10
+    }
+  ],
+  "notes": "Manual uses PERFECT score coefficients; AUTO uses AUTO score coefficients. Critical variants reuse the base note type coefficient."
+}

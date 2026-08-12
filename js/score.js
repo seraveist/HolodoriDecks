@@ -1,4 +1,6 @@
-export const SCORE_ENGINE_VERSION = "unit-score-v0.4-potential + song-score-v0.3-static";
+import { buildSongContext, songKernel, timelineSongProjection } from "./chart-score.js?v=20260812.4";
+
+export const SCORE_ENGINE_VERSION = "unit-score-v0.5-potential + song-score-v0.4-chart-timeline";
 export const UNIT_SCORE_K = 2.037342;
 export const CALIBRATION_FIXTURES = Object.freeze([
   { power: 67629, bonus: 106.8, score: 284936 },
@@ -450,17 +452,21 @@ function skillEvaluation(members, context, suppressLifeRate = false, maximize = 
 }
 
 function contextFromMusic(music, difficulty) {
+  if (music) {
+    const context = buildSongContext(music, difficulty, music?._chart ?? null);
+    return { ...context, comboMultiplier: averageComboMultiplier(context.notes) };
+  }
   const density = DIFFICULTY_NOTE_DENSITY[difficulty] ?? DIFFICULTY_NOTE_DENSITY.EXPERT;
-  const duration = Math.max(1, finite(music?.playing_seconds, UNIT_CONTEXT.duration));
-  const coefficient = Math.max(1, finite(music?.live_score_coefficient_permil, UNIT_CONTEXT.coefficient));
   return {
-    kind: music ? "song" : "generic",
-    duration,
-    notes: Math.max(1, Math.round(duration * density)),
-    coefficient,
-    comboMultiplier: averageComboMultiplier(Math.max(1, Math.round(duration * density))),
+    ...UNIT_CONTEXT,
+    kind: "generic",
+    comboMultiplier: averageComboMultiplier(UNIT_CONTEXT.notes),
     density,
-    title: music?.title ?? "범용 악곡",
+    title: "범용 악곡",
+    chartAccuracy: "generic",
+    noteTimeline: [],
+    skillTimeline: [],
+    fever: null,
   };
 }
 
@@ -487,12 +493,25 @@ function projectSong(unitScore, members, music, difficulty, fullSupportPct, play
   if (!music) return null;
   const selected = contextFromMusic(music, difficulty);
   const generic = contextFromMusic(null, difficulty);
-  const selectedExpected = songSkillMultiplier(members, selected, fullSupportPct);
+  const scoreRules = music?._scoreRules ?? null;
   const genericExpected = songSkillMultiplier(members, generic, fullSupportPct);
+  if (selected.chartAccuracy === "exact" && selected.noteTimeline.length) {
+    return timelineSongProjection({
+      unitScore,
+      members,
+      context: selected,
+      genericContext: generic,
+      fullSupportPct,
+      playMode,
+      genericSkillMultiplier: genericExpected.skillMultiplier,
+      scoreRules,
+    });
+  }
+  const selectedExpected = songSkillMultiplier(members, selected, fullSupportPct);
   const selectedMaximum = songSkillMultiplier(members, selected, fullSupportPct, true);
   const manual = playMode === "manual";
-  const selectedKernel = selected.notes * selected.coefficient * (manual ? selected.comboMultiplier : 1);
-  const genericKernel = generic.notes * generic.coefficient * (manual ? generic.comboMultiplier : 1);
+  const selectedKernel = songKernel(selected, playMode, scoreRules);
+  const genericKernel = songKernel(generic, playMode, scoreRules);
   const baseRatio = genericKernel > 0 ? selectedKernel / genericKernel : 1;
   const skillRatio = genericExpected.skillMultiplier > 0
     ? selectedExpected.skillMultiplier / genericExpected.skillMultiplier
@@ -512,9 +531,12 @@ function projectSong(unitScore, members, music, difficulty, fullSupportPct, play
     playMode: manual ? "manual" : "auto",
     expected: selectedExpected,
     maximum: selectedMaximum,
-    note: manual
-      ? "Manual FC 근사: 집계 노트의 콤보 보너스를 포함합니다."
-      : "AUTO 근사: 프로토타입과 같이 콤보 보너스를 제외합니다.",
+    specialWindows: [],
+    note: selected.chartAccuracy === "master"
+      ? "Master의 실제 풀콤보 노트 수를 사용하고, SP 타이밍은 집계 기반으로 근사합니다."
+      : manual
+        ? "Manual FC 근사: 추정 노트와 콤보 보너스를 포함합니다."
+        : "AUTO 근사: 추정 노트 수를 사용하고 콤보 보너스를 제외합니다.",
   };
 }
 
