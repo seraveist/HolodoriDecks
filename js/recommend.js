@@ -2,7 +2,8 @@ import {
   evaluateDeck,
   leaderPotential,
   memberIntrinsicValue,
-} from "./score.js?v=20260811.19";
+  memberPotentialValue,
+} from "./score.js?v=20260812.20";
 
 const EXACT_CASE_LIMIT = 650_000;
 const BEAM_MEMBER_LIMIT = 52;
@@ -88,6 +89,7 @@ function memberConditionProgress(condition, selected) {
 }
 
 function conceptMemberValue(member, concept) {
+  if (concept === "potential") return memberPotentialValue(member);
   const stat = CONCEPT_STAT[concept];
   return stat ? member.stats[stat] : memberIntrinsicValue(member);
 }
@@ -148,9 +150,9 @@ function beamCombinations(pool, size, leader, fixedMembers, concept, width = BEA
 }
 
 function combinedBeamCandidates(memberPool, size, leader, fixedMembers, concept) {
-  const heuristics = concept === "score"
-    ? ["score", "performance", "technique", "sense"]
-    : [concept, "score"];
+  const heuristics = concept === "potential"
+    ? ["potential", "score", "performance", "technique", "sense"]
+    : ["score", "performance", "technique", "sense"];
   const candidates = new Map();
   heuristics.forEach((heuristic, index) => {
     const width = index === 0 ? BEAM_WIDTH : BEAM_SECONDARY_WIDTH;
@@ -167,8 +169,9 @@ function combinedBeamCandidates(memberPool, size, leader, fixedMembers, concept)
 }
 
 export function recommendationValue(score, simulationTarget = "score") {
-  const stat = CONCEPT_STAT[simulationTarget];
-  return stat ? Number(score.deckStats?.[stat]) || 0 : score.rankingScore;
+  return simulationTarget === "potential"
+    ? Number(score.potentialRankingScore) || 0
+    : Number(score.rankingScore) || 0;
 }
 
 function compareResults(left, right) {
@@ -201,7 +204,7 @@ export function optimizeOwnedDeck({
   resultCount = DEFAULT_RESULT_COUNT,
 }) {
   const normalizedResultCount = Math.max(1, Math.min(10, Number(resultCount) || DEFAULT_RESULT_COUNT));
-  const normalizedSimulationTarget = simulationTarget === "score" || CONCEPT_STAT[simulationTarget]
+  const normalizedSimulationTarget = ["score", "potential"].includes(simulationTarget)
     ? simulationTarget
     : "score";
   const owned = ownedCardIds.map((id) => preparedCards.get(id)).filter(Boolean);
