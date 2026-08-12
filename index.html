@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-app-version="20260812.20">
+<html lang="ko" data-app-version="20260812.21">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#f7f9fc">
   <meta name="description" content="홀로라이브 드림스 6인 편성 UI 프로토타입">
   <title>Holodori DeckSim</title>
-  <link rel="stylesheet" href="./styles.css?v=20260811.19">
+  <link rel="stylesheet" href="./styles.css?v=20260812.21">
 </head>
 <body>
   <a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
@@ -58,11 +58,13 @@
             <input id="separate-role" type="checkbox" checked>
             <span>리더/멤버 분리</span>
           </label>
-          <button id="clear-members" class="text-button" type="button">프리셋 초기화</button>
         </div>
       </div>
 
-      <p class="preset-guide">계산에 고정할 리더나 멤버만 선택하세요. 선택하지 않은 자리는 시뮬레이션 목표에 맞춰 자동 편성됩니다.</p>
+      <div class="preset-slot-toolbar">
+        <p class="preset-guide">계산에 고정할 리더나 멤버만 선택하세요. 선택하지 않은 자리는 시뮬레이션 목표에 맞춰 자동 편성됩니다.</p>
+        <button id="clear-members" class="text-button preset-clear-button" type="button">프리셋 초기화</button>
+      </div>
       <div id="member-slots" class="member-slots" aria-label="고정 프리셋 슬롯"></div>
       <p id="preset-status" class="preset-status" aria-live="polite" hidden></p>
     </section>
@@ -269,6 +271,6 @@
   </div>
 
   <div id="app-error" class="app-error" role="alert" hidden></div>
-  <script type="module" src="./js/app.js?v=20260812.20"></script>
+  <script type="module" src="./js/app.js?v=20260812.21"></script>
 </body>
 </html>
