@@ -1,11 +1,28 @@
 from __future__ import annotations
 
-UPSTREAM_REPO = "HolodoriDB/holodori-db-kor-diff"
+CORE_REPO = "HolodoriDB/holodori-db-kor-diff"
+UPSTREAM_REPO = CORE_REPO
 UPSTREAM_REF = "main"
-COMMIT_API = f"https://api.github.com/repos/{UPSTREAM_REPO}/commits/{UPSTREAM_REF}"
-RAW_ROOT = f"https://raw.githubusercontent.com/{UPSTREAM_REPO}"
+GITHUB_API_ROOT = "https://api.github.com"
+RAW_GITHUB_ROOT = "https://raw.githubusercontent.com"
 
-# Keep this list explicit so upstream schema changes are reviewable.
+LOCALES = {
+    "ko": {
+        "repository": "HolodoriDB/holodori-db-kor-diff",
+        "suffix": "Kor",
+    },
+    "en": {
+        "repository": "HolodoriDB/holodori-db-eng-diff",
+        "suffix": "Eng",
+    },
+    "ja": {
+        "repository": "HolodoriDB/holodori-db-jpn-diff",
+        "suffix": "Jpn",
+    },
+}
+
+# Keep this list explicit so upstream schema changes remain reviewable. These are
+# the inputs required to rebuild cards/characters/music/master_refs exactly.
 MASTER_FILES = (
     "version.txt",
     "Card.json",
@@ -19,13 +36,10 @@ MASTER_FILES = (
     "CardPotential.json",
     "LiveLeaderSkill.json",
     "LangGeneratedLiveLeaderSkill_Kor.json",
-    "LiveActiveSkill.json",
     "LiveActiveSkillLevel.json",
     "LangGeneratedLiveActiveSkillLevel_Kor.json",
-    "LivePassiveSkill.json",
     "LivePassiveSkillLevel.json",
     "LangGeneratedLivePassiveSkillLevel_Kor.json",
-    "LiveSpecialSkill.json",
     "LiveSpecialSkillLevel.json",
     "LangGeneratedLiveSpecialSkillLevel_Kor.json",
     "LiveSkillTrigger.json",
