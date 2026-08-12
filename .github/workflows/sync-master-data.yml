@@ -113,6 +113,7 @@ jobs:
           git push --force origin "$SYNC_BRANCH"
 
       - name: Create or refresh sync pull request
+        id: sync_pr
         if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run != true
         env:
           GH_TOKEN: ${{ github.token }}
@@ -167,9 +168,34 @@ jobs:
           number="$(gh pr list --base main --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number // empty')"
           if [ -n "$number" ]; then
             gh pr edit "$number" --title "$title" --body-file /tmp/sync-pr-body.md
+            echo "state=updated" >> "$GITHUB_OUTPUT"
+            echo "number=$number" >> "$GITHUB_OUTPUT"
             echo "Updated sync PR #$number"
           else
-            gh pr create --base main --head "$SYNC_BRANCH" --title "$title" --body-file /tmp/sync-pr-body.md
+            set +e
+            output="$(gh pr create --base main --head "$SYNC_BRANCH" --title "$title" --body-file /tmp/sync-pr-body.md 2>&1)"
+            status=$?
+            set -e
+            if [ "$status" -eq 0 ]; then
+              echo "$output"
+              echo "state=created" >> "$GITHUB_OUTPUT"
+            elif printf '%s' "$output" | grep -q 'GitHub Actions is not permitted to create or approve pull requests'; then
+              compare_url="https://github.com/${GITHUB_REPOSITORY}/compare/main...${SYNC_BRANCH}?expand=1"
+              echo "state=blocked" >> "$GITHUB_OUTPUT"
+              echo "compare_url=$compare_url" >> "$GITHUB_OUTPUT"
+              echo "::warning::Validated sync branch was pushed, but repository settings block GitHub Actions from creating pull requests. Enable Settings > Actions > General > Workflow permissions > Allow GitHub Actions to create and approve pull requests, or open the compare URL from the job summary."
+              {
+                echo "### Sync branch ready, automatic PR creation is disabled"
+                echo
+                echo "All data validation passed and \`${SYNC_BRANCH}\` was pushed successfully."
+                echo
+                echo "- [Open a pull request from the validated sync branch](${compare_url})"
+                echo "- To restore automatic PR creation: **Settings → Actions → General → Workflow permissions → Allow GitHub Actions to create and approve pull requests**"
+              } >> "$GITHUB_STEP_SUMMARY"
+            else
+              printf '%s\n' "$output" >&2
+              exit "$status"
+            fi
           fi
 
       - name: Job summary
@@ -181,4 +207,8 @@ jobs:
             echo "- generated diff: ${{ steps.diff.outputs.has_diff || 'false' }}"
             echo "- master version: ${{ steps.sync.outputs.master_version || 'n/a' }}"
             echo "- dry run: ${{ inputs.dry_run || false }}"
+            echo "- review PR state: ${{ steps.sync_pr.outputs.state || 'not-needed' }}"
+            if [ -n "${{ steps.sync_pr.outputs.compare_url }}" ]; then
+              echo "- compare URL: ${{ steps.sync_pr.outputs.compare_url }}"
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
