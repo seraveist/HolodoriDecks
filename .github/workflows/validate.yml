@@ -1,0 +1,92 @@
+name: Validate Static App
+
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check JavaScript syntax and module exports
+        run: |
+          find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+          node --check scripts/build-i18n.mjs
+          node --input-type=module <<'NODE'
+          await Promise.all([
+            import('./js/i18n.js'),
+            import('./js/data.js'),
+            import('./js/state.js'),
+            import('./js/score.js'),
+            import('./js/recommend.js'),
+            import('./js/ui/cards.js'),
+            import('./js/ui/dom.js'),
+            import('./js/ui/member.js'),
+            import('./js/ui/modal.js'),
+            import('./js/ui/music.js'),
+            import('./js/ui/owned.js'),
+            import('./js/ui/result.js'),
+            import('./js/ui/target.js'),
+            import('./js/ui/card-detail.js'),
+          ]);
+          console.log('[validate] module imports resolved');
+          NODE
+          if grep -R --line-number --fixed-strings 'SLOT_LABELS' js; then
+            echo '[validate] obsolete SLOT_LABELS reference found'
+            exit 1
+          fi
+
+      - name: Build and validate locale packs
+        run: |
+          node scripts/build-i18n.mjs
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const expected = {
+            ko: {
+              'la-name-chr-00001': '토키노 소라',
+              'la-card_name-00001-5-uniq-0000-00': '한결같이 그리는 무지개 노래',
+            },
+            en: {
+              'la-name-chr-00001': 'Tokino Sora',
+              'la-card_name-00001-5-uniq-0000-00': 'Rainbow’s Devotion',
+            },
+            ja: {
+              'la-name-chr-00001': 'ときのそら',
+              'la-card_name-00001-5-uniq-0000-00': 'ひたむきに描く虹のうた',
+            },
+          };
+          for (const [locale, samples] of Object.entries(expected)) {
+            const pack = JSON.parse(await readFile(`data/generated/i18n/${locale}.json`, 'utf8'));
+            for (const [key, value] of Object.entries(samples)) {
+              if (pack[key] !== value) throw new Error(`${locale}: ${key} mismatch`);
+            }
+          }
+          const manifest = JSON.parse(await readFile('data/generated/i18n/manifest.json', 'utf8'));
+          if (!manifest.required_entry_count || Object.keys(manifest.locales ?? {}).length !== 3) {
+            throw new Error('invalid i18n manifest');
+          }
+          console.log(`[validate] ${manifest.required_entry_count} required LangIds validated`);
+          NODE
+
+      - name: Check app version and required files
+        run: |
+          grep -q 'data-app-version="20260812.1"' index.html
+          grep -q 'const APP_VERSION = "20260812.1"' js/app.js
+          test -f data/generated/cards.json
+          test -f data/generated/characters.json
+          test -f data/generated/music.json
+          test -f data/generated/manifest.json
