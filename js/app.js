@@ -9,7 +9,7 @@ import {
   saveLocale,
   t,
 } from "./i18n.js?v=20260812.1";
-import { getThemePreference, initTheme, setThemePreference } from "./theme.js?v=20260812.2";
+import { getThemePreference, initTheme, toggleTheme } from "./theme.js?v=20260812.3";
 import { renderMemberSlots } from "./ui/member.js?v=20260812.2";
 import { createCardPicker } from "./ui/modal.js?v=20260812.1";
 import { mountMusicControls } from "./ui/music.js?v=20260812.1";
@@ -20,33 +20,27 @@ import { mountMemberOptions } from "./ui/target.js?v=20260812.1";
 import { requiredElement } from "./ui/dom.js?v=20260812.1";
 import { createCardDetail } from "./ui/card-detail.js?v=20260812.1";
 
-const APP_VERSION = "20260812.2";
+const APP_VERSION = "20260812.3";
 const RESULT_COUNT = 5;
 
 const EXTRA_COPY = Object.freeze({
   ko: {
     targetScore: "최고 유닛 스코어",
     targetPotential: "최고 잠재 스코어",
-    themeLabel: "테마",
-    themeSystem: "시스템",
-    themeLight: "라이트",
-    themeDark: "다크",
+    themeToDark: "다크 모드로 전환",
+    themeToLight: "라이트 모드로 전환",
   },
   en: {
     targetScore: "Highest Unit Score",
     targetPotential: "Highest Potential Score",
-    themeLabel: "Theme",
-    themeSystem: "System",
-    themeLight: "Light",
-    themeDark: "Dark",
+    themeToDark: "Switch to dark mode",
+    themeToLight: "Switch to light mode",
   },
   ja: {
     targetScore: "最高ユニットスコア",
     targetPotential: "最高潜在スコア",
-    themeLabel: "テーマ",
-    themeSystem: "システム",
-    themeLight: "ライト",
-    themeDark: "ダーク",
+    themeToDark: "ダークモードに切り替え",
+    themeToLight: "ライトモードに切り替え",
   },
 });
 
@@ -88,6 +82,13 @@ function localizeOptimizerReason(reason) {
   return translated?.[getLocale()] ?? String(reason ?? "");
 }
 
+function syncThemeToggle(button, theme = getThemePreference()) {
+  const copy = EXTRA_COPY[getLocale()] ?? EXTRA_COPY.ko;
+  const label = theme === "dark" ? copy.themeToLight : copy.themeToDark;
+  button.setAttribute("aria-label", label);
+  button.setAttribute("title", label);
+}
+
 function syncExtraStaticCopy() {
   const copy = EXTRA_COPY[getLocale()] ?? EXTRA_COPY.ko;
   const target = document.querySelector("#simulation-target");
@@ -96,16 +97,8 @@ function syncExtraStaticCopy() {
   if (scoreOption) scoreOption.textContent = copy.targetScore;
   if (potentialOption) potentialOption.textContent = copy.targetPotential;
 
-  const themeLabel = document.querySelector("#theme-label");
-  const theme = document.querySelector("#theme-select");
-  if (themeLabel) themeLabel.textContent = copy.themeLabel;
-  const systemOption = theme?.querySelector('option[value="system"]');
-  const lightOption = theme?.querySelector('option[value="light"]');
-  const darkOption = theme?.querySelector('option[value="dark"]');
-  if (systemOption) systemOption.textContent = copy.themeSystem;
-  if (lightOption) lightOption.textContent = copy.themeLight;
-  if (darkOption) darkOption.textContent = copy.themeDark;
-  theme?.setAttribute("aria-label", copy.themeLabel);
+  const themeToggle = document.querySelector("#theme-toggle");
+  if (themeToggle) syncThemeToggle(themeToggle);
 }
 
 async function start() {
@@ -118,10 +111,9 @@ async function start() {
   await initI18n(manifest);
   syncExtraStaticCopy();
 
-  const themeSelect = requiredElement("#theme-select");
-  themeSelect.value = getThemePreference();
-  themeSelect.addEventListener("change", () => {
-    themeSelect.value = setThemePreference(themeSelect.value);
+  const themeToggle = requiredElement("#theme-toggle");
+  themeToggle.addEventListener("click", () => {
+    syncThemeToggle(themeToggle, toggleTheme());
   });
 
   const languageSelect = requiredElement("#language-select");
