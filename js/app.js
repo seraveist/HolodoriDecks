@@ -14,7 +14,7 @@ import { createCardPicker } from "./ui/modal.js?v=20260812.1";
 import { mountMusicControls } from "./ui/music.js?v=20260812.1";
 import { createOwnedCardsView } from "./ui/owned.js?v=20260812.1";
 import { renderResult } from "./ui/result.js?v=20260812.1";
-import { mountMemberOptions } from "./ui/target.js?v=20260811.19";
+import { mountMemberOptions } from "./ui/target.js?v=20260812.1";
 import { requiredElement } from "./ui/dom.js?v=20260812.1";
 import { createCardDetail } from "./ui/card-detail.js?v=20260812.1";
 
