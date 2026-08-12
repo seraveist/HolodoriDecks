@@ -1,4 +1,4 @@
-import { formatNumber, getLocale } from "../i18n.js?v=20260812.2";
+import { formatNumber, getLocale } from "../i18n.js?v=20260812.1";
 
 const COPY = Object.freeze({
   ko: {
