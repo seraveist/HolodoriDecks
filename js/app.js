@@ -1,17 +1,17 @@
-import { loadAppData } from "./data.js?v=20260811.19";
-import { createStore } from "./state.js?v=20260811.19";
-import { optimizeOwnedDeck } from "./recommend.js?v=20260811.19";
-import { prepareScoreCards } from "./score.js?v=20260811.19";
-import { renderMemberSlots } from "./ui/member.js?v=20260811.19";
-import { createCardPicker } from "./ui/modal.js?v=20260811.19";
-import { mountMusicControls } from "./ui/music.js?v=20260811.19";
-import { createOwnedCardsView } from "./ui/owned.js?v=20260811.19";
-import { renderResult } from "./ui/result.js?v=20260811.19";
-import { mountMemberOptions } from "./ui/target.js?v=20260811.19";
-import { requiredElement } from "./ui/dom.js?v=20260811.19";
-import { createCardDetail } from "./ui/card-detail.js?v=20260811.19";
+import { loadAppData } from "./data.js?v=20260812.20";
+import { createStore } from "./state.js?v=20260812.20";
+import { optimizeOwnedDeck } from "./recommend.js?v=20260812.20";
+import { prepareScoreCards } from "./score.js?v=20260812.20";
+import { renderMemberSlots } from "./ui/member.js?v=20260812.20";
+import { createCardPicker } from "./ui/modal.js?v=20260812.20";
+import { mountMusicControls } from "./ui/music.js?v=20260812.20";
+import { createOwnedCardsView } from "./ui/owned.js?v=20260812.20";
+import { renderResult } from "./ui/result.js?v=20260812.20";
+import { mountMemberOptions } from "./ui/target.js?v=20260812.20";
+import { requiredElement } from "./ui/dom.js?v=20260812.20";
+import { createCardDetail } from "./ui/card-detail.js?v=20260812.20";
 
-const APP_VERSION = "20260811.19";
+const APP_VERSION = "20260812.20";
 const RESULT_COUNT = 5;
 
 async function start() {
