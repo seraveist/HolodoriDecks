@@ -1,8 +1,5 @@
 const THEME_STORAGE_KEY = "holodori-decksim:theme";
-const DEFAULT_THEME = "system";
-const SUPPORTED_THEMES = new Set(["system", "light", "dark"]);
-
-let mediaListenerBound = false;
+const SUPPORTED_THEMES = new Set(["light", "dark"]);
 
 function storage() {
   try {
@@ -12,59 +9,54 @@ function storage() {
   }
 }
 
-function mediaQuery() {
+function systemTheme() {
   return typeof globalThis.matchMedia === "function"
-    ? globalThis.matchMedia("(prefers-color-scheme: dark)")
-    : null;
+    && globalThis.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
 }
 
 function normalizeTheme(value) {
-  return SUPPORTED_THEMES.has(value) ? value : DEFAULT_THEME;
+  return SUPPORTED_THEMES.has(value) ? value : systemTheme();
 }
 
-function resolvedTheme(preference) {
-  if (preference === "dark" || preference === "light") return preference;
-  return mediaQuery()?.matches ? "dark" : "light";
-}
-
-function applyTheme(preference) {
-  const normalized = normalizeTheme(preference);
-  const resolved = resolvedTheme(normalized);
+function applyTheme(theme) {
+  const normalized = normalizeTheme(theme);
   const root = globalThis.document?.documentElement;
   if (root) {
     root.dataset.themePreference = normalized;
-    root.dataset.theme = resolved;
-    root.style.colorScheme = resolved;
+    root.dataset.theme = normalized;
+    root.style.colorScheme = normalized;
   }
   const themeColor = globalThis.document?.querySelector('meta[name="theme-color"]');
-  if (themeColor) themeColor.setAttribute("content", resolved === "dark" ? "#0f1420" : "#f7f9fc");
+  if (themeColor) themeColor.setAttribute("content", normalized === "dark" ? "#0f1420" : "#f7f9fc");
   return normalized;
 }
 
-export function getThemePreference() {
-  const saved = storage()?.getItem(THEME_STORAGE_KEY);
-  return normalizeTheme(saved);
-}
-
-export function setThemePreference(preference) {
-  const normalized = normalizeTheme(preference);
+function persistTheme(theme) {
   try {
-    storage()?.setItem(THEME_STORAGE_KEY, normalized);
+    storage()?.setItem(THEME_STORAGE_KEY, theme);
   } catch {
     // Storage is optional; the current page can still apply the theme.
   }
-  applyTheme(normalized);
-  return normalized;
+}
+
+export function getThemePreference() {
+  return normalizeTheme(storage()?.getItem(THEME_STORAGE_KEY));
+}
+
+export function setThemePreference(theme) {
+  const normalized = normalizeTheme(theme);
+  persistTheme(normalized);
+  return applyTheme(normalized);
+}
+
+export function toggleTheme() {
+  return setThemePreference(getThemePreference() === "dark" ? "light" : "dark");
 }
 
 export function initTheme() {
-  const preference = applyTheme(getThemePreference());
-  const query = mediaQuery();
-  if (query && !mediaListenerBound) {
-    query.addEventListener?.("change", () => {
-      if (getThemePreference() === "system") applyTheme("system");
-    });
-    mediaListenerBound = true;
-  }
-  return preference;
+  const normalized = getThemePreference();
+  persistTheme(normalized);
+  return applyTheme(normalized);
 }
