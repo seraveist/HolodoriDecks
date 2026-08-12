@@ -1,0 +1,122 @@
+{
+  "assumptions": "all selectable ★4/★5 cards treated as owned; MAX level; potential 0; Manual FC",
+  "chart": {
+    "musicId": "m0049",
+    "difficulty": "EXPERT",
+    "notes": 720,
+    "skills": [
+      {
+        "slot": 1,
+        "time": 9.090909,
+        "combo": 22
+      },
+      {
+        "slot": 2,
+        "time": 27.272727,
+        "combo": 139
+      },
+      {
+        "slot": 3,
+        "time": 43.636364,
+        "combo": 263
+      },
+      {
+        "slot": 4,
+        "time": 60,
+        "combo": 380
+      },
+      {
+        "slot": 5,
+        "time": 85.454545,
+        "combo": 580
+      }
+    ],
+    "fever": {
+      "start": 60,
+      "end": 80.454545
+    }
+  },
+  "searchMode": "beam",
+  "evaluatedCount": 103311,
+  "leader": {
+    "id": "card-00018-5-uniq-0068-00",
+    "name": "호시마치 스이세이 / 여름의 일격! 물총 아르페지오"
+  },
+  "memberSet": [
+    {
+      "id": "card-00022-5-uniq-0018-00",
+      "name": "시로가네 노엘 / 향긋한 바람의 온화한 기사"
+    },
+    {
+      "id": "card-00017-5-uniq-0015-00",
+      "name": "이누가미 코로네 / Go! Go! Laughing Skater"
+    },
+    {
+      "id": "card-00013-5-uniq-0002-00",
+      "name": "AZKi / 흐드러지게 핀 일편단심 꽃"
+    },
+    {
+      "id": "card-00037-5-uniq-0030-00",
+      "name": "하쿠이 코요리 / 조수군의 마음을 사로잡는 라이브!"
+    },
+    {
+      "id": "card-00015-5-uniq-0003-00",
+      "name": "사쿠라 미코 / 벚꽃 Bloom"
+    }
+  ],
+  "orderCount": 120,
+  "best": {
+    "score": 572001,
+    "order": [
+      {
+        "id": "card-00022-5-uniq-0018-00",
+        "name": "시로가네 노엘 / 향긋한 바람의 온화한 기사"
+      },
+      {
+        "id": "card-00017-5-uniq-0015-00",
+        "name": "이누가미 코로네 / Go! Go! Laughing Skater"
+      },
+      {
+        "id": "card-00013-5-uniq-0002-00",
+        "name": "AZKi / 흐드러지게 핀 일편단심 꽃"
+      },
+      {
+        "id": "card-00037-5-uniq-0030-00",
+        "name": "하쿠이 코요리 / 조수군의 마음을 사로잡는 라이브!"
+      },
+      {
+        "id": "card-00015-5-uniq-0003-00",
+        "name": "사쿠라 미코 / 벚꽃 Bloom"
+      }
+    ]
+  },
+  "worst": {
+    "score": 561282,
+    "order": [
+      {
+        "id": "card-00017-5-uniq-0015-00",
+        "name": "이누가미 코로네 / Go! Go! Laughing Skater"
+      },
+      {
+        "id": "card-00015-5-uniq-0003-00",
+        "name": "사쿠라 미코 / 벚꽃 Bloom"
+      },
+      {
+        "id": "card-00013-5-uniq-0002-00",
+        "name": "AZKi / 흐드러지게 핀 일편단심 꽃"
+      },
+      {
+        "id": "card-00022-5-uniq-0018-00",
+        "name": "시로가네 노엘 / 향긋한 바람의 온화한 기사"
+      },
+      {
+        "id": "card-00037-5-uniq-0030-00",
+        "name": "하쿠이 코요리 / 조수군의 마음을 사로잡는 라이브!"
+      }
+    ]
+  },
+  "averageScore": 568743,
+  "difference": 10719,
+  "differencePctVsWorst": 1.9097,
+  "bestGainPctVsAverage": 0.5728
+}
