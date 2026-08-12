@@ -2,7 +2,9 @@
   color-scheme: light;
   --font-sans: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   --ink-950: #162034;
+  --ink-900: #202c42;
   --ink-800: #2c3850;
+  --ink-700: #45546d;
   --ink-650: #526078;
   --ink-500: #77839a;
   --line: #dfe5ee;
@@ -22,6 +24,7 @@
   --accent-soft: #e7f8f6;
   --accent-line: #b9e3d8;
   --warning: #f3a533;
+  --warning-ink: #b06a0a;
   --danger: #d94d67;
   --danger-soft: #fff0f1;
   --danger-line: #e49a9f;

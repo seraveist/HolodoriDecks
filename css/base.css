@@ -72,8 +72,8 @@ p {
   left: 12px;
   padding: 10px 14px;
   border-radius: 8px;
-  background: var(--ink-950);
-  color: #fff;
+  background: var(--surface-inverse);
+  color: var(--ink-inverse);
   transform: translateY(-160%);
   transition: transform 160ms ease;
 }
@@ -163,7 +163,7 @@ p {
   padding: 0 34px 0 12px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #fff;
+  background: var(--surface);
   color: var(--ink-950);
   box-shadow: var(--shadow-sm);
   font-size: 13px;

@@ -1,7 +1,9 @@
 html[data-theme="dark"] {
   color-scheme: dark;
   --ink-950: #f2f5fb;
+  --ink-900: #e9eef7;
   --ink-800: #dfe5f0;
+  --ink-700: #c4ccda;
   --ink-650: #aeb8ca;
   --ink-500: #8995aa;
   --line: #30394a;
@@ -9,17 +11,27 @@ html[data-theme="dark"] {
   --surface: #171d29;
   --surface-soft: #0f1420;
   --surface-blue: #16223a;
+  --surface-inverse: #0b1018;
+  --ink-inverse: #ffffff;
   --brand: #6f94ff;
   --brand-dark: #90abff;
   --brand-soft: #1b2b50;
+  --brand-line: #314a7c;
+  --brand-line-strong: #5876bf;
   --accent: #37c5bd;
+  --accent-ink: #77d9d3;
   --accent-soft: #153633;
+  --accent-line: #2d716b;
   --warning: #f4b554;
+  --warning-ink: #f4b554;
   --danger: #ff718a;
+  --danger-soft: #351c26;
+  --danger-line: #a85468;
   --shadow-sm: 0 8px 22px rgba(0, 0, 0, 0.2);
   --shadow-md: 0 18px 50px rgba(0, 0, 0, 0.34);
 }
 
+/* Theme-level exceptions only. Component surfaces use semantic tokens in their base CSS. */
 html[data-theme="dark"] body {
   background:
     radial-gradient(circle at 5% 0%, rgba(111, 148, 255, 0.12), transparent 28rem),
@@ -27,71 +39,8 @@ html[data-theme="dark"] body {
     var(--surface-soft);
 }
 
-html[data-theme="dark"] .skip-link {
-  background: #e7edf9;
-  color: #111824;
-}
-
-html[data-theme="dark"] .view-tabs,
-html[data-theme="dark"] .panel,
-html[data-theme="dark"] .modal-dialog,
-html[data-theme="dark"] .picker-card,
-html[data-theme="dark"] .owned-card,
-html[data-theme="dark"] .card-detail-dialog,
-html[data-theme="dark"] .recommendation-result-card,
-html[data-theme="dark"] .recommendation-result-body,
-html[data-theme="dark"] .result-context-row .rank-lockup,
-html[data-theme="dark"] .result-metric,
-html[data-theme="dark"] .calculation-card,
-html[data-theme="dark"] .skill-diagnostics,
-html[data-theme="dark"] .skill-timeline-panel,
-html[data-theme="dark"] .result-scorebar,
-html[data-theme="dark"] .result-skill-tooltip,
-html[data-theme="dark"] .slot-card-copy,
-html[data-theme="dark"] .result-empty-state {
-  background: var(--surface);
-  border-color: var(--line);
-}
-
 html[data-theme="dark"] .view-tabs {
   background: rgba(23, 29, 41, 0.88);
-}
-
-html[data-theme="dark"] .field select,
-html[data-theme="dark"] .search-field input,
-html[data-theme="dark"] .owned-card-settings input,
-html[data-theme="dark"] .owned-card-settings select,
-html[data-theme="dark"] .language-picker select,
-html[data-theme="dark"] .theme-picker select {
-  border-color: var(--line-strong);
-  background-color: #111824;
-  color: var(--ink-800);
-}
-
-html[data-theme="dark"] .member-separate-toggle,
-html[data-theme="dark"] .preset-clear-button {
-  border-color: var(--line-strong);
-  background: #151c29;
-  color: var(--ink-800);
-}
-
-html[data-theme="dark"] .member-slot {
-  border-color: #465166;
-  background: linear-gradient(155deg, #18202e, #121925);
-}
-
-html[data-theme="dark"] .member-slot.filled {
-  background: var(--surface);
-}
-
-html[data-theme="dark"] .member-slot.is-locked .slot-role {
-  background: #0b1018;
-  color: #fff;
-}
-
-html[data-theme="dark"] .slot-plus {
-  border-color: var(--line-strong);
-  background: #20293a;
 }
 
 html[data-theme="dark"] .slot-clear-button {
@@ -102,76 +51,9 @@ html[data-theme="dark"] .slot-clear-button {
 }
 
 html[data-theme="dark"] .slot-clear-button:hover {
-  border-color: #a85468;
-  background: #351c26;
+  border-color: var(--danger-line);
+  background: var(--danger-soft);
   color: var(--danger);
-}
-
-html[data-theme="dark"] .result-panel {
-  background:
-    linear-gradient(180deg, rgba(22, 34, 58, 0.46), var(--surface) 230px),
-    var(--surface);
-}
-
-html[data-theme="dark"] .recommendation-result-card[open] {
-  border-color: #5c78be;
-  background: #151e31;
-}
-
-html[data-theme="dark"] .recommendation-result-card > summary:hover .result-summary-header,
-html[data-theme="dark"] .recommendation-result-card[open] .result-summary-header {
-  background: #1a253b;
-}
-
-html[data-theme="dark"] .result-members,
-html[data-theme="dark"] .recommendation-result-card[open] .result-members-preview,
-html[data-theme="dark"] .diagnostic-team-row {
-  background: #121925;
-}
-
-html[data-theme="dark"] .result-summary-members b {
-  background: #252d3b;
-}
-
-html[data-theme="dark"] .result-summary-members b.is-leader {
-  background: var(--brand-soft);
-}
-
-html[data-theme="dark"] .result-metric.is-concept {
-  border-color: #5876bf;
-  background: var(--brand-soft);
-}
-
-html[data-theme="dark"] .song-projection {
-  border-color: #2d716b;
-  background: var(--accent-soft);
-}
-
-html[data-theme="dark"] .diagnostic-table th,
-html[data-theme="dark"] .diagnostic-timeline-columns {
-  background: #151d2a;
-}
-
-html[data-theme="dark"] .diagnostic-table td,
-html[data-theme="dark"] .diagnostic-timeline-row,
-html[data-theme="dark"] .diagnostic-timeline-columns,
-html[data-theme="dark"] .diagnostic-timeline-cell {
-  border-color: var(--line);
-}
-
-html[data-theme="dark"] .diagnostic-skill-timeline {
-  border-color: #414b5f;
-  background-color: #0f1520;
-  background-image: linear-gradient(to right,
-    transparent 24.7%, #354054 25%, transparent 25.3%,
-    transparent 49.7%, #354054 50%, transparent 50.3%,
-    transparent 74.7%, #354054 75%, transparent 75.3%);
-}
-
-html[data-theme="dark"] .calculate-row,
-html[data-theme="dark"] .recommendation-note {
-  border-color: #314a7c;
-  background: var(--surface-blue);
 }
 
 html[data-theme="dark"] .owned-card:not(.is-owned) .landscape-card-art img[data-card-portrait] {
@@ -184,4 +66,12 @@ html[data-theme="dark"] .modal-backdrop {
 
 html[data-theme="dark"] .app-error {
   background: #581f30;
+}
+
+html[data-theme="dark"] .theme-toggle-icon-moon {
+  display: none;
+}
+
+html[data-theme="dark"] .theme-toggle-icon-sun {
+  display: block;
 }

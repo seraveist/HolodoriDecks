@@ -39,14 +39,6 @@
   display: none;
 }
 
-html[data-theme="dark"] .theme-toggle-icon-moon {
-  display: none;
-}
-
-html[data-theme="dark"] .theme-toggle-icon-sun {
-  display: block;
-}
-
 .preset-slot-toolbar {
   margin: -10px 0 18px;
   display: flex;
@@ -111,8 +103,8 @@ html[data-theme="dark"] .theme-toggle-icon-sun {
 }
 
 .slot-clear-button:hover {
-  border-color: #e49a9f;
-  background: #fff5f6;
+  border-color: var(--danger-line);
+  background: var(--danger-soft);
   color: var(--danger);
   transform: scale(1.05);
 }
