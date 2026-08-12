@@ -41,7 +41,7 @@ validate-generated-data.py
         ↓
 automation/master-data-sync branch
         ↓
-automated review PR
+automated review PR (when repository permission allows)
         ↓
 manual merge
         ↓
@@ -66,6 +66,16 @@ automation/master-data-sync
 ```
 
 If a sync PR is already open, the branch is regenerated from the current `main` and the existing PR is refreshed instead of opening duplicates.
+
+### Repository permission for automatic PR creation
+
+GitHub has a repository-level switch separate from workflow YAML permissions. For fully automatic PR creation, enable:
+
+**Settings → Actions → General → Workflow permissions → Allow GitHub Actions to create and approve pull requests**
+
+The workflow still requests only the repository-scoped `contents: write` and `pull-requests: write` token permissions it needs.
+
+If this repository switch is disabled, synchronization does **not** discard the result and does not auto-merge anything. The validated data is still pushed to `automation/master-data-sync`; the workflow records a warning and places a direct compare/PR link plus the setting path in the Actions job summary. Enabling the switch later restores automatic PR creation without changing the sync code.
 
 ## Core normalization
 
