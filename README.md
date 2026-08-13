@@ -95,15 +95,12 @@ unit-score-v0.5-potential + song-score-v0.4-chart-timeline
 
 ## 채보 정확도 계층
 
-악곡/난이도별 계산은 가능한 데이터 수준에 따라 자동으로 내려갑니다.
+현재 공개된 v1.0.0은 다음 순서로 계산합니다.
 
 ```text
 Local Exact metadata
   → 저장소에 포함된 검증된 실제 노트 타임라인 + SP 슬롯 시각
   ↓ 없으면
-Pinned runtime Exact source
-  → 선택한 채보의 byte range만 읽어 실제 노트 타임라인 + SP 슬롯 시각 사용
-  ↓ 없거나 로드 실패 시
 Master chart
   → 실제 풀콤보 노트 수 + 집계형 SP 근사
   ↓ 없으면
@@ -111,11 +108,25 @@ Estimated
   → 난이도별 노트 밀도 추정
 ```
 
-현재 Master에는 난이도별 채보 728개가 있습니다. 저장소에 직접 포함된 Local Exact metadata는 `m0049 / EXPERT` 1개입니다.
+현재 공개 v1.0.0의 Local Exact metadata는 `m0049 / EXPERT` 1개입니다.
 
-다음 릴리스 후보에서는 추가로 현재 Master와 `musicId + difficulty + chartHash + fullComboNoteCount + chartAssetId + normalNoteCount`가 모두 일치하는 **703개 채보**를 고정된 공개 snapshot의 range index로 검증하고 있습니다. 이 경로는 악곡 선택 시 필요한 채보 객체만 lazy-load하며, 원본 28MB 전체 corpus를 앱 시작 시 내려받지 않습니다.
+### 다음 릴리스 후보: Runtime Exact
 
-런타임 Exact source가 실패하거나 현재 Master와 호환되지 않는 채보는 기존 Master/fallback 계산으로 자동 복귀합니다. 현재 감사 snapshot에서 Exact unavailable로 기록된 채보는 25개입니다.
+현재 별도 브랜치에서 아래 계층을 추가 검증하고 있습니다.
+
+```text
+Local Exact metadata
+  ↓ 없으면
+Pinned Runtime Exact source
+  ↓ 없거나 로드 실패 시
+Master chart
+  ↓ 없으면
+Estimated
+```
+
+후보 Runtime Exact index는 현재 Master 728개 채보 중 **703개**와 `musicId + difficulty + chartHash + fullComboNoteCount + chartAssetId + normalNoteCount`가 모두 일치합니다. 원본 공개 snapshot 전체는 약 28MB이지만, 앱은 선택한 채보 객체의 byte range만 lazy-load하도록 설계했습니다. 현재 감사 snapshot에서 unavailable로 기록된 채보는 25개이며 이들은 기존 Master/fallback을 사용합니다.
+
+이 Runtime Exact 경로는 아직 v1.0.0 공개 릴리스에 포함되지 않았습니다. 감사·검증 세부 내용은 [EXACT_CHART_CORPUS.md](EXACT_CHART_CORPUS.md)를 참고하세요.
 
 ## v1 계산 범위와 제한
 
@@ -124,7 +135,7 @@ Estimated
 - 이 프로젝트는 공식 게임 클라이언트의 내부 최종 점수식을 그대로 복제한 도구가 아니라, 확인 가능한 Master 데이터와 검증 fixture를 바탕으로 한 **시뮬레이터**입니다.
 - 계정별 **홀로멤버 보드 / 메모리 보정은 v1 계산에 포함하지 않습니다.** 현재 해당 항목의 계산 기여도는 0으로 유지됩니다.
 - **이벤트 보너스는 v1 계산에 포함하지 않습니다.**
-- 실제 노트별 시각과 SP 발동 순서는 Local Exact metadata 및 검증 중인 Runtime Exact 경로가 제공되는 악곡/난이도에서만 사용합니다. 그 외에는 Master 풀콤보 수와 집계형 SP 모델로 fallback합니다.
+- 공개 v1.0.0에서 실제 노트별 시각과 SP 발동 순서는 Local Exact metadata가 확보된 악곡/난이도에서만 사용합니다. 그 외에는 Master 풀콤보 수와 집계형 SP 모델로 fallback합니다.
 - Exact metadata의 Fever 구간은 보존하지만 v1의 솔로 점수에는 별도의 Fever 배율을 임의 적용하지 않습니다.
 - 따라서 앱의 점수는 편성 간 비교와 추천을 위한 예상값이며 인게임 결과와 소수점/반올림, 미확인 계정 보정, 향후 Master 변경 등에 따라 차이가 날 수 있습니다.
 
@@ -152,9 +163,9 @@ Exact SP 채보에서는 1차 조합 검색에 Master-only 컨텍스트를 사�
 - 악곡: 182
 - 리더 데이터 보유 카드: 169
 - 난이도별 채보: 728
-- Local Exact 채보 metadata: 1
-- Runtime Exact 릴리스 후보 호환 채보: 703 / 728
-- Runtime Exact unavailable: 25 / 728
+- 공개 v1.0.0 Local Exact 채보 metadata: 1
+- 다음 릴리스 후보 Runtime Exact 호환 채보: 703 / 728
+- 후보 snapshot Runtime Exact unavailable: 25 / 728
 - 지원 언어: KO / EN / JA
 
 보유 카드/프리셋 선택 UI에서는 ★4·★5 카드를 사용합니다.
@@ -199,11 +210,9 @@ node scripts/build-chart-index.mjs
 - source: `asciisyaez/yagoo-dori`
 - pinned commit: `6c2c95d52c268862d34fb523d965f09a3108bbbd`
 
-대량 Exact corpus 자체는 저장소에 재배포하지 않습니다. 릴리스 후보의 `data/generated/exact-runtime-index.json`에는 각 호환 채보의 byte offset/길이/SHA256과 현재 Master 식별값만 저장합니다. 앱은 Local Exact 파일이 없을 때 이 index를 통해 선택된 채보 객체만 range fetch하고, `chartHash`·노트 수 등 현재 Master와의 정합성을 다시 확인한 뒤 사용하도록 검증 중입니다.
+다음 릴리스 후보의 대량 Exact corpus intake는 703개 변환 timeline JSON을 DeckSim 저장소에 bulk-publish하지 않습니다. 대신 `data/generated/exact-runtime-index.json`에 각 호환 채보의 byte offset/길이/SHA256과 현재 Master 식별값만 저장하고, Local Exact 파일이 없을 때 선택된 공개 source chart 객체만 range fetch한 뒤 hash/Master 정합성을 다시 검증하는 방식입니다.
 
-후보 corpus의 source manifest에는 별도 재배포 라이선스가 명시되어 있지 않으므로, 703개 변환 JSON 파일을 DeckSim 저장소에 bulk-publish하지 않습니다. 자세한 감사 결과는 [EXACT_CHART_CORPUS.md](EXACT_CHART_CORPUS.md)를 참고하세요.
-
-채보 hash나 노트 수가 새 Master와 달라지면 해당 Local/Runtime Exact metadata는 계산에서 제외되고 fallback 경로가 사용됩니다.
+후보 corpus의 source manifest에는 별도 재배포 라이선스가 명시되어 있지 않기 때문에 전체 변환 데이터의 저장소 복제를 피합니다. 자세한 감사 결과는 [EXACT_CHART_CORPUS.md](EXACT_CHART_CORPUS.md)를 참고하세요.
 
 ## 프로젝트 구조
 
@@ -287,7 +296,7 @@ node scripts/test-chart-scoring.mjs
 python -m http.server 8000
 ```
 
-Runtime Exact range index를 재생성하려면 감사 문서에 기록된 **정확히 고정된 corpus snapshot**을 별도로 받아 다음을 실행합니다.
+Runtime Exact 릴리스 후보 range index를 재생성하려면 감사 문서에 기록된 **정확히 고정된 corpus snapshot**을 별도로 받아 다음을 실행합니다.
 
 ```bash
 node scripts/build-exact-runtime-index.mjs --input /path/to/holodori-chart-timelines.json
