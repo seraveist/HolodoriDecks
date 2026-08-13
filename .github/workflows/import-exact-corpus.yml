@@ -1,0 +1,85 @@
+name: Import Exact Chart Corpus
+
+on:
+  push:
+    branches: [feat/exact-chart-corpus]
+    paths:
+      - scripts/import-exact-chart-corpus.mjs
+      - .github/workflows/import-exact-corpus.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: exact-chart-corpus-import
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/exact-chart-corpus
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download pinned public exact timeline corpus
+        run: |
+          curl --fail --location --retry 3 --retry-delay 2 \
+            --output /tmp/holodori-chart-timelines.json \
+            https://raw.githubusercontent.com/asciisyaez/yagoo-dori/6c2c95d52c268862d34fb523d965f09a3108bbbd/data/generated/holodori-chart-timelines.json
+          test -s /tmp/holodori-chart-timelines.json
+
+      - name: Import Master-compatible exact timelines
+        run: |
+          node scripts/import-exact-chart-corpus.mjs \
+            --source=/tmp/holodori-chart-timelines.json \
+            --write \
+            | tee /tmp/exact-import-summary.json
+
+      - name: Rebuild chart index and validate
+        run: |
+          node scripts/build-chart-index.mjs
+          python scripts/validate-generated-data.py
+          node scripts/test-chart-scoring.mjs
+          node --check scripts/import-exact-chart-corpus.mjs
+
+      - name: Show import summary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = json.loads(Path('data/generated/exact-chart-corpus.json').read_text(encoding='utf-8'))
+          print(json.dumps({
+              'localChartCount': p['localChartCount'],
+              'corpusAvailableCount': p['corpusAvailableCount'],
+              'corpusUnavailableCount': p['corpusUnavailableCount'],
+              'matchingCount': p['matchingCount'],
+              'mismatchCount': p['mismatchCount'],
+              'sourceOnlyCount': p['sourceOnlyCount'],
+              'preservedIndependentExactCount': p['preservedIndependentExactCount'],
+              'parityFixture': p['parityFixture'],
+          }, indent=2))
+          PY
+
+      - name: Commit generated exact metadata
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/generated/charts data/generated/chart-index.json data/generated/exact-chart-corpus.json
+          if git diff --cached --quiet; then
+            echo "No generated exact metadata changes."
+            exit 0
+          fi
+          git commit -m "Import compatible exact chart timelines"
+          git push origin HEAD:feat/exact-chart-corpus
