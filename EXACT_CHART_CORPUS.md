@@ -1,6 +1,6 @@
 # Exact chart corpus compatibility audit
 
-This document records the compatibility audit and runtime intake design for a candidate bulk Exact chart-timeline source. The third-party 703-chart corpus is **not** bulk-redistributed by Holodori DeckSim.
+This document records the compatibility audit and release-candidate runtime intake design for a candidate bulk Exact chart-timeline source. The third-party 703-chart corpus is **not** bulk-redistributed by Holodori DeckSim.
 
 ## Candidate source
 
@@ -17,7 +17,7 @@ Pinned public generated snapshot:
 
 The parser reference recorded in that source is `HolodoriDB/holodori-scores`, whose parser code is MIT-licensed. That does not by itself establish redistribution terms for the generated chart corpus or game-derived chart data.
 
-Because the candidate corpus does not currently state redistribution terms, Holodori DeckSim does not publish 703 converted chart JSON files in this repository. Instead, the repository contains only a compact **runtime range index** derived from the pinned public snapshot. The index stores byte offsets, lengths, per-object SHA-256 values, and current-Master identifiers; it does not contain the note timelines themselves.
+Because the candidate corpus does not currently state redistribution terms, Holodori DeckSim does not publish 703 converted chart JSON files in this repository. The current release candidate instead contains only a compact **runtime range index** derived from the pinned public snapshot. The index stores byte offsets, lengths, per-object SHA-256 values, and current-Master identifiers; it does not contain the note timelines themselves.
 
 ## DeckSim snapshot audited
 
@@ -74,7 +74,7 @@ No attempt is made to bypass source access controls. These 25 charts remain on D
 
 ## Runtime range index
 
-`data/generated/exact-runtime-index.json` is generated from the exact pinned snapshot by `scripts/build-exact-runtime-index.mjs`.
+The release candidate's `data/generated/exact-runtime-index.json` is generated from the exact pinned snapshot by `scripts/build-exact-runtime-index.mjs`.
 
 For every compatible chart it records only:
 
@@ -155,7 +155,7 @@ A full materialized conversion was exercised only in a temporary Actions workspa
 - newly generated compact JSON bytes: `10,223,421`
 - total materialized `data/generated/charts/` size: about `10.26 MB`
 
-Those 702 derived files are not committed. The production repository instead adds `exact-runtime-index.json` at roughly 0.28 MB and lazy-loads one source object at a time.
+Those 702 derived files are not committed. The release candidate instead adds `exact-runtime-index.json` at roughly 0.28 MB and lazy-loads one source object at a time.
 
 ## Worst-case order-search benchmark
 
@@ -197,4 +197,6 @@ The builder refuses an input whose full SHA-256 does not match the pinned snapsh
 
 ## Source/data-use boundary
 
-The external snapshot remains hosted by its source repository. DeckSim publishes only the compatibility/range metadata required to request a selected public object and validates that object before use. This design intentionally avoids adding 703 third-party-derived note-timeline files to the DeckSim repository while retaining fail-soft Exact scoring for compatible charts.
+The external snapshot remains hosted by its source repository. DeckSim's release candidate publishes only the compatibility/range metadata required to request a selected public object and validates that object before use. This design intentionally avoids adding 703 third-party-derived note-timeline files to the DeckSim repository while retaining fail-soft Exact scoring for compatible charts.
+
+The runtime intake remains a release candidate until the branch's full CI and manual browser checks are completed and the change is deliberately merged/released.
