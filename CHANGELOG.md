@@ -4,22 +4,42 @@ Holodori DeckSim의 공개 릴리스 변경 이력을 기록합니다.
 
 형식은 [Keep a Changelog](https://keepachangelog.com/ko/1.1.0/)의 구성을 참고하고, 버전 번호는 Semantic Versioning을 따릅니다.
 
-## [Unreleased]
+## [1.1.0] - 2026-08-13
 
 ### Added
 
-- 현재 Master 728개 채보 중 703개와 호환되는 Runtime Exact range index 릴리스 후보
+- 현재 Master 728개 채보 중 703개와 호환되는 Runtime Exact range index
 - 고정 공개 chart snapshot에서 선택한 채보 객체만 HTTP Range로 lazy-load하는 Exact timeline 경로
-- Runtime Exact 객체의 byte length / Content-Range / SHA-256 / Master 식별값 재검증
 - Local Exact → Runtime Exact → Master → Estimated 순서의 fail-soft 채보 정확도 계층
-- Runtime Exact index builder와 loader regression test
+- 대상 지정 Passive Active-Skill-Effect-Up을 해당 멤버별로 적용하는 계산 경로
+- Exact 타임라인의 실제 액티브 판정 시각·확률·combo·SP 발동률·대상 support를 결과 진단에 재사용
+- 채보 밀도와 보유 카드 수에 따른 동적 Exact shortlist
+- 작은 카드 pool에서 `모든 조합 × 5! 순열` 완전탐색과 staged optimizer 결과를 비교하는 global-search regression
+- Runtime Exact index의 current-Master coherence regression
+- Runtime Exact Content-Range / byte length / SHA-256 fail-closed 검증
+- module Web Worker 기반 편성 탐색과 Worker 미지원 환경의 동기 fallback
+- 대상 패시브, 글로벌 Exact 탐색, Runtime coherence에 대한 JavaScript regression tests
 
 ### Changed
 
-- 저장소에 703개 변환 timeline JSON을 bulk-publish하지 않고, 호환성/range metadata만 저장하도록 Exact corpus intake 구조를 분리
-- 외부 Exact source가 실패하거나 stale이면 계산 자체를 실패시키지 않고 기존 Master fallback을 유지
+- Exact 2차 후보를 기존 고정 TOP 10에서 상황에 따라 약 12~30개까지 확대
+- 작은 보유 카드 pool에서는 가능한 전체 조합을 Exact 2차 평가 대상으로 보존
+- 대상 지정 액티브 효과 지원을 `대상 수 / 5` 팀 평균 근사 대신 실제 대상 멤버의 액티브에 적용
+- Exact 결과의 발동 횟수·커버율·팀 타임라인이 집계 재계산이 아니라 실제 타임라인 판정 데이터를 사용하도록 변경
+- `Manual FC` 표기를 실제 계산 의미에 맞춰 `Manual PERFECT FC`로 명확화
+- Runtime Exact index가 Master 데이터 동기화 시 새 chart index에 맞춰 함께 재생성되도록 sync pipeline 확장
+- Runtime source가 새 Master와 불일치하면 해당 채보만 자동 제외하고 Master fallback 유지
+- 저장소에 703개 변환 timeline JSON을 bulk-publish하지 않고 range metadata만 유지
+- 브라우저의 무거운 조합/순열 탐색을 메인 UI 스레드에서 Web Worker로 이동
 
-> 위 항목은 현재 `feat/exact-chart-runtime-source` 릴리스 후보에서 검증 중이며 아직 v1.0.0 공개 릴리스에는 포함되지 않습니다.
+### Validation
+
+- Unit Score calibration fixture drift 검사
+- 프리셋 멤버 포함 조건 및 120순열 회귀
+- 대상 지정 Passive Support 회귀
+- Exact staged/global exhaustive parity 회귀
+- Runtime Exact current-Master coherence 및 무결성 검사
+- PR / Pages 단계에서 신규 계산 regression 재실행
 
 ## [1.0.0] - 2026-08-13
 
