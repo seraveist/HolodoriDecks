@@ -30,7 +30,7 @@ Master/번역 데이터의 원저작권 또는 별도 이용 조건은 해당 �
 
 ## Exact chart metadata
 
-저장소에 직접 포함된 `m0049 / EXPERT` Exact metadata는 다음 공개 SUS fixture에서 변환되었습니다.
+현재 공개 v1.0.0 저장소에 직접 포함된 `m0049 / EXPERT` Exact metadata는 다음 공개 SUS fixture에서 변환되었습니다.
 
 - repository: https://github.com/asciisyaez/yagoo-dori
 - source commit: `6c2c95d52c268862d34fb523d965f09a3108bbbd`
