@@ -44,12 +44,21 @@ function chartKey(musicId, difficulty) {
   return `${String(musicId ?? "")}:${String(difficulty ?? "").toUpperCase()}`;
 }
 
-function stableTimeline(metadata) {
-  return JSON.stringify({
-    notes: metadata?.notes ?? [],
-    skills: metadata?.skills ?? [],
-    fever: metadata?.fever ?? null,
-  });
+function canonicalTimeline(metadata) {
+  const notes = [...(metadata?.notes ?? [])]
+    .map((note) => [String(note?.[0] ?? ""), Number(note?.[1])])
+    .sort((left, right) => left[1] - right[1] || left[0].localeCompare(right[0]));
+  const skills = [...(metadata?.skills ?? [])]
+    .map((skill) => ({
+      slot: Number(skill?.slot),
+      time: Number(skill?.time),
+      combo: Number(skill?.combo),
+    }))
+    .sort((left, right) => left.slot - right.slot);
+  const fever = metadata?.fever
+    ? { start: Number(metadata.fever.start), end: Number(metadata.fever.end) }
+    : null;
+  return JSON.stringify({ notes, skills, fever });
 }
 
 function requireArray(value, message) {
@@ -198,6 +207,7 @@ export async function importCorpus({
   const mismatches = [];
   const sourceOnly = [];
   const preservedExisting = [];
+  const independentConflicts = [];
   const desiredCorpusFiles = new Set();
   let parityFixtureMatched = false;
 
@@ -226,11 +236,21 @@ export async function importCorpus({
     const file = path.join(outputDir, fileName);
     const existing = await existingMetadata(file);
     if (existing && existing.sourceType !== SOURCE_TYPE) {
-      if (stableTimeline(existing) !== stableTimeline(converted)) {
-        throw new Error(`${key}: existing independently sourced exact metadata does not match corpus timeline`);
+      const timelineMatched = canonicalTimeline(existing) === canonicalTimeline(converted);
+      if (timelineMatched) {
+        preservedExisting.push(key);
+        if (key === "m0049:EXPERT") parityFixtureMatched = true;
+      } else {
+        independentConflicts.push({
+          key,
+          existingNoteCount: Array.isArray(existing.notes) ? existing.notes.length : null,
+          corpusNoteCount: converted.notes.length,
+          existingSkills: existing.skills ?? [],
+          corpusSkills: converted.skills,
+          existingFever: existing.fever ?? null,
+          corpusFever: converted.fever,
+        });
       }
-      preservedExisting.push(key);
-      if (key === "m0049:EXPERT") parityFixtureMatched = true;
     } else if (write) {
       await writeJson(file, converted, true);
     }
@@ -278,6 +298,7 @@ export async function importCorpus({
     corpusUnavailableCount: unavailable.length,
     matchingCount: matched.length,
     preservedIndependentExactCount: preservedExisting.length,
+    independentConflictCount: independentConflicts.length,
     mismatchCount: mismatches.length,
     sourceOnlyCount: sourceOnly.length,
     removedCorpusFiles,
@@ -285,6 +306,7 @@ export async function importCorpus({
       key: "m0049:EXPERT",
       matchedExistingTimeline: parityFixtureMatched,
     },
+    independentConflicts,
     mismatches,
     sourceOnly,
     unavailable,
@@ -309,7 +331,7 @@ async function main() {
   });
   console.log(JSON.stringify(summary, null, 2));
   if (!summary.parityFixture.matchedExistingTimeline) {
-    throw new Error("m0049:EXPERT parity fixture did not match the existing independently sourced timeline");
+    throw new Error("m0049:EXPERT semantic parity fixture did not match the existing independently sourced timeline");
   }
 }
 
