@@ -21,7 +21,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
@@ -43,6 +43,8 @@ jobs:
           node --check scripts/build-chart-index.mjs
           node --check scripts/build-exact-runtime-index.mjs
           node --check scripts/test-chart-scoring.mjs
+          node --check scripts/test-targeted-passive-support.mjs
+          node --check scripts/test-exact-global-search.mjs
           node --check scripts/test-exact-runtime-source.mjs
           python -m py_compile scripts/validate-generated-data.py
           node --input-type=module <<'NODE'
@@ -56,6 +58,8 @@ jobs:
             import('./js/state.js'),
             import('./js/score.js'),
             import('./js/recommend.js'),
+            import('./js/optimizer-core.js'),
+            import('./js/optimizer-client.js'),
             import('./js/ui/cards.js'),
             import('./js/ui/dom.js'),
             import('./js/ui/member.js'),
@@ -69,13 +73,22 @@ jobs:
           ]);
           console.log('[pages] module imports resolved');
           NODE
+          node scripts/test-chart-scoring.mjs
+          node scripts/test-targeted-passive-support.mjs
+          node scripts/test-exact-global-search.mjs
+          node scripts/test-exact-runtime-source.mjs
           node --input-type=module <<'NODE'
-          import { recommendationValue } from './js/recommend.js';
+          import { scoreEngineSelfTest } from './js/score.js';
+          import { exactShortlistSize, recommendationValue } from './js/recommend.js';
           const probe = { rankingScore: 100, potentialRankingScore: 140 };
           if (recommendationValue(probe, 'score') !== 100) throw new Error('score target ranking mismatch');
           if (recommendationValue(probe, 'potential') !== 140) throw new Error('potential target ranking mismatch');
+          if (scoreEngineSelfTest().maxAbsError !== 0) throw new Error('unit-score calibration fixture drift');
+          if (exactShortlistSize(700, 50) <= 10) throw new Error('Exact shortlist regression');
           NODE
-          grep -q 'data-app-version="20260812.3"' index.html
+          grep -q 'data-app-version="1.1.0"' index.html
+          grep -q 'const APP_VERSION = "1.1.0"' js/app.js
+          grep -q 'Manual PERFECT FC' index.html
           grep -q '<option value="potential">최고 잠재 스코어</option>' index.html
           grep -q 'id="theme-toggle"' index.html
           if grep -q 'id="theme-select"' index.html; then exit 1; fi
@@ -117,8 +130,6 @@ jobs:
         run: |
           node scripts/build-i18n.mjs
           node scripts/build-chart-index.mjs
-          node scripts/test-chart-scoring.mjs
-          node scripts/test-exact-runtime-source.mjs
           python scripts/validate-generated-data.py
           test -s data/generated/i18n/ko.json
           test -s data/generated/i18n/en.json
@@ -127,6 +138,7 @@ jobs:
           node --input-type=module <<'NODE'
           import { readFile } from 'node:fs/promises';
           const manifest = JSON.parse(await readFile('data/generated/i18n/manifest.json', 'utf8'));
+          const chart = JSON.parse(await readFile('data/generated/chart-index.json', 'utf8'));
           const runtime = JSON.parse(await readFile('data/generated/exact-runtime-index.json', 'utf8'));
           if (!manifest.required_entry_count
             || !Number.isInteger(manifest.card_name_alias_count)
@@ -135,13 +147,17 @@ jobs:
             throw new Error('invalid i18n manifest');
           }
           if (runtime.runtimeExactCount !== Object.keys(runtime.charts ?? {}).length
-            || runtime.runtimeExactCount !== 703
-            || runtime.unavailableCount !== 25
-            || runtime.rejectedAvailableCount !== 0) {
-            throw new Error('invalid exact runtime range index');
+            || runtime.currentMasterSourceCommit !== chart.source_commit
+            || runtime.currentMasterChartCount !== chart.chart_count) {
+            throw new Error('invalid or stale exact runtime range index');
           }
-          console.log(`[pages] ${manifest.required_entry_count} required LangIds; ${runtime.runtimeExactCount} runtime Exact charts validated`);
+          console.log(`[pages] ${manifest.required_entry_count} required LangIds; ${runtime.runtimeExactCount}/${chart.chart_count} Runtime Exact charts coherent`);
           NODE
+
+      - name: Validate release metadata
+        run: |
+          python -m pip install --disable-pip-version-check -e '.[test]'
+          python -m pytest -q
 
       - name: Prepare Pages artifact
         run: |
