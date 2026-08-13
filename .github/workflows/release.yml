@@ -1,0 +1,125 @@
+name: Publish Version Release
+
+on:
+  workflow_run:
+    workflows: ["Deploy GitHub Pages"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: version-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate release metadata
+        id: meta
+        run: |
+          version="$(tr -d '\r\n[:space:]' < VERSION)"
+          if ! printf '%s' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "Invalid VERSION: $version" >&2
+            exit 1
+          fi
+          RELEASE_VERSION="$version" python - <<'PY'
+          import os
+          import re
+          import tomllib
+          from pathlib import Path
+
+          root = Path('.')
+          version = os.environ['RELEASE_VERSION']
+          project = tomllib.loads((root / 'pyproject.toml').read_text(encoding='utf-8'))['project']
+          init_text = (root / 'src/holodori_decksim/__init__.py').read_text(encoding='utf-8')
+          match = re.search(r'__version__\s*=\s*["\']([^"\']+)["\']', init_text)
+          if project.get('version') != version:
+              raise SystemExit(f"pyproject version mismatch: {project.get('version')} != {version}")
+          if not match or match.group(1) != version:
+              raise SystemExit('package __version__ mismatch')
+          changelog = (root / 'CHANGELOG.md').read_text(encoding='utf-8')
+          if f'## [{version}]' not in changelog:
+              raise SystemExit(f'CHANGELOG entry missing for {version}')
+          PY
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+
+      - name: Check existing tag and release
+        id: existing
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.meta.outputs.tag }}
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "tag_exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag_exists=false" >> "$GITHUB_OUTPUT"
+          fi
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "release_exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "release_exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Extract release notes
+        if: steps.existing.outputs.release_exists != 'true'
+        env:
+          VERSION: ${{ steps.meta.outputs.version }}
+        run: |
+          awk -v version="$VERSION" '
+            index($0, "## [" version "] - ") == 1 { capture=1; next }
+            capture && /^## \[/ { exit }
+            capture { print }
+          ' CHANGELOG.md > /tmp/release-notes.md
+          if [ ! -s /tmp/release-notes.md ]; then
+            echo "Unable to extract release notes for $VERSION" >&2
+            exit 1
+          fi
+
+      - name: Create annotated tag
+        if: steps.existing.outputs.tag_exists != 'true'
+        env:
+          TAG: ${{ steps.meta.outputs.tag }}
+          TARGET_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$TAG" "$TARGET_SHA" -m "Holodori DeckSim $TAG"
+          git push origin "$TAG"
+
+      - name: Publish GitHub Release
+        if: steps.existing.outputs.release_exists != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.meta.outputs.tag }}
+          TARGET_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          gh release create "$TAG" \
+            --target "$TARGET_SHA" \
+            --title "Holodori DeckSim $TAG" \
+            --notes-file /tmp/release-notes.md
+
+      - name: Summary
+        run: |
+          {
+            echo "## Holodori DeckSim release"
+            echo "- version: ${{ steps.meta.outputs.version }}"
+            echo "- tag: ${{ steps.meta.outputs.tag }}"
+            echo "- deployed commit: ${{ github.event.workflow_run.head_sha }}"
+            echo "- tag previously existed: ${{ steps.existing.outputs.tag_exists }}"
+            echo "- release previously existed: ${{ steps.existing.outputs.release_exists }}"
+          } >> "$GITHUB_STEP_SUMMARY"
