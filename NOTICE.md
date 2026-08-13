@@ -38,7 +38,7 @@ Master/번역 데이터의 원저작권 또는 별도 이용 조건은 해당 �
 
 변환된 metadata의 provenance는 `data/generated/charts/m0049-EXPERT.json`에도 기록되어 있습니다.
 
-추가 Exact timeline 계산을 위해 다음 고정 공개 snapshot의 호환성도 별도로 감사합니다.
+다음 릴리스 후보에서는 추가 Exact timeline 계산을 위해 아래 고정 공개 snapshot의 호환성을 별도로 감사하고 있습니다.
 
 - repository: https://github.com/asciisyaez/yagoo-dori
 - source commit: `6c2c95d52c268862d34fb523d965f09a3108bbbd`
@@ -47,7 +47,7 @@ Master/번역 데이터의 원저작권 또는 별도 이용 조건은 해당 �
 
 이 대량 timeline corpus의 source manifest에는 별도 재배포 라이선스가 명시되어 있지 않습니다. 따라서 Holodori DeckSim은 703개 변환 timeline JSON 파일을 저장소에 bulk-publish하지 않습니다.
 
-대신 `data/generated/exact-runtime-index.json`에는 현재 Master와 호환성이 확인된 채보의 byte offset/길이/객체 SHA-256 및 식별값만 기록합니다. 앱은 Local Exact 파일이 없는 경우 선택한 채보 객체만 원 source의 고정 public snapshot에서 HTTP Range로 읽고, 반환 객체를 hash 및 Master 식별값으로 다시 검증한 후 메모리에서 변환하여 사용합니다. 원 snapshot 또는 변환된 전체 note corpus를 DeckSim 저장소에 복제하지 않습니다.
+릴리스 후보는 대신 `data/generated/exact-runtime-index.json`에 현재 Master와 호환성이 확인된 채보의 byte offset/길이/객체 SHA-256 및 식별값만 기록합니다. 앱은 Local Exact 파일이 없는 경우 선택한 채보 객체만 원 source의 고정 public snapshot에서 HTTP Range로 읽고, 반환 객체를 hash 및 Master 식별값으로 다시 검증한 후 메모리에서 변환하여 사용하는 방식을 검증 중입니다. 원 snapshot 또는 변환된 전체 note corpus를 DeckSim 저장소에 복제하지 않습니다.
 
 외부 source 접근이 실패하거나 검증이 맞지 않으면 해당 채보는 기존 Master/fallback 계산을 사용합니다. 자세한 기술 감사 결과는 `EXACT_CHART_CORPUS.md`에 기록합니다.
 
