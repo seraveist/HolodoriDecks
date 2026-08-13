@@ -7,7 +7,7 @@ import {
   escapeHtml,
   renderLandscapeCardArt,
   wirePortraitFallback,
-} from "./cards.js?v=20260812.1";
+} from "./cards.js?v=20260813.2";
 import { requiredElement } from "./dom.js?v=20260812.1";
 
 const LOCAL_COPY = Object.freeze({

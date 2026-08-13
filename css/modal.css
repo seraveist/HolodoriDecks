@@ -81,7 +81,7 @@ body.card-detail-open {
     radial-gradient(circle, transparent 5px, var(--ink-500) 6px, var(--ink-500) 7px, transparent 8px) 14px 13px / 22px 22px no-repeat,
     linear-gradient(45deg, transparent 47%, var(--ink-500) 48%, var(--ink-500) 54%, transparent 55%) 29px 28px / 7px 7px no-repeat,
     var(--surface);
-  font-size: 13px;
+  font-size: var(--type-body);
 }
 
 .filter-grid {
@@ -104,7 +104,7 @@ body.card-detail-open {
 
 .compact-field select {
   min-height: 48px;
-  font-size: 12px;
+  font-size: var(--type-body-sm);
 }
 
 .picker-summary {
@@ -113,7 +113,7 @@ body.card-detail-open {
   padding: 0 24px;
   border-bottom: 1px solid var(--line);
   color: var(--ink-500);
-  font-size: 11px;
+  font-size: var(--type-label);
   font-weight: 800;
 }
 
@@ -175,16 +175,16 @@ body.card-detail-open {
 }
 
 .picker-card .landscape-card-title strong {
-  font-size: 11px;
+  font-size: var(--type-label);
 }
 
 .picker-card .landscape-card-title small,
 .picker-card .landscape-card-copy > small {
-  font-size: 9px;
+  font-size: var(--type-caption);
 }
 
 .picker-card .landscape-card-copy > span:not(.landscape-card-title) {
-  font-size: 10px;
+  font-size: var(--type-caption);
 }
 
 .picker-card .landscape-card-art .attribute-icon {
@@ -197,7 +197,7 @@ body.card-detail-open {
 .picker-card .landscape-card-art .rarity-badge {
   left: 7px;
   bottom: 6px;
-  font-size: 12px;
+  font-size: var(--type-body-sm);
 }
 
 .used-chip {
@@ -208,8 +208,8 @@ body.card-detail-open {
   border-radius: 6px;
   background: rgba(21, 31, 50, 0.82);
   color: #fff;
-  font-size: 9px;
-  font-weight: 900;
+  font-size: var(--type-caption);
+  font-weight: var(--weight-extrabold);
 }
 
 .card-list .empty-state {
@@ -264,8 +264,8 @@ body.card-detail-open {
 
 .card-detail-rarity {
   color: var(--attribute-color, var(--brand));
-  font-size: 12px;
-  font-weight: 900;
+  font-size: var(--type-body-sm);
+  font-weight: var(--weight-extrabold);
 }
 
 .card-detail-identity h3 {
@@ -277,7 +277,7 @@ body.card-detail-open {
   margin-top: 3px;
   overflow: hidden;
   color: var(--ink-650);
-  font-size: 13px;
+  font-size: var(--type-body);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -289,7 +289,7 @@ body.card-detail-open {
   border-radius: 8px;
   background: var(--attribute-soft, var(--brand-soft));
   color: var(--ink-800);
-  font-size: 11px;
+  font-size: var(--type-label);
 }
 
 .card-detail-stats {
@@ -311,7 +311,7 @@ body.card-detail-open {
 
 .card-detail-stat span {
   color: var(--ink-650);
-  font-size: 11px;
+  font-size: var(--type-label);
   font-weight: 800;
 }
 
@@ -323,7 +323,7 @@ body.card-detail-open {
 .card-detail-stat small {
   grid-column: 1 / -1;
   color: var(--ink-500);
-  font-size: 9px;
+  font-size: var(--type-caption);
   font-weight: 800;
   text-align: right;
 }
@@ -350,13 +350,13 @@ body.card-detail-open {
 
 .card-detail-skill header strong {
   color: var(--brand-dark);
-  font-size: 12px;
+  font-size: var(--type-body-sm);
 }
 
 .card-detail-skill header span {
   color: var(--ink-500);
-  font-size: 10px;
-  font-weight: 900;
+  font-size: var(--type-caption);
+  font-weight: var(--weight-extrabold);
 }
 
 .card-detail-skill-meta {
@@ -371,14 +371,14 @@ body.card-detail-open {
   border-radius: 6px;
   background: var(--surface-soft);
   color: var(--ink-650);
-  font-size: 9px;
+  font-size: var(--type-caption);
   font-weight: 800;
 }
 
 .card-detail-skill p {
   margin-top: 8px;
   color: var(--ink-800);
-  font-size: 11px;
+  font-size: var(--type-label);
   line-height: 1.65;
 }
 

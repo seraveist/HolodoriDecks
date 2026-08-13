@@ -1,6 +1,24 @@
 :root {
   color-scheme: light;
-  --font-sans: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  --type-caption: 10px;
+  --type-label: 11px;
+  --type-body-sm: 12px;
+  --type-body: 13px;
+  --type-card-title: 13px;
+  --type-card-name: 11px;
+  --type-card-meta: 10px;
+  --type-heading-sm: 16px;
+  --type-heading-md: 20px;
+  --type-heading-lg: 21px;
+  --type-score-md: 21px;
+  --type-score-lg: 28px;
+  --type-score-xl: 30px;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-extrabold: 800;
+  --tracking-tight: -0.015em;
   --ink-950: #162034;
   --ink-900: #202c42;
   --ink-800: #2c3850;

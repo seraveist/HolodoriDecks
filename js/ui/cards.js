@@ -84,12 +84,12 @@ export function renderLandscapeCardArt(card, { lazy = true, showMeta = true } = 
 
 export function renderLandscapeCardTitle(card) {
   const meta = ATTRIBUTE_META[Number(card.attribute)] ?? ATTRIBUTE_META[1];
-  return `<span class="landscape-card-title"><span class="landscape-card-title-meta"><img class="landscape-card-type-icon" src="${meta.icon}" alt="${escapeHtml(t("card.typeAria", { type: meta.name }))}"><small>★${Number(card.rarity)}</small></span><strong>${escapeHtml(card.character_name)}</strong></span>`;
+  return `<span class="landscape-card-title card-copy-title"><span class="landscape-card-title-meta card-copy-title-meta"><img class="landscape-card-type-icon" src="${meta.icon}" alt="${escapeHtml(t("card.typeAria", { type: meta.name }))}"><small class="card-copy-rarity">★${Number(card.rarity)}</small></span><strong class="card-copy-character">${escapeHtml(card.character_name)}</strong></span>`;
 }
 
 export function renderCardCopy(card, className = "slot-card-copy", metaText = "") {
-  const meta = metaText ? `<small>${escapeHtml(metaText)}</small>` : "";
-  return `<div class="${className}" style="${attributeStyle(card)}"><strong>${escapeHtml(card.character_name)}</strong><span>${escapeHtml(card.name || t("card.noName"))}</span>${meta}</div>`;
+  const meta = metaText ? `<small class="card-copy-meta">${escapeHtml(metaText)}</small>` : "";
+  return `<div class="${className} card-copy" style="${attributeStyle(card)}"><strong class="card-copy-character">${escapeHtml(card.character_name)}</strong><span class="card-copy-name">${escapeHtml(card.name || t("card.noName"))}</span>${meta}</div>`;
 }
 
 export function wirePortraitFallback(container) {
