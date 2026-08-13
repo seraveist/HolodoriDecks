@@ -1,7 +1,7 @@
 from pathlib import Path
 import re
 
-# Shared typography tokens.
+# Shared typography tokens in the base token sheet for maintainability.
 p = Path('css/tokens.css')
 text = p.read_text(encoding='utf-8')
 old_font = '  --font-sans: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;\n'
@@ -30,12 +30,12 @@ if old_font not in text:
 text = text.replace(old_font, new_font, 1)
 p.write_text(text, encoding='utf-8')
 
-# Let OS/browser choose native smoothing behavior.
+# Let native rasterizers choose their own smoothing strategy.
 p = Path('css/base.css')
 text = p.read_text(encoding='utf-8').replace('  -webkit-font-smoothing: antialiased;\n', '')
 p.write_text(text, encoding='utf-8')
 
-# Normalize tiny text and heavy 900 weight across UI sheets.
+# Normalize tiny text and the old 900-weight pattern across UI styles.
 for p in Path('css').glob('*.css'):
     if p.name in {'tokens.css', 'theme.css'}:
         continue
@@ -48,13 +48,37 @@ for p in Path('css').glob('*.css'):
     text = text.replace('font-weight: 900;', 'font-weight: var(--weight-extrabold);')
     p.write_text(text, encoding='utf-8')
 
+# This final typography sheet is also self-contained so a cached older styles.css
+# cannot hide the new type variables after deployment.
 typography = ''':root {
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  --type-caption: 10px;
+  --type-label: 11px;
+  --type-body-sm: 12px;
+  --type-body: 13px;
+  --type-card-title: 13px;
+  --type-card-name: 11px;
+  --type-card-meta: 10px;
+  --type-heading-sm: 16px;
+  --type-heading-md: 20px;
+  --type-heading-lg: 21px;
+  --type-score-md: 21px;
+  --type-score-lg: 28px;
+  --type-score-xl: 30px;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-extrabold: 800;
+  --tracking-tight: -0.015em;
   font-variant-numeric: tabular-nums;
 }
 
 body {
+  font-family: var(--font-sans);
   font-synthesis: none;
   text-rendering: auto;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
 }
 
 button,
@@ -100,7 +124,7 @@ textarea {
   font-weight: var(--weight-extrabold);
 }
 
-/* One semantic type scale for every card surface. */
+/* One semantic type scale for preset, picker, owned-list, and result cards. */
 .card-copy-character {
   min-width: 0;
   font-size: var(--type-card-title) !important;
@@ -139,7 +163,7 @@ textarea {
   font-weight: var(--weight-extrabold);
 }
 
-/* Result hierarchy */
+/* Summary/result hierarchy */
 .result-top-number {
   font-size: var(--type-body-sm);
   font-weight: var(--weight-extrabold);
@@ -184,7 +208,7 @@ textarea {
   font-weight: var(--weight-bold);
 }
 
-/* Readable diagnostics/detail labels. */
+/* Detail/diagnostic labels remain readable without any 9px text. */
 .diagnostic-table th,
 .diagnostic-member-trigger strong,
 .diagnostic-member-meta,
@@ -208,15 +232,10 @@ textarea {
 }
 
 @media (max-width: 600px) {
-  .result-summary-score strong {
-    font-size: 22px;
-  }
+  .result-summary-score strong { font-size: 22px; }
+  .rank-lockup strong { font-size: 25px; }
 
-  .rank-lockup strong {
-    font-size: 25px;
-  }
-
-  /* Card text hierarchy intentionally remains identical on mobile. */
+  /* Card hierarchy intentionally stays identical on mobile. */
   .card-copy-character { font-size: var(--type-card-title) !important; }
   .card-copy-name { font-size: var(--type-card-name) !important; }
   .card-copy-meta,
@@ -224,17 +243,6 @@ textarea {
 }
 '''
 Path('css/typography.css').write_text(typography, encoding='utf-8')
-
-# Font CSS + canonical type layer, with theme remaining final.
-p = Path('styles.css')
-imports = p.read_text(encoding='utf-8').splitlines()
-font_import = '@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");'
-type_import = '@import url("./css/typography.css?v=20260813.1");'
-imports = [line for line in imports if 'typography.css' not in line and 'pretendardvariable' not in line]
-imports.insert(0, font_import)
-theme_index = next((i for i, line in enumerate(imports) if 'theme.css' in line), len(imports))
-imports.insert(theme_index, type_import)
-p.write_text('\n'.join(imports) + '\n', encoding='utf-8')
 
 # Shared semantic card classes.
 p = Path('js/ui/cards.js')
@@ -287,7 +295,7 @@ text = text.replace('class="result-card-character"', 'class="result-card-charact
 text = text.replace('class="result-card-name"', 'class="result-card-name card-copy-name"', 1)
 p.write_text(text, encoding='utf-8')
 
-# Bust cards module URL everywhere it is used.
+# Bust the shared cards module everywhere it is consumed.
 for p in Path('js/ui').glob('*.js'):
     text = p.read_text(encoding='utf-8')
     text = re.sub(r'\.\/cards\.js\?v=[^"]+', './cards.js?v=20260813.2', text)
@@ -299,16 +307,15 @@ for module in ('member', 'modal', 'owned', 'result'):
     text = re.sub(rf'\.\/ui\/{module}\.js\?v=[^"]+', f'./ui/{module}.js?v=20260813.2', text, count=1)
 p.write_text(text, encoding='utf-8')
 
-# Root cache busts; internal APP_VERSION stays pinned for existing compatibility checks.
+# Load the official variable dynamic subset and the new final typography layer
+# directly from HTML. This gives both resources a fresh cache key without
+# changing the pinned root styles.css URL used by existing CI.
 p = Path('index.html')
 text = p.read_text(encoding='utf-8')
-text = text.replace('styles.css?v=20260812.5', 'styles.css?v=20260813.1', 1)
+old_links = '  <link rel="stylesheet" href="./styles.css?v=20260812.5">\n  <link rel="stylesheet" href="./css/chart-timeline.css?v=20260812.4">\n'
+new_links = '  <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">\n  <link rel="stylesheet" href="./styles.css?v=20260812.5">\n  <link rel="stylesheet" href="./css/chart-timeline.css?v=20260812.4">\n  <link rel="stylesheet" href="./css/typography.css?v=20260813.1">\n'
+if old_links not in text:
+    raise SystemExit('index stylesheet marker not found')
+text = text.replace(old_links, new_links, 1)
 text = text.replace('./js/app.js?v=20260813.1', './js/app.js?v=20260813.2', 1)
 p.write_text(text, encoding='utf-8')
-
-# CI validates the new typography layer and new CSS cache key.
-for workflow in (Path('.github/workflows/validate.yml'), Path('.github/workflows/pages.yml')):
-    text = workflow.read_text(encoding='utf-8')
-    text = text.replace("'css/tweaks.css']", "'css/tweaks.css', 'css/typography.css']")
-    text = text.replace('styles.css?v=20260812.5', 'styles.css?v=20260813.1')
-    workflow.write_text(text, encoding='utf-8')
