@@ -181,32 +181,32 @@ const genericContext = {
   assert.equal(lateSupport.specialWindows[1].cardId, "A");
 }
 
+const L = leader();
+const preparedCards = new Map([L, A, B, C, D, E].map((card) => [card.id, card]));
+const baseline = evaluateDeck({
+  leader: L,
+  members: [B, A, C, D, E],
+  music: song,
+  difficulty: "EXPERT",
+  playMode: "manual",
+  separateRole: true,
+});
+assert.ok(baseline);
+
+const recommendation = {
+  ok: true,
+  results: [{
+    members: ["L", "B", "A", "C", "D", "E"],
+    score: baseline,
+    rankingValue: baseline.rankingScore,
+  }],
+  members: ["L", "B", "A", "C", "D", "E"],
+  score: baseline,
+};
+
 // Full order optimizer checks 5! permutations, preserves the selected five cards,
 // and chooses the high-value Special Support card for slot 1.
 {
-  const L = leader();
-  const preparedCards = new Map([L, A, B, C, D, E].map((card) => [card.id, card]));
-  const baseline = evaluateDeck({
-    leader: L,
-    members: [B, A, C, D, E],
-    music: song,
-    difficulty: "EXPERT",
-    playMode: "manual",
-    separateRole: true,
-  });
-  assert.ok(baseline);
-
-  const recommendation = {
-    ok: true,
-    results: [{
-      members: ["L", "B", "A", "C", "D", "E"],
-      score: baseline,
-      rankingValue: baseline.rankingScore,
-    }],
-    members: ["L", "B", "A", "C", "D", "E"],
-    score: baseline,
-  };
-
   const optimized = optimizeRecommendationOrders({
     recommendation,
     preparedCards,
@@ -222,9 +222,33 @@ const genericContext = {
 
   assert.equal(optimized.orderOptimization.mode, "exact");
   assert.equal(optimized.orderOptimization.evaluatedCount, 120);
+  assert.equal(optimized.members[0], "L");
   assert.equal(optimized.members[1], "A");
   assert.deepEqual(new Set(optimized.members.slice(1)), new Set(["A", "B", "C", "D", "E"]));
   assert.ok(optimized.score.rankingScore > baseline.rankingScore);
+}
+
+// Preset member slots are inclusion constraints, not position locks. Even when B and A
+// came from locked preset slots 1 and 2, exact SP optimization must still examine 5! orders.
+{
+  const optimizedPreset = optimizeRecommendationOrders({
+    recommendation,
+    preparedCards,
+    currentMembers: ["L", "B", "A", null, null, null],
+    lockedSlots: [true, true, true, false, false, false],
+    music: song,
+    difficulty: "EXPERT",
+    playMode: "manual",
+    simulationTarget: "score",
+    separateRole: true,
+    resultCount: 1,
+  });
+
+  assert.equal(optimizedPreset.orderOptimization.mode, "exact");
+  assert.equal(optimizedPreset.orderOptimization.evaluatedCount, 120);
+  assert.equal(optimizedPreset.members[0], "L");
+  assert.equal(optimizedPreset.members[1], "A");
+  assert.deepEqual(new Set(optimizedPreset.members.slice(1)), new Set(["A", "B", "C", "D", "E"]));
 }
 
 console.log("chart timeline scoring tests: OK");
