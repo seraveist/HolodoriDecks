@@ -42,6 +42,7 @@ jobs:
 
       - name: Import Master-compatible exact timelines
         run: |
+          set -o pipefail
           node scripts/import-exact-chart-corpus.mjs \
             --source=/tmp/holodori-chart-timelines.json \
             --write \
@@ -68,6 +69,7 @@ jobs:
               'mismatchCount': p['mismatchCount'],
               'sourceOnlyCount': p['sourceOnlyCount'],
               'preservedIndependentExactCount': p['preservedIndependentExactCount'],
+              'independentConflictCount': p['independentConflictCount'],
               'parityFixture': p['parityFixture'],
           }, indent=2))
           PY
