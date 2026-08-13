@@ -38,6 +38,7 @@ jobs:
           node --check scripts/build-i18n.mjs
           node --check scripts/build-chart-index.mjs
           node --check scripts/test-chart-scoring.mjs
+          node --check scripts/import-chart-timeline-corpus.mjs
           node --input-type=module <<'NODE'
           await Promise.all([
             import('./js/i18n.js'),
