@@ -167,6 +167,11 @@ async function loadRuntimeMetadata(resources, chartEntry, runtimeEntry) {
     try { await response.body?.cancel(); } catch { /* ignore */ }
     return null;
   }
+  const contentRange = String(response.headers?.get?.("content-range") ?? "").toLowerCase();
+  if (!contentRange.startsWith(`bytes ${start}-${end}/`)) {
+    try { await response.body?.cancel(); } catch { /* ignore */ }
+    return null;
+  }
 
   try {
     const text = await response.text();
@@ -174,7 +179,7 @@ async function loadRuntimeMetadata(resources, chartEntry, runtimeEntry) {
     const expectedSha = String(runtimeEntry.objectSha256 ?? "");
     if (expectedSha) {
       const actualSha = await sha256Hex(text);
-      if (actualSha && actualSha !== expectedSha) return null;
+      if (!actualSha || actualSha !== expectedSha) return null;
     }
     const sourceChart = JSON.parse(text);
     return convertRuntimeChartObject(sourceChart, chartEntry);

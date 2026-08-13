@@ -1,9 +1,8 @@
 import { loadAppData, loadManifest } from "./data.js?v=20260812.2";
-import { loadChartResources, loadSelectedChart } from "./chart-data.js?v=20260813.3";
+import { loadChartResources, loadSelectedChart } from "./chart-data.js?v=1.1.0";
 import { createStore } from "./state.js?v=20260812.2";
-import { optimizeOwnedDeck } from "./recommend.js?v=20260813.1";
-import { optimizeRecommendationOrders } from "./order.js?v=20260813.1";
-import { prepareScoreCards } from "./score.js?v=20260813.1";
+import { prepareScoreCards } from "./score.js?v=1.1.0";
+import { runOptimizationAsync } from "./optimizer-client.js?v=1.1.0";
 import {
   getLocale,
   initI18n,
@@ -16,13 +15,13 @@ import { renderMemberSlots } from "./ui/member.js?v=20260813.2";
 import { createCardPicker } from "./ui/modal.js?v=20260813.2";
 import { mountMusicControls } from "./ui/music.js?v=20260812.1";
 import { createOwnedCardsView } from "./ui/owned.js?v=20260813.2";
-import { renderResult } from "./ui/result.js?v=20260813.2";
+import { renderResult } from "./ui/result.js?v=1.1.0";
 import { applySimulationTargetPresentation } from "./ui/result-target.js?v=20260812.2";
 import { mountMemberOptions } from "./ui/target.js?v=20260812.1";
 import { requiredElement } from "./ui/dom.js?v=20260812.1";
 import { createCardDetail } from "./ui/card-detail.js?v=20260812.1";
 
-const APP_VERSION = "20260812.3";
+const APP_VERSION = "1.1.0";
 const RESULT_COUNT = 5;
 
 const EXTRA_COPY = Object.freeze({
@@ -208,32 +207,22 @@ async function start() {
   const searchChart = chart ? { ...chart, metadata: null } : null;
   const searchMusic = song ? { ...song, _chart: searchChart, _scoreRules: chartResources.scoreRules } : null;
   const hasExactOrder = Boolean(chart?.metadata?.skills?.length);
-  let result = optimizeOwnedDeck({
-    preparedCards,
+  const ownedSet = new Set(state.ownedCardIds);
+  const workerCards = new Map([...preparedCards].filter(([cardId]) => ownedSet.has(cardId)));
+  const result = await runOptimizationAsync({
+    preparedCards: workerCards,
     ownedCardIds: state.ownedCardIds,
     currentMembers: state.members,
     lockedSlots: state.lockedSlots,
-    music: searchMusic,
+    searchMusic,
+    exactMusic,
     difficulty: state.difficulty,
     playMode: state.playMode,
     simulationTarget: state.simulationTarget,
     separateRole: state.separateRole,
-    resultCount: hasExactOrder ? Math.min(10, RESULT_COUNT * 2) : RESULT_COUNT,
+    hasExactOrder,
+    resultCount: RESULT_COUNT,
   });
-  if (result.ok) {
-    result = optimizeRecommendationOrders({
-      recommendation: result,
-      preparedCards,
-      currentMembers: state.members,
-      lockedSlots: state.lockedSlots,
-      music: exactMusic,
-      difficulty: state.difficulty,
-      playMode: state.playMode,
-      simulationTarget: state.simulationTarget,
-      separateRole: state.separateRole,
-      resultCount: RESULT_COUNT,
-    });
-  }
 
     optimizeButton.textContent = t("calculate.button");
     optimizeButton.disabled = store.getState().ownedCardIds.length < 6;

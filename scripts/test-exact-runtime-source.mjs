@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+import fs from "node:fs";
 import assert from "node:assert/strict";
 import {
   chartKey,
@@ -72,6 +74,7 @@ globalThis.fetch = async (url, options = {}) => {
   assert.equal(options.headers?.Range, `bytes=10-${10 + Buffer.byteLength(sourceText) - 1}`);
   return {
     status: 206,
+    headers: { get: (name) => String(name).toLowerCase() === "content-range" ? `bytes=10-${10 + Buffer.byteLength(sourceText) - 1}/${10 + Buffer.byteLength(sourceText)}`.replace("bytes=", "bytes ") : null },
     text: async () => sourceText,
     body: { cancel: async () => {} },
   };
@@ -83,6 +86,7 @@ try {
     start: 10,
     end: 10 + Buffer.byteLength(sourceText) - 1,
     length: Buffer.byteLength(sourceText),
+    objectSha256: createHash("sha256").update(sourceText).digest("hex"),
   };
   const resources = {
     version: "test",
@@ -107,3 +111,14 @@ try {
 }
 
 console.log("exact runtime source tests: OK");
+
+
+const actualRuntime = JSON.parse(fs.readFileSync(new URL("../data/generated/exact-runtime-index.json", import.meta.url), "utf8"));
+const actualCharts = JSON.parse(fs.readFileSync(new URL("../data/generated/chart-index.json", import.meta.url), "utf8"));
+assert.equal(actualRuntime.currentMasterSourceCommit, actualCharts.source_commit);
+assert.equal(actualRuntime.currentMasterChartCount, actualCharts.chart_count);
+assert.equal(actualRuntime.runtimeExactCount, Object.keys(actualRuntime.charts ?? {}).length);
+for (const [key, runtime] of Object.entries(actualRuntime.charts ?? {})) {
+  assert.equal(runtimeEntryMatchesChart(runtime, actualCharts.charts?.[key]), true, `${key}: runtime/master mismatch`);
+}
+console.log(`exact runtime index coherence: ${actualRuntime.runtimeExactCount}/${actualRuntime.currentMasterChartCount}`);

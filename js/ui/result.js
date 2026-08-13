@@ -24,7 +24,7 @@ const LOCAL_COPY = Object.freeze({
     genericEvaluation: "110초 · 800노트 범용 유닛 평가 기준입니다.",
     selectedSongAverage: "선택 악곡 예상 평균",
     allActiveMaximum: "모든 유효 액티브 성공 시 근사 최대",
-    songMeta: (duration, notes, mode, accuracy) => `${duration}초 · ${accuracy === "estimated" ? "약 " : ""}${notes}노트 · ${mode === "auto" ? "AUTO (콤보 보너스 없음)" : "Manual FC"}`,
+    songMeta: (duration, notes, mode, accuracy) => `${duration}초 · ${accuracy === "estimated" ? "약 " : ""}${notes}노트 · ${mode === "auto" ? "AUTO (콤보 보너스 없음)" : "Manual PERFECT FC"}`,
     chartExact: "실제 채보 노트·SP 순서 반영",
     chartMaster: "Master 풀콤보 노트 수 반영 · SP 타이밍 근사",
     chartEstimated: "노트 밀도 추정",
@@ -64,7 +64,7 @@ const LOCAL_COPY = Object.freeze({
     genericEvaluation: "Generic unit evaluation: 110s · 800 notes.",
     selectedSongAverage: "Selected Song Estimated Avg.",
     allActiveMaximum: "Approx. max if all valid Active Skills succeed",
-    songMeta: (duration, notes, mode, accuracy) => `${duration}s · ${accuracy === "estimated" ? "approx. " : ""}${notes} notes · ${mode === "auto" ? "AUTO (no combo bonus)" : "Manual FC"}`,
+    songMeta: (duration, notes, mode, accuracy) => `${duration}s · ${accuracy === "estimated" ? "approx. " : ""}${notes} notes · ${mode === "auto" ? "AUTO (no combo bonus)" : "Manual PERFECT FC"}`,
     chartExact: "Exact chart notes and SP order applied",
     chartMaster: "Master full-combo note count applied · SP timing approximated",
     chartEstimated: "Estimated from note density",
@@ -104,7 +104,7 @@ const LOCAL_COPY = Object.freeze({
     genericEvaluation: "110秒 · 800ノーツの汎用ユニット評価基準です。",
     selectedSongAverage: "選択楽曲の予想平均",
     allActiveMaximum: "有効なアクティブがすべて成功した場合の近似最大",
-    songMeta: (duration, notes, mode, accuracy) => `${duration}秒 · ${accuracy === "estimated" ? "約" : ""}${notes}ノーツ · ${mode === "auto" ? "AUTO（コンボボーナスなし）" : "Manual FC"}`,
+    songMeta: (duration, notes, mode, accuracy) => `${duration}秒 · ${accuracy === "estimated" ? "約" : ""}${notes}ノーツ · ${mode === "auto" ? "AUTO（コンボボーナスなし）" : "Manual PERFECT FC"}`,
     chartExact: "実譜面ノーツ・SP順序を反映",
     chartMaster: "Masterのフルコンボ数を反映 · SP時刻は近似",
     chartEstimated: "ノーツ密度から推定",
@@ -159,9 +159,24 @@ function formatSeconds(value) {
 
 export function activationTimeline(row, totalDuration) {
   const timelineDuration = Math.max(1, Number(totalDuration) || 1);
+  const exactChecks = Array.isArray(row?.activationChecks) ? row.activationChecks : [];
+  if (exactChecks.length) {
+    return exactChecks.map((check) => {
+      const start = Math.max(0, Number(check?.time) || 0);
+      const end = Math.min(timelineDuration, Math.max(start, Number(check?.end) || start));
+      return {
+        start,
+        end,
+        probability: Math.max(0, Math.min(1, Number(check?.probability) || 0)),
+        startPercent: start / timelineDuration * 100,
+        widthPercent: (end - start) / timelineDuration * 100,
+      };
+    }).filter((window) => window.end > window.start);
+  }
   const interval = Math.max(0.001, Number(row?.interval) || timelineDuration);
   const activeDuration = Math.max(0, Number(row?.duration) || 0);
   const checks = Math.max(0, Math.floor(Number(row?.checks) || timelineDuration / interval));
+  const probability = Math.max(0, Math.min(1, Number(row?.effectiveProbability) || 0));
   const windows = [];
   for (let check = 1; check <= checks; check += 1) {
     const start = check * interval;
@@ -171,6 +186,7 @@ export function activationTimeline(row, totalDuration) {
     windows.push({
       start,
       end,
+      probability,
       startPercent: start / timelineDuration * 100,
       widthPercent: (end - start) / timelineDuration * 100,
     });
@@ -181,31 +197,31 @@ export function activationTimeline(row, totalDuration) {
 export function teamActivationTimeline(rows, totalDuration) {
   const duration = Math.max(1, Number(totalDuration) || 1);
   const events = [];
+  let windowId = 0;
   rows.forEach((row, rowIndex) => {
     activationTimeline(row, duration).forEach((window) => {
-      events.push({ time: window.start, rowIndex, delta: 1 });
-      events.push({ time: window.end, rowIndex, delta: -1 });
+      const id = windowId++;
+      events.push({ time: window.start, id, rowIndex, probability: window.probability, delta: 1 });
+      events.push({ time: window.end, id, rowIndex, probability: window.probability, delta: -1 });
     });
   });
-  events.sort((left, right) => left.time - right.time);
+  events.sort((left, right) => left.time - right.time || left.delta - right.delta);
 
-  const activeCounts = new Map();
+  const activeWindows = new Map();
   const segments = [];
   let cursor = 0;
   let eventIndex = 0;
   while (eventIndex < events.length) {
     const time = Math.max(0, Math.min(duration, events[eventIndex].time));
-    const activeIndexes = [...activeCounts.entries()]
-      .filter(([, count]) => count > 0)
-      .map(([rowIndex]) => rowIndex);
-    if (time > cursor && activeIndexes.length) {
-      const probability = 1 - activeIndexes.reduce((noneActive, rowIndex) => (
-        noneActive * (1 - Math.max(0, Math.min(1, Number(rows[rowIndex]?.effectiveProbability) || 0)))
+    if (time > cursor && activeWindows.size) {
+      const activeRows = new Set([...activeWindows.values()].map((event) => event.rowIndex));
+      const probability = 1 - [...activeWindows.values()].reduce((noneActive, event) => (
+        noneActive * (1 - Math.max(0, Math.min(1, Number(event.probability) || 0)))
       ), 1);
       segments.push({
         start: cursor,
         end: time,
-        count: activeIndexes.length,
+        count: activeRows.size,
         probability,
         startPercent: cursor / duration * 100,
         widthPercent: (time - cursor) / duration * 100,
@@ -215,7 +231,8 @@ export function teamActivationTimeline(rows, totalDuration) {
     while (eventIndex < events.length
       && Math.max(0, Math.min(duration, events[eventIndex].time)) === time) {
       const event = events[eventIndex];
-      activeCounts.set(event.rowIndex, (activeCounts.get(event.rowIndex) ?? 0) + event.delta);
+      if (event.delta > 0) activeWindows.set(event.id, event);
+      else activeWindows.delete(event.id);
       eventIndex += 1;
     }
   }

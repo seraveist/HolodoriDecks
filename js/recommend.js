@@ -3,13 +3,14 @@ import {
   leaderPotential,
   memberIntrinsicValue,
   memberPotentialValue,
-} from "./score.js?v=20260813.1";
+} from "./score.js?v=1.1.0";
 
 const EXACT_CASE_LIMIT = 650_000;
 const BEAM_MEMBER_LIMIT = 52;
 const BEAM_WIDTH = 360;
 const BEAM_SECONDARY_WIDTH = 180;
 const DEFAULT_RESULT_COUNT = 5;
+const MAX_RESULT_COUNT = 30;
 
 const CONCEPT_STAT = Object.freeze({
   performance: "p",
@@ -164,6 +165,16 @@ function combinedBeamCandidates(memberPool, size, leader, fixedMembers, concept)
   return [...candidates.values()];
 }
 
+export function exactShortlistSize(noteCount = 0, ownedCount = 0) {
+  const notes = Math.max(0, Number(noteCount) || 0);
+  const owned = Math.max(0, Number(ownedCount) || 0);
+  if (owned > 0 && owned <= 18) return MAX_RESULT_COUNT;
+  if (notes >= 1_600) return 12;
+  if (notes >= 1_200) return 16;
+  if (notes >= 800) return 20;
+  return 24;
+}
+
 export function recommendationValue(score, simulationTarget = "score") {
   return simulationTarget === "potential"
     ? Number(score.potentialRankingScore) || 0
@@ -199,7 +210,7 @@ export function optimizeOwnedDeck({
   separateRole = true,
   resultCount = DEFAULT_RESULT_COUNT,
 }) {
-  const normalizedResultCount = Math.max(1, Math.min(10, Number(resultCount) || DEFAULT_RESULT_COUNT));
+  const normalizedResultCount = Math.max(1, Math.min(MAX_RESULT_COUNT, Number(resultCount) || DEFAULT_RESULT_COUNT));
   const normalizedSimulationTarget = ["score", "potential"].includes(simulationTarget)
     ? simulationTarget
     : "score";
