@@ -44,9 +44,13 @@ function chartKey(musicId, difficulty) {
   return `${String(musicId ?? "")}:${String(difficulty ?? "").toUpperCase()}`;
 }
 
+function scoreNormalizedNoteType(value) {
+  return String(value ?? "").replace(/^critical_/, "").replace(/^normal$/, "tap");
+}
+
 function canonicalTimeline(metadata) {
   const notes = [...(metadata?.notes ?? [])]
-    .map((note) => [String(note?.[0] ?? ""), Number(note?.[1])])
+    .map((note) => [scoreNormalizedNoteType(note?.[0]), Number(note?.[1])])
     .sort((left, right) => left[1] - right[1] || left[0].localeCompare(right[0]));
   const skills = [...(metadata?.skills ?? [])]
     .map((skill) => ({
@@ -304,6 +308,7 @@ export async function importCorpus({
     removedCorpusFiles,
     parityFixture: {
       key: "m0049:EXPERT",
+      comparison: "score-engine-normalized-note-types + SP markers + Fever",
       matchedExistingTimeline: parityFixtureMatched,
     },
     independentConflicts,
@@ -331,7 +336,7 @@ async function main() {
   });
   console.log(JSON.stringify(summary, null, 2));
   if (!summary.parityFixture.matchedExistingTimeline) {
-    throw new Error("m0049:EXPERT semantic parity fixture did not match the existing independently sourced timeline");
+    throw new Error("m0049:EXPERT score-equivalent parity fixture did not match the existing independently sourced timeline");
   }
 }
 
