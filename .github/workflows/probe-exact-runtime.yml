@@ -1,109 +1,81 @@
-name: Probe Exact Runtime Source
+name: Build Exact Runtime Index
 
 on:
   push:
     branches: [feat/exact-chart-runtime-source]
-    paths: [.github/workflows/probe-exact-runtime.yml]
+    paths:
+      - scripts/build-exact-runtime-index.mjs
+      - scripts/test-exact-runtime-source.mjs
+      - js/chart-data.js
+      - .github/workflows/probe-exact-runtime.yml
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: exact-runtime-index-build
+  cancel-in-progress: false
 
 jobs:
-  probe:
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: feat/exact-chart-runtime-source
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Download pinned corpus and locate m0049 expert
+      - name: Download pinned public corpus
         run: |
-          URL='https://raw.githubusercontent.com/asciisyaez/yagoo-dori/6c2c95d52c268862d34fb523d965f09a3108bbbd/data/generated/holodori-chart-timelines.json'
-          curl --fail --location --silent --show-error -o /tmp/corpus.json "$URL"
+          curl --fail --location --silent --show-error --retry 3 --retry-delay 2 \
+            -o /tmp/holodori-chart-timelines.json \
+            https://raw.githubusercontent.com/asciisyaez/yagoo-dori/6c2c95d52c268862d34fb523d965f09a3108bbbd/data/generated/holodori-chart-timelines.json
+          test -s /tmp/holodori-chart-timelines.json
+      - name: Build current-Master runtime range index
+        run: |
+          node scripts/build-exact-runtime-index.mjs --input /tmp/holodori-chart-timelines.json
           node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const text = fs.readFileSync('/tmp/corpus.json', 'utf8');
-          const arrayMatch = /"charts"\s*:\s*\[/.exec(text);
-          if (!arrayMatch) throw new Error('charts array not found');
-          let cursor = arrayMatch.index + arrayMatch[0].length;
-          let found = null;
-          while (cursor < text.length) {
-            while (cursor < text.length && /[\s,]/.test(text[cursor])) cursor += 1;
-            if (text[cursor] === ']') break;
-            if (text[cursor] !== '{') throw new Error(`expected chart object at ${cursor}`);
-            const start = cursor;
-            let depth = 0;
-            let inString = false;
-            let escaped = false;
-            let end = -1;
-            for (; cursor < text.length; cursor += 1) {
-              const ch = text[cursor];
-              if (inString) {
-                if (escaped) escaped = false;
-                else if (ch === '\\') escaped = true;
-                else if (ch === '"') inString = false;
-                continue;
-              }
-              if (ch === '"') { inString = true; continue; }
-              if (ch === '{') depth += 1;
-              else if (ch === '}') {
-                depth -= 1;
-                if (depth === 0) { end = cursor; cursor += 1; break; }
-              }
-            }
-            if (end < 0) throw new Error('unterminated chart object');
-            const fragment = text.slice(start, end + 1);
-            const obj = JSON.parse(fragment);
-            if (obj.songId === 'm0049' && String(obj.difficulty).toLowerCase() === 'expert') {
-              found = { start, end, obj };
-              break;
-            }
-          }
-          if (!found) throw new Error('fixture chart not found');
-          const bytesBefore = Buffer.byteLength(text.slice(0, found.start), 'utf8');
-          const bytesObject = Buffer.byteLength(text.slice(found.start, found.end + 1), 'utf8');
-          fs.writeFileSync('/tmp/range.env', `START=${bytesBefore}\nEND=${bytesBefore + bytesObject - 1}\nLENGTH=${bytesObject}\n`);
-          console.log(JSON.stringify({ songId: found.obj.songId, difficulty: found.obj.difficulty, start: bytesBefore, end: bytesBefore + bytesObject - 1, length: bytesObject, events: found.obj.events.length }));
+          import { readFile } from 'node:fs/promises';
+          const index = JSON.parse(await readFile('data/generated/exact-runtime-index.json', 'utf8'));
+          if (index.runtimeExactCount !== 703) throw new Error(`expected 703 runtime exact charts, got ${index.runtimeExactCount}`);
+          if (index.currentMasterChartCount !== 728) throw new Error(`expected 728 Master charts, got ${index.currentMasterChartCount}`);
+          if (index.unavailableCount !== 25) throw new Error(`expected 25 unavailable charts, got ${index.unavailableCount}`);
+          if (index.rejectedAvailableCount !== 0) throw new Error(`runtime index rejected ${index.rejectedAvailableCount} available charts`);
+          console.log(`runtime exact index OK: ${index.runtimeExactCount}/${index.currentMasterChartCount}`);
           NODE
-          cat /tmp/range.env
-      - name: Probe raw GitHub identity Range and CORS
+      - name: Test runtime conversion and loader
         run: |
-          set -a; . /tmp/range.env; set +a
-          URL='https://raw.githubusercontent.com/asciisyaez/yagoo-dori/6c2c95d52c268862d34fb523d965f09a3108bbbd/data/generated/holodori-chart-timelines.json'
-          curl --fail --silent --show-error --dump-header /tmp/headers.txt -H "Range: bytes=${START}-${END}" -o /tmp/range.bin "$URL"
-          cat /tmp/headers.txt
-          test "$(wc -c < /tmp/range.bin)" -eq "$LENGTH"
-          grep -Eiq '^access-control-allow-origin: \*' /tmp/headers.txt
-          grep -Eiq '^content-range: bytes ' /tmp/headers.txt
-      - name: Probe Node fetch with automatic Accept-Encoding
+          node scripts/test-exact-runtime-source.mjs
+          node --check scripts/build-exact-runtime-index.mjs
+          node --check js/chart-data.js
+      - name: Probe pinned m0049 range with fetch semantics
         run: |
-          set -a; . /tmp/range.env; set +a
           node --input-type=module <<'NODE'
-          const start = Number(process.env.START);
-          const end = Number(process.env.END);
-          const length = Number(process.env.LENGTH);
-          const url = 'https://raw.githubusercontent.com/asciisyaez/yagoo-dori/6c2c95d52c268862d34fb523d965f09a3108bbbd/data/generated/holodori-chart-timelines.json';
-          const response = await fetch(url, { headers: { Range: `bytes=${start}-${end}` } });
-          console.log(JSON.stringify({ status: response.status, contentRange: response.headers.get('content-range'), contentEncoding: response.headers.get('content-encoding'), cors: response.headers.get('access-control-allow-origin') }));
-          if (response.status !== 206) throw new Error(`Node fetch range status ${response.status}`);
+          import { readFile } from 'node:fs/promises';
+          const index = JSON.parse(await readFile('data/generated/exact-runtime-index.json', 'utf8'));
+          const entry = index.charts['m0049:EXPERT'];
+          if (!entry) throw new Error('m0049:EXPERT runtime range missing');
+          const response = await fetch(index.source.url, { headers: { Range: `bytes=${entry.start}-${entry.end}` } });
+          if (response.status !== 206) throw new Error(`range status ${response.status}`);
           const text = await response.text();
-          if (Buffer.byteLength(text) !== length) throw new Error(`Node fetch length ${Buffer.byteLength(text)} != ${length}`);
-          const obj = JSON.parse(text);
-          if (obj.songId !== 'm0049' || obj.events?.length !== 720) throw new Error('Node fetch range payload mismatch');
+          if (Buffer.byteLength(text) !== entry.length) throw new Error('range byte length mismatch');
+          const chart = JSON.parse(text);
+          if (chart.songId !== 'm0049' || String(chart.difficulty).toLowerCase() !== 'expert' || chart.events?.length !== 720) {
+            throw new Error('m0049 range payload mismatch');
+          }
+          console.log(`range fetch OK: ${entry.length} bytes, ${chart.events.length} events`);
           NODE
-      - name: Probe jsDelivr compressed Range
+      - name: Commit generated range index
         run: |
-          set -a; . /tmp/range.env; set +a
-          URL='https://cdn.jsdelivr.net/gh/asciisyaez/yagoo-dori@6c2c95d52c268862d34fb523d965f09a3108bbbd/data/generated/holodori-chart-timelines.json'
-          curl --fail --silent --show-error --compressed --dump-header /tmp/jsd-headers.txt -H "Range: bytes=${START}-${END}" -o /tmp/jsd-range.bin "$URL"
-          cat /tmp/jsd-headers.txt
-          test "$(wc -c < /tmp/jsd-range.bin)" -eq "$LENGTH"
-          grep -Eiq '^access-control-allow-origin: \*' /tmp/jsd-headers.txt
-          grep -Eiq '^content-range: bytes ' /tmp/jsd-headers.txt
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const obj = JSON.parse(fs.readFileSync('/tmp/jsd-range.bin', 'utf8'));
-          if (obj.songId !== 'm0049' || obj.events?.length !== 720) throw new Error('jsDelivr range payload mismatch');
-          console.log('jsDelivr compressed range parse OK');
-          NODE
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/generated/exact-runtime-index.json
+          if git diff --cached --quiet; then
+            echo "Runtime index unchanged."
+            exit 0
+          fi
+          git commit -m "Generate exact runtime range index"
+          git push origin HEAD:feat/exact-chart-runtime-source
