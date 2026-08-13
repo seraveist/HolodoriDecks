@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
+import { pathToFileURL } from "node:url";
 
 const ROOT = process.cwd();
 const DEFAULT_CHART_INDEX = path.join(ROOT, "data", "generated", "chart-index.json");
@@ -142,10 +143,11 @@ export function validateRuntimeChart(chart, masterChart) {
     && chart.specialMarkerMicroseconds.some((time, index, rows) => index > 0 && Number(time) <= Number(rows[index - 1]))) reasons.push("non-chronological-special-markers");
   if (Array.isArray(chart?.events)
     && chart.events.some((event, index, rows) => index > 0 && Number(event?.[0]) < Number(rows[index - 1]?.[0]))) reasons.push("non-chronological-events");
-  if (Array.isArray(chart?.events) && chart.events.some((event) => {
-    const type = Number(event?.[1]);
-    return !Number.isInteger(type) || type < 0 || type >= NOTE_TYPE_COUNT;
-  })) reasons.push("unknown-note-type-code");
+  if (Array.isArray(chart?.events)
+    && chart.events.some((event) => {
+      const type = Number(event?.[1]);
+      return !Number.isInteger(type) || type < 0 || type >= NOTE_TYPE_COUNT;
+    })) reasons.push("unknown-note-type-code");
   if (Array.isArray(chart?.events) && chart.events.some((event) => Number(event?.[1]) === DAMAGE_NOTE_TYPE)) reasons.push("unsupported-damage-events");
   return reasons;
 }
@@ -229,7 +231,8 @@ async function main() {
   if (payload.rejectedAvailableCount) process.exitCode = 2;
 }
 
-if (import.meta.url === new URL(`file://${path.resolve(process.argv[1] ?? "")}`).href) {
+const invoked = process.argv[1] ? pathToFileURL(path.resolve(process.argv[1])).href : "";
+if (import.meta.url === invoked) {
   main().catch((error) => {
     console.error(error);
     process.exitCode = 1;
