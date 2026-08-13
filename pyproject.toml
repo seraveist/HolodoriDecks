@@ -4,9 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "holodori-decksim"
-version = "0.2.0"
+version = "1.0.0"
 description = "Hololive Dreams deck simulator master-data synchronization tools"
 requires-python = ">=3.11"
+license = { file = "LICENSE" }
+readme = "README.md"
 
 [project.optional-dependencies]
 test = ["pytest>=8"]
