@@ -37,27 +37,8 @@ function permutations(values) {
   return result;
 }
 
-function orderedMemberIds(result, currentMembers, lockedSlots) {
-  const selected = result.members.slice(1, 6);
-  const fixed = new Map();
-  const used = new Set();
-  for (let index = 0; index < 5; index += 1) {
-    const globalSlot = index + 1;
-    const fixedId = lockedSlots?.[globalSlot] ? currentMembers?.[globalSlot] : null;
-    if (!fixedId || !selected.includes(fixedId)) continue;
-    fixed.set(index, fixedId);
-    used.add(fixedId);
-  }
-  const open = Array.from({ length: 5 }, (_, index) => index).filter((index) => !fixed.has(index));
-  const freeIds = selected.filter((id) => !used.has(id));
-  return { fixed, open, freeIds };
-}
-
-function buildSlots(fixed, open, permutation) {
-  const slots = Array(5).fill(null);
-  for (const [index, id] of fixed.entries()) slots[index] = id;
-  open.forEach((index, position) => { slots[index] = permutation[position]; });
-  return slots;
+function orderableMemberIds(result) {
+  return result.members.slice(1, 6);
 }
 
 export function optimizeRecommendationOrders({
@@ -72,6 +53,9 @@ export function optimizeRecommendationOrders({
   separateRole = true,
   resultCount = 5,
 }) {
+  void currentMembers;
+  void lockedSlots;
+
   const exactSkills = music?._chart?.metadata?.skills;
   if (!recommendation?.ok || !Array.isArray(exactSkills) || exactSkills.length === 0) {
     if (recommendation?.ok) {
@@ -88,10 +72,9 @@ export function optimizeRecommendationOrders({
   for (const result of recommendation.results) {
     const leader = preparedCards.get(result.members[0]);
     if (!leader) continue;
-    const layout = orderedMemberIds(result, currentMembers, lockedSlots);
+    const selectedMemberIds = orderableMemberIds(result);
     let best = null;
-    for (const permutation of permutations(layout.freeIds)) {
-      const memberIds = buildSlots(layout.fixed, layout.open, permutation);
+    for (const memberIds of permutations(selectedMemberIds)) {
       const members = memberIds.map((id) => preparedCards.get(id));
       if (members.some((member) => !member)) continue;
       const score = evaluateDeck({
