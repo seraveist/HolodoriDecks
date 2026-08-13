@@ -6,7 +6,7 @@ import {
   renderLandscapeCardArt,
   renderLandscapeCardTitle,
   wirePortraitFallback,
-} from "./cards.js?v=20260812.1";
+} from "./cards.js?v=20260813.2";
 import { requiredElement } from "./dom.js?v=20260812.1";
 
 const OWNED_CARD_RARITIES = new Set([4, 5]);
@@ -227,8 +227,8 @@ export function createOwnedCardsView({ cards, charactersById = new Map(), store,
             ${renderLandscapeCardArt(card, { showMeta: false })}
             <span class="landscape-card-copy">
               ${renderLandscapeCardTitle(card)}
-              <span>${escapeHtml(card.name)}</span>
-              ${isOwned ? `<small>Lv${setting.level} · ${t("card.potential")} ${setting.potential}</small>` : ""}
+              <span class="card-copy-name">${escapeHtml(card.name)}</span>
+              ${isOwned ? `<small class="card-copy-meta">Lv${setting.level} · ${t("card.potential")} ${setting.potential}</small>` : ""}
             </span>
           </button>
           <button class="card-detail-button" type="button" data-card-detail="${escapeHtml(card.id)}" aria-label="${escapeHtml(t("card.detailsAria", { character: card.character_name }))}">i</button>

@@ -6,7 +6,7 @@ import {
   escapeHtml,
   renderLandscapeCardArt,
   wirePortraitFallback,
-} from "./cards.js?v=20260812.1";
+} from "./cards.js?v=20260813.2";
 import { getSlotLabel } from "./member.js?v=20260812.1";
 import { requiredElement } from "./dom.js?v=20260812.1";
 
@@ -246,15 +246,15 @@ function resultCard(card, index, state, fixed) {
     <div class="result-card-copy" style="${attributeStyle(card)}">
       <div class="result-card-meta">
         ${leaderBadge}
-        <span class="result-card-level">${escapeHtml(cardProfile(state, card))}</span>
+        <span class="result-card-level card-copy-meta">${escapeHtml(cardProfile(state, card))}</span>
         <span class="result-card-attribute" aria-label="${escapeHtml(t("card.typeAria", { type: attribute.name }))}"><img src="${attribute.icon}" alt="">${escapeHtml(attribute.name)}</span>
       </div>
       <div class="result-card-identity">
         <div class="result-card-title-line">
-          <span class="result-card-rarity" aria-label="${escapeHtml(t("card.rarityAria", { rarity: card.rarity }))}">★${Number(card.rarity)}</span>
-          <strong class="result-card-character">${escapeHtml(card.character_name)}</strong>
+          <span class="result-card-rarity card-copy-rarity" aria-label="${escapeHtml(t("card.rarityAria", { rarity: card.rarity }))}">★${Number(card.rarity)}</span>
+          <strong class="result-card-character card-copy-character">${escapeHtml(card.character_name)}</strong>
         </div>
-        <span class="result-card-name">${escapeHtml(card.name)}</span>
+        <span class="result-card-name card-copy-name">${escapeHtml(card.name)}</span>
       </div>
     </div>
   </article>`;

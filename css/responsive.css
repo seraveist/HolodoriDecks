@@ -275,11 +275,11 @@
   }
 
   .result-summary-members strong {
-    font-size: 11px;
+    font-size: var(--type-label);
   }
 
   .result-expand-label {
-    font-size: 11px;
+    font-size: var(--type-label);
   }
 
   .recommendation-result-body {

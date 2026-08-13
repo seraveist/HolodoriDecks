@@ -1,5 +1,5 @@
 import { getLocale, t } from "../i18n.js?v=20260812.1";
-import { renderLandscapeCardArt, renderCardCopy, wirePortraitFallback } from "./cards.js?v=20260812.1";
+import { renderLandscapeCardArt, renderCardCopy, wirePortraitFallback } from "./cards.js?v=20260813.2";
 
 const CLEAR_COPY = Object.freeze({
   ko: { change: "카드 변경", clear: "슬롯 비우기" },

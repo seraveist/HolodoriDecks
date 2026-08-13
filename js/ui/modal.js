@@ -4,7 +4,7 @@ import {
   renderLandscapeCardArt,
   renderLandscapeCardTitle,
   wirePortraitFallback,
-} from "./cards.js?v=20260812.1";
+} from "./cards.js?v=20260813.2";
 import { getSlotLabel } from "./member.js?v=20260812.1";
 import { compareByPower } from "../recommend.js?v=20260811.19";
 import { localeCompare, t } from "../i18n.js?v=20260812.1";
@@ -97,8 +97,8 @@ export function createCardPicker({ cards, store, onRequestOwned, onCardDetail })
           ${renderLandscapeCardArt(card, { showMeta: false })}
           <span class="landscape-card-copy picker-card-copy">
             ${renderLandscapeCardTitle(card)}
-            <span>${escapeHtml(card.name)}</span>
-            <small>Lv${Number(setting.level) || "-"} · ${t("card.potential")} ${Number(setting.potential) || 0}</small>
+            <span class="card-copy-name">${escapeHtml(card.name)}</span>
+            <small class="card-copy-meta">Lv${Number(setting.level) || "-"} · ${t("card.potential")} ${Number(setting.potential) || 0}</small>
           </span>
           </button>
           <button class="card-detail-button" type="button" data-card-detail="${escapeHtml(card.id)}" aria-label="${escapeHtml(t("card.detailsAria", { character: card.character_name }))}">i</button>
