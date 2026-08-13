@@ -67,7 +67,7 @@ jobs:
           console.log(JSON.stringify({ songId: found.obj.songId, difficulty: found.obj.difficulty, start: bytesBefore, end: bytesBefore + bytesObject - 1, length: bytesObject, events: found.obj.events.length }));
           NODE
           cat /tmp/range.env
-      - name: Probe Range and CORS headers
+      - name: Probe raw GitHub identity Range and CORS
         run: |
           set -a; . /tmp/range.env; set +a
           URL='https://raw.githubusercontent.com/asciisyaez/yagoo-dori/6c2c95d52c268862d34fb523d965f09a3108bbbd/data/generated/holodori-chart-timelines.json'
@@ -76,27 +76,34 @@ jobs:
           test "$(wc -c < /tmp/range.bin)" -eq "$LENGTH"
           grep -Eiq '^access-control-allow-origin: \*' /tmp/headers.txt
           grep -Eiq '^content-range: bytes ' /tmp/headers.txt
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const obj = JSON.parse(fs.readFileSync('/tmp/range.bin', 'utf8'));
-          if (obj.songId !== 'm0049' || String(obj.difficulty).toLowerCase() !== 'expert' || obj.events?.length !== 720) throw new Error('range payload mismatch');
-          console.log(`range parse OK: ${obj.songId}:${obj.difficulty}, ${obj.events.length} events`);
-          NODE
-      - name: Probe browser-like Accept-Encoding behavior
+      - name: Probe Node fetch with automatic Accept-Encoding
         run: |
           set -a; . /tmp/range.env; set +a
-          URL='https://raw.githubusercontent.com/asciisyaez/yagoo-dori/6c2c95d52c268862d34fb523d965f09a3108bbbd/data/generated/holodori-chart-timelines.json'
-          curl --fail --silent --show-error --compressed --dump-header /tmp/compressed-headers.txt -H "Range: bytes=${START}-${END}" -o /tmp/compressed-range.bin "$URL"
-          cat /tmp/compressed-headers.txt
-          test "$(wc -c < /tmp/compressed-range.bin)" -eq "$LENGTH"
-          grep -Eiq '^content-range: bytes ' /tmp/compressed-headers.txt
-          if grep -Eiq '^content-encoding:' /tmp/compressed-headers.txt; then
-            echo 'Range response used content encoding; browser byte offsets may be unsafe.' >&2
-            exit 1
-          fi
+          node --input-type=module <<'NODE'
+          const start = Number(process.env.START);
+          const end = Number(process.env.END);
+          const length = Number(process.env.LENGTH);
+          const url = 'https://raw.githubusercontent.com/asciisyaez/yagoo-dori/6c2c95d52c268862d34fb523d965f09a3108bbbd/data/generated/holodori-chart-timelines.json';
+          const response = await fetch(url, { headers: { Range: `bytes=${start}-${end}` } });
+          console.log(JSON.stringify({ status: response.status, contentRange: response.headers.get('content-range'), contentEncoding: response.headers.get('content-encoding'), cors: response.headers.get('access-control-allow-origin') }));
+          if (response.status !== 206) throw new Error(`Node fetch range status ${response.status}`);
+          const text = await response.text();
+          if (Buffer.byteLength(text) !== length) throw new Error(`Node fetch length ${Buffer.byteLength(text)} != ${length}`);
+          const obj = JSON.parse(text);
+          if (obj.songId !== 'm0049' || obj.events?.length !== 720) throw new Error('Node fetch range payload mismatch');
+          NODE
+      - name: Probe jsDelivr compressed Range
+        run: |
+          set -a; . /tmp/range.env; set +a
+          URL='https://cdn.jsdelivr.net/gh/asciisyaez/yagoo-dori@6c2c95d52c268862d34fb523d965f09a3108bbbd/data/generated/holodori-chart-timelines.json'
+          curl --fail --silent --show-error --compressed --dump-header /tmp/jsd-headers.txt -H "Range: bytes=${START}-${END}" -o /tmp/jsd-range.bin "$URL"
+          cat /tmp/jsd-headers.txt
+          test "$(wc -c < /tmp/jsd-range.bin)" -eq "$LENGTH"
+          grep -Eiq '^access-control-allow-origin: \*' /tmp/jsd-headers.txt
+          grep -Eiq '^content-range: bytes ' /tmp/jsd-headers.txt
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          const obj = JSON.parse(fs.readFileSync('/tmp/compressed-range.bin', 'utf8'));
-          if (obj.songId !== 'm0049' || obj.events?.length !== 720) throw new Error('compressed range payload mismatch');
-          console.log('compressed-request range parse OK');
+          const obj = JSON.parse(fs.readFileSync('/tmp/jsd-range.bin', 'utf8'));
+          if (obj.songId !== 'm0049' || obj.events?.length !== 720) throw new Error('jsDelivr range payload mismatch');
+          console.log('jsDelivr compressed range parse OK');
           NODE
