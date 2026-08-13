@@ -4,6 +4,8 @@ import re
 import tomllib
 from pathlib import Path
 
+from holodori_decksim import __version__
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -17,6 +19,7 @@ def test_release_version_metadata_is_aligned() -> None:
 
     project = tomllib.loads(_read("pyproject.toml"))["project"]
     assert project["version"] == version
+    assert __version__ == version
 
     readme = _read("README.md")
     changelog = _read("CHANGELOG.md")
