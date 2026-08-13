@@ -111,6 +111,23 @@ textarea {
   font-weight: var(--weight-extrabold);
 }
 
+/* Keep leader and normal member metadata rows at the same 16px visual height. */
+.result-card-meta {
+  min-height: 16px;
+  align-items: center;
+}
+
+.result-card-role.is-leader {
+  height: 16px;
+  min-height: 16px;
+  padding: 0 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  line-height: 1;
+}
+
 /* Summary/result hierarchy */
 .result-top-number {
   font-size: var(--type-body-sm);
