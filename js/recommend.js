@@ -3,7 +3,7 @@ import {
   leaderPotential,
   memberIntrinsicValue,
   memberPotentialValue,
-} from "./score.js?v=20260812.20";
+} from "./score.js?v=20260813.1";
 
 const EXACT_CASE_LIMIT = 650_000;
 const BEAM_MEMBER_LIMIT = 52;
@@ -72,12 +72,8 @@ function forEachCombination(rows, size, callback) {
   return count;
 }
 
-function composeMemberSlots(currentMembers, lockedSlots, fill) {
-  const available = [...fill];
-  return currentMembers.slice(1, 6).map((cardId, index) => {
-    if (lockedSlots[index + 1] && cardId) return cardId;
-    return available.shift()?.id ?? null;
-  });
+function composeMemberIds(requiredMemberIds, fill) {
+  return [...requiredMemberIds, ...fill.map((card) => card.id)];
 }
 
 function memberConditionProgress(condition, selected) {
@@ -262,9 +258,9 @@ export function optimizeOwnedDeck({
       );
 
     const evaluateFill = (fill) => {
-      const memberSlotIds = composeMemberSlots(currentMembers, locked, fill);
+      const memberSlotIds = composeMemberIds(fixedMemberIdList, fill);
       const members = memberSlotIds.map((id) => preparedCards.get(id)).filter(Boolean);
-      const score = evaluateDeck({ leader, members, music, difficulty, playMode, separateRole });
+      const score = evaluateDeck({ leader, members, music, difficulty, playMode, separateRole, evaluationTarget: normalizedSimulationTarget });
       evaluatedCount += 1;
       if (!score) return;
       const candidate = {

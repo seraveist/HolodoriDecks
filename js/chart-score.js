@@ -4,6 +4,7 @@ const DEFAULT_NOTE_WEIGHTS = Object.freeze({
   auto: Object.freeze({ tap: 0.8, flick: 0.8, long_start: 0.8, long_end: 0.8, long_flick_end: 0.8, long_relay: 0.1, long_continuation: 0.1 }),
 });
 const DEFAULT_COMBO = Object.freeze(Array.from({ length: 11 }, (_, index) => ({ from: index * 100, scoreUpPct: index })));
+const TIMELINE_WEIGHT_CACHE = new WeakMap();
 
 const finite = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -41,6 +42,24 @@ function averageComboMultiplier(noteCount, scoreRules) {
   let total = 0;
   for (let combo = 1; combo <= notes; combo += 1) total += comboMultiplier(combo, scoreRules);
   return total / notes;
+}
+
+function timelineWeights(context, playMode, scoreRules) {
+  let cache = TIMELINE_WEIGHT_CACHE.get(context);
+  if (!cache) {
+    cache = new Map();
+    TIMELINE_WEIGHT_CACHE.set(context, cache);
+  }
+  const key = `${playMode === "manual" ? "manual" : "auto"}|${scoreRules?.source_commit ?? "default"}`;
+  if (cache.has(key)) return cache.get(key);
+  const manual = playMode === "manual";
+  const weights = (context.noteTimeline ?? []).map((note, index) => (
+    noteWeight(note?.[0], playMode, scoreRules)
+      * (manual ? comboMultiplier(index + 1, scoreRules) : 1)
+  ));
+  const result = { weights, baseWeight: weights.reduce((sum, value) => sum + value, 0) };
+  cache.set(key, result);
+  return result;
 }
 
 function memberMatchesCondition(member, condition) {
@@ -174,30 +193,46 @@ function activeEventsAt(checks, time, cardId = null) {
 }
 
 function probabilityAny(events) {
-  return 1 - events.reduce((none, event) => none * (1 - clamp(finite(event.probability), 0, 1)), 1);
+  return 1 - [...events].reduce((none, event) => none * (1 - clamp(finite(event.probability), 0, 1)), 1);
 }
 
 function timelineSkillEvaluation(members, context, fullSupportPct, playMode, scoreRules, maximize = false) {
   const windows = specialWindows(members, context);
   const checks = buildActiveChecks(members, context, windows, maximize);
   const notes = context.noteTimeline ?? [];
-  let baseWeight = 0;
+  const scoring = timelineWeights(context, playMode, scoreRules);
   let skillWeight = 0;
   const coverageAcc = new Map(members.map((member) => [member.id, 0]));
+  const starts = [...checks.all].sort((left, right) => finite(left.time) - finite(right.time));
+  const ends = [...checks.all].sort((left, right) => finite(left.end) - finite(right.end));
+  const active = new Set();
+  const activeByMember = new Map(members.map((member) => [member.id, new Set()]));
+  let startIndex = 0;
+  let endIndex = 0;
 
   notes.forEach((note, index) => {
     const time = finite(note?.[1]);
-    const combo = index + 1;
-    const weight = noteWeight(note?.[0], playMode, scoreRules)
-      * (playMode === "manual" ? comboMultiplier(combo, scoreRules) : 1);
-    const current = activeEventsAt(checks.all, time);
-    const activePct = expectedMaximum(current);
+    while (endIndex < ends.length && finite(ends[endIndex].end) <= time + 1e-9) {
+      const row = ends[endIndex];
+      active.delete(row);
+      activeByMember.get(row.cardId)?.delete(row);
+      endIndex += 1;
+    }
+    while (startIndex < starts.length && finite(starts[startIndex].time) <= time + 1e-9) {
+      const row = starts[startIndex];
+      if (time < finite(row.end) - 1e-9) {
+        active.add(row);
+        activeByMember.get(row.cardId)?.add(row);
+      }
+      startIndex += 1;
+    }
+    const weight = scoring.weights[index] ?? 0;
+    const activePct = expectedMaximum(active);
     const support = finite(fullSupportPct) + supportAt(windows, time);
     const supportedPct = activePct * (1 + support / 100);
-    baseWeight += weight;
     skillWeight += weight * (1 + supportedPct / 100);
     for (const member of members) {
-      coverageAcc.set(member.id, coverageAcc.get(member.id) + probabilityAny(activeEventsAt(checks.all, time, member.id)));
+      coverageAcc.set(member.id, coverageAcc.get(member.id) + probabilityAny(activeByMember.get(member.id) ?? []));
     }
   });
 
@@ -218,21 +253,20 @@ function timelineSkillEvaluation(members, context, fullSupportPct, playMode, sco
       scoreUpPct: member.active.conditionalScoreUp || member.active.baseScoreUp,
     };
   });
-
   const supportAveragePct = context.duration > 0
     ? windows.reduce((sum, window) => sum + window.support * (window.end - window.start) / context.duration, 0)
     : 0;
   const activationRateAveragePct = context.duration > 0
     ? windows.reduce((sum, window) => sum + window.activationRateUp * (window.end - window.start) / context.duration, 0)
     : 0;
-
+  const skillMultiplier = scoring.baseWeight > 0 ? skillWeight / scoring.baseWeight : 1;
   return {
-    skillMultiplier: baseWeight > 0 ? skillWeight / baseWeight : 1,
+    skillMultiplier,
     special: { supportAveragePct, activationRateAveragePct, windows },
     details,
     active: {
-      independentPct: Math.max(0, (baseWeight > 0 ? skillWeight / baseWeight : 1) - 1) * 100,
-      correctedPct: Math.max(0, (baseWeight > 0 ? skillWeight / baseWeight : 1) - 1) * 100,
+      independentPct: Math.max(0, skillMultiplier - 1) * 100,
+      correctedPct: Math.max(0, skillMultiplier - 1) * 100,
       duplicateGroups: 0,
       collisionLossPct: 0,
     },
@@ -299,16 +333,24 @@ export function timelineSongProjection({
   playMode = "auto",
   genericSkillMultiplier = 1,
   scoreRules = null,
+  evaluationTarget = "both",
 }) {
-  const expected = timelineSkillEvaluation(members, context, fullSupportPct, playMode, scoreRules, false);
-  const maximum = timelineSkillEvaluation(members, context, fullSupportPct, playMode, scoreRules, true);
+  const needExpected = evaluationTarget !== "potential";
+  const needMaximum = evaluationTarget !== "score";
+  const expected = needExpected
+    ? timelineSkillEvaluation(members, context, fullSupportPct, playMode, scoreRules, false)
+    : null;
+  const maximum = needMaximum
+    ? timelineSkillEvaluation(members, context, fullSupportPct, playMode, scoreRules, true)
+    : null;
   const selectedKernel = songKernel(context, playMode, scoreRules);
   const genericKernel = songKernel(genericContext, playMode, scoreRules);
   const baseRatio = genericKernel > 0 ? selectedKernel / genericKernel : 1;
-  const skillRatio = genericSkillMultiplier > 0 ? expected.skillMultiplier / genericSkillMultiplier : 1;
-  const maxSkillRatio = genericSkillMultiplier > 0 ? maximum.skillMultiplier / genericSkillMultiplier : 1;
-  const averageScore = Math.max(0, Math.round(unitScore * baseRatio * skillRatio));
-  const maxScore = Math.max(averageScore, Math.round(unitScore * baseRatio * maxSkillRatio));
+  const skillRatio = expected && genericSkillMultiplier > 0 ? expected.skillMultiplier / genericSkillMultiplier : 1;
+  const maxSkillRatio = maximum && genericSkillMultiplier > 0 ? maximum.skillMultiplier / genericSkillMultiplier : 1;
+  const averageScore = expected ? Math.max(0, Math.round(unitScore * baseRatio * skillRatio)) : null;
+  const rawMaxScore = maximum ? Math.max(0, Math.round(unitScore * baseRatio * maxSkillRatio)) : null;
+  const maxScore = rawMaxScore == null ? null : Math.max(averageScore ?? 0, rawMaxScore);
   return {
     averageScore,
     maxScore,
@@ -319,9 +361,7 @@ export function timelineSongProjection({
     playMode: playMode === "manual" ? "manual" : "auto",
     expected,
     maximum,
-    specialWindows: expected.special.windows,
-    note: context.chartAccuracy === "exact"
-      ? "실제 채보의 노트 시각·종류와 SP 슬롯 발동 시점을 반영합니다."
-      : "채보 타임라인을 사용할 수 없어 집계 기반 근사를 사용합니다.",
+    specialWindows: expected?.special?.windows ?? maximum?.special?.windows ?? [],
+    note: "실제 채보의 노트 시각/종류와 SP 슬롯 발동 시각을 사용합니다.",
   };
 }
