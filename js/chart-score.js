@@ -186,17 +186,24 @@ function buildActiveChecks(members, context, windows, maximize = false) {
   return { all, byMember };
 }
 
-function activeEventsAt(checks, time, cardId = null) {
-  return checks.filter((check) => (!cardId || check.cardId === cardId)
-    && check.time <= time + 1e-9
-    && time < check.end - 1e-9);
-}
-
 function probabilityAny(events) {
   return 1 - [...events].reduce((none, event) => none * (1 - clamp(finite(event.probability), 0, 1)), 1);
 }
 
-function timelineSkillEvaluation(members, context, fullSupportPct, playMode, scoreRules, maximize = false) {
+function memberSupportPct(supportByMember, cardId) {
+  if (supportByMember instanceof Map) return finite(supportByMember.get(cardId));
+  return finite(supportByMember?.[cardId]);
+}
+
+function timelineSkillEvaluation(
+  members,
+  context,
+  leaderSupportPct,
+  passiveSupportByMember,
+  playMode,
+  scoreRules,
+  maximize = false,
+) {
   const windows = specialWindows(members, context);
   const checks = buildActiveChecks(members, context, windows, maximize);
   const notes = context.noteTimeline ?? [];
@@ -227,10 +234,17 @@ function timelineSkillEvaluation(members, context, fullSupportPct, playMode, sco
       startIndex += 1;
     }
     const weight = scoring.weights[index] ?? 0;
-    const activePct = expectedMaximum(active);
-    const support = finite(fullSupportPct) + supportAt(windows, time);
-    const supportedPct = activePct * (1 + support / 100);
-    skillWeight += weight * (1 + supportedPct / 100);
+    const specialSupport = supportAt(windows, time);
+    const supportedEvents = [...active].map((event) => ({
+      ...event,
+      scoreUpPct: finite(event.scoreUpPct) * (1 + (
+        finite(leaderSupportPct)
+        + memberSupportPct(passiveSupportByMember, event.cardId)
+        + specialSupport
+      ) / 100),
+    }));
+    const activePct = expectedMaximum(supportedEvents);
+    skillWeight += weight * (1 + activePct / 100);
     for (const member of members) {
       coverageAcc.set(member.id, coverageAcc.get(member.id) + probabilityAny(activeByMember.get(member.id) ?? []));
     }
@@ -251,6 +265,7 @@ function timelineSkillEvaluation(members, context, fullSupportPct, playMode, sco
       expectedActivations,
       coverage: notes.length ? coverageAcc.get(member.id) / notes.length : 0,
       scoreUpPct: member.active.conditionalScoreUp || member.active.baseScoreUp,
+      passiveSupportPct: memberSupportPct(passiveSupportByMember, member.id),
     };
   });
   const supportAveragePct = context.duration > 0
@@ -329,7 +344,8 @@ export function timelineSongProjection({
   members,
   context,
   genericContext,
-  fullSupportPct,
+  leaderSupportPct = 0,
+  passiveSupportByMember = null,
   playMode = "auto",
   genericSkillMultiplier = 1,
   scoreRules = null,
@@ -338,10 +354,10 @@ export function timelineSongProjection({
   const needExpected = evaluationTarget !== "potential";
   const needMaximum = evaluationTarget !== "score";
   const expected = needExpected
-    ? timelineSkillEvaluation(members, context, fullSupportPct, playMode, scoreRules, false)
+    ? timelineSkillEvaluation(members, context, leaderSupportPct, passiveSupportByMember, playMode, scoreRules, false)
     : null;
   const maximum = needMaximum
-    ? timelineSkillEvaluation(members, context, fullSupportPct, playMode, scoreRules, true)
+    ? timelineSkillEvaluation(members, context, leaderSupportPct, passiveSupportByMember, playMode, scoreRules, true)
     : null;
   const selectedKernel = songKernel(context, playMode, scoreRules);
   const genericKernel = songKernel(genericContext, playMode, scoreRules);
