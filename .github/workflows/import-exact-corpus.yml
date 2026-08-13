@@ -5,6 +5,7 @@ on:
     branches: [feat/exact-chart-corpus]
     paths:
       - scripts/import-exact-chart-corpus.mjs
+      - scripts/audit-exact-corpus-parity.mjs
       - .github/workflows/import-exact-corpus.yml
 
 permissions:
@@ -40,6 +41,9 @@ jobs:
             https://raw.githubusercontent.com/asciisyaez/yagoo-dori/6c2c95d52c268862d34fb523d965f09a3108bbbd/data/generated/holodori-chart-timelines.json
           test -s /tmp/holodori-chart-timelines.json
 
+      - name: Audit m0049 independent parity fixture
+        run: node scripts/audit-exact-corpus-parity.mjs --source=/tmp/holodori-chart-timelines.json
+
       - name: Import Master-compatible exact timelines
         run: |
           set -o pipefail
@@ -54,6 +58,7 @@ jobs:
           python scripts/validate-generated-data.py
           node scripts/test-chart-scoring.mjs
           node --check scripts/import-exact-chart-corpus.mjs
+          node --check scripts/audit-exact-corpus-parity.mjs
 
       - name: Show import summary
         run: |
