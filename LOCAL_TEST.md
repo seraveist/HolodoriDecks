@@ -113,9 +113,9 @@ py -m http.server 8000
 4. 멤버 프리셋으로 카드를 여러 장 지정한 뒤 다시 계산해도 지정 카드들이 포함되면서 순서는 재배치될 수 있는지 확인합니다.
 5. 같은 5인 조합이라도 SP 순서에 따라 점수가 달라질 수 있는지 확인합니다.
 
-### Runtime Exact source
+### Runtime Exact release candidate
 
-현재 `data/generated/exact-runtime-index.json`에는 728개 Master 채보 중 703개가 Runtime Exact 호환으로 등록되어야 합니다.
+현재 릴리스 후보의 `data/generated/exact-runtime-index.json`에는 728개 Master 채보 중 703개가 Runtime Exact 호환으로 등록되어야 합니다.
 
 1. `m0049 / EXPERT` 이외의 Runtime Exact 등록 채보 하나를 선택합니다.
 2. 브라우저 Network 탭에서 `raw.githubusercontent.com/.../holodori-chart-timelines.json` 요청이 발생하는지 확인합니다.
