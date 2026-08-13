@@ -51,31 +51,57 @@ jobs:
           node scripts/test-exact-runtime-source.mjs
           node --check scripts/build-exact-runtime-index.mjs
           node --check js/chart-data.js
-      - name: Probe pinned m0049 range with fetch semantics
+      - name: Exercise real pinned range through loadSelectedChart
         run: |
           node --input-type=module <<'NODE'
           import { readFile } from 'node:fs/promises';
-          const index = JSON.parse(await readFile('data/generated/exact-runtime-index.json', 'utf8'));
-          const entry = index.charts['m0049:EXPERT'];
-          if (!entry) throw new Error('m0049:EXPERT runtime range missing');
-          const response = await fetch(index.source.url, { headers: { Range: `bytes=${entry.start}-${entry.end}` } });
-          if (response.status !== 206) throw new Error(`range status ${response.status}`);
-          const text = await response.text();
-          if (Buffer.byteLength(text) !== entry.length) throw new Error('range byte length mismatch');
-          const chart = JSON.parse(text);
-          if (chart.songId !== 'm0049' || String(chart.difficulty).toLowerCase() !== 'expert' || chart.events?.length !== 720) {
-            throw new Error('m0049 range payload mismatch');
-          }
-          console.log(`range fetch OK: ${entry.length} bytes, ${chart.events.length} events`);
+          import { loadSelectedChart } from './js/chart-data.js';
+          const chartIndex = JSON.parse(await readFile('data/generated/chart-index.json', 'utf8'));
+          const runtimeIndex = JSON.parse(await readFile('data/generated/exact-runtime-index.json', 'utf8'));
+          const resources = {
+            version: chartIndex.source_commit,
+            chartsByKey: new Map(Object.entries(chartIndex.charts)),
+            runtimeIndex,
+            runtimeChartsByKey: new Map(Object.entries(runtimeIndex.charts)),
+          };
+          const result = await loadSelectedChart(resources, 'm0001', 'EASY');
+          if (!result?.metadata?.sourceRuntime) throw new Error('m0001:EASY did not load runtime Exact metadata');
+          if (result.metadata.notes.length !== result.fullComboNoteCount) throw new Error('runtime Exact note count mismatch');
+          if (result.metadata.skills.length !== 5) throw new Error('runtime Exact SP marker count mismatch');
+          console.log(`live loader OK: m0001:EASY ${result.metadata.notes.length} notes`);
           NODE
-      - name: Commit generated range index
+      - name: Bust chart loader cache keys
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          app = Path('js/app.js')
+          text = app.read_text(encoding='utf-8')
+          old = './chart-data.js?v=20260812.4'
+          new = './chart-data.js?v=20260813.3'
+          if old in text:
+              text = text.replace(old, new)
+              app.write_text(text, encoding='utf-8')
+          elif new not in text:
+              raise SystemExit('unexpected chart-data cache key')
+
+          index = Path('index.html')
+          text = index.read_text(encoding='utf-8')
+          old = './js/app.js?v=20260813.2'
+          new = './js/app.js?v=20260813.3'
+          if old in text:
+              text = text.replace(old, new)
+              index.write_text(text, encoding='utf-8')
+          elif new not in text:
+              raise SystemExit('unexpected app cache key')
+          PY
+      - name: Commit generated range index and cache keys
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/generated/exact-runtime-index.json
+          git add data/generated/exact-runtime-index.json js/app.js index.html
           if git diff --cached --quiet; then
-            echo "Runtime index unchanged."
+            echo "Runtime integration files unchanged."
             exit 0
           fi
-          git commit -m "Generate exact runtime range index"
+          git commit -m "Finalize exact runtime source integration"
           git push origin HEAD:feat/exact-chart-runtime-source
