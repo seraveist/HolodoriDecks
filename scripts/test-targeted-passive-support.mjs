@@ -26,7 +26,7 @@ const leader = {
   characterName: "L",
   leader: { primaryCondition: [], primaryEffects: { p: 0, t: 0, s: 0, support: 0 }, additionalCondition: [], additionalEffects: { p: 0, t: 0, s: 0, support: 0 }, description: "" },
 };
-const passive = { level: 1, condition: null, description: "target support", effect: { kind: "support", value: 100, target: { kind: "group", value: "grp-target", count: 1 } } };
+const passive = { level: 1, condition: null, description: "target support", effect: { kind: "support", value: 10, target: { kind: "group", value: "grp-target", count: 1 } } };
 const notes = Array.from({ length: 30 }, (_, index) => ["tap", 10.5 + index * 0.5]);
 const chart = { fullComboNoteCount: notes.length, chartHash: "support-test", metadata: { notes, skills: [], fever: null } };
 const music = { id: "support-test", title: "support", playing_seconds: 30, live_score_coefficient_permil: 5, _chart: chart, _scoreRules: rules };
