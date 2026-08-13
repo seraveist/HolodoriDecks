@@ -1,0 +1,44 @@
+name: Commit v1.1 Stability Patch
+
+on:
+  push:
+    branches: [release/v1.1.0-stability]
+    paths: [.github/workflows/commit-v11-stability.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release/v1.1.0-stability
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Apply source patch
+        run: python scripts/apply_v11_stability.py
+      - name: Run baseline regressions
+        run: |
+          find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+          node scripts/test-chart-scoring.mjs
+          node scripts/test-exact-global-search.mjs
+          node scripts/test-exact-runtime-source.mjs
+          python -m pip install --disable-pip-version-check -e '.[test]'
+          python -m pytest -q
+          python scripts/validate-generated-data.py
+      - name: Commit source patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add js scripts index.html
+          git reset scripts/apply_v11_stability.py
+          git commit -m "Harden scoring and move optimization to worker"
+          git push origin HEAD:release/v1.1.0-stability
