@@ -23,6 +23,7 @@ node scripts/build-chart-index.mjs
 python scripts/validate-generated-data.py
 python -m pytest -q
 node scripts/test-chart-scoring.mjs
+node scripts/test-exact-runtime-source.mjs
 ```
 
 정적 서버 실행:
@@ -102,7 +103,9 @@ py -m http.server 8000
 
 ## 8. Exact 채보 / SP 순서
 
-현재 회귀 검증용 실제 채보로 `m0049 / EXPERT`를 사용할 수 있습니다.
+### Local Exact fixture
+
+`m0049 / EXPERT`는 저장소에 직접 포함된 회귀 검증용 Local Exact 채보입니다.
 
 1. `m0049`, `EXPERT`를 선택하고 계산합니다.
 2. 상세 결과에 실제 채보 반영 안내와 `스페셜 스킬 발동 순서`가 표시되는지 확인합니다.
@@ -110,7 +113,27 @@ py -m http.server 8000
 4. 멤버 프리셋으로 카드를 여러 장 지정한 뒤 다시 계산해도 지정 카드들이 포함되면서 순서는 재배치될 수 있는지 확인합니다.
 5. 같은 5인 조합이라도 SP 순서에 따라 점수가 달라질 수 있는지 확인합니다.
 
-다른 Master-only 악곡에서도 계산이 오류 없이 완료되고 실제 풀콤보 노트 수 기반 안내가 표시되는지 확인합니다.
+### Runtime Exact release candidate
+
+현재 릴리스 후보의 `data/generated/exact-runtime-index.json`에는 728개 Master 채보 중 703개가 Runtime Exact 호환으로 등록되어야 합니다.
+
+1. `m0049 / EXPERT` 이외의 Runtime Exact 등록 채보 하나를 선택합니다.
+2. 브라우저 Network 탭에서 `raw.githubusercontent.com/.../holodori-chart-timelines.json` 요청이 발생하는지 확인합니다.
+3. 요청에 `Range: bytes=...`가 사용되고 응답이 `206 Partial Content`인지 확인합니다.
+4. 전체 28MB 파일이 아니라 선택한 chart range 크기만 전송되는지 확인합니다.
+5. 결과 상세가 Master-only가 아니라 실제 채보 반영 상태로 표시되는지 확인합니다.
+6. 최종 5인 SP1~SP5 순서 재최적화가 실행되는지 확인합니다.
+7. 같은 채보로 다시 계산했을 때 in-memory cache가 재사용되어 불필요한 동일 range 요청이 반복되지 않는지 확인합니다.
+
+### Fail-soft fallback
+
+외부 Runtime Exact 요청을 DevTools에서 차단하거나 오프라인 상태를 만들어 같은 곡을 계산합니다.
+
+1. 계산 자체가 실패하지 않는지 확인합니다.
+2. Master 풀콤보 노트 수 기반 fallback 결과가 정상 표시되는지 확인합니다.
+3. 외부 Exact source 실패가 전체 앱 오류 배너로 확산되지 않는지 확인합니다.
+
+현재 source snapshot에서 unavailable인 25개 채보도 Master/fallback 계산으로 정상 완료되어야 합니다.
 
 ## 9. 결과 카드 / 상세 결과
 
@@ -153,6 +176,8 @@ node scripts/test-chart-scoring.mjs
 
 생성 결과가 동일 snapshot이면 불필요한 timestamp 차이 없이 deterministic한지 확인합니다.
 
+Master가 갱신되면 Runtime Exact index도 새 `chart-index.json`에 대해 다시 생성·검증해야 합니다. 기존 range entry가 새 `chartHash` 또는 노트 수와 맞지 않으면 런타임에서 사용해서는 안 됩니다.
+
 ## 12. 릴리스 metadata
 
 현재 버전은 다음 세 위치가 일치해야 합니다.
@@ -191,7 +216,8 @@ PR에서는 `.github/workflows/validate.yml`이 다음을 자동 검사합니다
 - i18n completeness
 - generated data integrity
 - chart index / score rules
-- exact chart metadata
+- Local Exact chart metadata
+- Runtime Exact index 구조 및 loader regression
 - SP order regression
 
 `main` 병합 후 `.github/workflows/pages.yml`이 핵심 검증을 다시 수행하고 Pages를 배포합니다.

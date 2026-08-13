@@ -1,5 +1,5 @@
 import { loadAppData, loadManifest } from "./data.js?v=20260812.2";
-import { loadChartResources, loadSelectedChart } from "./chart-data.js?v=20260812.4";
+import { loadChartResources, loadSelectedChart } from "./chart-data.js?v=20260813.3";
 import { createStore } from "./state.js?v=20260812.2";
 import { optimizeOwnedDeck } from "./recommend.js?v=20260813.1";
 import { optimizeRecommendationOrders } from "./order.js?v=20260813.1";

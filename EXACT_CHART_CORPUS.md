@@ -1,6 +1,6 @@
 # Exact chart corpus compatibility audit
 
-This document records the compatibility audit for a candidate bulk Exact chart-timeline source. It does **not** mean that the third-party corpus is redistributed by Holodori DeckSim.
+This document records the compatibility audit and release-candidate runtime intake design for a candidate bulk Exact chart-timeline source. The third-party 703-chart corpus is **not** bulk-redistributed by Holodori DeckSim.
 
 ## Candidate source
 
@@ -15,19 +15,19 @@ Pinned public generated snapshot:
 - source retrieval date: `2026-08-02`
 - source manifest license field: `null`
 
-The candidate project describes the source as build-time data. The parser reference recorded in that source is `HolodoriDB/holodori-scores`, whose parser code is MIT-licensed; this does not by itself establish redistribution terms for the generated chart corpus or game-derived chart data.
+The parser reference recorded in that source is `HolodoriDB/holodori-scores`, whose parser code is MIT-licensed. That does not by itself establish redistribution terms for the generated chart corpus or game-derived chart data.
 
-Because the candidate corpus does not currently state redistribution terms, Holodori DeckSim does not bulk-publish the converted 703-chart dataset. The importer and audit remain ready so that production intake can proceed once the data-use terms are documented.
+Because the candidate corpus does not currently state redistribution terms, Holodori DeckSim does not publish 703 converted chart JSON files in this repository. The current release candidate instead contains only a compact **runtime range index** derived from the pinned public snapshot. The index stores byte offsets, lengths, per-object SHA-256 values, and current-Master identifiers; it does not contain the note timelines themselves.
 
 ## DeckSim snapshot audited
 
-The audit was run against the v1.0.0-era generated Master currently used by DeckSim:
+The audit was run against the generated Master currently used by DeckSim:
 
 - core source commit: `fee804a5a89a6564a38bd5f8dc0d0b48912e0016`
 - master version: `879558f477b498cee415f23b1013af1bf72bf5e1d8468cc6022beecad57240c5`
 - songs: `182`
 - difficulty charts: `728`
-- Exact metadata already committed before the audit: `1` (`m0049 / EXPERT`)
+- Local Exact metadata already committed: `1` (`m0049 / EXPERT`)
 
 ## Compatibility result
 
@@ -54,7 +54,7 @@ Audit result:
 
 ```text
 current Master charts        728
-usable Exact charts          703
+usable Runtime Exact charts  703
 rejected available charts      0
 missing corpus keys             0
 unavailable charts             25
@@ -71,6 +71,53 @@ Unavailable reasons recorded by the source snapshot:
 ```
 
 No attempt is made to bypass source access controls. These 25 charts remain on DeckSim's existing Master/fallback path unless an independently valid Exact source becomes available.
+
+## Runtime range index
+
+The release candidate's `data/generated/exact-runtime-index.json` is generated from the exact pinned snapshot by `scripts/build-exact-runtime-index.mjs`.
+
+For every compatible chart it records only:
+
+```text
+byte start / end / length
+per-object SHA-256
+musicId / difficulty
+chartHash
+chartAssetId
+fullComboNoteCount
+normalNoteCount
+```
+
+At runtime:
+
+```text
+Local Exact file exists
+→ use Local Exact
+
+otherwise Runtime Exact range exists
+→ request only bytes=start-end from the pinned raw GitHub snapshot
+→ require HTTP 206 and exact Content-Range
+→ verify returned byte length
+→ verify per-object SHA-256
+→ parse source chart object
+→ re-check musicId/difficulty/chartHash/note counts/5 SP markers
+→ convert in memory to DeckSim metadata
+→ use exact timeline scoring/order optimization
+
+any failure
+→ return to Master chart fallback
+```
+
+The browser does not download the 28.4 MB corpus during app startup. It loads the small runtime index once and only the selected chart object on demand. A representative `m0049 / EXPERT` range is about `49.7 KB`.
+
+The pinned GitHub Raw source was verified to support browser-style `fetch()` with:
+
+- `206 Partial Content`
+- `Content-Range`
+- `Access-Control-Allow-Origin: *`
+- no response content-encoding on the tested Range request
+
+The loader remains fail-soft: network/CORS/Range/source failures never prevent a Master-only score calculation.
 
 ## m0049 parser parity
 
@@ -96,19 +143,19 @@ Manual kernel delta   0
 AUTO kernel delta     0
 ```
 
-The importer therefore reports both strict parser equality and semantic scoring parity, and preserves an already committed per-chart Exact file by default instead of overwriting it.
+The Local Exact `m0049 / EXPERT` file therefore remains the preferred source, while the runtime converter is regression-tested against it for semantic parity.
 
 ## Payload impact
 
-The production-format conversion was exercised in a temporary Actions workspace only.
+A full materialized conversion was exercised only in a temporary Actions workspace:
 
 - new compact per-chart files: `702`
 - existing `m0049 / EXPERT` preserved: `1`
 - resulting Exact files: `703`
 - newly generated compact JSON bytes: `10,223,421`
-- total `data/generated/charts/` bytes including the existing fixture: about `10.26 MB`
+- total materialized `data/generated/charts/` size: about `10.26 MB`
 
-Files are lazy-loaded per selected chart, so the whole corpus would not be downloaded by the browser on page startup.
+Those 702 derived files are not committed. The release candidate instead adds `exact-runtime-index.json` at roughly 0.28 MB and lazy-loads one source object at a time.
 
 ## Worst-case order-search benchmark
 
@@ -122,13 +169,13 @@ m0136:EXPERT   1,421 notes   1,619.3 ms
 m0028:EXPERT   1,404 notes   1,685.5 ms
 ```
 
-This is a synthetic CI benchmark rather than a browser SLA, but it confirms that the current staged optimizer remains practical even on the densest candidate timelines.
+This is a synthetic CI benchmark rather than a browser SLA, but it confirms that the staged optimizer remains practical even on the densest audited timelines.
 
-## Importer
+## Tooling
 
-`scripts/import-chart-timeline-corpus.mjs` performs a read-only audit by default and verifies the pinned source SHA before parsing.
+### Compatibility/materialization importer
 
-Example after obtaining the exact pinned input file:
+`scripts/import-chart-timeline-corpus.mjs` verifies the pinned source SHA and performs the full compatibility audit. By default it is read-only.
 
 ```bash
 node scripts/import-chart-timeline-corpus.mjs \
@@ -136,15 +183,20 @@ node scripts/import-chart-timeline-corpus.mjs \
   --report /tmp/exact-corpus-report.json
 ```
 
-To materialize compatible per-chart files locally:
+Its `--write` mode exists for local testing but is not the production redistribution mechanism.
+
+### Runtime index builder
 
 ```bash
-node scripts/import-chart-timeline-corpus.mjs \
-  --input /path/to/holodori-chart-timelines.json \
-  --write
-node scripts/build-chart-index.mjs
-python scripts/validate-generated-data.py
-node scripts/test-chart-scoring.mjs
+node scripts/build-exact-runtime-index.mjs \
+  --input /path/to/holodori-chart-timelines.json
+node scripts/test-exact-runtime-source.mjs
 ```
 
-Existing Exact files are preserved unless `--overwrite` is explicitly provided.
+The builder refuses an input whose full SHA-256 does not match the pinned snapshot and refuses/rejects chart objects that do not match the current Master safety keys.
+
+## Source/data-use boundary
+
+The external snapshot remains hosted by its source repository. DeckSim's release candidate publishes only the compatibility/range metadata required to request a selected public object and validates that object before use. This design intentionally avoids adding 703 third-party-derived note-timeline files to the DeckSim repository while retaining fail-soft Exact scoring for compatible charts.
+
+The runtime intake remains a release candidate until the branch's full CI and manual browser checks are completed and the change is deliberately merged/released.

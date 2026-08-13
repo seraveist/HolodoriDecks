@@ -95,11 +95,11 @@ unit-score-v0.5-potential + song-score-v0.4-chart-timeline
 
 ## 채보 정확도 계층
 
-악곡/난이도별 계산은 가능한 데이터 수준에 따라 자동으로 내려갑니다.
+현재 공개된 v1.0.0은 다음 순서로 계산합니다.
 
 ```text
-Exact SUS metadata
-  → 실제 노트 타임라인 + 실제 SP 슬롯 시각
+Local Exact metadata
+  → 저장소에 포함된 검증된 실제 노트 타임라인 + SP 슬롯 시각
   ↓ 없으면
 Master chart
   → 실제 풀콤보 노트 수 + 집계형 SP 근사
@@ -108,7 +108,25 @@ Estimated
   → 난이도별 노트 밀도 추정
 ```
 
-현재 생성 데이터에는 난이도별 Master 채보 728개가 있으며, Exact metadata는 `m0049 / EXPERT` 1개가 활성화되어 있습니다. Exact 파일은 Master의 `chartHash`와 노트 수가 계속 일치할 때만 사용됩니다.
+현재 공개 v1.0.0의 Local Exact metadata는 `m0049 / EXPERT` 1개입니다.
+
+### 다음 릴리스 후보: Runtime Exact
+
+현재 별도 브랜치에서 아래 계층을 추가 검증하고 있습니다.
+
+```text
+Local Exact metadata
+  ↓ 없으면
+Pinned Runtime Exact source
+  ↓ 없거나 로드 실패 시
+Master chart
+  ↓ 없으면
+Estimated
+```
+
+후보 Runtime Exact index는 현재 Master 728개 채보 중 **703개**와 `musicId + difficulty + chartHash + fullComboNoteCount + chartAssetId + normalNoteCount`가 모두 일치합니다. 원본 공개 snapshot 전체는 약 28MB이지만, 앱은 선택한 채보 객체의 byte range만 lazy-load하도록 설계했습니다. 현재 감사 snapshot에서 unavailable로 기록된 채보는 25개이며 이들은 기존 Master/fallback을 사용합니다.
+
+이 Runtime Exact 경로는 아직 v1.0.0 공개 릴리스에 포함되지 않았습니다. 감사·검증 세부 내용은 [EXACT_CHART_CORPUS.md](EXACT_CHART_CORPUS.md)를 참고하세요.
 
 ## v1 계산 범위와 제한
 
@@ -117,7 +135,7 @@ Estimated
 - 이 프로젝트는 공식 게임 클라이언트의 내부 최종 점수식을 그대로 복제한 도구가 아니라, 확인 가능한 Master 데이터와 검증 fixture를 바탕으로 한 **시뮬레이터**입니다.
 - 계정별 **홀로멤버 보드 / 메모리 보정은 v1 계산에 포함하지 않습니다.** 현재 해당 항목의 계산 기여도는 0으로 유지됩니다.
 - **이벤트 보너스는 v1 계산에 포함하지 않습니다.**
-- 실제 노트별 시각과 SP 발동 순서는 Exact metadata가 확보된 악곡/난이도에서만 사용합니다. 그 외에는 Master 풀콤보 수와 집계형 SP 모델로 fallback합니다.
+- 공개 v1.0.0에서 실제 노트별 시각과 SP 발동 순서는 Local Exact metadata가 확보된 악곡/난이도에서만 사용합니다. 그 외에는 Master 풀콤보 수와 집계형 SP 모델로 fallback합니다.
 - Exact metadata의 Fever 구간은 보존하지만 v1의 솔로 점수에는 별도의 Fever 배율을 임의 적용하지 않습니다.
 - 따라서 앱의 점수는 편성 간 비교와 추천을 위한 예상값이며 인게임 결과와 소수점/반올림, 미확인 계정 보정, 향후 Master 변경 등에 따라 차이가 날 수 있습니다.
 
@@ -145,7 +163,9 @@ Exact SP 채보에서는 1차 조합 검색에 Master-only 컨텍스트를 사�
 - 악곡: 182
 - 리더 데이터 보유 카드: 169
 - 난이도별 채보: 728
-- Exact 채보 metadata: 1
+- 공개 v1.0.0 Local Exact 채보 metadata: 1
+- 다음 릴리스 후보 Runtime Exact 호환 채보: 703 / 728
+- 후보 snapshot Runtime Exact unavailable: 25 / 728
 - 지원 언어: KO / EN / JA
 
 보유 카드/프리셋 선택 UI에서는 ★4·★5 카드를 사용합니다.
@@ -185,12 +205,14 @@ python scripts/ingest-chart-metadata.py path/to/chart_m0001_expert.sus
 node scripts/build-chart-index.mjs
 ```
 
-현재 `m0049 / EXPERT` metadata는 공개 fixture를 기반으로 하며 provenance가 JSON에 기록되어 있습니다.
+현재 저장소에 직접 포함된 `m0049 / EXPERT` metadata는 공개 fixture를 기반으로 하며 provenance가 JSON에 기록되어 있습니다.
 
 - source: `asciisyaez/yagoo-dori`
 - pinned commit: `6c2c95d52c268862d34fb523d965f09a3108bbbd`
 
-채보 hash나 노트 수가 새 Master와 달라지면 해당 Exact metadata는 파일 자체는 보존하되 `metadataPath`에서 자동 제외됩니다.
+다음 릴리스 후보의 대량 Exact corpus intake는 703개 변환 timeline JSON을 DeckSim 저장소에 bulk-publish하지 않습니다. 대신 `data/generated/exact-runtime-index.json`에 각 호환 채보의 byte offset/길이/SHA256과 현재 Master 식별값만 저장하고, Local Exact 파일이 없을 때 선택된 공개 source chart 객체만 range fetch한 뒤 hash/Master 정합성을 다시 검증하는 방식입니다.
+
+후보 corpus의 source manifest에는 별도 재배포 라이선스가 명시되어 있지 않기 때문에 전체 변환 데이터의 저장소 복제를 피합니다. 자세한 감사 결과는 [EXACT_CHART_CORPUS.md](EXACT_CHART_CORPUS.md)를 참고하세요.
 
 ## 프로젝트 구조
 
@@ -226,9 +248,12 @@ src/holodori_decksim/
 scripts/
   build-i18n.mjs
   build-chart-index.mjs
+  build-exact-runtime-index.mjs
+  import-chart-timeline-corpus.mjs
   ingest-chart-metadata.py
   validate-generated-data.py
   test-chart-scoring.mjs
+  test-exact-runtime-source.mjs
 tests/
   test_sync.py
   test_release_metadata.py
@@ -239,6 +264,7 @@ data/generated/
   music.json
   master_refs.json
   chart-index.json
+  exact-runtime-index.json
   live-score-rules.json
   charts/
   i18n/
@@ -260,47 +286,33 @@ NOTICE.md
 - Node.js 24 이상
 - Python 3.11 이상
 
-언어팩/채보 인덱스를 재생성하려면:
-
 ```bash
+python -m pip install -e '.[test]'
 node scripts/build-i18n.mjs
 node scripts/build-chart-index.mjs
-```
-
-정적 서버 실행:
-
-```bash
+python scripts/validate-generated-data.py
+python -m pytest -q
+node scripts/test-chart-scoring.mjs
 python -m http.server 8000
 ```
 
-브라우저에서 `http://localhost:8000/`을 엽니다. 세부 수동 검증은 [LOCAL_TEST.md](LOCAL_TEST.md)를 참고하세요.
+Runtime Exact 릴리스 후보 range index를 재생성하려면 감사 문서에 기록된 **정확히 고정된 corpus snapshot**을 별도로 받아 다음을 실행합니다.
 
-## 자동 검증
+```bash
+node scripts/build-exact-runtime-index.mjs --input /path/to/holodori-chart-timelines.json
+node scripts/test-exact-runtime-source.mjs
+```
 
-PR에서는 `.github/workflows/validate.yml`이 다음을 검사합니다.
+브라우저에서 `http://localhost:8000/`을 엽니다. `file://` 직접 열기는 ES module/CORS 제약 때문에 지원하지 않습니다.
 
-- Python sync unit tests
-- 릴리스 버전 metadata 정합성
-- 전체 JavaScript syntax / ESM import
-- 시뮬레이션 목표 정렬
-- 프리셋/모바일 결과 핵심 UI 규칙
-- 라이트/다크 semantic token 계층
-- KO/EN/JA 동일 Master 및 필수 LangId
-- generated data 참조 무결성
-- catastrophic data drop
-- chart hash / exact metadata 검증
-- chart timeline / SP 순서 회귀 테스트
+수동 회귀 테스트 항목은 [LOCAL_TEST.md](LOCAL_TEST.md)를 참고하세요.
 
-`main`에서는 Pages 배포 전에 핵심 검증을 다시 수행합니다. 배포 성공 후 `VERSION`에 대응하는 tag/release가 아직 없을 때 `.github/workflows/release.yml`이 릴리스를 생성합니다.
+## 라이선스 / 출처
 
-## 릴리스
+- 이 저장소에서 프로젝트 제작자가 작성한 소스 코드와 문서: [MIT License](LICENSE)
+- 게임 파생 이름·데이터·이미지·상표 등: 각 원 권리자에게 귀속
+- HolodoriDB Master/번역 데이터: 각 원 출처의 조건을 따르며 이 저장소의 MIT License 대상이 아님
+- Exact chart 외부 source 및 provenance: [NOTICE.md](NOTICE.md), [EXACT_CHART_CORPUS.md](EXACT_CHART_CORPUS.md)
+- Pretendard: SIL Open Font License 1.1
 
-현재 공개 버전: **v1.0.0**
-
-변경 이력은 [CHANGELOG.md](CHANGELOG.md)를 참고하세요.
-
-## 라이선스와 출처
-
-이 저장소에서 직접 작성한 소스 코드는 [MIT License](LICENSE)로 배포합니다.
-
-게임에서 파생된 카드 이미지·게임 데이터·캐릭터명·상표·기타 제3자 자료는 MIT License 대상이 아니며 각 권리자에게 권리가 있습니다. Master/번역 데이터 및 공개 채보 fixture 등 외부 출처에 대한 상세 표기는 [NOTICE.md](NOTICE.md)를 참고하세요.
+자세한 구분은 [NOTICE.md](NOTICE.md)를 참고하세요.
