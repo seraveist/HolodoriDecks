@@ -130,6 +130,39 @@ function parityPayload(metadata) {
   };
 }
 
+function compareNotes(existingNotes = [], convertedNotes = []) {
+  const length = Math.max(existingNotes.length, convertedNotes.length);
+  let mismatchCount = 0;
+  let typeMismatchCount = 0;
+  let timeMismatchCount = 0;
+  let maxAbsTimeDelta = 0;
+  const samples = [];
+  for (let index = 0; index < length; index += 1) {
+    const existing = existingNotes[index] ?? null;
+    const converted = convertedNotes[index] ?? null;
+    const typeMismatch = String(existing?.[0] ?? "") !== String(converted?.[0] ?? "");
+    const existingTime = Number(existing?.[1]);
+    const convertedTime = Number(converted?.[1]);
+    const delta = Number.isFinite(existingTime) && Number.isFinite(convertedTime)
+      ? convertedTime - existingTime
+      : null;
+    const timeMismatch = delta == null || Math.abs(delta) > 1e-9;
+    if (!typeMismatch && !timeMismatch) continue;
+    mismatchCount += 1;
+    if (typeMismatch) typeMismatchCount += 1;
+    if (timeMismatch) timeMismatchCount += 1;
+    if (delta != null) maxAbsTimeDelta = Math.max(maxAbsTimeDelta, Math.abs(delta));
+    if (samples.length < 20) samples.push({ index, existing, converted, timeDelta: delta });
+  }
+  return {
+    mismatchCount,
+    typeMismatchCount,
+    timeMismatchCount,
+    maxAbsTimeDelta,
+    samples,
+  };
+}
+
 function validateAvailableChart(chart, masterChart) {
   const reasons = [];
   if (!masterChart) reasons.push("missing-current-master-chart");
@@ -236,6 +269,7 @@ async function main() {
         equal: deepEqual(parityPayload(existing), parityPayload(converted)),
         existingNotes: existing.notes?.length ?? 0,
         convertedNotes: converted.notes?.length ?? 0,
+        noteComparison: compareNotes(existing.notes, converted.notes),
         existingSkills: existing.skills ?? [],
         convertedSkills: converted.skills ?? [],
         existingFever: existing.fever ?? null,
@@ -249,7 +283,7 @@ async function main() {
 
   if (options.write) {
     await fs.mkdir(path.resolve(options.outputDir), { recursive: true });
-    for (const { key, chart } of matches) {
+    for (const { chart } of matches) {
       const metadata = convertChart(chart, corpus);
       const file = path.join(path.resolve(options.outputDir), `${metadata.musicId}-${metadata.difficulty}.json`);
       await fs.writeFile(file, `${JSON.stringify(metadata, null, 2)}\n`, "utf8");
