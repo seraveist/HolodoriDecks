@@ -1,0 +1,225 @@
+{
+  "version": 1,
+  "sourceType": "yagoo-dori-exact-corpus",
+  "sourceRepository": "asciisyaez/yagoo-dori",
+  "sourceCommit": "6c2c95d52c268862d34fb523d965f09a3108bbbd",
+  "sourcePath": "data/generated/holodori-chart-timelines.json",
+  "sourceSchemaVersion": 1,
+  "sourceTransformVersion": "exact-sus-timeline-v1",
+  "sourceApiRevision": 51,
+  "sourceRetrievedAt": "2026-08-02",
+  "sourceLicense": null,
+  "localMasterVersion": "879558f477b498cee415f23b1013af1bf72bf5e1d8468cc6022beecad57240c5",
+  "localChartSourceCommit": "fee804a5a89a6564a38bd5f8dc0d0b48912e0016",
+  "localChartCount": 728,
+  "corpusAvailableCount": 703,
+  "corpusUnavailableCount": 25,
+  "matchingCount": 703,
+  "preservedIndependentExactCount": 0,
+  "independentConflictCount": 1,
+  "mismatchCount": 0,
+  "sourceOnlyCount": 0,
+  "removedCorpusFiles": 0,
+  "parityFixture": {
+    "key": "m0049:EXPERT",
+    "matchedExistingTimeline": false
+  },
+  "independentConflicts": [
+    {
+      "key": "m0049:EXPERT",
+      "existingNoteCount": 720,
+      "corpusNoteCount": 720,
+      "existingSkills": [
+        {
+          "slot": 1,
+          "time": 9.090909,
+          "combo": 22
+        },
+        {
+          "slot": 2,
+          "time": 27.272727,
+          "combo": 139
+        },
+        {
+          "slot": 3,
+          "time": 43.636364,
+          "combo": 263
+        },
+        {
+          "slot": 4,
+          "time": 60,
+          "combo": 380
+        },
+        {
+          "slot": 5,
+          "time": 85.454545,
+          "combo": 580
+        }
+      ],
+      "corpusSkills": [
+        {
+          "slot": 1,
+          "time": 9.090909,
+          "combo": 22
+        },
+        {
+          "slot": 2,
+          "time": 27.272727,
+          "combo": 139
+        },
+        {
+          "slot": 3,
+          "time": 43.636364,
+          "combo": 263
+        },
+        {
+          "slot": 4,
+          "time": 60,
+          "combo": 380
+        },
+        {
+          "slot": 5,
+          "time": 85.454545,
+          "combo": 580
+        }
+      ],
+      "existingFever": {
+        "start": 60,
+        "end": 80.454545
+      },
+      "corpusFever": {
+        "start": 60,
+        "end": 80.454545
+      }
+    }
+  ],
+  "mismatches": [],
+  "sourceOnly": [],
+  "unavailable": [
+    {
+      "key": "m0318:EASY",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "96a863227ba0d5212bf2ca7e4295277e"
+    },
+    {
+      "key": "m0323:EASY",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "acf062061764bad29ad097bdf0bcc11a"
+    },
+    {
+      "key": "m0323:EXPERT",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "129625d57e8a16d3203bf62349316ebf"
+    },
+    {
+      "key": "m0323:HARD",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "7ae2802a1b7267cc7d1ff18f4d8d28eb"
+    },
+    {
+      "key": "m0323:NORMAL",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "3578142d78853ccf7db507c9147f2dc4"
+    },
+    {
+      "key": "m0324:EASY",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "700f3a6649b08fae63e970253aa25501"
+    },
+    {
+      "key": "m0324:EXPERT",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "8b7e2b0c48e5b44f8225fcc98e36f70a"
+    },
+    {
+      "key": "m0324:HARD",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "2952b01023415c35dd12945634ca329a"
+    },
+    {
+      "key": "m0324:NORMAL",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "9ec0dba7cf1f15ee9bbcec73d8aa0fd4"
+    },
+    {
+      "key": "m0325:EASY",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "9feaa9f14cdf701c7ded308f5fe0ea7d"
+    },
+    {
+      "key": "m0325:EXPERT",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "2e0acedf99762130e763cf2890e00c1c"
+    },
+    {
+      "key": "m0325:HARD",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "42432ab91c88277649716caf682ba414"
+    },
+    {
+      "key": "m0325:NORMAL",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "8ef71046b3925309ffffca2809378852"
+    },
+    {
+      "key": "m0346:EASY",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "463448ecdf82745f068607ce18c5d690"
+    },
+    {
+      "key": "m0346:EXPERT",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "17f3473be43bc1fd3119490e3fd81ff4"
+    },
+    {
+      "key": "m0346:HARD",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "f2c12b5da1f9e577472b4cf53acb5217"
+    },
+    {
+      "key": "m0346:NORMAL",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "0548645c114706810abe79c7a9fde427"
+    },
+    {
+      "key": "m0347:EASY",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "d1e7dbff3521054a3fc2cf6b66809496"
+    },
+    {
+      "key": "m0347:EXPERT",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "1658ff58778cc9ebd971e137ce293893"
+    },
+    {
+      "key": "m0347:HARD",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "2d3e9f9084ddb874978ebf7f87ee2d2a"
+    },
+    {
+      "key": "m0347:NORMAL",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake",
+      "upstreamChartHash": "6a27fe5b0dad0bfdb58a1292ebc5324f"
+    },
+    {
+      "key": "m9999:EASY",
+      "reason": "source-chart-does-not-contain-five-special-markers",
+      "upstreamChartHash": "dfce5cb4193a3e5490201c9f7c2d2c77"
+    },
+    {
+      "key": "m9999:EXPERT",
+      "reason": "source-chart-does-not-contain-five-special-markers",
+      "upstreamChartHash": "f67e9f3a96a07f502bb5b3bbcabba854"
+    },
+    {
+      "key": "m9999:HARD",
+      "reason": "source-chart-does-not-contain-five-special-markers",
+      "upstreamChartHash": "c80cf700983e2f73f8589f34d6165200"
+    },
+    {
+      "key": "m9999:NORMAL",
+      "reason": "source-chart-does-not-contain-five-special-markers",
+      "upstreamChartHash": "8e9fdbb3545362a4c708a041bcb0b9ad"
+    }
+  ]
+}
