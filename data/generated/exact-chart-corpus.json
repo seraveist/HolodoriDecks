@@ -15,84 +15,17 @@
   "corpusAvailableCount": 703,
   "corpusUnavailableCount": 25,
   "matchingCount": 703,
-  "preservedIndependentExactCount": 0,
-  "independentConflictCount": 1,
+  "preservedIndependentExactCount": 1,
+  "independentConflictCount": 0,
   "mismatchCount": 0,
   "sourceOnlyCount": 0,
   "removedCorpusFiles": 0,
   "parityFixture": {
     "key": "m0049:EXPERT",
-    "matchedExistingTimeline": false
+    "comparison": "score-normalized notes <= 2us + SP markers + Fever",
+    "matchedExistingTimeline": true
   },
-  "independentConflicts": [
-    {
-      "key": "m0049:EXPERT",
-      "existingNoteCount": 720,
-      "corpusNoteCount": 720,
-      "existingSkills": [
-        {
-          "slot": 1,
-          "time": 9.090909,
-          "combo": 22
-        },
-        {
-          "slot": 2,
-          "time": 27.272727,
-          "combo": 139
-        },
-        {
-          "slot": 3,
-          "time": 43.636364,
-          "combo": 263
-        },
-        {
-          "slot": 4,
-          "time": 60,
-          "combo": 380
-        },
-        {
-          "slot": 5,
-          "time": 85.454545,
-          "combo": 580
-        }
-      ],
-      "corpusSkills": [
-        {
-          "slot": 1,
-          "time": 9.090909,
-          "combo": 22
-        },
-        {
-          "slot": 2,
-          "time": 27.272727,
-          "combo": 139
-        },
-        {
-          "slot": 3,
-          "time": 43.636364,
-          "combo": 263
-        },
-        {
-          "slot": 4,
-          "time": 60,
-          "combo": 380
-        },
-        {
-          "slot": 5,
-          "time": 85.454545,
-          "combo": 580
-        }
-      ],
-      "existingFever": {
-        "start": 60,
-        "end": 80.454545
-      },
-      "corpusFever": {
-        "start": 60,
-        "end": 80.454545
-      }
-    }
-  ],
+  "independentConflicts": [],
   "mismatches": [],
   "sourceOnly": [],
   "unavailable": [
