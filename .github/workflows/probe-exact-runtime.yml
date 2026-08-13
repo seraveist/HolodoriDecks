@@ -82,3 +82,21 @@ jobs:
           if (obj.songId !== 'm0049' || String(obj.difficulty).toLowerCase() !== 'expert' || obj.events?.length !== 720) throw new Error('range payload mismatch');
           console.log(`range parse OK: ${obj.songId}:${obj.difficulty}, ${obj.events.length} events`);
           NODE
+      - name: Probe browser-like Accept-Encoding behavior
+        run: |
+          set -a; . /tmp/range.env; set +a
+          URL='https://raw.githubusercontent.com/asciisyaez/yagoo-dori/6c2c95d52c268862d34fb523d965f09a3108bbbd/data/generated/holodori-chart-timelines.json'
+          curl --fail --silent --show-error --compressed --dump-header /tmp/compressed-headers.txt -H "Range: bytes=${START}-${END}" -o /tmp/compressed-range.bin "$URL"
+          cat /tmp/compressed-headers.txt
+          test "$(wc -c < /tmp/compressed-range.bin)" -eq "$LENGTH"
+          grep -Eiq '^content-range: bytes ' /tmp/compressed-headers.txt
+          if grep -Eiq '^content-encoding:' /tmp/compressed-headers.txt; then
+            echo 'Range response used content encoding; browser byte offsets may be unsafe.' >&2
+            exit 1
+          fi
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const obj = JSON.parse(fs.readFileSync('/tmp/compressed-range.bin', 'utf8'));
+          if (obj.songId !== 'm0049' || obj.events?.length !== 720) throw new Error('compressed range payload mismatch');
+          console.log('compressed-request range parse OK');
+          NODE
