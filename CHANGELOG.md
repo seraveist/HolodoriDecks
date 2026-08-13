@@ -4,6 +4,21 @@ Holodori DeckSim의 공개 릴리스 변경 이력을 기록합니다.
 
 형식은 [Keep a Changelog](https://keepachangelog.com/ko/1.1.0/)의 구성을 참고하고, 버전 번호는 Semantic Versioning을 따릅니다.
 
+## [Unreleased]
+
+### Added
+
+- 현재 Master 728개 채보 중 703개와 호환되는 Runtime Exact range index
+- 고정 공개 chart snapshot에서 선택한 채보 객체만 HTTP Range로 lazy-load하는 Exact timeline 경로
+- Runtime Exact 객체의 byte length / Content-Range / SHA-256 / Master 식별값 재검증
+- Local Exact → Runtime Exact → Master → Estimated 순서의 fail-soft 채보 정확도 계층
+- Runtime Exact index builder와 loader regression test
+
+### Changed
+
+- 저장소에 703개 변환 timeline JSON을 bulk-publish하지 않고, 호환성/range metadata만 저장하도록 Exact corpus intake 구조를 분리
+- 외부 Exact source가 실패하거나 stale이면 계산 자체를 실패시키지 않고 기존 Master fallback을 유지
+
 ## [1.0.0] - 2026-08-13
 
 ### Added
