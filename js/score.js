@@ -1,4 +1,4 @@
-import { buildSongContext, songKernel, timelineSongProjection } from "./chart-score.js?v=20260812.4";
+import { buildSongContext, songKernel, timelineSongProjection } from "./chart-score.js?v=20260813.1";
 
 export const SCORE_ENGINE_VERSION = "unit-score-v0.5-potential + song-score-v0.4-chart-timeline";
 export const UNIT_SCORE_K = 2.037342;
@@ -16,6 +16,10 @@ export const CALIBRATION_FIXTURES = Object.freeze([
 ]);
 
 const UNIT_CONTEXT = Object.freeze({ duration: 110, notes: 800, coefficient: 5, kind: "unit" });
+const COMBO_AVERAGE_CACHE = new Map();
+const GENERIC_CONTEXT_CACHE = new Map();
+const MUSIC_CONTEXT_CACHE = new WeakMap();
+const SONG_KERNEL_CACHE = new WeakMap();
 const DIFFICULTY_NOTE_DENSITY = Object.freeze({
   EASY: 3.0,
   NORMAL: 4.5,
@@ -452,12 +456,22 @@ function skillEvaluation(members, context, suppressLifeRate = false, maximize = 
 }
 
 function contextFromMusic(music, difficulty) {
+  const normalizedDifficulty = String(difficulty ?? "EXPERT").toUpperCase();
   if (music) {
-    const context = buildSongContext(music, difficulty, music?._chart ?? null);
-    return { ...context, comboMultiplier: averageComboMultiplier(context.notes) };
+    let cache = MUSIC_CONTEXT_CACHE.get(music);
+    if (!cache) {
+      cache = new Map();
+      MUSIC_CONTEXT_CACHE.set(music, cache);
+    }
+    if (cache.has(normalizedDifficulty)) return cache.get(normalizedDifficulty);
+    const context = buildSongContext(music, normalizedDifficulty, music?._chart ?? null);
+    const resolved = { ...context, comboMultiplier: averageComboMultiplier(context.notes) };
+    cache.set(normalizedDifficulty, resolved);
+    return resolved;
   }
-  const density = DIFFICULTY_NOTE_DENSITY[difficulty] ?? DIFFICULTY_NOTE_DENSITY.EXPERT;
-  return {
+  if (GENERIC_CONTEXT_CACHE.has(normalizedDifficulty)) return GENERIC_CONTEXT_CACHE.get(normalizedDifficulty);
+  const density = DIFFICULTY_NOTE_DENSITY[normalizedDifficulty] ?? DIFFICULTY_NOTE_DENSITY.EXPERT;
+  const resolved = {
     ...UNIT_CONTEXT,
     kind: "generic",
     comboMultiplier: averageComboMultiplier(UNIT_CONTEXT.notes),
@@ -468,17 +482,33 @@ function contextFromMusic(music, difficulty) {
     skillTimeline: [],
     fever: null,
   };
+  GENERIC_CONTEXT_CACHE.set(normalizedDifficulty, resolved);
+  return resolved;
 }
 
 function averageComboMultiplier(noteCount) {
   const notes = Math.max(1, Math.round(finite(noteCount, 1)));
+  if (COMBO_AVERAGE_CACHE.has(notes)) return COMBO_AVERAGE_CACHE.get(notes);
   let before = 0;
   let after = 0;
   for (let note = 1; note <= notes; note += 1) {
     before += 1 + Math.min(10, Math.floor((note - 1) / 100)) / 100;
     after += 1 + Math.min(10, Math.floor(note / 100)) / 100;
   }
-  return (before + after) / (2 * notes);
+  const value = (before + after) / (2 * notes);
+  COMBO_AVERAGE_CACHE.set(notes, value);
+  return value;
+}
+
+function cachedSongKernel(context, playMode, scoreRules) {
+  let cache = SONG_KERNEL_CACHE.get(context);
+  if (!cache) {
+    cache = new Map();
+    SONG_KERNEL_CACHE.set(context, cache);
+  }
+  const key = `${playMode === "manual" ? "manual" : "auto"}|${scoreRules?.source_commit ?? "default"}`;
+  if (!cache.has(key)) cache.set(key, songKernel(context, playMode, scoreRules));
+  return cache.get(key);
 }
 
 function songSkillMultiplier(members, context, fullSupportPct, maximize = false) {
@@ -489,12 +519,14 @@ function songSkillMultiplier(members, context, fullSupportPct, maximize = false)
   return { skillMultiplier: 1 + supportedActive / 100, special, details, active };
 }
 
-function projectSong(unitScore, members, music, difficulty, fullSupportPct, playMode = "auto") {
+function projectSong(unitScore, members, music, difficulty, fullSupportPct, playMode = "auto", evaluationTarget = "both") {
   if (!music) return null;
   const selected = contextFromMusic(music, difficulty);
   const generic = contextFromMusic(null, difficulty);
   const scoreRules = music?._scoreRules ?? null;
   const genericExpected = songSkillMultiplier(members, generic, fullSupportPct);
+  const needExpected = evaluationTarget !== "potential";
+  const needMaximum = evaluationTarget !== "score";
   if (selected.chartAccuracy === "exact" && selected.noteTimeline.length) {
     return timelineSongProjection({
       unitScore,
@@ -505,22 +537,28 @@ function projectSong(unitScore, members, music, difficulty, fullSupportPct, play
       playMode,
       genericSkillMultiplier: genericExpected.skillMultiplier,
       scoreRules,
+      evaluationTarget,
     });
   }
-  const selectedExpected = songSkillMultiplier(members, selected, fullSupportPct);
-  const selectedMaximum = songSkillMultiplier(members, selected, fullSupportPct, true);
+  const selectedExpected = needExpected ? songSkillMultiplier(members, selected, fullSupportPct) : null;
+  const selectedMaximum = needMaximum ? songSkillMultiplier(members, selected, fullSupportPct, true) : null;
   const manual = playMode === "manual";
-  const selectedKernel = songKernel(selected, playMode, scoreRules);
-  const genericKernel = songKernel(generic, playMode, scoreRules);
+  const selectedKernel = cachedSongKernel(selected, playMode, scoreRules);
+  const genericKernel = cachedSongKernel(generic, playMode, scoreRules);
   const baseRatio = genericKernel > 0 ? selectedKernel / genericKernel : 1;
-  const skillRatio = genericExpected.skillMultiplier > 0
+  const skillRatio = selectedExpected && genericExpected.skillMultiplier > 0
     ? selectedExpected.skillMultiplier / genericExpected.skillMultiplier
     : 1;
-  const maxSkillRatio = genericExpected.skillMultiplier > 0
+  const maxSkillRatio = selectedMaximum && genericExpected.skillMultiplier > 0
     ? selectedMaximum.skillMultiplier / genericExpected.skillMultiplier
     : 1;
-  const averageScore = Math.max(0, Math.round(unitScore * baseRatio * skillRatio));
-  const maxScore = Math.max(averageScore, Math.round(unitScore * baseRatio * maxSkillRatio));
+  const averageScore = selectedExpected
+    ? Math.max(0, Math.round(unitScore * baseRatio * skillRatio))
+    : null;
+  const rawMaxScore = selectedMaximum
+    ? Math.max(0, Math.round(unitScore * baseRatio * maxSkillRatio))
+    : null;
+  const maxScore = rawMaxScore == null ? null : Math.max(averageScore ?? 0, rawMaxScore);
   return {
     averageScore,
     maxScore,
@@ -580,15 +618,7 @@ function diagnostics(members, context, passiveStates, leader, additionalLeaderCo
   });
 }
 
-export function evaluateDeck({
-  leader,
-  members,
-  music = null,
-  difficulty = "EXPERT",
-  playMode = "auto",
-  separateRole = true,
-  includeDiagnostics = false,
-}) {
+function buildDeckComposition({ leader, members, separateRole = true, includePotential = true }) {
   if (!leader || members.length !== 5 || members.some((member) => !member)) return null;
   if (separateRole && members.some((member) => member.characterId === leader.characterId)) return null;
   if (!allConditionsMet(leader.leader.primaryCondition, members)) return null;
@@ -639,70 +669,128 @@ export function evaluateDeck({
   const scoreBonusPct = round1(Object.values(scoreBonusDetail).reduce((sum, value) => sum + value, 0));
   const unitScore = unitScoreFromDisplayed(overallPower, scoreBonusPct);
 
-  const potentialUnitSkill = skillEvaluation(members, UNIT_CONTEXT, true, true);
-  const potentialActive = potentialUnitSkill.active.correctedPct;
-  const potentialActiveBase = potentialUnitSkill.activeBase.correctedPct;
-  const potentialRateGain = Math.max(0, potentialActive - potentialActiveBase);
-  const potentialScoreBonusDetail = {
-    outfit: round1(potentialActive * leaderEffects.support / 100),
-    active: round1(potentialActive),
-    board: 0,
-    passive: round1(potentialActive * passive.supportPoints / 100),
-    special: round1(potentialActiveBase * potentialUnitSkill.special.supportAveragePct / 100 + potentialRateGain),
-  };
-  const potentialScoreBonusPct = round1(Object.values(potentialScoreBonusDetail).reduce((sum, value) => sum + value, 0));
-  const potentialUnitScore = Math.max(unitScore, unitScoreFromDisplayed(overallPower, potentialScoreBonusPct));
+  let potentialUnitScore = unitScore;
+  let potentialScoreBonusPct = scoreBonusPct;
+  if (includePotential) {
+    const potentialUnitSkill = skillEvaluation(members, UNIT_CONTEXT, true, true);
+    const potentialActive = potentialUnitSkill.active.correctedPct;
+    const potentialActiveBase = potentialUnitSkill.activeBase.correctedPct;
+    const potentialRateGain = Math.max(0, potentialActive - potentialActiveBase);
+    const potentialScoreBonusDetail = {
+      outfit: round1(potentialActive * leaderEffects.support / 100),
+      active: round1(potentialActive),
+      board: 0,
+      passive: round1(potentialActive * passive.supportPoints / 100),
+      special: round1(potentialActiveBase * potentialUnitSkill.special.supportAveragePct / 100 + potentialRateGain),
+    };
+    potentialScoreBonusPct = round1(Object.values(potentialScoreBonusDetail).reduce((sum, value) => sum + value, 0));
+    potentialUnitScore = Math.max(unitScore, unitScoreFromDisplayed(overallPower, potentialScoreBonusPct));
+  }
 
-  const fullSupportPct = leaderEffects.support + passive.supportPoints;
-  const songProjection = projectSong(unitScore, members, music, difficulty, fullSupportPct, playMode);
-  const rankingScore = songProjection?.averageScore ?? unitScore;
-  const potentialRankingScore = songProjection?.maxScore ?? potentialUnitScore;
+  return {
+    potentialComputed: includePotential,
+    baseStats,
+    passive,
+    leaderEffects,
+    additionalMet,
+    deckStats,
+    baseParameter,
+    leaderPower,
+    passivePower,
+    overallPower,
+    enhancementPower,
+    unitSkill,
+    active,
+    activeBase,
+    rateGain,
+    scoreBonusDetail,
+    scoreBonusPct,
+    unitScore,
+    potentialUnitScore,
+    potentialScoreBonusPct,
+    fullSupportPct: leaderEffects.support + passive.supportPoints,
+  };
+}
+
+export function prepareDeckComposition({ leader, members, separateRole = true }) {
+  return buildDeckComposition({ leader, members, separateRole, includePotential: true });
+}
+
+export function evaluateDeck({
+  leader,
+  members,
+  music = null,
+  difficulty = "EXPERT",
+  playMode = "auto",
+  separateRole = true,
+  includeDiagnostics = false,
+  evaluationTarget = "both",
+  preparedComposition = null,
+}) {
+  const needPotential = evaluationTarget !== "score";
+  let composition = preparedComposition;
+  if (!composition || (needPotential && !composition.potentialComputed)) {
+    composition = buildDeckComposition({ leader, members, separateRole, includePotential: needPotential });
+  }
+  if (!composition) return null;
+
+  const songProjection = projectSong(
+    composition.unitScore,
+    members,
+    music,
+    difficulty,
+    composition.fullSupportPct,
+    playMode,
+    evaluationTarget,
+  );
+  const rankingScore = songProjection?.averageScore ?? composition.unitScore;
+  const potentialRankingScore = songProjection?.maxScore ?? composition.potentialUnitScore;
   const diagnosticContext = songProjection?.context ?? UNIT_CONTEXT;
 
   return {
     rankingScore,
     potentialRankingScore,
-    unitScore,
-    potentialUnitScore,
+    unitScore: composition.unitScore,
+    potentialUnitScore: composition.potentialUnitScore,
     estimatedSongScore: songProjection?.averageScore ?? null,
     estimatedSongMax: songProjection?.maxScore ?? null,
     songProjection,
-    deckStats,
-    baseStats,
-    overallPower,
-    scoreBonusPct,
-    potentialScoreBonusPct,
-    activeScoreBonus: active,
-    activeBaseScoreBonus: activeBase,
-    activationRateGain: rateGain,
-    supportPct: fullSupportPct + unitSkill.special.supportAveragePct,
-    activePassives: passive.activeStates.filter((row) => row.active).length,
+    deckStats: composition.deckStats,
+    baseStats: composition.baseStats,
+    overallPower: composition.overallPower,
+    scoreBonusPct: composition.scoreBonusPct,
+    potentialScoreBonusPct: composition.potentialScoreBonusPct,
+    activeScoreBonus: composition.active,
+    activeBaseScoreBonus: composition.activeBase,
+    activationRateGain: composition.rateGain,
+    supportPct: composition.fullSupportPct + composition.unitSkill.special.supportAveragePct,
+    activePassives: composition.passive.activeStates.filter((row) => row.active).length,
     songKernelRatio: songProjection?.baseRatio ?? 1,
     context: diagnosticContext,
     leaderCondition: {
       primaryMet: true,
       primaryCount: leader.leader.primaryCondition.length,
-      additionalMet,
+      additionalMet: composition.additionalMet,
       additionalCount: leader.leader.additionalCondition.length,
     },
     detail: {
       power: {
-        memberParameter: baseParameter,
-        outfit: Math.round(leaderPower),
+        memberParameter: composition.baseParameter,
+        outfit: Math.round(composition.leaderPower),
         board: 0,
-        passive: Math.round(passivePower),
+        passive: Math.round(composition.passivePower),
         memory: 0,
-        enhancement: enhancementPower,
+        enhancement: composition.enhancementPower,
       },
-      scoreBonus: scoreBonusDetail,
+      scoreBonus: composition.scoreBonusDetail,
       collision: {
-        groups: unitSkill.active.duplicateGroups,
-        lossPct: round1(unitSkill.active.collisionLossPct),
+        groups: composition.unitSkill.active.duplicateGroups,
+        lossPct: round1(composition.unitSkill.active.collisionLossPct),
       },
     },
-    passiveStates: passive.activeStates,
+    passiveStates: composition.passive.activeStates,
     diagnostics: includeDiagnostics
-      ? diagnostics(members, diagnosticContext, passive.activeStates, leader, additionalMet)
+      ? diagnostics(members, diagnosticContext, composition.passive.activeStates, leader, composition.additionalMet)
       : [],
   };
 }

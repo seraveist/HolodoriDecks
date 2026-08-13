@@ -1,4 +1,4 @@
-import { evaluateDeck } from "./score.js?v=20260812.4";
+import { evaluateDeck, prepareDeckComposition } from "./score.js?v=20260813.1";
 
 const finite = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
 
@@ -73,6 +73,10 @@ export function optimizeRecommendationOrders({
     const leader = preparedCards.get(result.members[0]);
     if (!leader) continue;
     const selectedMemberIds = orderableMemberIds(result);
+    const selectedMembers = selectedMemberIds.map((id) => preparedCards.get(id));
+    if (selectedMembers.some((member) => !member)) continue;
+    const preparedComposition = prepareDeckComposition({ leader, members: selectedMembers, separateRole });
+    if (!preparedComposition) continue;
     let best = null;
     for (const memberIds of permutations(selectedMemberIds)) {
       const members = memberIds.map((id) => preparedCards.get(id));
@@ -84,6 +88,8 @@ export function optimizeRecommendationOrders({
         difficulty,
         playMode,
         separateRole,
+        evaluationTarget: simulationTarget,
+        preparedComposition,
       });
       evaluatedCount += 1;
       if (!score) continue;
@@ -91,6 +97,7 @@ export function optimizeRecommendationOrders({
         members: [leader.id, ...memberIds],
         score,
         rankingValue: rankingValue(score, simulationTarget),
+        _preparedComposition: preparedComposition,
       };
       if (!best || compareResults(candidate, best) < 0) best = candidate;
     }
@@ -109,9 +116,12 @@ export function optimizeRecommendationOrders({
       playMode,
       separateRole,
       includeDiagnostics: true,
+      evaluationTarget: "both",
+      preparedComposition: result._preparedComposition,
     });
+    const { _preparedComposition, ...publicResult } = result;
     return {
-      ...result,
+      ...publicResult,
       score,
       rankingValue: rankingValue(score, simulationTarget),
     };

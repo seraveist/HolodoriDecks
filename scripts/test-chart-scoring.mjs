@@ -7,6 +7,7 @@ import {
 } from "../js/chart-score.js";
 import { evaluateDeck } from "../js/score.js";
 import { optimizeRecommendationOrders } from "../js/order.js";
+import { optimizeOwnedDeck } from "../js/recommend.js";
 
 const rules = JSON.parse(fs.readFileSync(new URL("../data/generated/live-score-rules.json", import.meta.url), "utf8"));
 
@@ -249,6 +250,28 @@ const recommendation = {
   assert.equal(optimizedPreset.members[0], "L");
   assert.equal(optimizedPreset.members[1], "A");
   assert.deepEqual(new Set(optimizedPreset.members.slice(1)), new Set(["A", "B", "C", "D", "E"]));
+}
+
+// Preset members are inclusion constraints from the first search stage, not positional locks.
+{
+  const L = leader();
+  const preparedCards = new Map([L, A, B, C, D, E].map((card) => [card.id, card]));
+  const result = optimizeOwnedDeck({
+    preparedCards,
+    ownedCardIds: ["L", "A", "B", "C", "D", "E"],
+    currentMembers: ["L", null, null, null, "A", null],
+    lockedSlots: [true, false, false, false, true, false],
+    music: null,
+    difficulty: "EXPERT",
+    playMode: "manual",
+    simulationTarget: "score",
+    separateRole: true,
+    resultCount: 1,
+  });
+  assert.equal(result.ok, true);
+  assert.ok(result.members.includes("A"));
+  assert.equal(result.members[1], "A");
+  assert.notEqual(result.members[4], "A");
 }
 
 console.log("chart timeline scoring tests: OK");
