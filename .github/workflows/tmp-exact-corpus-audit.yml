@@ -1,0 +1,57 @@
+name: Temporary exact chart corpus audit
+
+on:
+  push:
+    branches: [data/exact-chart-corpus-audit]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Download pinned public timeline snapshot
+        run: |
+          curl --fail --location --retry 3 \
+            https://raw.githubusercontent.com/asciisyaez/yagoo-dori/6c2c95d52c268862d34fb523d965f09a3108bbbd/data/generated/holodori-chart-timelines.json \
+            --output /tmp/holodori-chart-timelines.json
+          ls -lh /tmp/holodori-chart-timelines.json
+          sha256sum /tmp/holodori-chart-timelines.json
+
+      - name: Audit corpus against current DeckSim master
+        run: |
+          node --check scripts/import-chart-timeline-corpus.mjs
+          node scripts/import-chart-timeline-corpus.mjs \
+            --input /tmp/holodori-chart-timelines.json \
+            --report /tmp/exact-corpus-report.json
+
+      - name: Show compact audit summary
+        if: always()
+        run: |
+          if [ -f /tmp/exact-corpus-report.json ]; then
+            node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r = JSON.parse(fs.readFileSync('/tmp/exact-corpus-report.json', 'utf8'));
+          console.log(JSON.stringify({
+            corpus: r.corpus,
+            currentMaster: r.currentMaster,
+            compatibility: r.compatibility,
+          }, null, 2));
+          NODE
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: exact-corpus-audit-report
+          path: /tmp/exact-corpus-report.json
+          if-no-files-found: ignore
