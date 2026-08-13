@@ -38,14 +38,15 @@ function fail(message) {
 }
 
 function parseArgs(argv) {
-  const options = { input: null, chartIndex: DEFAULT_CHART_INDEX, output: DEFAULT_OUTPUT };
+  const options = { input: null, chartIndex: DEFAULT_CHART_INDEX, output: DEFAULT_OUTPUT, strict: false };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === "--input") options.input = argv[++index];
     else if (arg === "--chart-index") options.chartIndex = argv[++index];
     else if (arg === "--output") options.output = argv[++index];
+    else if (arg === "--strict") options.strict = true;
     else if (arg === "--help" || arg === "-h") {
-      console.log("Usage: node scripts/build-exact-runtime-index.mjs --input <pinned-corpus.json> [--output data/generated/exact-runtime-index.json]");
+      console.log("Usage: node scripts/build-exact-runtime-index.mjs --input <pinned-corpus.json> [--output data/generated/exact-runtime-index.json] [--strict]");
       process.exit(0);
     } else fail(`Unknown argument: ${arg}`);
   }
@@ -231,7 +232,7 @@ async function main() {
     output: path.resolve(options.output),
   });
   console.log(`exact-runtime-index: ${payload.runtimeExactCount}/${payload.currentMasterChartCount} compatible charts, ${payload.unavailableCount} unavailable, ${payload.rejectedAvailableCount} rejected`);
-  if (payload.rejectedAvailableCount) process.exitCode = 2;
+  if (options.strict && payload.rejectedAvailableCount) process.exitCode = 2;
 }
 
 const invoked = process.argv[1] ? pathToFileURL(path.resolve(process.argv[1])).href : "";

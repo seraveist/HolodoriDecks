@@ -41,12 +41,15 @@ def test_readme_describes_current_engine_and_preset_semantics() -> None:
     assert "unit-score-v0.5-potential + song-score-v0.4-chart-timeline" in readme
     assert "이 카드를 반드시 사용" in readme
     assert "5! = 120" in readme
-    assert "v1 계산 범위와 제한" in readme
+    assert "v1.1 계산 범위와 제한" in readme
+    assert "Runtime Exact" in readme
+    assert "Manual PERFECT FC" in readme
 
     stale_phrases = (
         "Unit Score Engine v0.4-potential",
         "잠긴 멤버 슬롯을 유지한 채",
         "현재 `music.json`에는 실제 노트 타임라인이 없으므로",
+        "다음 릴리스 후보: Runtime Exact",
     )
     for phrase in stale_phrases:
         assert phrase not in readme

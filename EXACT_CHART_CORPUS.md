@@ -1,10 +1,8 @@
 # Exact chart corpus compatibility audit
 
-This document records the compatibility audit and release-candidate runtime intake design for a candidate bulk Exact chart-timeline source. The third-party 703-chart corpus is **not** bulk-redistributed by Holodori DeckSim.
+This document records the compatibility audit and v1.1.0 runtime intake design for the public Exact chart-timeline source used by Holodori DeckSim. The third-party chart corpus is **not** bulk-redistributed by this repository.
 
-## Candidate source
-
-Pinned public generated snapshot:
+## Pinned source
 
 - repository: `asciisyaez/yagoo-dori`
 - commit: `6c2c95d52c268862d34fb523d965f09a3108bbbd`
@@ -15,23 +13,21 @@ Pinned public generated snapshot:
 - source retrieval date: `2026-08-02`
 - source manifest license field: `null`
 
-The parser reference recorded in that source is `HolodoriDB/holodori-scores`, whose parser code is MIT-licensed. That does not by itself establish redistribution terms for the generated chart corpus or game-derived chart data.
+The parser reference recorded in that source is `HolodoriDB/holodori-scores`. Its parser code being MIT-licensed does not establish redistribution terms for the generated game-derived timeline corpus.
 
-Because the candidate corpus does not currently state redistribution terms, Holodori DeckSim does not publish 703 converted chart JSON files in this repository. The current release candidate instead contains only a compact **runtime range index** derived from the pinned public snapshot. The index stores byte offsets, lengths, per-object SHA-256 values, and current-Master identifiers; it does not contain the note timelines themselves.
+For that reason DeckSim does not publish 703 converted chart JSON files. v1.1.0 includes only `data/generated/exact-runtime-index.json`, which stores range and integrity metadata and does not contain the full note timelines.
 
-## DeckSim snapshot audited
-
-The audit was run against the generated Master currently used by DeckSim:
+## Audited DeckSim snapshot
 
 - core source commit: `fee804a5a89a6564a38bd5f8dc0d0b48912e0016`
 - master version: `879558f477b498cee415f23b1013af1bf72bf5e1d8468cc6022beecad57240c5`
 - songs: `182`
 - difficulty charts: `728`
-- Local Exact metadata already committed: `1` (`m0049 / EXPERT`)
+- Local Exact metadata: `1` (`m0049 / EXPERT`)
 
 ## Compatibility result
 
-The pinned corpus declares:
+The pinned source snapshot declares:
 
 - songs with Exact timelines: `176`
 - available Exact charts: `703`
@@ -39,7 +35,7 @@ The pinned corpus declares:
 - timed note events: `405,623`
 - Special markers: `3,515` (`703 × 5`)
 
-All 703 available charts matched the current DeckSim Master on the required safety keys:
+All 703 available charts matched the audited DeckSim Master on:
 
 - `musicId + difficulty`
 - `chartHash`
@@ -49,8 +45,6 @@ All 703 available charts matched the current DeckSim Master on the required safe
 - parsed event count
 - five chronological Special markers
 - supported note-type codes
-
-Audit result:
 
 ```text
 current Master charts        728
@@ -70,13 +64,13 @@ Unavailable reasons recorded by the source snapshot:
  4  source-chart-does-not-contain-five-special-markers
 ```
 
-No attempt is made to bypass source access controls. These 25 charts remain on DeckSim's existing Master/fallback path unless an independently valid Exact source becomes available.
+DeckSim does not attempt to bypass source access controls. These charts remain on the Master fallback path unless a valid Exact source becomes available.
 
 ## Runtime range index
 
-The release candidate's `data/generated/exact-runtime-index.json` is generated from the exact pinned snapshot by `scripts/build-exact-runtime-index.mjs`.
+`scripts/build-exact-runtime-index.mjs` builds the current-Master range index from the exact pinned source file.
 
-For every compatible chart it records only:
+For each compatible chart the index stores only:
 
 ```text
 byte start / end / length
@@ -91,37 +85,49 @@ normalNoteCount
 At runtime:
 
 ```text
-Local Exact file exists
+Local Exact exists
 → use Local Exact
 
-otherwise Runtime Exact range exists
-→ request only bytes=start-end from the pinned raw GitHub snapshot
-→ require HTTP 206 and exact Content-Range
+otherwise compatible Runtime Exact entry exists
+→ request bytes=start-end from the pinned public snapshot
+→ require HTTP 206
+→ require matching Content-Range
 → verify returned byte length
-→ verify per-object SHA-256
-→ parse source chart object
-→ re-check musicId/difficulty/chartHash/note counts/5 SP markers
+→ require and verify per-object SHA-256
+→ parse the source chart object
+→ re-check current Master identifiers and five SP markers
 → convert in memory to DeckSim metadata
-→ use exact timeline scoring/order optimization
+→ use Exact timeline scoring/order optimization
 
 any failure
-→ return to Master chart fallback
+→ Master chart fallback
 ```
 
-The browser does not download the 28.4 MB corpus during app startup. It loads the small runtime index once and only the selected chart object on demand. A representative `m0049 / EXPERT` range is about `49.7 KB`.
+A representative `m0049 / EXPERT` range is about `49.7 KB`; the browser does not download the full source corpus at application startup.
 
-The pinned GitHub Raw source was verified to support browser-style `fetch()` with:
+The pinned GitHub Raw source was verified with browser-style Range semantics:
 
 - `206 Partial Content`
 - `Content-Range`
 - `Access-Control-Allow-Origin: *`
 - no response content-encoding on the tested Range request
 
-The loader remains fail-soft: network/CORS/Range/source failures never prevent a Master-only score calculation.
+## Current-Master coherence
+
+The range index records the Master source commit and chart count it was built against. v1.1.0 regression tests require:
+
+```text
+runtime.currentMasterSourceCommit == chart-index.source_commit
+runtime.currentMasterChartCount   == chart-index.chart_count
+```
+
+Every runtime entry is also rechecked against its current Master chart.
+
+`.github/workflows/sync-master-data.yml` rebuilds the Runtime Exact index whenever upstream Master data changes. If the pinned source no longer matches some new/changed charts, those entries are omitted and the application uses Master fallback for them.
 
 ## m0049 parser parity
 
-The already committed `m0049 / EXPERT` direct fixture was compared with the same chart converted from the bulk corpus.
+The existing Local Exact `m0049 / EXPERT` direct fixture was compared with the same chart converted from the runtime corpus.
 
 Both contain 720 notes and identical:
 
@@ -130,36 +136,28 @@ Both contain 720 notes and identical:
 - chart hash
 - full-combo count
 
-Strict JSON note-array ordering is not identical:
-
-- 45 sequence positions differ
-- 44 are type/order differences among simultaneous notes
-- 1 timestamp differs by at most `1 µs`
-
-The DeckSim scoring kernel is nevertheless exactly equivalent for the current rules:
+Strict JSON note-array ordering is not identical because of simultaneous-note ordering and one timestamp differs by at most `1 µs`. For the current scoring kernel:
 
 ```text
 Manual kernel delta   0
 AUTO kernel delta     0
 ```
 
-The Local Exact `m0049 / EXPERT` file therefore remains the preferred source, while the runtime converter is regression-tested against it for semantic parity.
+The Local Exact file therefore remains preferred for this chart.
 
 ## Payload impact
 
-A full materialized conversion was exercised only in a temporary Actions workspace:
+A full materialized conversion was tested in a temporary Actions workspace only:
 
-- new compact per-chart files: `702`
-- existing `m0049 / EXPERT` preserved: `1`
-- resulting Exact files: `703`
+- compatible Exact files: `703`
 - newly generated compact JSON bytes: `10,223,421`
-- total materialized `data/generated/charts/` size: about `10.26 MB`
+- materialized directory size: about `10.26 MB`
 
-Those 702 derived files are not committed. The release candidate instead adds `exact-runtime-index.json` at roughly 0.28 MB and lazy-loads one source object at a time.
+Those files are not committed. The checked-in range index is roughly `0.28 MB` and loads one chart object on demand.
 
-## Worst-case order-search benchmark
+## Exact order benchmark
 
-A synthetic five-member deck was evaluated on the five highest-note Exact charts. Each benchmark used 10 shortlisted compositions × all `5!` member orders = `1,200` exact order evaluations on a GitHub-hosted Ubuntu runner.
+The five highest-note audited charts were tested with 10 shortlisted compositions × all `5!` member orders = `1,200` order evaluations on a GitHub-hosted Ubuntu runner.
 
 ```text
 m0321:EXPERT   2,022 notes   2,295.2 ms
@@ -169,13 +167,11 @@ m0136:EXPERT   1,421 notes   1,619.3 ms
 m0028:EXPERT   1,404 notes   1,685.5 ms
 ```
 
-This is a synthetic CI benchmark rather than a browser SLA, but it confirms that the staged optimizer remains practical even on the densest audited timelines.
+v1.1.0 also expands the 1st-stage Exact shortlist beyond the legacy fixed TOP 10 and includes a small-pool regression that compares the staged optimizer with a complete `all compositions × 120 permutations` search.
 
 ## Tooling
 
-### Compatibility/materialization importer
-
-`scripts/import-chart-timeline-corpus.mjs` verifies the pinned source SHA and performs the full compatibility audit. By default it is read-only.
+Read-only compatibility/materialization audit:
 
 ```bash
 node scripts/import-chart-timeline-corpus.mjs \
@@ -183,9 +179,7 @@ node scripts/import-chart-timeline-corpus.mjs \
   --report /tmp/exact-corpus-report.json
 ```
 
-Its `--write` mode exists for local testing but is not the production redistribution mechanism.
-
-### Runtime index builder
+Runtime index rebuild:
 
 ```bash
 node scripts/build-exact-runtime-index.mjs \
@@ -193,10 +187,4 @@ node scripts/build-exact-runtime-index.mjs \
 node scripts/test-exact-runtime-source.mjs
 ```
 
-The builder refuses an input whose full SHA-256 does not match the pinned snapshot and refuses/rejects chart objects that do not match the current Master safety keys.
-
-## Source/data-use boundary
-
-The external snapshot remains hosted by its source repository. DeckSim's release candidate publishes only the compatibility/range metadata required to request a selected public object and validates that object before use. This design intentionally avoids adding 703 third-party-derived note-timeline files to the DeckSim repository while retaining fail-soft Exact scoring for compatible charts.
-
-The runtime intake remains a release candidate until the branch's full CI and manual browser checks are completed and the change is deliberately merged/released.
+`--strict` may be used when an audit should fail if any source-available chart is rejected. Normal Master sync uses the non-strict mode so a changed Master can safely reduce Runtime Exact coverage instead of failing the whole data sync.

@@ -30,7 +30,9 @@ Master/번역 데이터의 원저작권 또는 별도 이용 조건은 해당 �
 
 ## Exact chart metadata
 
-현재 공개 v1.0.0 저장소에 직접 포함된 `m0049 / EXPERT` Exact metadata는 다음 공개 SUS fixture에서 변환되었습니다.
+### Local Exact
+
+저장소에 직접 포함된 `m0049 / EXPERT` Exact metadata는 다음 공개 SUS fixture에서 변환되었습니다.
 
 - repository: https://github.com/asciisyaez/yagoo-dori
 - source commit: `6c2c95d52c268862d34fb523d965f09a3108bbbd`
@@ -38,24 +40,30 @@ Master/번역 데이터의 원저작권 또는 별도 이용 조건은 해당 �
 
 변환된 metadata의 provenance는 `data/generated/charts/m0049-EXPERT.json`에도 기록되어 있습니다.
 
-다음 릴리스 후보에서는 추가 Exact timeline 계산을 위해 아래 고정 공개 snapshot의 호환성을 별도로 감사하고 있습니다.
+### Runtime Exact
+
+v1.1.0은 추가 Exact timeline 계산을 위해 다음 고정 공개 snapshot을 참조합니다.
 
 - repository: https://github.com/asciisyaez/yagoo-dori
 - source commit: `6c2c95d52c268862d34fb523d965f09a3108bbbd`
 - source path: `data/generated/holodori-chart-timelines.json`
 - pinned SHA-256: `0c34e934a20e29e5ded8140ab31d12617f832ed723d2b56e535d3db19c276534`
 
-이 대량 timeline corpus의 source manifest에는 별도 재배포 라이선스가 명시되어 있지 않습니다. 따라서 Holodori DeckSim은 703개 변환 timeline JSON 파일을 저장소에 bulk-publish하지 않습니다.
+해당 timeline corpus의 source manifest에는 별도 재배포 라이선스가 명시되어 있지 않습니다. 따라서 Holodori DeckSim은 호환되는 703개 채보의 변환 timeline JSON을 이 저장소에 bulk-publish하지 않습니다.
 
-릴리스 후보는 대신 `data/generated/exact-runtime-index.json`에 현재 Master와 호환성이 확인된 채보의 byte offset/길이/객체 SHA-256 및 식별값만 기록합니다. 앱은 Local Exact 파일이 없는 경우 선택한 채보 객체만 원 source의 고정 public snapshot에서 HTTP Range로 읽고, 반환 객체를 hash 및 Master 식별값으로 다시 검증한 후 메모리에서 변환하여 사용하는 방식을 검증 중입니다. 원 snapshot 또는 변환된 전체 note corpus를 DeckSim 저장소에 복제하지 않습니다.
+대신 `data/generated/exact-runtime-index.json`에는 현재 Master와 호환성이 확인된 채보의 byte offset, 길이, 객체 SHA-256과 Master 식별값만 저장합니다. 이 range index에는 전체 노트 타임라인이 포함되지 않습니다.
 
-외부 source 접근이 실패하거나 검증이 맞지 않으면 해당 채보는 기존 Master/fallback 계산을 사용합니다. 자세한 기술 감사 결과는 `EXACT_CHART_CORPUS.md`에 기록합니다.
+앱은 Local Exact 파일이 없는 경우 사용자가 선택한 채보 객체만 위 고정 public snapshot에서 HTTP Range로 읽습니다. 반환 데이터는 byte range, SHA-256, `musicId`, 난이도, `chartHash`, 노트 수 및 chart asset 식별값을 재검증한 뒤 메모리에서 DeckSim 형식으로 변환합니다.
+
+외부 source 접근, 무결성 검증 또는 현재 Master 호환성이 실패하면 해당 채보는 Runtime Exact를 사용하지 않고 Master/fallback 계산으로 내려갑니다. 원 snapshot 전체 또는 변환된 전체 note corpus를 DeckSim 저장소에 복제하지 않습니다.
+
+`data/generated/exact-runtime-index.json`은 Master sync 시 현재 chart index에 맞춰 재생성됩니다. 현재 snapshot에서의 호환 결과와 기술 감사는 `EXACT_CHART_CORPUS.md`를 참고하세요.
 
 Exact SUS 직접 변환 파이프라인은 필요 시 다음 공개 프로젝트를 사용합니다.
 
 - https://github.com/HolodoriDB/holodori-scores
 
-외부 chart/SUS 자료 자체의 권리와 이용 조건은 각 원 출처를 따릅니다.
+외부 chart/SUS 자료 자체의 권리와 이용 조건은 각 원 출처와 권리자의 조건을 따릅니다.
 
 ## Typeface
 

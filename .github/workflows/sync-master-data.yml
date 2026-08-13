@@ -28,7 +28,7 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
 
     steps:
       - uses: actions/checkout@v4
@@ -68,11 +68,15 @@ jobs:
           print(f"upstream_commit={result.get('upstream_commit', '')}")
           PY
 
-      - name: Rebuild locale and chart derived data
+      - name: Rebuild locale, chart, and Runtime Exact derived data
         if: steps.sync.outputs.changed == 'true'
         run: |
           node scripts/build-i18n.mjs
           node scripts/build-chart-index.mjs
+          curl --fail --location --silent --show-error --retry 3 --retry-delay 2 \
+            -o /tmp/holodori-chart-timelines.json \
+            https://raw.githubusercontent.com/asciisyaez/yagoo-dori/6c2c95d52c268862d34fb523d965f09a3108bbbd/data/generated/holodori-chart-timelines.json
+          node scripts/build-exact-runtime-index.mjs --input /tmp/holodori-chart-timelines.json
 
       - name: Validate synchronized data
         if: steps.sync.outputs.changed == 'true'
@@ -80,9 +84,13 @@ jobs:
           python scripts/validate-generated-data.py --baseline /tmp/manifest-before.json
           python -m pytest -q
           node scripts/test-chart-scoring.mjs
+          node scripts/test-targeted-passive-support.mjs
+          node scripts/test-exact-global-search.mjs
+          node scripts/test-exact-runtime-source.mjs
           find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
           node --check scripts/build-i18n.mjs
           node --check scripts/build-chart-index.mjs
+          node --check scripts/build-exact-runtime-index.mjs
 
       - name: Detect generated diff
         id: diff
@@ -128,6 +136,7 @@ jobs:
           state = json.loads(Path('data/sync_state.json').read_text(encoding='utf-8'))
           manifest = json.loads(Path('data/generated/manifest.json').read_text(encoding='utf-8'))
           chart = json.loads(Path('data/generated/chart-index.json').read_text(encoding='utf-8'))
+          runtime = json.loads(Path('data/generated/exact-runtime-index.json').read_text(encoding='utf-8'))
           locale_text = '\n'.join(
               f"- {name}: `{config['commit']}` ({config['repository']})"
               for name, config in manifest['locales'].items()
@@ -145,8 +154,11 @@ jobs:
           - Characters: {counts.get('characters', manifest['character_count'])}
           - Music: {counts.get('music', manifest['music_count'])}
           - Difficulty charts: {chart.get('chart_count', 0)}
-          - Exact chart metadata enabled: {chart.get('exact_metadata_count', 0)}
-          - Stale exact chart metadata disabled: {chart.get('stale_metadata_count', 0)}
+          - Local Exact chart metadata enabled: {chart.get('exact_metadata_count', 0)}
+          - Runtime Exact compatible charts: {runtime.get('runtimeExactCount', 0)}
+          - Runtime Exact rejected available charts: {runtime.get('rejectedAvailableCount', 0)}
+          - Runtime Exact source-unavailable charts: {runtime.get('unavailableCount', 0)}
+          - Stale Local Exact chart metadata disabled: {chart.get('stale_metadata_count', 0)}
 
           ### Locale snapshots
           {locale_text}
@@ -155,9 +167,11 @@ jobs:
           - KO/EN/JA `version.txt` aligned to the same master version
           - generated-data structural and catastrophic-drop validation
           - locale pack completeness validation
-          - chart hash/note-count validation for exact SUS metadata
+          - Local Exact chart hash/note-count validation
+          - Runtime Exact index rebuilt against the new Master snapshot
+          - Runtime Exact current-Master coherence regression
           - Python sync unit tests
-          - chart-scoring regression tests
+          - chart-scoring / targeted-support / global-search regressions
           - JavaScript syntax checks
           """
           Path('/tmp/sync-pr-body.md').write_text('\n'.join(line.strip() for line in body.splitlines()) + '\n', encoding='utf-8')

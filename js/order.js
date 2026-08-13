@@ -1,4 +1,4 @@
-import { evaluateDeck, prepareDeckComposition } from "./score.js?v=20260813.1";
+import { evaluateDeck, prepareDeckComposition } from "./score.js?v=1.1.0";
 
 const finite = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
 

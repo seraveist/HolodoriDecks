@@ -1,6 +1,6 @@
-# Holodori DeckSim v1 로컬 테스트
+# Holodori DeckSim v1.1 로컬 테스트
 
-이 문서는 v1 공개 전후의 수동 회귀 테스트 기준입니다.
+이 문서는 v1.1.0 공개 전후의 수동 회귀 테스트 기준입니다.
 
 ## 1. 준비
 
@@ -9,161 +9,113 @@
 - Node.js 24 이상
 - Python 3.11 이상
 
-동기화 도구와 pytest 설치:
-
 ```bash
 python -m pip install -e '.[test]'
-```
-
-생성 데이터 재검증:
-
-```bash
 node scripts/build-i18n.mjs
 node scripts/build-chart-index.mjs
 python scripts/validate-generated-data.py
 python -m pytest -q
 node scripts/test-chart-scoring.mjs
+node scripts/test-targeted-passive-support.mjs
+node scripts/test-exact-global-search.mjs
 node scripts/test-exact-runtime-source.mjs
-```
-
-정적 서버 실행:
-
-```bash
 python -m http.server 8000
 ```
 
-Windows에서 `python` 명령이 없다면:
+Windows에서 `python` 명령이 없다면 `py -m http.server 8000`을 사용합니다. 브라우저에서 `http://localhost:8000/`을 엽니다.
 
-```bash
-py -m http.server 8000
-```
-
-브라우저에서 `http://localhost:8000/`을 엽니다.
-
-## 2. 초기 로드
+## 2. 초기 로드 / 저장 상태
 
 1. 앱이 오류 배너 없이 로드되는지 확인합니다.
 2. `편성하기` / `내 보유 카드` 탭 전환이 정상인지 확인합니다.
 3. 카드·캐릭터·악곡 데이터가 정상 표시되는지 확인합니다.
-4. 새로고침해도 저장된 보유 카드·레벨·개화·프리셋·언어·테마가 유지되는지 확인합니다.
+4. 새로고침 후 보유 카드·레벨·개화·프리셋·언어·테마가 유지되는지 확인합니다.
 
-## 3. 언어 / 테마
+## 3. 언어 / 테마 / Typography
 
-1. 한국어 / English / 日本語 전환 시 UI, 카드·캐릭터·악곡명, 스킬 설명이 같이 바뀌는지 확인합니다.
-2. 언어를 변경해도 보유 카드·레벨·개화·프리셋 상태가 유지되는지 확인합니다.
-3. 헤더의 테마 버튼으로 라이트 ↔ 다크가 즉시 전환되는지 확인합니다.
-4. 새로고침 후 마지막 테마가 유지되는지 확인합니다.
-5. 좁은 화면에서도 테마 버튼과 언어 선택기가 한 줄을 유지하는지 확인합니다.
-6. 다크 모드에서 패널·입력 필드·결과 카드·모달·스킬 표의 대비가 충분한지 확인합니다.
+1. 한국어 / English / 日本語 전환 시 UI와 카드·캐릭터·악곡·스킬 문구가 함께 바뀌는지 확인합니다.
+2. 헤더 테마 버튼으로 라이트 ↔ 다크가 즉시 전환되고 새로고침 후 유지되는지 확인합니다.
+3. 프리셋 / 선택 팝업 / 보유 카드 / 결과 카드의 캐릭터명·카드명·Lv/개화 계층이 동일한지 확인합니다.
+4. 결과 카드에서 리더 배지 유무와 관계없이 텍스트 시작 높이가 멤버 카드와 일치하는지 확인합니다.
+5. Windows 100% / 125% / 150% 또는 브라우저 확대에서 작은 글씨가 심하게 번지지 않는지 확인합니다.
+6. 모바일/좁은 화면에서도 카드 텍스트 계층이 데스크톱과 동일하게 유지되는지 확인합니다.
 
-## 4. 내 보유 카드
+## 4. 보유 카드 / 프리셋
 
-1. 카드 검색·희귀도·타입·보유 상태·정렬 필터가 정상 동작하는지 확인합니다.
-2. 카드를 보유/미보유로 전환할 수 있는지 확인합니다.
-3. 보유 카드의 레벨과 개화 0~5를 변경할 수 있는지 확인합니다.
-4. `현재 목록 모두 보유`와 `보유 목록 비우기`가 정상 동작하는지 확인합니다.
-5. JSON 내보내기 후 다시 가져왔을 때 보유 카드와 레벨·개화가 복원되는지 확인합니다.
-6. 카드 상세 정보 버튼이 카드 선택 동작과 충돌하지 않는지 확인합니다.
+1. 검색·희귀도·타입·보유 상태·정렬 필터가 정상 동작하는지 확인합니다.
+2. 보유/미보유, 레벨, 개화 0~5, JSON 내보내기/가져오기를 확인합니다.
+3. 리더 프리셋은 리더로 유지되어야 합니다.
+4. 멤버 프리셋은 최종 5명에 포함되되, 멤버 프리셋을 예를 들어 `멤버 4`에 지정해도 해당 위치에 고정되지 않는지 확인합니다.
+5. 리더/멤버 분리 옵션과 프리셋 초기화를 확인합니다.
 
-## 5. 카드 텍스트 계층
+## 5. 시뮬레이션 목표 / 플레이 기준
 
-프리셋 / 카드 선택 팝업 / 내 보유 카드 / 결과 카드에서 같은 정보는 같은 시각 계층을 사용해야 합니다.
+시뮬레이션 목표는 `최고 유닛 스코어`, `최고 잠재 스코어` 두 개뿐이어야 합니다.
 
-1. 캐릭터명이 모든 카드 표현에서 같은 크기·굵기로 보이는지 확인합니다.
-2. 카드명이 같은 크기로 보이는지 확인합니다.
-3. Lv·개화 메타가 같은 크기로 보이는지 확인합니다.
-4. 작은 배지/희귀도/타입 텍스트가 지나치게 뭉개지지 않는지 확인합니다.
-5. 결과 카드에서 리더 배지 유무와 관계없이 캐릭터명·카드명 시작 높이가 멤버 카드와 일치하는지 확인합니다.
-6. Windows 100% / 125% / 150% 배율 또는 브라우저 확대에서 작은 텍스트가 심하게 번지지 않는지 확인합니다.
+1. 악곡 미선택/선택에서 각각 유닛 스코어·예상 평균과 잠재 유닛 스코어·근사 최대 기준으로 TOP 5가 바뀌는지 확인합니다.
+2. AUTO가 정상 선택되는지 확인합니다.
+3. 수동 기준은 `Manual PERFECT FC`로 표시되는지 확인합니다.
+4. Manual PERFECT FC가 PERFECT 계수와 콤보 보너스를 사용하고 AUTO는 AUTO 계수·콤보 보너스 없음으로 표시되는지 확인합니다.
 
-## 6. 프리셋 동작
+## 6. Local Exact / Runtime Exact
 
-1. 리더 슬롯에 카드를 지정하면 추천 결과에서도 해당 카드가 리더로 유지되는지 확인합니다.
-2. 멤버 프리셋에 카드를 지정하면 해당 카드는 최종 멤버 5명에 포함되는지 확인합니다.
-3. 멤버 프리셋을 예를 들어 `멤버 4`에 지정해도 결과에서 반드시 `멤버 4` 위치에 고정되지 않는지 확인합니다.
-4. 프리셋 카드의 `×`를 누르면 팝업 없이 해당 조건만 제거되는지 확인합니다.
-5. `프리셋 초기화`는 6개 프리셋만 비우고 보유 카드 목록은 유지하는지 확인합니다.
-6. 리더/멤버 분리 옵션을 켰을 때 리더와 같은 홀로멤이 멤버에 들어가지 않는지 확인합니다.
-7. 충돌하는 프리셋을 지정했을 때 현재 언어로 경고/오류가 표시되는지 확인합니다.
+### Local Exact
 
-## 7. 시뮬레이션 목표
+`m0049 / EXPERT`를 선택합니다.
 
-시뮬레이션 목표에는 아래 두 항목만 있어야 합니다.
+1. `실제 채보 노트·SP 순서 반영` 안내가 표시되는지 확인합니다.
+2. SP1~SP5에 실제 카드명과 시작/종료 시각이 표시되는지 확인합니다.
+3. 프리셋 멤버가 포함되면서 SP 순서에 따라 다른 위치로 재배치될 수 있는지 확인합니다.
 
-- `최고 유닛 스코어`
-- `최고 잠재 스코어`
+### Runtime Exact
 
-확인 항목:
+`m0001 / EXPERT` 등 Local Exact 이외의 Runtime Exact 등록 채보를 선택합니다.
 
-1. 악곡 미선택 + 최고 유닛 스코어에서 일반 유닛 스코어 기준 TOP 5가 표시되는지 확인합니다.
-2. 악곡 미선택 + 최고 잠재 스코어에서 잠재 유닛 스코어 기준 TOP 5가 표시되는지 확인합니다.
-3. 특정 악곡 + 최고 유닛 스코어에서 예상 평균 스코어 기준으로 정렬되는지 확인합니다.
-4. 특정 악곡 + 최고 잠재 스코어에서 근사 최대 스코어 기준으로 정렬되는지 확인합니다.
-5. 목표·악곡·난이도·AUTO/Manual·육성 반영을 바꾸면 기존 결과가 무효화되는지 확인합니다.
+1. Network 탭에서 `holodori-chart-timelines.json` 요청이 발생하는지 확인합니다.
+2. 요청 헤더가 `Range: bytes=...`인지 확인합니다.
+3. 응답이 `206 Partial Content`이고 `Content-Range`가 요청 구간과 일치하는지 확인합니다.
+4. 전체 source가 아니라 선택 채보 범위만 전송되는지 확인합니다.
+5. 결과가 `실제 채보 노트·SP 순서 반영` 상태인지 확인합니다.
+6. 최종 5인 SP1~SP5 순서가 재최적화되는지 확인합니다.
 
-## 8. Exact 채보 / SP 순서
-
-### Local Exact fixture
-
-`m0049 / EXPERT`는 저장소에 직접 포함된 회귀 검증용 Local Exact 채보입니다.
-
-1. `m0049`, `EXPERT`를 선택하고 계산합니다.
-2. 상세 결과에 실제 채보 반영 안내와 `스페셜 스킬 발동 순서`가 표시되는지 확인합니다.
-3. SP1~SP5에 카드명과 시작/종료 시각이 표시되는지 확인합니다.
-4. 멤버 프리셋으로 카드를 여러 장 지정한 뒤 다시 계산해도 지정 카드들이 포함되면서 순서는 재배치될 수 있는지 확인합니다.
-5. 같은 5인 조합이라도 SP 순서에 따라 점수가 달라질 수 있는지 확인합니다.
-
-### Runtime Exact release candidate
-
-현재 릴리스 후보의 `data/generated/exact-runtime-index.json`에는 728개 Master 채보 중 703개가 Runtime Exact 호환으로 등록되어야 합니다.
-
-1. `m0049 / EXPERT` 이외의 Runtime Exact 등록 채보 하나를 선택합니다.
-2. 브라우저 Network 탭에서 `raw.githubusercontent.com/.../holodori-chart-timelines.json` 요청이 발생하는지 확인합니다.
-3. 요청에 `Range: bytes=...`가 사용되고 응답이 `206 Partial Content`인지 확인합니다.
-4. 전체 28MB 파일이 아니라 선택한 chart range 크기만 전송되는지 확인합니다.
-5. 결과 상세가 Master-only가 아니라 실제 채보 반영 상태로 표시되는지 확인합니다.
-6. 최종 5인 SP1~SP5 순서 재최적화가 실행되는지 확인합니다.
-7. 같은 채보로 다시 계산했을 때 in-memory cache가 재사용되어 불필요한 동일 range 요청이 반복되지 않는지 확인합니다.
+현재 snapshot에서는 Runtime Exact 호환 채보가 703 / 728이고, 25개는 Master fallback 대상입니다.
 
 ### Fail-soft fallback
 
-외부 Runtime Exact 요청을 DevTools에서 차단하거나 오프라인 상태를 만들어 같은 곡을 계산합니다.
+DevTools에서 Runtime Exact source 요청을 차단한 뒤 같은 곡을 다시 계산합니다.
 
-1. 계산 자체가 실패하지 않는지 확인합니다.
-2. Master 풀콤보 노트 수 기반 fallback 결과가 정상 표시되는지 확인합니다.
-3. 외부 Exact source 실패가 전체 앱 오류 배너로 확산되지 않는지 확인합니다.
+1. 계산 자체가 실패하지 않아야 합니다.
+2. `Master 풀콤보 노트 수 반영 · SP 타이밍 근사`로 내려가야 합니다.
+3. 앱 전체 오류 배너가 발생하지 않아야 합니다.
 
-현재 source snapshot에서 unavailable인 25개 채보도 Master/fallback 계산으로 정상 완료되어야 합니다.
+## 7. Exact 진단 일치 / 대상 Passive Support
 
-## 9. 결과 카드 / 상세 결과
+1. Exact 곡 상세 결과의 예상 발동 횟수·확률·커버율이 실제 SP 발동률 구간과 일치하는지 확인합니다.
+2. 개인/팀 타임라인이 실제 액티브 판정 시각을 사용하는지 확인합니다.
+3. 대상 지정 Passive Active-Skill-Effect-Up이 실제 대상 멤버의 액티브에만 적용되는지 확인합니다.
 
-1. TOP 1~5가 순서대로 표시되는지 확인합니다.
-2. 카드 6장이 리더 + 멤버 5명 순으로 표시되는지 확인합니다.
-3. 결과 카드의 타입 아이콘, 희귀도, Lv/개화, 캐릭터명, 카드명이 식별 가능한지 확인합니다.
-4. TOP 카드의 예상 평균/근사 최대 및 주요 숫자가 선명하게 보이는지 확인합니다.
-5. 결과를 펼치면 악곡 예상값, 종합력, P/T/S, 스코어 보너스 산식이 표시되는지 확인합니다.
-6. 스킬 진단표에 발동 간격·확률·지속시간·기대 횟수·패시브 상태가 표시되는지 확인합니다.
-7. 멤버명에 포인터/키보드 포커스를 주면 스킬 툴팁이 표시되는지 확인합니다.
-8. 개인/팀 발동 타임라인이 정상 렌더링되는지 확인합니다.
-9. 결과를 열어 둔 상태에서 다른 TOP 카드를 열거나 조건을 변경해도 UI가 깨지지 않는지 확인합니다.
+## 8. Worker / UI 응답성
 
-## 10. 모바일 / 좁은 화면
+보유 카드를 충분히 많이 등록하고 Runtime Exact 곡을 계산합니다.
 
-600px 이하에서 확인합니다.
+1. 계산 중 버튼이 비활성화되고 완료 후 다시 활성화되는지 확인합니다.
+2. 계산 중에도 스크롤·페이지 애니메이션이 장시간 멈추지 않는지 확인합니다.
+3. DevTools에서 module Worker가 생성되는지 확인합니다.
+4. Worker 미지원 환경에서는 동일 계산 코어의 동기 fallback으로 결과가 나오는지 확인합니다.
 
-1. 프리셋 슬롯이 2열로 배치되는지 확인합니다.
-2. 카드 선택 팝업과 보유 카드가 2열로 표시되는지 확인합니다.
-3. 추천 결과의 6장 카드를 강제로 축소하지 않고 좌우 스크롤할 수 있는지 확인합니다.
-4. 카드 단위 스크롤/스냅이 자연스러운지 확인합니다.
-5. 카드 텍스트 계층은 데스크톱과 동일하게 유지되는지 확인합니다.
-6. 결과 헤더의 큰 숫자만 반응형으로 축소되고 잘리지 않는지 확인합니다.
-7. 모달이 화면 밖으로 벗어나지 않고 내부 스크롤되는지 확인합니다.
+## 9. 결과 / 모바일
 
-## 11. 데이터 동기화 수동 점검
+1. TOP 1~5와 리더 + 멤버 5장이 정상 표시되는지 확인합니다.
+2. 예상 평균/근사 최대, 종합력, P/T/S, 스코어 보너스 산식이 표시되는지 확인합니다.
+3. 스킬 툴팁과 개인/팀 발동 타임라인이 정상인지 확인합니다.
+4. 600px 이하에서 프리셋/보유 카드가 2열이고 결과 6장은 좌우 스크롤되는지 확인합니다.
+5. 모달과 결과 헤더가 화면 밖으로 벗어나지 않는지 확인합니다.
 
-변경을 실제 반영하지 않고 최신 upstream을 검증하려면 GitHub Actions의 `Sync Holodori master data`를 `dry_run=true`로 실행합니다.
+## 10. 데이터 동기화
 
-로컬에서는 다음 명령으로 현재 snapshot을 강제 재생성할 수 있습니다.
+GitHub Actions의 `Sync Holodori master data`를 `dry_run=true`로 실행해 최신 upstream을 검증할 수 있습니다.
+
+Master 변경 시 workflow는 `chart-index.json` 이후 pinned Runtime Exact corpus를 현재 Master와 다시 대조해 `exact-runtime-index.json`도 재생성해야 합니다. 새 `chartHash` 또는 노트 수와 맞지 않는 Runtime entry는 새 index에서 제외되어야 합니다.
 
 ```bash
 holodori-sync --force
@@ -172,54 +124,13 @@ node scripts/build-chart-index.mjs
 python scripts/validate-generated-data.py
 python -m pytest -q
 node scripts/test-chart-scoring.mjs
+node scripts/test-targeted-passive-support.mjs
+node scripts/test-exact-global-search.mjs
+node scripts/test-exact-runtime-source.mjs
 ```
 
-생성 결과가 동일 snapshot이면 불필요한 timestamp 차이 없이 deterministic한지 확인합니다.
+## 11. 릴리스 metadata
 
-Master가 갱신되면 Runtime Exact index도 새 `chart-index.json`에 대해 다시 생성·검증해야 합니다. 기존 range entry가 새 `chartHash` 또는 노트 수와 맞지 않으면 런타임에서 사용해서는 안 됩니다.
+현재 버전은 `VERSION`, `pyproject.toml`, package `__version__`, README, CHANGELOG가 동일해야 합니다. `python -m pytest -q`의 release metadata 테스트와 `.github/workflows/release.yml`이 공개 버전 정합성을 검증합니다.
 
-## 12. 릴리스 metadata
-
-현재 버전은 다음 세 위치가 일치해야 합니다.
-
-```text
-VERSION
-pyproject.toml [project].version
-src/holodori_decksim/__init__.py __version__
-```
-
-확인:
-
-```bash
-cat VERSION
-python - <<'PY'
-import tomllib
-from pathlib import Path
-from holodori_decksim import __version__
-print('package:', __version__)
-print('pyproject:', tomllib.loads(Path('pyproject.toml').read_text(encoding='utf-8'))['project']['version'])
-PY
-```
-
-`python -m pytest -q`의 release metadata 테스트가 VERSION, README, CHANGELOG, LICENSE, NOTICE를 함께 검증합니다.
-
-## 13. PR / Pages 자동 검증
-
-PR에서는 `.github/workflows/validate.yml`이 다음을 자동 검사합니다.
-
-- Python sync tests
-- release metadata
-- JavaScript syntax / ESM imports
-- 추천 목표 정렬
-- 핵심 UI 규칙
-- semantic theme layering
-- i18n completeness
-- generated data integrity
-- chart index / score rules
-- Local Exact chart metadata
-- Runtime Exact index 구조 및 loader regression
-- SP order regression
-
-`main` 병합 후 `.github/workflows/pages.yml`이 핵심 검증을 다시 수행하고 Pages를 배포합니다.
-
-성공한 Pages 배포에 대해 `VERSION` tag/release가 아직 없으면 `.github/workflows/release.yml`이 해당 배포 커밋을 태그하고 GitHub Release를 생성합니다.
+`main` 병합 후 `.github/workflows/pages.yml`이 핵심 검증을 다시 수행하고 Pages를 배포합니다. 성공한 Pages 배포에 대해 VERSION tag/release가 아직 없으면 `.github/workflows/release.yml`이 해당 배포 커밋을 태그하고 GitHub Release를 생성합니다.

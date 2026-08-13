@@ -1,4 +1,4 @@
-import { buildSongContext, songKernel, timelineSongProjection } from "./chart-score.js?v=20260813.1";
+import { buildSongContext, songKernel, timelineSongProjection } from "./chart-score.js?v=1.1.0";
 
 export const SCORE_ENGINE_VERSION = "unit-score-v0.5-potential + song-score-v0.4-chart-timeline";
 export const UNIT_SCORE_K = 2.037342;
@@ -285,8 +285,8 @@ function addEffects(target, source) {
 
 function passiveEvaluation(members) {
   const bonusByMember = new Map(members.map((member) => [member.id, { p: 0, t: 0, s: 0 }]));
+  const supportByMember = new Map(members.map((member) => [member.id, 0]));
   const activeStates = [];
-  let supportPoints = 0;
 
   for (const owner of members) {
     const passive = owner.passive;
@@ -299,7 +299,9 @@ function passiveEvaluation(members) {
       .sort((left, right) => effect.kind === "stat" ? right.stats[effect.stat] - left.stats[effect.stat] : 0)
       .slice(0, effect.target?.count ?? 5);
     if (effect.kind === "support") {
-      supportPoints += effect.value * targets.length / 5;
+      for (const target of targets) {
+        supportByMember.set(target.id, (supportByMember.get(target.id) ?? 0) + effect.value);
+      }
       continue;
     }
     for (const target of targets) {
@@ -315,7 +317,13 @@ function passiveEvaluation(members) {
   for (const bonus of bonusByMember.values()) {
     for (const stat of ["p", "t", "s"]) bonusStats[stat] += bonus[stat];
   }
-  return { bonusStats, supportPoints, activeStates };
+  const supportPoints = [...supportByMember.values()].reduce((sum, value) => sum + value, 0) / Math.max(1, members.length);
+  return {
+    bonusStats,
+    supportPoints,
+    supportByMember: Object.fromEntries(supportByMember),
+    activeStates,
+  };
 }
 
 function activeConditionalShare(active, members, context) {
@@ -511,20 +519,38 @@ function cachedSongKernel(context, playMode, scoreRules) {
   return cache.get(key);
 }
 
-function songSkillMultiplier(members, context, fullSupportPct, maximize = false) {
+function staticSupportForMember(memberId, supportProfile = {}) {
+  return finite(supportProfile?.leaderSupportPct)
+    + finite(supportProfile?.passiveSupportByMember?.[memberId]);
+}
+
+function applyStaticSupport(details, supportProfile = {}) {
+  return details.map((detail) => {
+    const staticSupportPct = staticSupportForMember(detail.cardId, supportProfile);
+    return {
+      ...detail,
+      rawScoreUpPct: detail.scoreUpPct,
+      staticSupportPct,
+      scoreUpPct: detail.scoreUpPct * (1 + staticSupportPct / 100),
+    };
+  });
+}
+
+function songSkillMultiplier(members, context, supportProfile = {}, maximize = false) {
   const special = specialAverages(members, context);
-  const details = activeDetails(members, context, special.activationRateAveragePct, maximize);
+  const rawDetails = activeDetails(members, context, special.activationRateAveragePct, maximize);
+  const details = applyStaticSupport(rawDetails, supportProfile);
   const active = aggregateActiveScore(details, context);
-  const supportedActive = active.correctedPct * (1 + (fullSupportPct + special.supportAveragePct) / 100);
+  const supportedActive = active.correctedPct * (1 + special.supportAveragePct / 100);
   return { skillMultiplier: 1 + supportedActive / 100, special, details, active };
 }
 
-function projectSong(unitScore, members, music, difficulty, fullSupportPct, playMode = "auto", evaluationTarget = "both") {
+function projectSong(unitScore, members, music, difficulty, supportProfile = {}, playMode = "auto", evaluationTarget = "both") {
   if (!music) return null;
   const selected = contextFromMusic(music, difficulty);
   const generic = contextFromMusic(null, difficulty);
   const scoreRules = music?._scoreRules ?? null;
-  const genericExpected = songSkillMultiplier(members, generic, fullSupportPct);
+  const genericExpected = songSkillMultiplier(members, generic, supportProfile);
   const needExpected = evaluationTarget !== "potential";
   const needMaximum = evaluationTarget !== "score";
   if (selected.chartAccuracy === "exact" && selected.noteTimeline.length) {
@@ -533,15 +559,15 @@ function projectSong(unitScore, members, music, difficulty, fullSupportPct, play
       members,
       context: selected,
       genericContext: generic,
-      fullSupportPct,
+      supportProfile,
       playMode,
       genericSkillMultiplier: genericExpected.skillMultiplier,
       scoreRules,
       evaluationTarget,
     });
   }
-  const selectedExpected = needExpected ? songSkillMultiplier(members, selected, fullSupportPct) : null;
-  const selectedMaximum = needMaximum ? songSkillMultiplier(members, selected, fullSupportPct, true) : null;
+  const selectedExpected = needExpected ? songSkillMultiplier(members, selected, supportProfile) : null;
+  const selectedMaximum = needMaximum ? songSkillMultiplier(members, selected, supportProfile, true) : null;
   const manual = playMode === "manual";
   const selectedKernel = cachedSongKernel(selected, playMode, scoreRules);
   const genericKernel = cachedSongKernel(generic, playMode, scoreRules);
@@ -573,17 +599,17 @@ function projectSong(unitScore, members, music, difficulty, fullSupportPct, play
     note: selected.chartAccuracy === "master"
       ? "Master의 실제 풀콤보 노트 수를 사용하고, SP 타이밍은 집계 기반으로 근사합니다."
       : manual
-        ? "Manual FC 근사: 추정 노트와 콤보 보너스를 포함합니다."
+        ? "Manual PERFECT FC 근사: 추정 노트와 콤보 보너스를 포함합니다."
         : "AUTO 근사: 추정 노트 수를 사용하고 콤보 보너스를 제외합니다.",
   };
 }
 
-function diagnostics(members, context, passiveStates, leader, additionalLeaderConditionMet) {
+function diagnostics(members, context, passiveStates, leader, additionalLeaderConditionMet, projectedDetails = null) {
   const intervalCount = {};
   for (const member of members) intervalCount[member.active.interval] = (intervalCount[member.active.interval] ?? 0) + 1;
   const passiveMap = new Map(passiveStates.map((row) => [row.cardId, row]));
-  const skill = skillEvaluation(members, context);
-  const activeMap = new Map(skill.details.map((row) => [row.cardId, row]));
+  const fallbackSkill = projectedDetails ? null : skillEvaluation(members, context);
+  const activeMap = new Map((projectedDetails ?? fallbackSkill.details).map((row) => [row.cardId, row]));
   const leaderConditions = [
     ...leader.leader.primaryCondition,
     ...(additionalLeaderConditionMet ? leader.leader.additionalCondition : []),
@@ -610,6 +636,8 @@ function diagnostics(members, context, passiveStates, leader, additionalLeaderCo
       expectedActivations: active.expectedActivations,
       coverage: active.coverage,
       scoreUpPct: active.scoreUpPct,
+      activationChecks: active.activationChecks ?? [],
+      staticSupportPct: finite(active.staticSupportPct),
       collision: intervalCount[member.active.interval] > 1,
       passiveActive: passive?.active ?? true,
       passiveLabel: passive?.label ?? "활성",
@@ -709,6 +737,10 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
     potentialUnitScore,
     potentialScoreBonusPct,
     fullSupportPct: leaderEffects.support + passive.supportPoints,
+    supportProfile: {
+      leaderSupportPct: leaderEffects.support,
+      passiveSupportByMember: passive.supportByMember,
+    },
   };
 }
 
@@ -739,13 +771,16 @@ export function evaluateDeck({
     members,
     music,
     difficulty,
-    composition.fullSupportPct,
+    composition.supportProfile,
     playMode,
     evaluationTarget,
   );
   const rankingScore = songProjection?.averageScore ?? composition.unitScore;
   const potentialRankingScore = songProjection?.maxScore ?? composition.potentialUnitScore;
   const diagnosticContext = songProjection?.context ?? UNIT_CONTEXT;
+  const projectedDiagnostics = songProjection?.context?.chartAccuracy === "exact"
+    ? songProjection?.expected?.details ?? null
+    : null;
 
   return {
     rankingScore,
@@ -790,7 +825,7 @@ export function evaluateDeck({
     },
     passiveStates: composition.passive.activeStates,
     diagnostics: includeDiagnostics
-      ? diagnostics(members, diagnosticContext, composition.passive.activeStates, leader, composition.additionalMet)
+      ? diagnostics(members, diagnosticContext, composition.passive.activeStates, leader, composition.additionalMet, projectedDiagnostics)
       : [],
   };
 }
