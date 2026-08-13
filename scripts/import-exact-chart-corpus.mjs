@@ -9,6 +9,7 @@ const DEFAULT_CHART_INDEX = path.join(GENERATED, "chart-index.json");
 const DEFAULT_MANIFEST = path.join(GENERATED, "manifest.json");
 const DEFAULT_OUTPUT_DIR = path.join(GENERATED, "charts");
 const DEFAULT_SUMMARY = path.join(GENERATED, "exact-chart-corpus.json");
+const PARITY_TIME_TOLERANCE_SECONDS = 0.000002;
 
 export const SOURCE_TYPE = "yagoo-dori-exact-corpus";
 export const DEFAULT_SOURCE_REPOSITORY = "asciisyaez/yagoo-dori";
@@ -48,21 +49,40 @@ function scoreNormalizedNoteType(value) {
   return String(value ?? "").replace(/^critical_/, "").replace(/^normal$/, "tap");
 }
 
-function canonicalTimeline(metadata) {
-  const notes = [...(metadata?.notes ?? [])]
+function timelineParity(left, right, tolerance = PARITY_TIME_TOLERANCE_SECONDS) {
+  const leftNotes = [...(left?.notes ?? [])]
     .map((note) => [scoreNormalizedNoteType(note?.[0]), Number(note?.[1])])
-    .sort((left, right) => left[1] - right[1] || left[0].localeCompare(right[0]));
-  const skills = [...(metadata?.skills ?? [])]
-    .map((skill) => ({
-      slot: Number(skill?.slot),
-      time: Number(skill?.time),
-      combo: Number(skill?.combo),
-    }))
-    .sort((left, right) => left.slot - right.slot);
-  const fever = metadata?.fever
-    ? { start: Number(metadata.fever.start), end: Number(metadata.fever.end) }
-    : null;
-  return JSON.stringify({ notes, skills, fever });
+    .sort((a, b) => a[0].localeCompare(b[0]) || a[1] - b[1]);
+  const rightNotes = [...(right?.notes ?? [])]
+    .map((note) => [scoreNormalizedNoteType(note?.[0]), Number(note?.[1])])
+    .sort((a, b) => a[0].localeCompare(b[0]) || a[1] - b[1]);
+  if (leftNotes.length !== rightNotes.length) return false;
+  for (let index = 0; index < leftNotes.length; index += 1) {
+    if (leftNotes[index][0] !== rightNotes[index][0]) return false;
+    if (Math.abs(leftNotes[index][1] - rightNotes[index][1]) > tolerance) return false;
+  }
+
+  const leftSkills = [...(left?.skills ?? [])]
+    .map((skill) => ({ slot: Number(skill?.slot), time: Number(skill?.time), combo: Number(skill?.combo) }))
+    .sort((a, b) => a.slot - b.slot);
+  const rightSkills = [...(right?.skills ?? [])]
+    .map((skill) => ({ slot: Number(skill?.slot), time: Number(skill?.time), combo: Number(skill?.combo) }))
+    .sort((a, b) => a.slot - b.slot);
+  if (leftSkills.length !== rightSkills.length) return false;
+  for (let index = 0; index < leftSkills.length; index += 1) {
+    if (leftSkills[index].slot !== rightSkills[index].slot) return false;
+    if (leftSkills[index].combo !== rightSkills[index].combo) return false;
+    if (Math.abs(leftSkills[index].time - rightSkills[index].time) > tolerance) return false;
+  }
+
+  const leftFever = left?.fever ?? null;
+  const rightFever = right?.fever ?? null;
+  if (Boolean(leftFever) !== Boolean(rightFever)) return false;
+  if (leftFever && rightFever) {
+    if (Math.abs(Number(leftFever.start) - Number(rightFever.start)) > tolerance) return false;
+    if (Math.abs(Number(leftFever.end) - Number(rightFever.end)) > tolerance) return false;
+  }
+  return true;
 }
 
 function requireArray(value, message) {
@@ -240,7 +260,7 @@ export async function importCorpus({
     const file = path.join(outputDir, fileName);
     const existing = await existingMetadata(file);
     if (existing && existing.sourceType !== SOURCE_TYPE) {
-      const timelineMatched = canonicalTimeline(existing) === canonicalTimeline(converted);
+      const timelineMatched = timelineParity(existing, converted);
       if (timelineMatched) {
         preservedExisting.push(key);
         if (key === "m0049:EXPERT") parityFixtureMatched = true;
@@ -308,7 +328,7 @@ export async function importCorpus({
     removedCorpusFiles,
     parityFixture: {
       key: "m0049:EXPERT",
-      comparison: "score-engine-normalized-note-types + SP markers + Fever",
+      comparison: `score-normalized notes <= ${PARITY_TIME_TOLERANCE_SECONDS * 1_000_000}us + SP markers + Fever`,
       matchedExistingTimeline: parityFixtureMatched,
     },
     independentConflicts,
