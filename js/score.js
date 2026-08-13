@@ -1,6 +1,6 @@
-import { buildSongContext, songKernel, timelineSongProjection } from "./chart-score.js?v=20260813.1";
+import { buildSongContext, songKernel, timelineSongProjection } from "./chart-score.js?v=20260813.4";
 
-export const SCORE_ENGINE_VERSION = "unit-score-v0.5-potential + song-score-v0.4-chart-timeline";
+export const SCORE_ENGINE_VERSION = "unit-score-v0.6-targeted-support + song-score-v0.5-exact-timeline";
 export const UNIT_SCORE_K = 2.037342;
 export const CALIBRATION_FIXTURES = Object.freeze([
   { power: 67629, bonus: 106.8, score: 284936 },
@@ -285,8 +285,8 @@ function addEffects(target, source) {
 
 function passiveEvaluation(members) {
   const bonusByMember = new Map(members.map((member) => [member.id, { p: 0, t: 0, s: 0 }]));
+  const supportByMember = new Map(members.map((member) => [member.id, 0]));
   const activeStates = [];
-  let supportPoints = 0;
 
   for (const owner of members) {
     const passive = owner.passive;
@@ -299,7 +299,9 @@ function passiveEvaluation(members) {
       .sort((left, right) => effect.kind === "stat" ? right.stats[effect.stat] - left.stats[effect.stat] : 0)
       .slice(0, effect.target?.count ?? 5);
     if (effect.kind === "support") {
-      supportPoints += effect.value * targets.length / 5;
+      for (const target of targets) {
+        supportByMember.set(target.id, (supportByMember.get(target.id) ?? 0) + effect.value);
+      }
       continue;
     }
     for (const target of targets) {
@@ -315,7 +317,10 @@ function passiveEvaluation(members) {
   for (const bonus of bonusByMember.values()) {
     for (const stat of ["p", "t", "s"]) bonusStats[stat] += bonus[stat];
   }
-  return { bonusStats, supportPoints, activeStates };
+  const supportPoints = members.length
+    ? [...supportByMember.values()].reduce((sum, value) => sum + finite(value), 0) / members.length
+    : 0;
+  return { bonusStats, supportPoints, supportByMember, activeStates };
 }
 
 function activeConditionalShare(active, members, context) {
@@ -384,6 +389,21 @@ function activeDetails(members, context, activationRateAveragePct, maximize = fa
   });
 }
 
+function memberSupportPct(supportByMember, cardId) {
+  if (supportByMember instanceof Map) return finite(supportByMember.get(cardId));
+  return finite(supportByMember?.[cardId]);
+}
+
+function supportedDetails(details, globalSupportPct = 0, supportByMember = null, extraSupportPct = 0) {
+  return details.map((detail) => ({
+    ...detail,
+    passiveSupportPct: memberSupportPct(supportByMember, detail.cardId),
+    scoreUpPct: finite(detail.scoreUpPct) * (1 + (
+      finite(globalSupportPct) + memberSupportPct(supportByMember, detail.cardId) + finite(extraSupportPct)
+    ) / 100),
+  }));
+}
+
 function expectedMaximum(items, probabilityKey) {
   const sorted = [...items].sort((left, right) => right.scoreUpPct - left.scoreUpPct);
   let expected = 0;
@@ -450,9 +470,14 @@ function skillEvaluation(members, context, suppressLifeRate = false, maximize = 
   return {
     special,
     details,
+    noRateDetails,
     active: aggregateActiveScore(details, context),
     activeBase: aggregateActiveScore(noRateDetails, context),
   };
+}
+
+function aggregateSupportedActive(details, context, globalSupportPct = 0, supportByMember = null, extraSupportPct = 0) {
+  return aggregateActiveScore(supportedDetails(details, globalSupportPct, supportByMember, extraSupportPct), context);
 }
 
 function contextFromMusic(music, difficulty) {
@@ -511,20 +536,25 @@ function cachedSongKernel(context, playMode, scoreRules) {
   return cache.get(key);
 }
 
-function songSkillMultiplier(members, context, fullSupportPct, maximize = false) {
+function songSkillMultiplier(members, context, leaderSupportPct, passiveSupportByMember, maximize = false) {
   const special = specialAverages(members, context);
   const details = activeDetails(members, context, special.activationRateAveragePct, maximize);
-  const active = aggregateActiveScore(details, context);
-  const supportedActive = active.correctedPct * (1 + (fullSupportPct + special.supportAveragePct) / 100);
-  return { skillMultiplier: 1 + supportedActive / 100, special, details, active };
+  const active = aggregateSupportedActive(
+    details,
+    context,
+    leaderSupportPct,
+    passiveSupportByMember,
+    special.supportAveragePct,
+  );
+  return { skillMultiplier: 1 + active.correctedPct / 100, special, details, active };
 }
 
-function projectSong(unitScore, members, music, difficulty, fullSupportPct, playMode = "auto", evaluationTarget = "both") {
+function projectSong(unitScore, members, music, difficulty, leaderSupportPct, passiveSupportByMember, playMode = "auto", evaluationTarget = "both") {
   if (!music) return null;
   const selected = contextFromMusic(music, difficulty);
   const generic = contextFromMusic(null, difficulty);
   const scoreRules = music?._scoreRules ?? null;
-  const genericExpected = songSkillMultiplier(members, generic, fullSupportPct);
+  const genericExpected = songSkillMultiplier(members, generic, leaderSupportPct, passiveSupportByMember);
   const needExpected = evaluationTarget !== "potential";
   const needMaximum = evaluationTarget !== "score";
   if (selected.chartAccuracy === "exact" && selected.noteTimeline.length) {
@@ -533,15 +563,20 @@ function projectSong(unitScore, members, music, difficulty, fullSupportPct, play
       members,
       context: selected,
       genericContext: generic,
-      fullSupportPct,
+      leaderSupportPct,
+      passiveSupportByMember,
       playMode,
       genericSkillMultiplier: genericExpected.skillMultiplier,
       scoreRules,
       evaluationTarget,
     });
   }
-  const selectedExpected = needExpected ? songSkillMultiplier(members, selected, fullSupportPct) : null;
-  const selectedMaximum = needMaximum ? songSkillMultiplier(members, selected, fullSupportPct, true) : null;
+  const selectedExpected = needExpected
+    ? songSkillMultiplier(members, selected, leaderSupportPct, passiveSupportByMember)
+    : null;
+  const selectedMaximum = needMaximum
+    ? songSkillMultiplier(members, selected, leaderSupportPct, passiveSupportByMember, true)
+    : null;
   const manual = playMode === "manual";
   const selectedKernel = cachedSongKernel(selected, playMode, scoreRules);
   const genericKernel = cachedSongKernel(generic, playMode, scoreRules);
@@ -573,17 +608,19 @@ function projectSong(unitScore, members, music, difficulty, fullSupportPct, play
     note: selected.chartAccuracy === "master"
       ? "Master의 실제 풀콤보 노트 수를 사용하고, SP 타이밍은 집계 기반으로 근사합니다."
       : manual
-        ? "Manual FC 근사: 추정 노트와 콤보 보너스를 포함합니다."
+        ? "Manual PERFECT FC 근사: 추정 노트와 콤보 보너스를 포함합니다."
         : "AUTO 근사: 추정 노트 수를 사용하고 콤보 보너스를 제외합니다.",
   };
 }
 
-function diagnostics(members, context, passiveStates, leader, additionalLeaderConditionMet) {
+function diagnostics(members, context, passiveStates, leader, additionalLeaderConditionMet, exactDetails = null) {
   const intervalCount = {};
   for (const member of members) intervalCount[member.active.interval] = (intervalCount[member.active.interval] ?? 0) + 1;
   const passiveMap = new Map(passiveStates.map((row) => [row.cardId, row]));
-  const skill = skillEvaluation(members, context);
-  const activeMap = new Map(skill.details.map((row) => [row.cardId, row]));
+  const skillDetails = Array.isArray(exactDetails) && exactDetails.length
+    ? exactDetails
+    : skillEvaluation(members, context).details;
+  const activeMap = new Map(skillDetails.map((row) => [row.cardId, row]));
   const leaderConditions = [
     ...leader.leader.primaryCondition,
     ...(additionalLeaderConditionMet ? leader.leader.additionalCondition : []),
@@ -604,12 +641,13 @@ function diagnostics(members, context, passiveStates, leader, additionalLeaderCo
       specialDescription: member.special.description,
       interval: member.active.interval,
       probability: member.active.probability,
-      effectiveProbability: active.effectiveProbability,
+      effectiveProbability: active?.effectiveProbability ?? 0,
       duration: member.active.duration,
-      checks: active.checks,
-      expectedActivations: active.expectedActivations,
-      coverage: active.coverage,
-      scoreUpPct: active.scoreUpPct,
+      checks: active?.checks ?? 0,
+      expectedActivations: active?.expectedActivations ?? 0,
+      coverage: active?.coverage ?? 0,
+      scoreUpPct: active?.scoreUpPct ?? 0,
+      passiveSupportPct: active?.passiveSupportPct ?? 0,
       collision: intervalCount[member.active.interval] > 1,
       passiveActive: passive?.active ?? true,
       passiveLabel: passive?.label ?? "활성",
@@ -656,34 +694,62 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   const enhancementPower = Math.max(0, Math.round(overallPower - baseParameter - leaderPower - passivePower));
 
   const unitSkill = skillEvaluation(members, UNIT_CONTEXT, true);
-  const active = unitSkill.active.correctedPct;
-  const activeBase = unitSkill.activeBase.correctedPct;
-  const rateGain = Math.max(0, active - activeBase);
+  const baseStep = round1(unitSkill.activeBase.correctedPct);
+  const leaderStep = round1(aggregateSupportedActive(
+    unitSkill.noRateDetails,
+    UNIT_CONTEXT,
+    leaderEffects.support,
+  ).correctedPct);
+  const passiveStep = round1(aggregateSupportedActive(
+    unitSkill.noRateDetails,
+    UNIT_CONTEXT,
+    leaderEffects.support,
+    passive.supportByMember,
+  ).correctedPct);
+  const fullStep = round1(aggregateSupportedActive(
+    unitSkill.details,
+    UNIT_CONTEXT,
+    leaderEffects.support,
+    passive.supportByMember,
+    unitSkill.special.supportAveragePct,
+  ).correctedPct);
+  const active = fullStep;
+  const activeBase = baseStep;
+  const rateGain = Math.max(0, unitSkill.active.correctedPct - unitSkill.activeBase.correctedPct);
   const scoreBonusDetail = {
-    outfit: round1(active * leaderEffects.support / 100),
-    active: round1(active),
+    outfit: round1(leaderStep - baseStep),
+    active: baseStep,
     board: 0,
-    passive: round1(active * passive.supportPoints / 100),
-    special: round1(activeBase * unitSkill.special.supportAveragePct / 100 + rateGain),
+    passive: round1(passiveStep - leaderStep),
+    special: round1(fullStep - passiveStep),
   };
-  const scoreBonusPct = round1(Object.values(scoreBonusDetail).reduce((sum, value) => sum + value, 0));
+  const scoreBonusPct = fullStep;
   const unitScore = unitScoreFromDisplayed(overallPower, scoreBonusPct);
 
   let potentialUnitScore = unitScore;
   let potentialScoreBonusPct = scoreBonusPct;
   if (includePotential) {
     const potentialUnitSkill = skillEvaluation(members, UNIT_CONTEXT, true, true);
-    const potentialActive = potentialUnitSkill.active.correctedPct;
-    const potentialActiveBase = potentialUnitSkill.activeBase.correctedPct;
-    const potentialRateGain = Math.max(0, potentialActive - potentialActiveBase);
-    const potentialScoreBonusDetail = {
-      outfit: round1(potentialActive * leaderEffects.support / 100),
-      active: round1(potentialActive),
-      board: 0,
-      passive: round1(potentialActive * passive.supportPoints / 100),
-      special: round1(potentialActiveBase * potentialUnitSkill.special.supportAveragePct / 100 + potentialRateGain),
-    };
-    potentialScoreBonusPct = round1(Object.values(potentialScoreBonusDetail).reduce((sum, value) => sum + value, 0));
+    const potentialBase = round1(potentialUnitSkill.activeBase.correctedPct);
+    const potentialLeader = round1(aggregateSupportedActive(
+      potentialUnitSkill.noRateDetails,
+      UNIT_CONTEXT,
+      leaderEffects.support,
+    ).correctedPct);
+    const potentialPassive = round1(aggregateSupportedActive(
+      potentialUnitSkill.noRateDetails,
+      UNIT_CONTEXT,
+      leaderEffects.support,
+      passive.supportByMember,
+    ).correctedPct);
+    const potentialFull = round1(aggregateSupportedActive(
+      potentialUnitSkill.details,
+      UNIT_CONTEXT,
+      leaderEffects.support,
+      passive.supportByMember,
+      potentialUnitSkill.special.supportAveragePct,
+    ).correctedPct);
+    potentialScoreBonusPct = potentialFull;
     potentialUnitScore = Math.max(unitScore, unitScoreFromDisplayed(overallPower, potentialScoreBonusPct));
   }
 
@@ -709,6 +775,8 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
     potentialUnitScore,
     potentialScoreBonusPct,
     fullSupportPct: leaderEffects.support + passive.supportPoints,
+    leaderSupportPct: leaderEffects.support,
+    passiveSupportByMember: passive.supportByMember,
   };
 }
 
@@ -739,7 +807,8 @@ export function evaluateDeck({
     members,
     music,
     difficulty,
-    composition.fullSupportPct,
+    composition.leaderSupportPct,
+    composition.passiveSupportByMember,
     playMode,
     evaluationTarget,
   );
@@ -790,7 +859,16 @@ export function evaluateDeck({
     },
     passiveStates: composition.passive.activeStates,
     diagnostics: includeDiagnostics
-      ? diagnostics(members, diagnosticContext, composition.passive.activeStates, leader, composition.additionalMet)
+      ? diagnostics(
+        members,
+        diagnosticContext,
+        composition.passive.activeStates,
+        leader,
+        composition.additionalMet,
+        songProjection?.context?.chartAccuracy === "exact"
+          ? (songProjection?.expected?.details ?? songProjection?.maximum?.details ?? null)
+          : null,
+      )
       : [],
   };
 }
