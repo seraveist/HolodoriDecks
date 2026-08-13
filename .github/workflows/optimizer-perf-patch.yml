@@ -9,6 +9,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: optimizer-perf-patch
+  cancel-in-progress: true
+
 jobs:
   patch:
     runs-on: ubuntu-latest
@@ -50,7 +54,7 @@ jobs:
             return row?.raw?.leader && row.leader.primaryCondition.length === 0;
           }) ?? selectable.find((card) => prepared.get(card.id)?.raw?.leader);
           if (!leaderCard) throw new Error('benchmark leader not found');
-          const ownedIds = [leaderCard.id, ...selectable.filter((card) => card.id !== leaderCard.id).slice(0, 35).map((card) => card.id)];
+          const ownedIds = [leaderCard.id, ...selectable.filter((card) => card.id !== leaderCard.id).slice(0, 29).map((card) => card.id)];
           const songBase = music.find((row) => row.id === 'm0049');
           const chartEntry = chartIndex.charts['m0049:EXPERT'];
           const searchMusic = { ...songBase, _chart: { ...chartEntry, metadata: null }, _scoreRules: scoreRules };
