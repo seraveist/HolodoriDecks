@@ -37,7 +37,9 @@ jobs:
           find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
           node --check scripts/build-i18n.mjs
           node --check scripts/build-chart-index.mjs
+          node --check scripts/build-exact-runtime-index.mjs
           node --check scripts/test-chart-scoring.mjs
+          node --check scripts/test-exact-runtime-source.mjs
           node --check scripts/import-chart-timeline-corpus.mjs
           node --input-type=module <<'NODE'
           await Promise.all([
@@ -121,6 +123,7 @@ jobs:
           node scripts/build-i18n.mjs
           node scripts/build-chart-index.mjs
           node scripts/test-chart-scoring.mjs
+          node scripts/test-exact-runtime-source.mjs
           python scripts/validate-generated-data.py
           node --input-type=module <<'NODE'
           import { readFile } from 'node:fs/promises';
@@ -141,7 +144,15 @@ jobs:
             || Object.keys(manifest.locales ?? {}).length !== 3) {
             throw new Error('invalid i18n manifest');
           }
-          console.log(`[validate] ${manifest.required_entry_count} required LangIds validated`);
+          const runtime = JSON.parse(await readFile('data/generated/exact-runtime-index.json', 'utf8'));
+          if (runtime.runtimeExactCount !== Object.keys(runtime.charts ?? {}).length
+            || runtime.runtimeExactCount !== 703
+            || runtime.unavailableCount !== 25
+            || runtime.rejectedAvailableCount !== 0
+            || !/^[0-9a-f]{64}$/.test(runtime.source?.sha256 ?? '')) {
+            throw new Error('invalid exact runtime range index');
+          }
+          console.log(`[validate] ${manifest.required_entry_count} required LangIds; ${runtime.runtimeExactCount} runtime Exact charts validated`);
           NODE
 
       - name: Check app version and required files
@@ -154,3 +165,4 @@ jobs:
           test -f data/generated/manifest.json
           test -f data/generated/chart-index.json
           test -f data/generated/live-score-rules.json
+          test -f data/generated/exact-runtime-index.json
