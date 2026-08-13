@@ -67,15 +67,18 @@ function isWhitespace(value) {
 
 function findChartsArrayStart(bytes) {
   const marker = Buffer.from('"charts"');
-  const markerIndex = bytes.indexOf(marker);
-  if (markerIndex < 0) fail("Corpus charts property not found");
-  let cursor = markerIndex + marker.length;
-  while (cursor < bytes.length && isWhitespace(bytes[cursor])) cursor += 1;
-  if (bytes[cursor] !== BYTE.colon) fail("Corpus charts property has no colon");
-  cursor += 1;
-  while (cursor < bytes.length && isWhitespace(bytes[cursor])) cursor += 1;
-  if (bytes[cursor] !== BYTE.openBracket) fail("Corpus charts property is not an array");
-  return cursor + 1;
+  let markerIndex = bytes.indexOf(marker);
+  while (markerIndex >= 0) {
+    let cursor = markerIndex + marker.length;
+    while (cursor < bytes.length && isWhitespace(bytes[cursor])) cursor += 1;
+    if (bytes[cursor] === BYTE.colon) {
+      cursor += 1;
+      while (cursor < bytes.length && isWhitespace(bytes[cursor])) cursor += 1;
+      if (bytes[cursor] === BYTE.openBracket) return cursor + 1;
+    }
+    markerIndex = bytes.indexOf(marker, markerIndex + marker.length);
+  }
+  fail("Corpus charts array not found");
 }
 
 export function scanChartObjects(bytes) {
