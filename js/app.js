@@ -1,8 +1,9 @@
 import { loadAppData, loadManifest } from "./data.js?v=1.1.1";
-import { loadChartResources, loadSelectedChart } from "./chart-data.js?v=1.1.0";
+import { loadChartResources, loadSelectedChart } from "./chart-data.js?v=1.1.2";
 import { createStore } from "./state.js?v=20260812.2";
 import { prepareScoreCards } from "./card-prepare.js?v=1.1.1";
 import { runOptimizationAsync } from "./optimizer-client.js?v=1.1.1";
+import { createOptimizationSession } from "./optimization-session.js?v=1.1.2";
 import {
   getLocale,
   initI18n,
@@ -20,7 +21,7 @@ import { mountMemberOptions } from "./ui/target.js?v=20260812.1";
 import { requiredElement } from "./ui/dom.js?v=20260812.1";
 import { createCardDetail } from "./ui/card-detail.js?v=20260812.1";
 
-const APP_VERSION = "1.1.1";
+const APP_VERSION = "1.1.2";
 const RESULT_COUNT = 5;
 
 const EXTRA_COPY = Object.freeze({
@@ -143,8 +144,7 @@ async function start() {
   const optimizeButton = requiredElement("#auto-compose");
   let activeView = "deck";
   let lastRecommendation = null;
-  let calculationGeneration = 0;
-  let activeOptimization = null;
+  const optimizationSession = createOptimizationSession();
 
   function setRecommendationStatus(message = "") {
     recommendationStatus.textContent = message;
@@ -194,24 +194,25 @@ async function start() {
       return false;
     }
 
-    activeOptimization?.controller.abort();
-    const controller = new AbortController();
-    const generation = ++calculationGeneration;
     const signature = recommendationSignature(state);
-    const request = { controller, generation, signature };
-    activeOptimization = request;
+    const request = optimizationSession.begin(signature);
 
     optimizeButton.disabled = true;
     optimizeButton.textContent = t("calc.runningTop", { count: RESULT_COUNT });
     setRecommendationStatus(t("calc.running"));
     await new Promise((resolve) => window.requestAnimationFrame(() => window.setTimeout(resolve, 0)));
+    if (!optimizationSession.isCurrent(request)) return false;
 
     const preparedCards = prepareScoreCards(data.cards, data.charactersById, state.ownedCardSettings, {
       levelMode: state.levelMode,
       masterRefs: data.masterRefs,
     });
     const song = state.musicId ? data.musicById.get(state.musicId) : null;
-    const chart = song ? await loadSelectedChart(chartResources, song.id, state.difficulty) : null;
+    const chart = song
+      ? await loadSelectedChart(chartResources, song.id, state.difficulty, { signal: request.signal })
+      : null;
+    if (!optimizationSession.isCurrent(request)) return false;
+
     const exactMusic = song ? { ...song, _chart: chart, _scoreRules: chartResources.scoreRules } : null;
     const searchChart = chart ? { ...chart, metadata: null } : null;
     const searchMusic = song ? { ...song, _chart: searchChart, _scoreRules: chartResources.scoreRules } : null;
@@ -231,14 +232,16 @@ async function start() {
       separateRole: state.separateRole,
       hasExactOrder,
       resultCount: RESULT_COUNT,
-    }, { signal: controller.signal });
+    }, { signal: request.signal });
 
-    if (activeOptimization === request) activeOptimization = null;
+    // Only the request that is still current may touch button/status/result UI.
+    if (!optimizationSession.finish(request)) return false;
+
     optimizeButton.textContent = t("calculate.button");
     const currentState = store.getState();
     optimizeButton.disabled = currentState.ownedCardIds.length < 6;
 
-    if (result?.cancelled || generation !== calculationGeneration || recommendationSignature(currentState) !== signature) {
+    if (recommendationSignature(currentState) !== signature) {
       lastRecommendation = null;
       setRecommendationStatus(t("calc.changed"));
       render(currentState);
@@ -311,10 +314,8 @@ async function start() {
 
   function render(state) {
     const signature = recommendationSignature(state);
-    if (activeOptimization && activeOptimization.signature !== signature) {
-      activeOptimization.controller.abort();
-      activeOptimization = null;
-      calculationGeneration += 1;
+    if (optimizationSession.invalidateIfChanged(signature)) {
+      optimizeButton.textContent = t("calculate.button");
       setRecommendationStatus(t("calc.changed"));
     }
     if (lastRecommendation && lastRecommendation.signature !== signature) {

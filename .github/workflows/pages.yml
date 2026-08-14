@@ -51,6 +51,8 @@ jobs:
           node --check scripts/test-exact-pruning.mjs
           node --check scripts/test-beam-search.mjs
           node --check scripts/test-exact-runtime-source.mjs
+          node --check scripts/test-optimization-session.mjs
+          node --check scripts/test-chart-abort.mjs
           node --check scripts/test-browser-smoke.mjs
           python -m py_compile scripts/validate-generated-data.py
           node --input-type=module <<'NODE'
@@ -67,6 +69,7 @@ jobs:
             import('./js/recommend.js'),
             import('./js/optimizer-core.js'),
             import('./js/optimizer-client.js'),
+            import('./js/optimization-session.js'),
             import('./js/ui/cards.js'),
             import('./js/ui/dom.js'),
             import('./js/ui/member.js'),
@@ -88,6 +91,8 @@ jobs:
           node scripts/test-exact-pruning.mjs
           node scripts/test-beam-search.mjs
           node scripts/test-exact-runtime-source.mjs
+          node scripts/test-optimization-session.mjs
+          node scripts/test-chart-abort.mjs
           node scripts/test-browser-smoke.mjs
           node --input-type=module <<'NODE'
           import { scoreEngineSelfTest } from './js/score.js';
@@ -98,8 +103,9 @@ jobs:
           if (scoreEngineSelfTest().maxAbsError !== 0) throw new Error('unit-score calibration fixture drift');
           if (exactShortlistSize(700, 50) <= 10) throw new Error('Exact shortlist regression');
           NODE
-          grep -q 'data-app-version="1.1.1"' index.html
-          grep -q 'const APP_VERSION = "1.1.1"' js/app.js
+          grep -q 'data-app-version="1.1.2"' index.html
+          grep -q 'const APP_VERSION = "1.1.2"' js/app.js
+          grep -q 'app.js?v=1.1.2' index.html
           grep -q 'Manual PERFECT FC' index.html
           grep -q '<option value="potential">최고 잠재 스코어</option>' index.html
           if grep -q '<option value="3">★3</option>' index.html; then exit 1; fi

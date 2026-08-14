@@ -4,6 +4,20 @@ Holodori DeckSim의 공개 릴리스 변경 이력을 기록합니다.
 
 형식은 [Keep a Changelog](https://keepachangelog.com/ko/1.1.0/)의 구성을 참고하고, 버전 번호는 Semantic Versioning을 따릅니다.
 
+## [1.1.2] - 2026-08-14
+
+### Fixed
+
+- 계산 A가 취소된 뒤 새 계산 B가 완료한 경우, 늦게 끝난 A가 B의 결과·상태·계산 버튼을 다시 덮어쓸 수 있던 stale completion race 제거
+- 계산 입력 변경 시 현재 요청을 session guard에서 즉시 무효화하고 AbortSignal로 Worker와 채보 fetch를 함께 취소
+- 취소된 Runtime/Local Exact 요청이 Master fallback으로 계속 진행하지 않고 즉시 종료되도록 chart loader 보강
+
+### Validation
+
+- `A 시작 → 설정 변경 → B 시작/완료 → A 지연 완료` 순서에서 B만 최종 상태를 commit하는 reverse-completion 회귀 추가
+- Runtime Exact chart fetch에 계산 AbortSignal이 실제 전달되고 abort 시 stale chart 결과를 반환하지 않는 회귀 추가
+- v1.1.1의 카드 준비, 목표 분리, 액티브 충돌, Exact pruning, Beam, Worker watchdog, 브라우저 smoke 회귀를 그대로 재실행
+
 ## [1.1.1] - 2026-08-14
 
 ### Changed

@@ -1,6 +1,6 @@
 # Holodori DeckSim
 
-**v1.1.1** · 홀로라이브 드림스 보유 카드 기반 6인 라이브 편성 시뮬레이터
+**v1.1.2** · 홀로라이브 드림스 보유 카드 기반 6인 라이브 편성 시뮬레이터
 
 > 비공식 팬메이드 도구입니다. COVER Corporation, hololive production 및 게임 운영 주체와 제휴·후원·공식 인증 관계가 없습니다.
 
@@ -24,6 +24,7 @@
 - 채보 밀도와 보유 카드 수에 따른 동적 Exact shortlist
 - 큰 조합에서는 Beam Search, 작은 조합에서는 Exact Search
 - Web Worker 기반 편성 탐색과 동기 fallback
+- 계산 입력 변경 시 stale Worker와 진행 중인 채보 fetch를 함께 취소
 - 계산 근거, 스킬 진단표, 실제 Exact 발동 체크 기반 타임라인
 - 카드 상세, 검색, 필터, 정렬
 - 보유 카드 JSON 내보내기 / 가져오기
@@ -98,7 +99,7 @@ unit-score-v0.5-potential + song-score-v0.4-chart-timeline
 
 ## 채보 정확도 계층
 
-v1.1.1은 다음 순서로 가능한 가장 높은 정확도의 채보를 사용합니다.
+v1.1.2는 다음 순서로 가능한 가장 높은 정확도의 채보를 사용합니다.
 
 ```text
 Local Exact metadata
@@ -142,7 +143,7 @@ Runtime Exact는 703개의 변환 timeline JSON을 이 저장소에 bulk-publish
 - 노트 수·노트 타입·시간 순서
 - 5개의 SP marker와 시간 순서
 
-검증할 수 없거나 하나라도 불일치하면 Runtime Exact를 사용하지 않고 Master fallback으로 내려갑니다.
+검증할 수 없거나 하나라도 불일치하면 Runtime Exact를 사용하지 않고 Master fallback으로 내려갑니다. 단, 해당 계산 요청 자체가 취소된 경우에는 stale 요청이므로 fallback 계산을 이어가지 않고 종료합니다.
 
 상세 감사 기록은 [EXACT_CHART_CORPUS.md](EXACT_CHART_CORPUS.md)를 참고하세요.
 
@@ -166,9 +167,9 @@ Master-only 1차 조합 탐색
 → 최종 TOP 5
 ```
 
-v1.1.1의 shortlist는 기존 고정 10개가 아니라 대략 12~30개입니다. 고밀도 채보는 성능을 위해 좁히고, 작은 보유 카드 풀은 가능한 전체 조합을 보존합니다. 작은 synthetic pool에서는 `모든 조합 × 120순열` 완전탐색과 staged optimizer의 결과가 동일한지 회귀 테스트합니다.
+v1.1.2의 shortlist는 기존 고정 10개가 아니라 대략 12~30개입니다. 고밀도 채보는 성능을 위해 좁히고, 작은 보유 카드 풀은 가능한 전체 조합을 보존합니다. 작은 synthetic pool에서는 `모든 조합 × 120순열` 완전탐색과 staged optimizer의 결과가 동일한지 회귀 테스트합니다.
 
-곡 context·콤보 평균·song kernel은 캐시하며, SP 순열에서는 동일 5인 조합의 리더/패시브/파라미터 계산을 재사용합니다. 브라우저에서는 편성 탐색을 module Web Worker로 실행하고 Worker를 사용할 수 없는 환경에서는 같은 계산 코어를 메인 스레드에서 fallback 실행합니다.
+곡 context·콤보 평균·song kernel은 캐시하며, SP 순열에서는 동일 5인 조합의 리더/패시브/파라미터 계산을 재사용합니다. 브라우저에서는 편성 탐색을 module Web Worker로 실행하고 Worker를 사용할 수 없는 환경에서는 같은 계산 코어를 메인 스레드에서 fallback 실행합니다. 계산 입력이 바뀌면 기존 요청 session을 무효화하여 늦게 끝난 이전 계산이 새 결과를 덮어쓰지 못하게 합니다.
 
 ## v1.1 계산 범위와 제한
 
@@ -234,6 +235,8 @@ PR과 Pages 배포에서 다음을 자동 검증합니다.
 - 대상 지정 Passive Support 회귀
 - 작은 pool의 Exact 글로벌 완전탐색 parity
 - Runtime Exact Content-Range / SHA / current-Master coherence
+- stale A → 최신 B 역순 완료 시 최신 요청만 commit되는 session 회귀
+- 계산 취소 시 Runtime/Local chart fetch AbortSignal 전파 회귀
 - generated data와 KO/EN/JA completeness
 - CSS semantic theme layering
 
@@ -254,8 +257,16 @@ python scripts/validate-generated-data.py
 python -m pytest -q
 node scripts/test-chart-scoring.mjs
 node scripts/test-targeted-passive-support.mjs
+node scripts/test-card-preparation.mjs
+node scripts/test-simulation-targets.mjs
+node scripts/test-collision-choice.mjs
 node scripts/test-exact-global-search.mjs
+node scripts/test-exact-pruning.mjs
+node scripts/test-beam-search.mjs
 node scripts/test-exact-runtime-source.mjs
+node scripts/test-optimization-session.mjs
+node scripts/test-chart-abort.mjs
+node scripts/test-browser-smoke.mjs
 python -m http.server 8000
 ```
 
@@ -272,12 +283,14 @@ js/
   state.js
   recommend.js
   score.js
+  card-prepare.js
   chart-data.js
   chart-score.js
   order.js
   optimizer-core.js
   optimizer-client.js
   optimizer-worker.js
+  optimization-session.js
   ui/
 src/holodori_decksim/
 scripts/

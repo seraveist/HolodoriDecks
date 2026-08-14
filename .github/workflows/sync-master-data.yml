@@ -92,6 +92,8 @@ jobs:
           node scripts/test-exact-pruning.mjs
           node scripts/test-beam-search.mjs
           node scripts/test-exact-runtime-source.mjs
+          node scripts/test-optimization-session.mjs
+          node scripts/test-chart-abort.mjs
           find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
           node --check scripts/build-i18n.mjs
           node --check scripts/build-chart-index.mjs
@@ -101,6 +103,8 @@ jobs:
           node --check scripts/test-collision-choice.mjs
           node --check scripts/test-exact-pruning.mjs
           node --check scripts/test-beam-search.mjs
+          node --check scripts/test-optimization-session.mjs
+          node --check scripts/test-chart-abort.mjs
 
       - name: Detect generated diff
         id: diff
@@ -180,6 +184,7 @@ jobs:
           - CardPotential / structured skill preparation regression for selectable cards
           - expected-vs-potential target divergence and same-cycle soft-constraint regressions
           - Exact shortlist pruning and Beam-vs-exhaustive search regressions
+          - stale-request reverse-completion and chart-fetch cancellation regressions
           - Local Exact chart hash/note-count validation
           - Runtime Exact index rebuilt against the new Master snapshot
           - Runtime Exact current-Master coherence regression
