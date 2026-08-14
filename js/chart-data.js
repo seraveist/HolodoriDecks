@@ -14,10 +14,11 @@ const RUNTIME_NOTE_TYPES = Object.freeze([
   "damage",
 ]);
 
-async function fetchOptionalJson(url) {
+async function fetchOptionalJson(url, { signal = null } = {}) {
+  if (signal?.aborted) return null;
   try {
-    const response = await fetch(url, { cache: "no-store" });
-    if (!response.ok) return null;
+    const response = await fetch(url, { cache: "no-store", signal });
+    if (!response.ok || signal?.aborted) return null;
     return await response.json();
   } catch {
     return null;
@@ -144,7 +145,8 @@ async function sha256Hex(text) {
   }
 }
 
-async function loadRuntimeMetadata(resources, chartEntry, runtimeEntry) {
+async function loadRuntimeMetadata(resources, chartEntry, runtimeEntry, { signal = null } = {}) {
+  if (signal?.aborted) return null;
   const sourceUrl = resources?.runtimeIndex?.source?.url;
   if (!sourceUrl || !runtimeEntryMatchesChart(runtimeEntry, chartEntry)) return null;
   const start = Number(runtimeEntry.start);
@@ -159,8 +161,13 @@ async function loadRuntimeMetadata(resources, chartEntry, runtimeEntry) {
       headers: { Range: `bytes=${start}-${end}` },
       cache: "force-cache",
       mode: "cors",
+      signal,
     });
   } catch {
+    return null;
+  }
+  if (signal?.aborted) {
+    try { await response.body?.cancel(); } catch { /* ignore */ }
     return null;
   }
   if (response.status !== 206) {
@@ -175,14 +182,15 @@ async function loadRuntimeMetadata(resources, chartEntry, runtimeEntry) {
 
   try {
     const text = await response.text();
+    if (signal?.aborted) return null;
     if (typeof TextEncoder !== "undefined" && new TextEncoder().encode(text).byteLength !== length) return null;
     const expectedSha = String(runtimeEntry.objectSha256 ?? "");
     if (expectedSha) {
       const actualSha = await sha256Hex(text);
-      if (!actualSha || actualSha !== expectedSha) return null;
+      if (signal?.aborted || !actualSha || actualSha !== expectedSha) return null;
     }
     const sourceChart = JSON.parse(text);
-    return convertRuntimeChartObject(sourceChart, chartEntry);
+    return signal?.aborted ? null : convertRuntimeChartObject(sourceChart, chartEntry);
   } catch {
     return null;
   }
@@ -207,19 +215,21 @@ export async function loadChartResources(manifest = {}) {
   };
 }
 
-export async function loadSelectedChart(resources, musicId, difficulty) {
-  if (!resources || !musicId) return null;
+export async function loadSelectedChart(resources, musicId, difficulty, { signal = null } = {}) {
+  if (!resources || !musicId || signal?.aborted) return null;
   const key = chartKey(musicId, difficulty);
   const entry = resources.chartsByKey.get(key);
   if (!entry) return null;
 
   if (entry.metadataPath) {
     const metadataUrl = versionedUrl(new URL(entry.metadataPath, CHART_INDEX_URL), resources.version);
-    const metadata = await fetchOptionalJson(metadataUrl);
+    const metadata = await fetchOptionalJson(metadataUrl, { signal });
+    if (signal?.aborted) return null;
     if (metadata) return { ...entry, metadata };
   }
 
   const runtimeEntry = resources.runtimeChartsByKey?.get(key);
-  const metadata = runtimeEntry ? await loadRuntimeMetadata(resources, entry, runtimeEntry) : null;
+  const metadata = runtimeEntry ? await loadRuntimeMetadata(resources, entry, runtimeEntry, { signal }) : null;
+  if (signal?.aborted) return null;
   return { ...entry, metadata: metadata ?? null };
 }

@@ -1,6 +1,6 @@
-# Holodori DeckSim v1.1.1 로컬 테스트
+# Holodori DeckSim v1.1.2 로컬 테스트
 
-이 문서는 v1.1.0 공개 전후의 수동 회귀 테스트 기준입니다.
+이 문서는 v1.1 계열 공개 전후의 수동 회귀 테스트 기준입니다.
 
 ## 1. 준비
 
@@ -24,6 +24,9 @@ node scripts/test-exact-global-search.mjs
 node scripts/test-exact-pruning.mjs
 node scripts/test-beam-search.mjs
 node scripts/test-exact-runtime-source.mjs
+node scripts/test-optimization-session.mjs
+node scripts/test-chart-abort.mjs
+node scripts/test-browser-smoke.mjs
 python -m http.server 8000
 ```
 
@@ -101,7 +104,7 @@ DevTools에서 Runtime Exact source 요청을 차단한 뒤 같은 곡을 다시
 2. 개인/팀 타임라인이 실제 액티브 판정 시각을 사용하는지 확인합니다.
 3. 대상 지정 Passive Active-Skill-Effect-Up이 실제 대상 멤버의 액티브에만 적용되는지 확인합니다.
 
-## 8. Worker / UI 응답성
+## 8. Worker / UI 응답성 / stale 요청
 
 보유 카드를 충분히 많이 등록하고 Runtime Exact 곡을 계산합니다.
 
@@ -109,6 +112,8 @@ DevTools에서 Runtime Exact source 요청을 차단한 뒤 같은 곡을 다시
 2. 계산 중에도 스크롤·페이지 애니메이션이 장시간 멈추지 않는지 확인합니다.
 3. DevTools에서 module Worker가 생성되는지 확인합니다.
 4. Worker 미지원 환경에서는 동일 계산 코어의 동기 fallback으로 결과가 나오는지 확인합니다.
+5. Runtime Exact 요청이 진행 중일 때 악곡·목표·프리셋 중 하나를 바꾸면 기존 Range 요청이 취소되는지 확인합니다.
+6. 설정 변경 후 새 계산 B를 완료한 다음 이전 계산 A가 늦게 종료되어도 B의 TOP 5·상태 문구·계산 버튼 상태가 지워지거나 덮어써지지 않는지 확인합니다.
 
 ## 9. 결과 / 모바일
 
@@ -139,6 +144,8 @@ node scripts/test-exact-global-search.mjs
 node scripts/test-exact-pruning.mjs
 node scripts/test-beam-search.mjs
 node scripts/test-exact-runtime-source.mjs
+node scripts/test-optimization-session.mjs
+node scripts/test-chart-abort.mjs
 ```
 
 ## 11. 릴리스 metadata
