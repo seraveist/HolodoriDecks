@@ -1,8 +1,8 @@
-import { loadAppData, loadManifest } from "./data.js?v=20260812.2";
+import { loadAppData, loadManifest } from "./data.js?v=1.1.1";
 import { loadChartResources, loadSelectedChart } from "./chart-data.js?v=1.1.0";
 import { createStore } from "./state.js?v=20260812.2";
-import { prepareScoreCards } from "./score.js?v=1.1.0";
-import { runOptimizationAsync } from "./optimizer-client.js?v=1.1.0";
+import { prepareScoreCards } from "./card-prepare.js?v=1.1.1";
+import { runOptimizationAsync } from "./optimizer-client.js?v=1.1.1";
 import {
   getLocale,
   initI18n,
@@ -15,13 +15,12 @@ import { renderMemberSlots } from "./ui/member.js?v=20260813.2";
 import { createCardPicker } from "./ui/modal.js?v=20260813.2";
 import { mountMusicControls } from "./ui/music.js?v=20260812.1";
 import { createOwnedCardsView } from "./ui/owned.js?v=20260813.2";
-import { renderResult } from "./ui/result.js?v=1.1.0";
-import { applySimulationTargetPresentation } from "./ui/result-target.js?v=20260812.2";
+import { renderResult } from "./ui/result.js?v=1.1.1";
 import { mountMemberOptions } from "./ui/target.js?v=20260812.1";
 import { requiredElement } from "./ui/dom.js?v=20260812.1";
 import { createCardDetail } from "./ui/card-detail.js?v=20260812.1";
 
-const APP_VERSION = "1.1.0";
+const APP_VERSION = "1.1.1";
 const RESULT_COUNT = 5;
 
 const EXTRA_COPY = Object.freeze({
@@ -125,7 +124,6 @@ async function start() {
   });
 
   const memberSlots = requiredElement("#member-slots");
-  const resultContainer = requiredElement("#recommendation-results");
   memberSlots.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><span aria-hidden="true">◌</span><p>${t("app.loadingCards")}</p></div>`;
 
   const data = localizeAppData(await loadAppData(manifest));
@@ -145,6 +143,8 @@ async function start() {
   const optimizeButton = requiredElement("#auto-compose");
   let activeView = "deck";
   let lastRecommendation = null;
+  let calculationGeneration = 0;
+  let activeOptimization = null;
 
   function setRecommendationStatus(message = "") {
     recommendationStatus.textContent = message;
@@ -193,53 +193,71 @@ async function start() {
       setRecommendationStatus(t("calc.needSix"));
       return false;
     }
+
+    activeOptimization?.controller.abort();
+    const controller = new AbortController();
+    const generation = ++calculationGeneration;
+    const signature = recommendationSignature(state);
+    const request = { controller, generation, signature };
+    activeOptimization = request;
+
     optimizeButton.disabled = true;
     optimizeButton.textContent = t("calc.runningTop", { count: RESULT_COUNT });
     setRecommendationStatus(t("calc.running"));
     await new Promise((resolve) => window.requestAnimationFrame(() => window.setTimeout(resolve, 0)));
 
     const preparedCards = prepareScoreCards(data.cards, data.charactersById, state.ownedCardSettings, {
-    levelMode: state.levelMode,
-  });
-  const song = state.musicId ? data.musicById.get(state.musicId) : null;
-  const chart = song ? await loadSelectedChart(chartResources, song.id, state.difficulty) : null;
-  const exactMusic = song ? { ...song, _chart: chart, _scoreRules: chartResources.scoreRules } : null;
-  const searchChart = chart ? { ...chart, metadata: null } : null;
-  const searchMusic = song ? { ...song, _chart: searchChart, _scoreRules: chartResources.scoreRules } : null;
-  const hasExactOrder = Boolean(chart?.metadata?.skills?.length);
-  const ownedSet = new Set(state.ownedCardIds);
-  const workerCards = new Map([...preparedCards].filter(([cardId]) => ownedSet.has(cardId)));
-  const result = await runOptimizationAsync({
-    preparedCards: workerCards,
-    ownedCardIds: state.ownedCardIds,
-    currentMembers: state.members,
-    lockedSlots: state.lockedSlots,
-    searchMusic,
-    exactMusic,
-    difficulty: state.difficulty,
-    playMode: state.playMode,
-    simulationTarget: state.simulationTarget,
-    separateRole: state.separateRole,
-    hasExactOrder,
-    resultCount: RESULT_COUNT,
-  });
+      levelMode: state.levelMode,
+      masterRefs: data.masterRefs,
+    });
+    const song = state.musicId ? data.musicById.get(state.musicId) : null;
+    const chart = song ? await loadSelectedChart(chartResources, song.id, state.difficulty) : null;
+    const exactMusic = song ? { ...song, _chart: chart, _scoreRules: chartResources.scoreRules } : null;
+    const searchChart = chart ? { ...chart, metadata: null } : null;
+    const searchMusic = song ? { ...song, _chart: searchChart, _scoreRules: chartResources.scoreRules } : null;
+    const hasExactOrder = Boolean(chart?.metadata?.skills?.length);
+    const ownedSet = new Set(state.ownedCardIds);
+    const workerCards = new Map([...preparedCards].filter(([cardId]) => ownedSet.has(cardId)));
+    const result = await runOptimizationAsync({
+      preparedCards: workerCards,
+      ownedCardIds: state.ownedCardIds,
+      currentMembers: state.members,
+      lockedSlots: state.lockedSlots,
+      searchMusic,
+      exactMusic,
+      difficulty: state.difficulty,
+      playMode: state.playMode,
+      simulationTarget: state.simulationTarget,
+      separateRole: state.separateRole,
+      hasExactOrder,
+      resultCount: RESULT_COUNT,
+    }, { signal: controller.signal });
 
+    if (activeOptimization === request) activeOptimization = null;
     optimizeButton.textContent = t("calculate.button");
-    optimizeButton.disabled = store.getState().ownedCardIds.length < 6;
+    const currentState = store.getState();
+    optimizeButton.disabled = currentState.ownedCardIds.length < 6;
+
+    if (result?.cancelled || generation !== calculationGeneration || recommendationSignature(currentState) !== signature) {
+      lastRecommendation = null;
+      setRecommendationStatus(t("calc.changed"));
+      render(currentState);
+      return false;
+    }
 
     if (!result.ok) {
       lastRecommendation = null;
       setRecommendationStatus(localizeOptimizerReason(result.reason));
-      render(store.getState());
+      render(currentState);
       return false;
     }
 
     lastRecommendation = {
       ...result,
-      signature: recommendationSignature(state),
+      signature,
     };
     setRecommendationStatus();
-    render(state);
+    render(currentState);
     return true;
   }
 
@@ -292,7 +310,14 @@ async function start() {
   });
 
   function render(state) {
-    if (lastRecommendation && lastRecommendation.signature !== recommendationSignature(state)) {
+    const signature = recommendationSignature(state);
+    if (activeOptimization && activeOptimization.signature !== signature) {
+      activeOptimization.controller.abort();
+      activeOptimization = null;
+      calculationGeneration += 1;
+      setRecommendationStatus(t("calc.changed"));
+    }
+    if (lastRecommendation && lastRecommendation.signature !== signature) {
       lastRecommendation = null;
       setRecommendationStatus(t("calc.changed"));
     }
@@ -301,7 +326,6 @@ async function start() {
     syncPresetStatus(state);
     renderMemberSlots(memberSlots, data.cardsById, state, picker.open, clearPresetSlot);
     renderResult(data, state, lastRecommendation);
-    applySimulationTargetPresentation(resultContainer, state, lastRecommendation);
     ownedCardsView.render(state);
     optimizeButton.disabled = state.ownedCardIds.length < 6;
     picker.refresh();

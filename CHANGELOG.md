@@ -4,6 +4,25 @@ Holodori DeckSim의 공개 릴리스 변경 이력을 기록합니다.
 
 형식은 [Keep a Changelog](https://keepachangelog.com/ko/1.1.0/)의 구성을 참고하고, 버전 번호는 Semantic Versioning을 따릅니다.
 
+## [1.1.1] - 2026-08-14
+
+### Changed
+
+- 카드 준비 로직이 `CardPotential`과 `master_refs`의 구조화된 Master 효과/트리거를 우선 사용하도록 분리
+- ★4/★5 5개화의 스킬트리 연계 효과를 현재 점수 범위 밖으로 명시적으로 분류
+- 최고 유닛 스코어 / 최고 잠재 스코어를 결과 렌더러가 직접 처리하도록 레거시 P/T/S target adapter 제거
+- 계산 중 설정이 바뀐 경우 이전 Worker 결과를 폐기하도록 stale-result 방지 추가
+- Worker 무응답 시 동기 계산으로 복귀하는 watchdog 추가
+
+### Validation
+
+- ★4/★5 전체 카드의 0~5개화 Master/기존 계산 parity 회귀
+- 기대값 최적 편성과 잠재값 최적 편성이 실제로 분리되는 목표 회귀
+- 동일 액티브 주기를 hard-ban하지 않고 최종 점수로 판단하는 soft-constraint 회귀
+- 252개 조합에서 실제 30개 shortlist pruning 후 `모든 조합 × 5!` 전수 결과와 비교
+- 강제 Beam Search와 완전탐색의 synthetic parity 회귀
+- 브라우저에서 ★4/★5 정책, TOP 5, Runtime Exact Range 206, Master fail-soft fallback까지 자동 smoke 검증
+
 ## [1.1.0] - 2026-08-13
 
 ### Added

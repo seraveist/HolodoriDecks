@@ -1,4 +1,4 @@
-import { exactShortlistSize, optimizeOwnedDeck } from "./recommend.js?v=1.1.0";
+import { exactShortlistSize, optimizeOwnedDeck } from "./recommend.js?v=1.1.1";
 import { optimizeRecommendationOrders } from "./order.js?v=1.1.0";
 
 export function runOptimization({

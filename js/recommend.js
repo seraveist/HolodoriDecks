@@ -209,11 +209,13 @@ export function optimizeOwnedDeck({
   simulationTarget = "score",
   separateRole = true,
   resultCount = DEFAULT_RESULT_COUNT,
+  exactCaseLimit = EXACT_CASE_LIMIT,
 }) {
   const normalizedResultCount = Math.max(1, Math.min(MAX_RESULT_COUNT, Number(resultCount) || DEFAULT_RESULT_COUNT));
   const normalizedSimulationTarget = ["score", "potential"].includes(simulationTarget)
     ? simulationTarget
     : "score";
+  const normalizedExactCaseLimit = Math.max(1, Math.round(Number(exactCaseLimit) || EXACT_CASE_LIMIT));
   const owned = ownedCardIds.map((id) => preparedCards.get(id)).filter(Boolean);
   const locked = Array.from({ length: 6 }, (_, index) => Boolean(lockedSlots?.[index] && currentMembers?.[index]));
   const fixedMemberIdList = currentMembers.slice(1, 6).filter((id, index) => locked[index + 1] && id);
@@ -246,10 +248,10 @@ export function optimizeOwnedDeck({
     const poolSize = owned.filter((card) => card.id !== leader.id
       && !fixedMemberIds.has(card.id)
       && (!separateRole || card.characterId !== leader.characterId)).length;
-    estimatedCases += combinationCount(poolSize, need, EXACT_CASE_LIMIT + 1);
-    if (estimatedCases > EXACT_CASE_LIMIT) break;
+    estimatedCases += combinationCount(poolSize, need, normalizedExactCaseLimit + 1);
+    if (estimatedCases > normalizedExactCaseLimit) break;
   }
-  const exact = estimatedCases <= EXACT_CASE_LIMIT;
+  const exact = estimatedCases <= normalizedExactCaseLimit;
   let evaluatedCount = 0;
   const topResults = [];
   for (const leader of leaders) {

@@ -85,12 +85,22 @@ jobs:
           python -m pytest -q
           node scripts/test-chart-scoring.mjs
           node scripts/test-targeted-passive-support.mjs
+          node scripts/test-card-preparation.mjs
+          node scripts/test-simulation-targets.mjs
+          node scripts/test-collision-choice.mjs
           node scripts/test-exact-global-search.mjs
+          node scripts/test-exact-pruning.mjs
+          node scripts/test-beam-search.mjs
           node scripts/test-exact-runtime-source.mjs
           find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
           node --check scripts/build-i18n.mjs
           node --check scripts/build-chart-index.mjs
           node --check scripts/build-exact-runtime-index.mjs
+          node --check scripts/test-card-preparation.mjs
+          node --check scripts/test-simulation-targets.mjs
+          node --check scripts/test-collision-choice.mjs
+          node --check scripts/test-exact-pruning.mjs
+          node --check scripts/test-beam-search.mjs
 
       - name: Detect generated diff
         id: diff
@@ -167,11 +177,13 @@ jobs:
           - KO/EN/JA `version.txt` aligned to the same master version
           - generated-data structural and catastrophic-drop validation
           - locale pack completeness validation
+          - CardPotential / structured skill preparation regression for selectable cards
+          - expected-vs-potential target divergence and same-cycle soft-constraint regressions
+          - Exact shortlist pruning and Beam-vs-exhaustive search regressions
           - Local Exact chart hash/note-count validation
           - Runtime Exact index rebuilt against the new Master snapshot
           - Runtime Exact current-Master coherence regression
           - Python sync unit tests
-          - chart-scoring / targeted-support / global-search regressions
           - JavaScript syntax checks
           """
           Path('/tmp/sync-pr-body.md').write_text('\n'.join(line.strip() for line in body.splitlines()) + '\n', encoding='utf-8')
