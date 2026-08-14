@@ -44,8 +44,14 @@ jobs:
           node --check scripts/build-exact-runtime-index.mjs
           node --check scripts/test-chart-scoring.mjs
           node --check scripts/test-targeted-passive-support.mjs
+          node --check scripts/test-card-preparation.mjs
+          node --check scripts/test-simulation-targets.mjs
+          node --check scripts/test-collision-choice.mjs
           node --check scripts/test-exact-global-search.mjs
+          node --check scripts/test-exact-pruning.mjs
+          node --check scripts/test-beam-search.mjs
           node --check scripts/test-exact-runtime-source.mjs
+          node --check scripts/test-browser-smoke.mjs
           python -m py_compile scripts/validate-generated-data.py
           node --input-type=module <<'NODE'
           await Promise.all([
@@ -57,6 +63,7 @@ jobs:
             import('./js/order.js'),
             import('./js/state.js'),
             import('./js/score.js'),
+            import('./js/card-prepare.js'),
             import('./js/recommend.js'),
             import('./js/optimizer-core.js'),
             import('./js/optimizer-client.js'),
@@ -67,7 +74,6 @@ jobs:
             import('./js/ui/music.js'),
             import('./js/ui/owned.js'),
             import('./js/ui/result.js'),
-            import('./js/ui/result-target.js'),
             import('./js/ui/target.js'),
             import('./js/ui/card-detail.js'),
           ]);
@@ -75,8 +81,14 @@ jobs:
           NODE
           node scripts/test-chart-scoring.mjs
           node scripts/test-targeted-passive-support.mjs
+          node scripts/test-card-preparation.mjs
+          node scripts/test-simulation-targets.mjs
+          node scripts/test-collision-choice.mjs
           node scripts/test-exact-global-search.mjs
+          node scripts/test-exact-pruning.mjs
+          node scripts/test-beam-search.mjs
           node scripts/test-exact-runtime-source.mjs
+          node scripts/test-browser-smoke.mjs
           node --input-type=module <<'NODE'
           import { scoreEngineSelfTest } from './js/score.js';
           import { exactShortlistSize, recommendationValue } from './js/recommend.js';
@@ -86,10 +98,13 @@ jobs:
           if (scoreEngineSelfTest().maxAbsError !== 0) throw new Error('unit-score calibration fixture drift');
           if (exactShortlistSize(700, 50) <= 10) throw new Error('Exact shortlist regression');
           NODE
-          grep -q 'data-app-version="1.1.0"' index.html
-          grep -q 'const APP_VERSION = "1.1.0"' js/app.js
+          grep -q 'data-app-version="1.1.1"' index.html
+          grep -q 'const APP_VERSION = "1.1.1"' js/app.js
           grep -q 'Manual PERFECT FC' index.html
           grep -q '<option value="potential">최고 잠재 스코어</option>' index.html
+          if grep -q '<option value="3">★3</option>' index.html; then exit 1; fi
+          if grep -q 'TARGET_STATS' js/ui/result.js; then exit 1; fi
+          test ! -e js/ui/result-target.js
           grep -q 'id="theme-toggle"' index.html
           if grep -q 'id="theme-select"' index.html; then exit 1; fi
           grep -q 'data-theme="dark"' css/theme.css
@@ -99,6 +114,7 @@ jobs:
           test -f data/generated/characters.json
           test -f data/generated/music.json
           test -f data/generated/manifest.json
+          test -f data/generated/master_refs.json
           test -f data/generated/exact-runtime-index.json
 
       - name: Validate CSS theme layering

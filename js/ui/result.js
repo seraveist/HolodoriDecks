@@ -10,7 +10,6 @@ import {
 import { getSlotLabel } from "./member.js?v=20260812.1";
 import { requiredElement } from "./dom.js?v=20260812.1";
 
-const TARGET_STATS = Object.freeze({ performance: "p", technique: "t", sense: "s" });
 const LOCAL_COPY = Object.freeze({
   ko: {
     notSelected: "미선택",
@@ -46,6 +45,7 @@ const LOCAL_COPY = Object.freeze({
     member: "멤버",
     songProgress: "곡 진행",
     expectedAverageScore: "예상 평균 스코어",
+    potentialUnitScore: "잠재 유닛 스코어",
     approximateMax: "근사 최대",
     detailsShow: "+ 상세 보기",
     detailsHide: "- 접기",
@@ -86,6 +86,7 @@ const LOCAL_COPY = Object.freeze({
     member: "Member",
     songProgress: "Song Progress",
     expectedAverageScore: "Estimated Average Score",
+    potentialUnitScore: "Potential Unit Score",
     approximateMax: "Approx. Max",
     detailsShow: "+ View Details",
     detailsHide: "- Collapse",
@@ -126,6 +127,7 @@ const LOCAL_COPY = Object.freeze({
     member: "メンバー",
     songProgress: "楽曲進行",
     expectedAverageScore: "予想平均スコア",
+    potentialUnitScore: "潜在ユニットスコア",
     approximateMax: "近似最大",
     detailsShow: "+ 詳細を見る",
     detailsHide: "- 閉じる",
@@ -485,19 +487,23 @@ function wireDiagnosticTooltips(container) {
 function resultDetails(result, index, data, state, song, open) {
   const cards = result.members.map((cardId) => data.cardsById.get(cardId) ?? null);
   const score = result.score;
-  const rankingScore = score.rankingScore;
-  const scoreLabel = song ? copy().expectedAverageScore : t("result.unitScore");
-  const targetStat = TARGET_STATS[state.simulationTarget] ?? null;
-  const targetLabel = targetStat ? statLabel(targetStat) : scoreLabel;
-  const targetValue = targetStat ? score.deckStats?.[targetStat] : rankingScore;
+  const expectedValue = Number(score.rankingScore) || Number(score.unitScore) || 0;
+  const potentialValue = Number(score.potentialRankingScore)
+    || Number(score.estimatedSongMax)
+    || Number(score.potentialUnitScore)
+    || expectedValue;
+  const expectedLabel = song ? copy().expectedAverageScore : t("result.unitScore");
+  const potentialLabel = song ? copy().approximateMax : copy().potentialUnitScore;
+  const potentialTarget = state.simulationTarget === "potential";
+  const targetLabel = potentialTarget ? potentialLabel : expectedLabel;
+  const targetValue = potentialTarget ? potentialValue : expectedValue;
+  const comparisonLabel = potentialTarget ? expectedLabel : potentialLabel;
+  const comparisonValue = potentialTarget ? expectedValue : potentialValue;
   const statMetrics = ["p", "t", "s"].map((stat) => metric(
     statLabel(stat),
     score.deckStats?.[stat],
-    targetStat === stat ? "is-concept" : "",
   )).join("");
-  const maxSummary = !targetStat && score.estimatedSongMax
-    ? `<small>${escapeHtml(copy().approximateMax)} ${formatNumber(score.estimatedSongMax)}</small>`
-    : "";
+  const comparisonSummary = `<small>${escapeHtml(comparisonLabel)} ${formatNumber(comparisonValue)}</small>`;
   const rank = index + 1;
 
   return `
@@ -508,7 +514,7 @@ function resultDetails(result, index, data, state, song, open) {
           <div class="result-summary-score">
             <span>${escapeHtml(targetLabel)}</span>
             <strong>${formatNumber(targetValue)}</strong>
-            ${maxSummary}
+            ${comparisonSummary}
           </div>
           ${summaryMemberGroups(cards)}
           <span class="result-expand-label" aria-hidden="true"><span class="is-collapsed">${escapeHtml(copy().detailsShow)}</span><span class="is-expanded">${escapeHtml(copy().detailsHide)}</span></span>
@@ -526,8 +532,8 @@ function resultDetails(result, index, data, state, song, open) {
         ${songProjection(score, song, state.difficulty)}
         <div class="result-context-row">
           <div class="result-metrics">
-            ${metric(scoreLabel, rankingScore, targetStat ? "" : "is-concept")}
-            ${song ? metric(copy().approximateMax, score.estimatedSongMax) : ""}
+            ${metric(expectedLabel, expectedValue, potentialTarget ? "" : "is-concept")}
+            ${metric(potentialLabel, potentialValue, potentialTarget ? "is-concept" : "")}
             ${metric(copy().overallPower, score.overallPower)}
             ${statMetrics}
           </div>

@@ -1,4 +1,4 @@
-# Holodori DeckSim v1.1 로컬 테스트
+# Holodori DeckSim v1.1.1 로컬 테스트
 
 이 문서는 v1.1.0 공개 전후의 수동 회귀 테스트 기준입니다.
 
@@ -17,12 +17,19 @@ python scripts/validate-generated-data.py
 python -m pytest -q
 node scripts/test-chart-scoring.mjs
 node scripts/test-targeted-passive-support.mjs
+node scripts/test-card-preparation.mjs
+node scripts/test-simulation-targets.mjs
+node scripts/test-collision-choice.mjs
 node scripts/test-exact-global-search.mjs
+node scripts/test-exact-pruning.mjs
+node scripts/test-beam-search.mjs
 node scripts/test-exact-runtime-source.mjs
 python -m http.server 8000
 ```
 
 Windows에서 `python` 명령이 없다면 `py -m http.server 8000`을 사용합니다. 브라우저에서 `http://localhost:8000/`을 엽니다.
+
+GitHub Actions와 동일한 자동 브라우저 smoke는 `node scripts/test-browser-smoke.mjs`로 별도 실행할 수 있습니다.
 
 ## 2. 초기 로드 / 저장 상태
 
@@ -125,7 +132,12 @@ python scripts/validate-generated-data.py
 python -m pytest -q
 node scripts/test-chart-scoring.mjs
 node scripts/test-targeted-passive-support.mjs
+node scripts/test-card-preparation.mjs
+node scripts/test-simulation-targets.mjs
+node scripts/test-collision-choice.mjs
 node scripts/test-exact-global-search.mjs
+node scripts/test-exact-pruning.mjs
+node scripts/test-beam-search.mjs
 node scripts/test-exact-runtime-source.mjs
 ```
 
