@@ -13,16 +13,41 @@
   },
   "sourceSchemaVersion": 1,
   "sourceTransformVersion": "exact-sus-timeline-v1",
-  "currentMasterSourceCommit": "fee804a5a89a6564a38bd5f8dc0d0b48912e0016",
-  "currentMasterChartCount": 728,
-  "runtimeExactCount": 703,
+  "currentMasterSourceCommit": "f5e3c9513edbeec7007e02c0002786291fe1d119",
+  "currentMasterChartCount": 752,
+  "runtimeExactCount": 699,
   "unavailableCount": 25,
   "unavailableReasons": {
     "source-api-unreachable-cloudflare-challenge-at-intake": 21,
     "source-chart-does-not-contain-five-special-markers": 4
   },
-  "rejectedAvailableCount": 0,
-  "rejectedAvailable": [],
+  "rejectedAvailableCount": 4,
+  "rejectedAvailable": [
+    {
+      "key": "m0337:EASY",
+      "reasons": [
+        "chart-hash-mismatch"
+      ]
+    },
+    {
+      "key": "m0337:EXPERT",
+      "reasons": [
+        "chart-hash-mismatch"
+      ]
+    },
+    {
+      "key": "m0337:HARD",
+      "reasons": [
+        "chart-hash-mismatch"
+      ]
+    },
+    {
+      "key": "m0337:NORMAL",
+      "reasons": [
+        "chart-hash-mismatch"
+      ]
+    }
+  ],
   "charts": {
     "m0001:EASY": {
       "start": 1190,
@@ -8363,54 +8388,6 @@
       "chartAssetId": "chart_m0331_normal",
       "fullComboNoteCount": 343,
       "normalNoteCount": 187
-    },
-    "m0337:EASY": {
-      "start": 27975247,
-      "end": 28001272,
-      "length": 26026,
-      "objectSha256": "56e80817362b73a73ca1d30b5489996d551e337e84278201ba15c43215b15eea",
-      "musicId": "m0337",
-      "difficulty": "EASY",
-      "chartHash": "b944cd143582f59e96bfb8aa258b2f77",
-      "chartAssetId": "chart_m0337_easy",
-      "fullComboNoteCount": 361,
-      "normalNoteCount": 57
-    },
-    "m0337:EXPERT": {
-      "start": 28001279,
-      "end": 28083318,
-      "length": 82040,
-      "objectSha256": "412331794bf3916c89ebf46802a72f1f36eae0a548f233032acbb7ac3464e8ac",
-      "musicId": "m0337",
-      "difficulty": "EXPERT",
-      "chartHash": "4abac55b4efe382e72e0918979b3bf0f",
-      "chartAssetId": "chart_m0337_expert",
-      "fullComboNoteCount": 1209,
-      "normalNoteCount": 354
-    },
-    "m0337:HARD": {
-      "start": 28083325,
-      "end": 28145848,
-      "length": 62524,
-      "objectSha256": "2574b89fe71cdaca8100d09993ff94d922710181361951a5e94359c7e6c353f1",
-      "musicId": "m0337",
-      "difficulty": "HARD",
-      "chartHash": "9d9aa557b1d1f0d1ef667ff402491456",
-      "chartAssetId": "chart_m0337_hard",
-      "fullComboNoteCount": 914,
-      "normalNoteCount": 239
-    },
-    "m0337:NORMAL": {
-      "start": 28145855,
-      "end": 28181562,
-      "length": 35708,
-      "objectSha256": "dcb075836465f93233cb747fef04b22b77805f73fcaf0c862178f7a5c2750baa",
-      "musicId": "m0337",
-      "difficulty": "NORMAL",
-      "chartHash": "66abaebacfd911ff68637cfd193a642a",
-      "chartAssetId": "chart_m0337_normal",
-      "fullComboNoteCount": 507,
-      "normalNoteCount": 132
     },
     "m0524:EASY": {
       "start": 28181569,
