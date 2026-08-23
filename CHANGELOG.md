@@ -8,7 +8,6 @@ Holodori DeckSim의 공개 릴리스 변경 이력을 기록합니다.
 
 ### Added
 
-- 결과 영역에 편성 비교용 예상값, 이벤트/보드/메모리 미반영, Manual PERFECT FC 기준만 안내하는 간결한 `계산 기준 ⓘ` 추가
 - ★4/★5 신규 카드 portrait 자동 동기화와 provenance 기록, landscape illustration 검증/repair 경로 추가
 - `holosims.net` 실제 배포 SHA·manifest·JSON 경로·카드 WebP를 검증하는 Production smoke 추가
 
