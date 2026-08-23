@@ -2,7 +2,7 @@ name: Publish Version Release
 
 on:
   workflow_run:
-    workflows: ["Deploy GitHub Pages"]
+    workflows: ["Smoke Production"]
     types: [completed]
 
 permissions:
@@ -119,7 +119,7 @@ jobs:
             echo "## Holodori DeckSim release"
             echo "- version: ${{ steps.meta.outputs.version }}"
             echo "- tag: ${{ steps.meta.outputs.tag }}"
-            echo "- deployed commit: ${{ github.event.workflow_run.head_sha }}"
+            echo "- production-smoked commit: ${{ github.event.workflow_run.head_sha }}"
             echo "- tag previously existed: ${{ steps.existing.outputs.tag_exists }}"
             echo "- release previously existed: ${{ steps.existing.outputs.release_exists }}"
           } >> "$GITHUB_STEP_SUMMARY"
