@@ -28,6 +28,20 @@ MIT License는 아래의 제3자 자료에 대한 권리를 부여하지 않습�
 
 Master/번역 데이터의 원저작권 또는 별도 이용 조건은 해당 데이터와 원 권리자의 조건을 따르며 이 프로젝트의 MIT License로 재허가되지 않습니다.
 
+## Card portrait synchronization tooling
+
+신규 ★4/★5 카드의 정적 portrait를 동기화할 때 다음 공개 도구를 build-time tooling으로 사용합니다.
+
+- repository: https://github.com/HolodoriDB/holodori-asset-tools
+- pinned tool commit: `85b70c9b0024e91ea566dacafe8374e1c4212cf5`
+- tool license: GNU GPL v3
+
+이 도구는 CI에서 게임의 현재 Octo catalog/CDN 자산을 조회·복호화·추출할 때만 사용하며, Holodori DeckSim 브라우저 런타임이나 정적 Pages artifact에 포함되지 않습니다.
+
+자동으로 추가된 portrait의 bundle/object 식별자와 SHA-256 provenance는 `assets/card-portrait-sync.json`에 기록합니다. 추출 결과인 카드 이미지는 게임 파생 미디어이므로 위 도구의 GPL 또는 본 프로젝트의 MIT License로 재허가되는 것이 아니며, 관련 권리는 원 권리자에게 있습니다.
+
+구체적인 동기화 및 안전장치는 `CARD_ASSET_SYNC.md`를 참고하세요.
+
 ## Exact chart metadata
 
 ### Local Exact
