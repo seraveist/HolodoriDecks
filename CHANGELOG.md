@@ -16,7 +16,6 @@ Holodori DeckSim의 공개 릴리스 변경 이력을 기록합니다.
 
 - 공식 라이브 서비스 주소를 `https://holosims.net/`으로 전환
 - GitHub Pages 배포 SHA를 JS/카드 이미지 revision으로 사용하여 동일 파일명 교체 시 browser/CDN stale cache를 우회
-- GitHub Release 발행을 Pages 배포 성공뿐 아니라 Production smoke 성공 이후로 제한
 - 현재 Master 문서 기준을 174카드 / 188악곡 / 752채보 / Runtime Exact 699개로 갱신
 
 ### Fixed
