@@ -4,6 +4,7 @@ Card Master data and card portrait binaries are intentionally synchronized by se
 
 - Master data is normalized from the version-aligned HolodoriDB repositories.
 - Portraits are required only for selectable rarity ★4/★5 cards.
+- `assets/cards/{card.id}.webp` represents a **landscape card illustration**, not the square card icon.
 - Missing portraits never block Master-data publication; the UI falls back to `assets/ui/card-placeholder.svg` until the portrait pipeline succeeds.
 
 ## Production flow
@@ -17,14 +18,16 @@ Sync Holodori card assets workflow
         ↓
 audit assets/cards/{card.id}.webp for ★4/★5
         ↓
-missing cards only
+missing cards + legacy wrong-class snapshot portraits
         ↓
 resolve current asciisyaez/yagoo-dori public card-art commit
         ↓
 validate card-art-manifest.json + per-file SHA-256
         ↓
-copy verified 300×300 WebP card icons
-        ↓ missing snapshot rows only
+fetch /game/illustrations/{card.id}.webp
+        ↓
+normalize verified landscape illustration to WebP (max 768px, quality 90)
+        ↓ snapshot lacks current card only
 Octo catalog fallback
         ↓
 assetId-based AssetBundle candidate search / decrypt / UnityPy extraction
@@ -61,19 +64,24 @@ At each run the synchronizer resolves the repository's current `main` commit thr
 
 ```text
 data/generated/card-art-manifest.json
-apps/web/public/game/cards/{card.id}.webp
+apps/web/public/game/illustrations/{card.id}.webp
 ```
 
-A public-snapshot image is accepted only when:
+The manifest also contains 300×300 `/game/cards/` icons. Those are intentionally **not** used as DeckSim portraits because the established DeckSim assets are landscape illustrations. Importing the square icon causes the browser's landscape crop to zoom into the character and produces inconsistent framing.
+
+A public-snapshot illustration is accepted only when:
 
 - the manifest contains the exact current Master `card.id`;
-- its local path is exactly `/game/cards/{card.id}.webp`;
+- its illustration path is exactly `/game/illustrations/{card.id}.webp`;
 - the downloaded bytes are WebP;
 - SHA-256 matches the manifest when supplied;
 - decoded width/height match the manifest when supplied;
-- dimensions remain inside the DeckSim 128..768 pixel portrait bounds.
+- the source is a usable landscape image;
+- the normalized result remains landscape and fits the DeckSim 768px output bound.
 
-The current published snapshot contains the five 2026-08 additions and therefore avoids the game catalog request that currently returns HTTP 403 from GitHub-hosted runners.
+The synchronizer also inspects `assets/card-portrait-sync.json`. An existing public-snapshot portrait is automatically repaired when its provenance shows the obsolete square `/game/cards/` icon class or a square output. This repair rule exists so a bad automated asset selection does not become permanent merely because the file now exists.
+
+The current published snapshot contains the five 2026-08 additions and their landscape illustrations, so those cards do not require the game catalog request that currently returns HTTP 403 from GitHub-hosted runners.
 
 The snapshot itself records the public page/image source used for each card; DeckSim copies those provenance fields into `assets/card-portrait-sync.json`.
 
@@ -86,18 +94,19 @@ If a current Master card is not yet present in the public snapshot, the pipeline
 
 The tool is build-time only and is never shipped to the browser or Pages artifact.
 
-The fallback searches the current Octo AssetBundle catalog using Master `asset_id`, downloads bundle dependencies, decrypts them, loads them through UnityPy and ranks `Sprite` / `Texture2D` objects. Existing committed portraits are never overwritten.
+The fallback searches the current Octo AssetBundle catalog using Master `asset_id`, downloads bundle dependencies, decrypts them, loads them through UnityPy and ranks `Sprite` / `Texture2D` objects. Image ranking prefers illustration/card/main/still/portrait semantics and penalizes icon/thumbnail resources.
 
 If the Octo catalog itself is unavailable, the sync report records the fallback error and unresolved IDs instead of losing the earlier public-snapshot result.
 
 ## Safety properties
 
 - ★3 cards are excluded by policy.
-- Existing committed portraits are never overwritten by automatic sync.
+- Original bootstrap portraits are not overwritten by routine sync.
+- A public-snapshot portrait previously imported with the wrong square asset class may be explicitly repaired.
 - Only cards currently present in `data/generated/cards.json` are targets.
 - No partial image PR is created while a target remains unresolved.
 - `--require-complete` requires zero missing ★4/★5 portraits.
-- Each accepted output is validated as WebP and limited to 768×768.
+- Each accepted automated output is WebP and landscape.
 - The normal generated-data validator runs after portrait import.
 - Pages/runtime retains its placeholder fallback for unexpected missing files.
 
@@ -112,10 +121,12 @@ assets/card-portrait-sync.json
 Public-snapshot records include:
 
 - Master `asset_id`;
+- asset class (`card-illustration`);
 - resolved source repository commit;
 - source manifest/path/page/URL;
-- source dimensions;
-- output SHA-256.
+- source width/height and SHA-256;
+- normalized output width/height and SHA-256;
+- whether an existing wrong-class snapshot file was repaired.
 
 Octo fallback records include its catalog revision, bundle/object names, Unity object/type, dimensions and output SHA-256.
 
@@ -138,7 +149,7 @@ python scripts/sync-card-assets.py --require-complete
 
 ## Local live synchronization
 
-The primary GitHub-hosted source uses only standard HTTP plus Pillow validation. Install the pinned Octo tool as well if fallback extraction may be required:
+The primary GitHub-hosted source uses standard HTTP plus Pillow validation/normalization. Install the pinned Octo tool as well if fallback extraction may be required:
 
 ```bash
 python -m pip install -e '.[test]'

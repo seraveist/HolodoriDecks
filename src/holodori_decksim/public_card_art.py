@@ -15,6 +15,9 @@ PUBLIC_ART_REPOSITORY = "asciisyaez/yagoo-dori"
 PUBLIC_ART_REF = "main"
 PUBLIC_ART_MANIFEST_PATH = "data/generated/card-art-manifest.json"
 PUBLIC_ART_WEB_ROOT = "apps/web/public"
+PUBLIC_ART_ASSET_CLASS = "card-illustration"
+PUBLIC_ART_MAX_DIMENSION = 768
+PUBLIC_ART_WEBP_QUALITY = 90
 GITHUB_API_ROOT = "https://api.github.com"
 RAW_GITHUB_ROOT = "https://raw.githubusercontent.com"
 
@@ -22,7 +25,7 @@ RAW_GITHUB_ROOT = "https://raw.githubusercontent.com"
 def _request_bytes(url: str, *, accept: str = "application/octet-stream") -> bytes:
     headers = {
         "Accept": accept,
-        "User-Agent": "HolodoriDeckSim-card-art-sync/1.0",
+        "User-Agent": "HolodoriDeckSim-card-art-sync/1.1",
     }
     token = os.getenv("GITHUB_TOKEN", "")
     if token and url.startswith(GITHUB_API_ROOT):
@@ -56,7 +59,7 @@ def public_art_manifest_url(
 
 def public_art_asset_path(local_path: str) -> str:
     normalized = "/" + str(local_path).lstrip("/")
-    if not normalized.startswith("/game/cards/") or not normalized.endswith(".webp"):
+    if not normalized.startswith("/game/illustrations/") or not normalized.endswith(".webp"):
         raise ValueError(f"unexpected public card-art path: {local_path!r}")
     return f"{PUBLIC_ART_WEB_ROOT}{normalized}"
 
@@ -99,7 +102,7 @@ def _load_provenance(path: Path) -> dict[str, Any]:
     cards = payload.get("cards")
     if not isinstance(cards, dict):
         cards = {}
-    payload["version"] = max(2, int(payload.get("version") or 0))
+    payload["version"] = max(3, int(payload.get("version") or 0))
     payload["cards"] = cards
     return payload
 
@@ -113,10 +116,11 @@ def _write_provenance(path: Path, payload: dict[str, Any]) -> None:
     )
 
 
-def _validate_webp(content: bytes, icon: dict[str, Any]) -> tuple[int, int]:
+def _validate_source_webp(content: bytes, illustration: dict[str, Any]) -> tuple[int, int]:
     if len(content) < 12 or content[:4] != b"RIFF" or content[8:12] != b"WEBP":
-        raise ValueError("public card art is not WebP")
-    expected_sha = str(icon.get("sha256") or "").lower()
+        raise ValueError("public card illustration is not WebP")
+
+    expected_sha = str(illustration.get("sha256") or "").lower()
     actual_sha = _sha256_bytes(content)
     if expected_sha and actual_sha != expected_sha:
         raise ValueError(f"public card-art SHA-256 mismatch: {actual_sha} != {expected_sha}")
@@ -131,15 +135,71 @@ def _validate_webp(content: bytes, icon: dict[str, Any]) -> tuple[int, int]:
             raise ValueError(f"public card art decoded as {image.format}, expected WEBP")
         width, height = image.size
 
-    expected_width = int(icon.get("width") or 0)
-    expected_height = int(icon.get("height") or 0)
+    expected_width = int(illustration.get("width") or 0)
+    expected_height = int(illustration.get("height") or 0)
     if expected_width and width != expected_width:
         raise ValueError(f"public card-art width mismatch: {width} != {expected_width}")
     if expected_height and height != expected_height:
         raise ValueError(f"public card-art height mismatch: {height} != {expected_height}")
-    if width < 128 or height < 128 or width > 768 or height > 768:
-        raise ValueError(f"public card-art dimensions out of bounds: {width}x{height}")
+    if width < 640 or height < 320 or width <= height:
+        raise ValueError(f"public card illustration is not a usable landscape image: {width}x{height}")
     return width, height
+
+
+def _normalize_illustration_webp(content: bytes) -> tuple[bytes, int, int]:
+    try:
+        from PIL import Image
+    except ImportError as exc:  # pragma: no cover - live workflow installs Pillow via asset tooling
+        raise RuntimeError("public card-art normalization requires Pillow") from exc
+
+    with Image.open(io.BytesIO(content)) as source:
+        image = source.convert("RGB")
+        image.thumbnail(
+            (PUBLIC_ART_MAX_DIMENSION, PUBLIC_ART_MAX_DIMENSION),
+            Image.Resampling.LANCZOS,
+        )
+        output = io.BytesIO()
+        image.save(
+            output,
+            format="WEBP",
+            quality=PUBLIC_ART_WEBP_QUALITY,
+            method=6,
+        )
+        width, height = image.size
+
+    if width < 320 or height < 180 or width <= height:
+        raise ValueError(f"normalized card illustration is not landscape: {width}x{height}")
+    return output.getvalue(), width, height
+
+
+def snapshot_sync_target_ids(
+    *,
+    cards_path: Path = CARDS_FILE,
+    assets_dir: Path = ASSET_DIR,
+    provenance_path: Path = PROVENANCE_FILE,
+) -> list[str]:
+    audit = audit_portraits(cards_path, assets_dir)
+    target_ids = {item["id"] for item in audit["missing"]}
+    provenance = _load_provenance(provenance_path)
+
+    for target in build_targets(cards_path, assets_dir):
+        record = provenance["cards"].get(target.card_id)
+        if not isinstance(record, dict):
+            continue
+        if record.get("source_type") != "public-card-art-snapshot":
+            continue
+
+        source_path = str(record.get("source_path") or "")
+        asset_class = str(record.get("asset_class") or "")
+        width = int(record.get("width") or 0)
+        height = int(record.get("height") or 0)
+        wrong_class = asset_class != PUBLIC_ART_ASSET_CLASS
+        legacy_icon_path = "/game/cards/" in source_path
+        square_output = bool(width and height and abs(width - height) <= 2)
+        if wrong_class or legacy_icon_path or square_output:
+            target_ids.add(target.card_id)
+
+    return sorted(target_ids)
 
 
 def sync_public_snapshot_portraits(
@@ -151,11 +211,17 @@ def sync_public_snapshot_portraits(
     ref: str = PUBLIC_ART_REF,
 ) -> dict[str, Any]:
     before = audit_portraits(cards_path, assets_dir)
-    if before["missing_count"] == 0:
+    sync_ids = snapshot_sync_target_ids(
+        cards_path=cards_path,
+        assets_dir=assets_dir,
+        provenance_path=provenance_path,
+    )
+    if not sync_ids:
         return {
             "source_repository": repository,
             "source_commit": None,
             "before": before,
+            "repair_count": 0,
             "imported_count": 0,
             "imported": [],
             "unresolved_count": 0,
@@ -176,46 +242,56 @@ def sync_public_snapshot_portraits(
             "repository": repository,
             "commit": commit,
             "manifest_path": PUBLIC_ART_MANIFEST_PATH,
+            "asset_class": PUBLIC_ART_ASSET_CLASS,
             "retrieved_at": manifest.get("retrievedAt"),
         }
     )
 
+    missing_ids = {item["id"] for item in before["missing"]}
     imported: list[dict[str, Any]] = []
     unresolved: list[dict[str, Any]] = []
-    for missing in before["missing"]:
-        card_id = missing["id"]
-        target = targets_by_id[card_id]
+    repaired_count = 0
+
+    for card_id in sync_ids:
+        target = targets_by_id.get(card_id)
+        if target is None:
+            continue
         row = indexed.get(card_id)
-        icon = row.get("icon") if isinstance(row, dict) else None
-        if not isinstance(icon, dict):
+        illustration = row.get("illustration") if isinstance(row, dict) else None
+        if not isinstance(illustration, dict):
             unresolved.append(
                 {
                     "id": card_id,
                     "asset_id": target.asset_id,
-                    "reason": "card icon missing from public snapshot manifest",
+                    "reason": "card illustration missing from public snapshot manifest",
                 }
             )
             continue
 
-        local_path = str(icon.get("localPath") or "")
-        expected_path = f"/game/cards/{card_id}.webp"
+        local_path = str(illustration.get("localPath") or "")
+        expected_path = f"/game/illustrations/{card_id}.webp"
         if local_path != expected_path:
             unresolved.append(
                 {
                     "id": card_id,
                     "asset_id": target.asset_id,
-                    "reason": f"unexpected public snapshot path: {local_path!r}",
+                    "reason": f"unexpected public snapshot illustration path: {local_path!r}",
                 }
             )
             continue
 
+        replaced_existing = target.destination.is_file() and card_id not in missing_ids
         try:
             source_path = public_art_asset_path(local_path)
             source_url = public_art_asset_url(commit, local_path, repository)
-            content = _request_bytes(source_url, accept="image/webp,image/*;q=0.9,*/*;q=0.5")
-            width, height = _validate_webp(content, icon)
+            source_content = _request_bytes(
+                source_url,
+                accept="image/webp,image/*;q=0.9,*/*;q=0.5",
+            )
+            source_width, source_height = _validate_source_webp(source_content, illustration)
+            output_content, width, height = _normalize_illustration_webp(source_content)
             target.destination.parent.mkdir(parents=True, exist_ok=True)
-            target.destination.write_bytes(content)
+            target.destination.write_bytes(output_content)
         except Exception as exc:
             unresolved.append(
                 {
@@ -226,21 +302,28 @@ def sync_public_snapshot_portraits(
             )
             continue
 
+        if replaced_existing:
+            repaired_count += 1
         record = {
             "asset_id": target.asset_id,
+            "asset_class": PUBLIC_ART_ASSET_CLASS,
             "source_type": "public-card-art-snapshot",
             "source_repository": repository,
             "source_commit": commit,
             "source_manifest": PUBLIC_ART_MANIFEST_PATH,
             "source_path": source_path,
-            "source_page": icon.get("sourcePage"),
-            "source_url": icon.get("sourceUrl"),
-            "retrieved_at": icon.get("retrievedAt") or manifest.get("retrievedAt"),
+            "source_page": illustration.get("sourcePage"),
+            "source_url": illustration.get("sourceUrl"),
+            "retrieved_at": illustration.get("retrievedAt") or manifest.get("retrievedAt"),
+            "source_width": source_width,
+            "source_height": source_height,
+            "source_sha256": _sha256_bytes(source_content),
             "width": width,
             "height": height,
-            "sha256": _sha256_bytes(content),
-            "unity_object_type": "WebP",
+            "sha256": _sha256_bytes(output_content),
+            "unity_object_type": "WebP illustration",
             "unity_object": source_path,
+            "replaced_existing": replaced_existing,
         }
         provenance["cards"][card_id] = record
         imported.append({"id": card_id, **record})
@@ -253,6 +336,7 @@ def sync_public_snapshot_portraits(
         "source_repository": repository,
         "source_commit": commit,
         "before": before,
+        "repair_count": repaired_count,
         "imported_count": len(imported),
         "imported": imported,
         "unresolved_count": len(unresolved),
