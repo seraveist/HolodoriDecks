@@ -1,0 +1,207 @@
+name: Sync Holodori card assets
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/generated/cards.json"
+      - "src/holodori_decksim/card_assets.py"
+      - "scripts/sync-card-assets.py"
+      - ".github/workflows/sync-card-assets.yml"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Resolve and extract missing portraits without pushing a branch or PR
+        required: false
+        default: false
+        type: boolean
+  schedule:
+    # 00:45 KST every day. This retries assets that may lag behind Master publication.
+    - cron: "45 15 * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: holodori-card-asset-sync
+  cancel-in-progress: false
+
+env:
+  ASSET_TOOL_REPOSITORY: HolodoriDB/holodori-asset-tools
+  ASSET_TOOL_COMMIT: 85b70c9b0024e91ea566dacafe8374e1c4212cf5
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install project and pinned asset tooling
+        run: |
+          python -m pip install --disable-pip-version-check -e '.[test]'
+          python -m pip install --disable-pip-version-check \
+            "git+https://github.com/${ASSET_TOOL_REPOSITORY}.git@${ASSET_TOOL_COMMIT}"
+
+      - name: Validate card asset sync helpers
+        run: |
+          python -m pytest -q tests/test_card_assets.py
+          python -m py_compile src/holodori_decksim/card_assets.py scripts/sync-card-assets.py
+
+      - name: Audit missing selectable-card portraits
+        id: audit
+        run: |
+          python scripts/sync-card-assets.py --report /tmp/card-asset-audit.json
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          report = json.load(open('/tmp/card-asset-audit.json', encoding='utf-8'))
+          print(f"missing_count={report['missing_count']}")
+          print("missing_ids=" + ",".join(item['id'] for item in report['missing']))
+          PY
+
+      - name: Resolve, download, extract, and normalize missing portraits
+        id: sync_assets
+        if: steps.audit.outputs.missing_count != '0'
+        run: |
+          python scripts/sync-card-assets.py \
+            --sync \
+            --catalog-cache /tmp/holodori-octo-list.json \
+            --provenance assets/card-portrait-sync.json \
+            --report /tmp/card-asset-sync.json
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          report = json.load(open('/tmp/card-asset-sync.json', encoding='utf-8'))
+          print(f"imported_count={report['imported_count']}")
+          print(f"unresolved_count={report['unresolved_count']}")
+          print(f"catalog_revision={report['catalog_revision']}")
+          print("imported_ids=" + ",".join(item['id'] for item in report['imported']))
+          PY
+
+      - name: Validate completed portrait set
+        if: steps.audit.outputs.missing_count != '0'
+        run: |
+          python scripts/sync-card-assets.py --require-complete
+          python scripts/validate-generated-data.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from PIL import Image
+
+          report = json.load(open('/tmp/card-asset-sync.json', encoding='utf-8'))
+          for row in report['imported']:
+              path = Path('assets/cards') / f"{row['id']}.webp"
+              with Image.open(path) as image:
+                  if image.format != 'WEBP':
+                      raise SystemExit(f"not WebP: {path}")
+                  if image.width < 128 or image.height < 128:
+                      raise SystemExit(f"portrait unexpectedly small: {path} {image.size}")
+                  if image.width > 768 or image.height > 768:
+                      raise SystemExit(f"portrait exceeds normalized bounds: {path} {image.size}")
+          print(f"validated {len(report['imported'])} imported WebP portraits")
+          PY
+
+      - name: Detect asset diff
+        id: diff
+        run: |
+          if [ -n "$(git status --porcelain -- assets/cards assets/card-portrait-sync.json)" ]; then
+            echo "has_diff=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_diff=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Show dry-run summary
+        if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run == true
+        run: |
+          git status --short -- assets/cards assets/card-portrait-sync.json
+          git diff --stat -- assets/cards assets/card-portrait-sync.json
+
+      - name: Commit asset sync branch
+        if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run != true
+        env:
+          SYNC_BRANCH: automation/card-asset-sync
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$SYNC_BRANCH"
+          git add assets/cards assets/card-portrait-sync.json
+          git commit -m "Sync Holodori card portraits"
+          git push --force origin "$SYNC_BRANCH"
+
+      - name: Create or refresh card asset pull request
+        id: asset_pr
+        if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SYNC_BRANCH: automation/card-asset-sync
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('/tmp/card-asset-sync.json').read_text(encoding='utf-8'))
+          imported = report.get('imported', [])
+          rows = '\n'.join(
+              f"- `{row['id']}` ← `{row['asset_id']}` ({row['unity_object_type']} `{row['unity_object']}`)"
+              for row in imported
+          ) or '- none'
+          body = f"""## Automated Holodori card portrait sync
+
+          This PR was generated from the current `main` card Master and is intentionally **not auto-merged**.
+
+          - Asset tool: `{report['asset_tool_repository']}@{report['asset_tool_commit']}`
+          - Octo catalog revision: `{report['catalog_revision']}`
+          - Missing before sync: {report['before']['missing_count']}
+          - Imported: {report['imported_count']}
+          - Missing after sync: {report['after']['missing_count']}
+
+          ### Imported portraits
+          {rows}
+
+          ### Validation
+          - only ★4/★5 cards are portrait targets
+          - existing committed portraits are never overwritten
+          - each imported file is normalized to WebP within 768×768
+          - post-sync audit requires zero missing selectable-card portraits
+          - generated Master validation remains unchanged
+          - source bundle/object and SHA-256 provenance is recorded in `assets/card-portrait-sync.json`
+          """
+          Path('/tmp/card-asset-pr-body.md').write_text(
+              '\n'.join(line.strip() for line in body.splitlines()) + '\n',
+              encoding='utf-8',
+          )
+          PY
+
+          title="Sync Holodori card portraits (${{ steps.sync_assets.outputs.imported_count }} images)"
+          number="$(gh pr list --base main --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number // empty')"
+          if [ -n "$number" ]; then
+            gh pr edit "$number" --title "$title" --body-file /tmp/card-asset-pr-body.md
+            echo "state=updated" >> "$GITHUB_OUTPUT"
+            echo "number=$number" >> "$GITHUB_OUTPUT"
+          else
+            output="$(gh pr create --base main --head "$SYNC_BRANCH" --title "$title" --body-file /tmp/card-asset-pr-body.md)"
+            echo "$output"
+            echo "state=created" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "## Holodori card asset sync"
+            echo "- missing before: ${{ steps.audit.outputs.missing_count || 'unknown' }}"
+            echo "- imported: ${{ steps.sync_assets.outputs.imported_count || '0' }}"
+            echo "- unresolved: ${{ steps.sync_assets.outputs.unresolved_count || '0' }}"
+            echo "- Octo catalog revision: ${{ steps.sync_assets.outputs.catalog_revision || 'n/a' }}"
+            echo "- generated diff: ${{ steps.diff.outputs.has_diff || 'false' }}"
+            echo "- dry run: ${{ inputs.dry_run || false }}"
+            echo "- review PR state: ${{ steps.asset_pr.outputs.state || 'not-needed' }}"
+          } >> "$GITHUB_STEP_SUMMARY"
