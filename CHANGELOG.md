@@ -4,6 +4,26 @@ Holodori DeckSim의 공개 릴리스 변경 이력을 기록합니다.
 
 형식은 [Keep a Changelog](https://keepachangelog.com/ko/1.1.0/)의 구성을 참고하고, 버전 번호는 Semantic Versioning을 따릅니다.
 
+## [1.1.3] - 2026-08-23
+
+### Added
+
+- 결과 영역에 편성 비교용 예상값, 이벤트/보드/메모리 미반영, Manual PERFECT FC 기준만 안내하는 간결한 `계산 기준 ⓘ` 추가
+- ★4/★5 신규 카드 portrait 자동 동기화와 provenance 기록, landscape illustration 검증/repair 경로 추가
+- `holosims.net` 실제 배포 SHA·manifest·JSON 경로·카드 WebP를 검증하는 Production smoke 추가
+
+### Changed
+
+- 공식 라이브 서비스 주소를 `https://holosims.net/`으로 전환
+- GitHub Pages 배포 SHA를 JS/카드 이미지 revision으로 사용하여 동일 파일명 교체 시 browser/CDN stale cache를 우회
+- 현재 Master 문서 기준을 174카드 / 188악곡 / 752채보 / Runtime Exact 699개로 갱신
+
+### Fixed
+
+- GitHub-hosted runner에서 Octo catalog가 HTTP 403을 반환할 때 공개 card-art snapshot을 우선 사용하고 Octo를 fallback으로 유지
+- 신규 portrait가 300×300 카드 icon으로 들어오던 asset-class 오류를 가로형 illustration으로 교정하고 기존 잘못된 자동 import도 repair 가능하게 수정
+- Pages revision rewrite가 `manifest.json`을 `manifest.js`로 오인해 production 404를 만들던 회귀를 전용 rewrite script와 JSON 보존 테스트로 차단
+
 ## [1.1.2] - 2026-08-14
 
 ### Fixed

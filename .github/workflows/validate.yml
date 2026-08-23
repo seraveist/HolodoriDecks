@@ -50,6 +50,7 @@ jobs:
           node --check scripts/test-optimization-session.mjs
           node --check scripts/test-chart-abort.mjs
           node --check scripts/test-browser-smoke.mjs
+          node --check scripts/test-production-smoke.mjs
           node --check scripts/import-chart-timeline-corpus.mjs
           node --input-type=module <<'NODE'
           await Promise.all([
@@ -119,6 +120,8 @@ jobs:
           if grep -q 'TARGET_STATS' js/ui/result.js; then exit 1; fi
           test ! -e js/ui/result-target.js
           grep -q 'Manual PERFECT FC' index.html
+          grep -q 'class="calculation-scope"' index.html
+          grep -q '이벤트 보너스 · 홀로멤 보드 · 메모리는 현재 반영하지 않습니다.' index.html
           grep -q 'id="theme-toggle"' index.html
           if grep -q 'id="theme-select"' index.html; then exit 1; fi
           if grep -q '<option value="system">' index.html; then exit 1; fi
@@ -127,6 +130,7 @@ jobs:
           grep -q 'flex-direction: row' css/tweaks.css
           grep -q 'slot-clear-button' js/ui/member.js
           grep -q 'result-card-width: clamp(145px, 42vw, 168px)' css/tweaks.css
+          grep -q 'calculation-scope-panel' css/tweaks.css
           grep -q 'data-theme="dark"' css/theme.css
 
       - name: Validate CSS theme layering
@@ -191,9 +195,10 @@ jobs:
           grep -q 'data-app-version="1.1.2"' index.html
           grep -q 'const APP_VERSION = "1.1.2"' js/app.js
           grep -q 'app.js?v=1.1.2' index.html
-          grep -qx '1.1.2' VERSION
-          grep -q 'version = "1.1.2"' pyproject.toml
-          grep -q '__version__ = "1.1.2"' src/holodori_decksim/__init__.py
+          grep -qx '1.1.3' VERSION
+          grep -q 'version = "1.1.3"' pyproject.toml
+          grep -q '__version__ = "1.1.3"' src/holodori_decksim/__init__.py
+          grep -q '## \[1.1.3\]' CHANGELOG.md
           test -f data/generated/cards.json
           test -f data/generated/characters.json
           test -f data/generated/music.json
