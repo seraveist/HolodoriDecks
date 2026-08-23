@@ -1,10 +1,10 @@
 # Holodori DeckSim
 
-**v1.1.2** · 홀로라이브 드림스 보유 카드 기반 6인 라이브 편성 시뮬레이터
+**v1.1.3** · 홀로라이브 드림스 보유 카드 기반 6인 라이브 편성 시뮬레이터
 
 > 비공식 팬메이드 도구입니다. COVER Corporation, hololive production 및 게임 운영 주체와 제휴·후원·공식 인증 관계가 없습니다.
 
-라이브 서비스: https://seraveist.github.io/HolodoriDecks/
+라이브 서비스: https://holosims.net/
 
 ## 주요 기능
 
@@ -30,7 +30,7 @@
 - 보유 카드 JSON 내보내기 / 가져오기
 - 한국어 / English / 日本語
 - 라이트 / 다크 테마, 반응형 PC·태블릿·모바일 UI
-- HolodoriDB Master 자동 동기화와 검증 PR
+- HolodoriDB Master·★4/★5 카드 이미지 자동 동기화와 검증 PR
 - GitHub Pages 자동 배포 및 VERSION 기반 GitHub Release
 
 ## 기본 사용 흐름
@@ -117,17 +117,17 @@ Estimated
 
 현재 snapshot:
 
-- 악곡: 182
-- Master 난이도별 채보: 728
+- 악곡: 188
+- Master 난이도별 채보: 752
 - Local Exact 파일: 1 (`m0049 / EXPERT`)
-- 현재 Master와 호환되는 Runtime Exact: **703 / 728**
-- Runtime source에서 사용 불가로 기록된 채보: 25 / 728
+- 현재 Master와 호환되는 Runtime Exact: **699 / 752**
+- Runtime source에서 사용 불가로 기록된 채보: 25 / 752
 
 `chart-index.json`의 `exact_metadata_count`는 저장소에 직접 포함된 **Local Exact 파일만** 계산합니다. Runtime Exact 커버리지는 `data/generated/exact-runtime-index.json`의 `runtimeExactCount`를 사용합니다.
 
 ### Runtime Exact 안전장치
 
-Runtime Exact는 703개의 변환 timeline JSON을 이 저장소에 bulk-publish하지 않습니다. 약 0.28MB의 range index만 포함하며 사용자가 선택한 채보 객체만 가져옵니다.
+Runtime Exact는 699개의 변환 timeline JSON을 이 저장소에 bulk-publish하지 않습니다. 약 0.28MB의 range index만 포함하며 사용자가 선택한 채보 객체만 가져옵니다.
 
 사용 전 다음을 검증합니다.
 
@@ -224,9 +224,11 @@ upstream 변경 감지
 
 Runtime Exact source가 새 Master의 일부 채보와 더 이상 맞지 않으면 해당 채보는 새 index에서 제외되고 Master fallback을 사용합니다. sync는 자동으로 `main`에 merge하지 않습니다. 자세한 내용은 [DATA_SYNC.md](DATA_SYNC.md)를 참고하세요.
 
+카드 portrait는 `.github/workflows/sync-card-assets.yml`에서 ★4/★5 대상만 별도로 감사합니다. 누락되거나 자동 import provenance상 잘못된 asset class가 확인되면 검증된 public card-art snapshot을 우선 사용하고, 필요한 경우 Octo/UnityPy 경로를 fallback으로 사용하여 `automation/card-asset-sync` 검토 PR을 만듭니다. 자세한 내용은 [CARD_ASSET_SYNC.md](CARD_ASSET_SYNC.md)를 참고하세요.
+
 ## 검증
 
-PR과 Pages 배포에서 다음을 자동 검증합니다.
+PR과 배포 파이프라인에서 다음을 자동 검증합니다.
 
 - Python sync unit tests / release metadata
 - JavaScript syntax와 ESM import
@@ -239,6 +241,7 @@ PR과 Pages 배포에서 다음을 자동 검증합니다.
 - 계산 취소 시 Runtime/Local chart fetch AbortSignal 전파 회귀
 - generated data와 KO/EN/JA completeness
 - CSS semantic theme layering
+- Pages 배포 후 `holosims.net`의 배포 SHA / manifest / JSON 경로 / 카드 WebP Production smoke
 
 수동 브라우저 확인 항목은 [LOCAL_TEST.md](LOCAL_TEST.md)를 참고하세요.
 
@@ -308,6 +311,8 @@ data/generated/
   validate.yml
   pages.yml
   sync-master-data.yml
+  sync-card-assets.yml
+  production-smoke.yml
   release.yml
 VERSION
 CHANGELOG.md
