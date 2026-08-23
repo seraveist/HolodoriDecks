@@ -182,12 +182,50 @@ jobs:
           python -m pytest -q
 
       - name: Prepare Pages artifact
+        env:
+          CARD_ASSET_REVISION: ${{ github.sha }}
         run: |
           mkdir -p _site/data _site/assets
           cp index.html styles.css .nojekyll LOCAL_TEST.md _site/
           cp -R css js _site/
           cp -R data/generated _site/data/
           cp -R assets/cards assets/ui _site/assets/
+          python - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          root = Path('_site')
+          revision = os.environ['CARD_ASSET_REVISION']
+          index_path = root / 'index.html'
+          index = index_path.read_text(encoding='utf-8')
+          index = index.replace(
+              '<html lang="ko" data-app-version="1.1.2">',
+              f'<html lang="ko" data-app-version="1.1.2" data-card-asset-revision="{revision}">',
+          )
+          index = re.sub(
+              r'(src="\./js/app\.js)\?v=[^"]+("[^>]*>)',
+              rf'\1?v={revision}\2',
+              index,
+          )
+          index_path.write_text(index, encoding='utf-8')
+
+          js_ref = re.compile(r'((?:\.\.?/)+[^"\'\s]+\.js)(?:\?v=[^"\'\s]+)?')
+          for path in (root / 'js').rglob('*.js'):
+              text = path.read_text(encoding='utf-8')
+              rewritten = js_ref.sub(lambda match: f'{match.group(1)}?v={revision}', text)
+              path.write_text(rewritten, encoding='utf-8')
+
+          deployed_index = index_path.read_text(encoding='utf-8')
+          if f'data-card-asset-revision="{revision}"' not in deployed_index:
+              raise SystemExit('card asset revision was not injected')
+          if f'./js/app.js?v={revision}' not in deployed_index:
+              raise SystemExit('app module revision was not injected')
+          cards = (root / 'js/ui/cards.js').read_text(encoding='utf-8')
+          if 'dataset.cardAssetRevision' not in cards:
+              raise SystemExit('card portrait cache-busting hook missing')
+          print(f'[pages] static asset revision injected: {revision}')
+          PY
 
       - uses: actions/upload-pages-artifact@v3
         with:
