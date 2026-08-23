@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import py_compile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -10,6 +11,8 @@ from holodori_decksim.card_assets import (
     find_catalog_candidates,
     image_candidate_score,
 )
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 @dataclass
@@ -21,6 +24,10 @@ class FakeEntry:
 @dataclass
 class FakeCatalog:
     assetBundles: list[FakeEntry]
+
+
+def test_card_asset_sync_cli_compiles() -> None:
+    py_compile.compile(str(ROOT / "scripts" / "sync-card-assets.py"), doraise=True)
 
 
 def test_audit_portraits_only_requires_rarity_4_and_5(tmp_path: Path) -> None:
