@@ -54,7 +54,7 @@ jobs:
           node --check scripts/test-optimization-session.mjs
           node --check scripts/test-chart-abort.mjs
           node --check scripts/test-browser-smoke.mjs
-          python -m py_compile scripts/validate-generated-data.py
+          python -m py_compile scripts/validate-generated-data.py scripts/rewrite-pages-revisions.py
           node --input-type=module <<'NODE'
           await Promise.all([
             import('./js/i18n.js'),
@@ -190,42 +190,11 @@ jobs:
           cp -R css js _site/
           cp -R data/generated _site/data/
           cp -R assets/cards assets/ui _site/assets/
-          python - <<'PY'
-          import os
-          import re
-          from pathlib import Path
-
-          root = Path('_site')
-          revision = os.environ['CARD_ASSET_REVISION']
-          index_path = root / 'index.html'
-          index = index_path.read_text(encoding='utf-8')
-          index = index.replace(
-              '<html lang="ko" data-app-version="1.1.2">',
-              f'<html lang="ko" data-app-version="1.1.2" data-card-asset-revision="{revision}">',
-          )
-          index = re.sub(
-              r'(src="\./js/app\.js)\?v=[^"]+("[^>]*>)',
-              rf'\1?v={revision}\2',
-              index,
-          )
-          index_path.write_text(index, encoding='utf-8')
-
-          js_ref = re.compile(r'((?:\.\.?/)+[^"\'\s]+\.js)(?:\?v=[^"\'\s]+)?')
-          for path in (root / 'js').rglob('*.js'):
-              text = path.read_text(encoding='utf-8')
-              rewritten = js_ref.sub(lambda match: f'{match.group(1)}?v={revision}', text)
-              path.write_text(rewritten, encoding='utf-8')
-
-          deployed_index = index_path.read_text(encoding='utf-8')
-          if f'data-card-asset-revision="{revision}"' not in deployed_index:
-              raise SystemExit('card asset revision was not injected')
-          if f'./js/app.js?v={revision}' not in deployed_index:
-              raise SystemExit('app module revision was not injected')
-          cards = (root / 'js/ui/cards.js').read_text(encoding='utf-8')
-          if 'dataset.cardAssetRevision' not in cards:
-              raise SystemExit('card portrait cache-busting hook missing')
-          print(f'[pages] static asset revision injected: {revision}')
-          PY
+          python scripts/rewrite-pages-revisions.py \
+            --root _site \
+            --revision "$CARD_ASSET_REVISION"
+          grep -q '../data/generated/manifest.json' _site/js/data.js
+          if grep -q 'manifest.js?v=' _site/js/data.js; then exit 1; fi
 
       - uses: actions/upload-pages-artifact@v3
         with:
