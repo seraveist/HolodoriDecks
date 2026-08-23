@@ -19,17 +19,15 @@ audit assets/cards/{card.id}.webp for ★4/★5
         ↓
 missing cards only
         ↓
-current Octo catalog
+resolve current asciisyaez/yagoo-dori public card-art commit
         ↓
-assetId-based AssetBundle candidate search
+validate card-art-manifest.json + per-file SHA-256
         ↓
-download + decrypt candidate bundle/dependencies
+copy verified 300×300 WebP card icons
+        ↓ missing snapshot rows only
+Octo catalog fallback
         ↓
-UnityPy Sprite / Texture2D extraction
-        ↓
-select the card illustration candidate
-        ↓
-normalize to WebP (max 768×768, quality 90)
+assetId-based AssetBundle candidate search / decrypt / UnityPy extraction
         ↓
 zero-missing audit + generated-data validation
         ↓
@@ -50,57 +48,58 @@ The image workflow never auto-merges.
 
 - when `main` receives a changed `data/generated/cards.json`;
 - when the asset-sync implementation itself is merged;
-- once per day at **00:45 KST** so a portrait can be retried if the game asset CDN/catalog lags behind the Master publication;
+- once per day at **00:45 KST** so assets can be retried when an upstream image source lags behind Master publication;
 - by manual `workflow_dispatch`.
 
-A manual `dry_run` resolves and extracts portraits but does not push the automation branch or create a PR.
+A manual `dry_run` resolves portraits but does not push the automation branch or create a PR.
 
-## Source and tool pin
+## Primary public card-art snapshot
 
-The production workflow uses the game Octo CDN through the public asset tooling:
+The first source is the published card-art snapshot maintained by `asciisyaez/yagoo-dori`.
+
+At each run the synchronizer resolves the repository's current `main` commit through the GitHub API, then pins every manifest and image request to that exact commit. It reads:
+
+```text
+data/generated/card-art-manifest.json
+apps/web/public/game/cards/{card.id}.webp
+```
+
+A public-snapshot image is accepted only when:
+
+- the manifest contains the exact current Master `card.id`;
+- its local path is exactly `/game/cards/{card.id}.webp`;
+- the downloaded bytes are WebP;
+- SHA-256 matches the manifest when supplied;
+- decoded width/height match the manifest when supplied;
+- dimensions remain inside the DeckSim 128..768 pixel portrait bounds.
+
+The current published snapshot contains the five 2026-08 additions and therefore avoids the game catalog request that currently returns HTTP 403 from GitHub-hosted runners.
+
+The snapshot itself records the public page/image source used for each card; DeckSim copies those provenance fields into `assets/card-portrait-sync.json`.
+
+## Octo fallback
+
+If a current Master card is not yet present in the public snapshot, the pipeline falls back to the game Octo CDN through:
 
 - tool repository: `HolodoriDB/holodori-asset-tools`
 - pinned tool commit: `85b70c9b0024e91ea566dacafe8374e1c4212cf5`
 
-The pin makes the extraction implementation reviewable while the tool itself resolves the current app version/Octo keys and current asset catalog at runtime.
+The tool is build-time only and is never shipped to the browser or Pages artifact.
 
-`holodori-asset-tools` is build-time tooling only. It is not shipped to the browser or included in the static Pages artifact.
+The fallback searches the current Octo AssetBundle catalog using Master `asset_id`, downloads bundle dependencies, decrypts them, loads them through UnityPy and ranks `Sprite` / `Texture2D` objects. Existing committed portraits are never overwritten.
 
-## Matching rules
-
-The app-facing card row already contains the upstream `asset_id`. The portrait synchronizer searches current Octo AssetBundle metadata by that identifier.
-
-Candidate ranking prefers:
-
-- an exact normalized `asset_id` match in the bundle name/object name;
-- card/image/illustration/still/portrait semantics;
-- non-movie resources.
-
-It can also fall back to a structural card match containing both the character token and the unique card sequence when the catalog path does not embed the complete `asset_id` verbatim.
-
-For each candidate bundle the synchronizer downloads the bundle plus catalog-declared dependencies, decrypts them with the pinned asset tool, loads them in one UnityPy environment, and inspects `Sprite` / `Texture2D` objects.
-
-Image ranking prefers:
-
-- the complete card `asset_id` in the Unity object name;
-- matching character/sequence tokens;
-- `Sprite` over raw `Texture2D`;
-- illustration/card/main/still/portrait naming;
-- larger usable images;
-- non-icon/non-mask/non-thumbnail objects.
-
-Images smaller than 128×128 are rejected.
+If the Octo catalog itself is unavailable, the sync report records the fallback error and unresolved IDs instead of losing the earlier public-snapshot result.
 
 ## Safety properties
 
 - ★3 cards are excluded by policy.
 - Existing committed portraits are never overwritten by automatic sync.
 - Only cards currently present in `data/generated/cards.json` are targets.
-- A live sync with any unresolved target exits non-zero and does not create a partial image PR.
-- After extraction, `--require-complete` requires zero missing ★4/★5 portraits.
-- Each new output is validated as WebP and limited to 768×768.
-- The normal generated-data validator is run after portrait import.
-- Pages/runtime code still has a placeholder fallback if an image is unexpectedly unavailable.
+- No partial image PR is created while a target remains unresolved.
+- `--require-complete` requires zero missing ★4/★5 portraits.
+- Each accepted output is validated as WebP and limited to 768×768.
+- The normal generated-data validator runs after portrait import.
+- Pages/runtime retains its placeholder fallback for unexpected missing files.
 
 ## Provenance
 
@@ -110,14 +109,15 @@ Automated imports create/update:
 assets/card-portrait-sync.json
 ```
 
-For each automated portrait it records:
+Public-snapshot records include:
 
 - Master `asset_id`;
-- Octo catalog revision;
-- selected catalog bundle/object name;
-- selected Unity object and object type;
+- resolved source repository commit;
+- source manifest/path/page/URL;
 - source dimensions;
 - output SHA-256.
+
+Octo fallback records include its catalog revision, bundle/object names, Unity object/type, dimensions and output SHA-256.
 
 The original bootstrap portrait set predates this automation and is not retroactively rewritten or re-downloaded.
 
@@ -138,7 +138,7 @@ python scripts/sync-card-assets.py --require-complete
 
 ## Local live synchronization
 
-Install the same pinned asset tool used by CI:
+The primary GitHub-hosted source uses only standard HTTP plus Pillow validation. Install the pinned Octo tool as well if fallback extraction may be required:
 
 ```bash
 python -m pip install -e '.[test]'
@@ -156,10 +156,6 @@ python scripts/sync-card-assets.py \
   --report /tmp/card-asset-sync.json
 ```
 
-The live command does not overwrite portraits that already exist.
-
 ## Failure handling
 
-A Master-data update can be merged even when the image CDN/catalog is temporarily unavailable. In that case the static app immediately gains the new card data and uses the existing placeholder.
-
-The image workflow reports the unresolved card IDs and retries on the next scheduled run. Once all missing portraits resolve, it opens/refreshes `automation/card-asset-sync` for human review.
+Master-data updates remain independent of portrait availability. If both the public snapshot and Octo fallback lack a new card, the site can publish its card data with the placeholder while the image workflow reports unresolved IDs and retries at the next scheduled run.
