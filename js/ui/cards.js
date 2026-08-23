@@ -38,7 +38,9 @@ export function cleanGameMarkup(value) {
 }
 
 export function cardPortraitPath(card) {
-  const revision = document.documentElement.dataset.cardAssetRevision?.trim();
+  const revision = typeof document === "undefined"
+    ? ""
+    : document.documentElement.dataset.cardAssetRevision?.trim();
   const query = revision ? `?v=${encodeURIComponent(revision)}` : "";
   return `./assets/cards/${encodeURIComponent(card.id)}.webp${query}`;
 }
