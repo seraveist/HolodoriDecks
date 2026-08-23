@@ -6,12 +6,13 @@ on:
     paths:
       - "data/generated/cards.json"
       - "src/holodori_decksim/card_assets.py"
+      - "src/holodori_decksim/public_card_art.py"
       - "scripts/sync-card-assets.py"
       - ".github/workflows/sync-card-assets.yml"
   workflow_dispatch:
     inputs:
       dry_run:
-        description: Resolve and extract missing portraits without pushing a branch or PR
+        description: Resolve and extract missing/repairable portraits without pushing a branch or PR
         required: false
         default: false
         type: boolean
@@ -54,8 +55,11 @@ jobs:
 
       - name: Validate card asset sync helpers
         run: |
-          python -m pytest -q tests/test_card_assets.py
-          python -m py_compile src/holodori_decksim/card_assets.py scripts/sync-card-assets.py
+          python -m pytest -q tests/test_card_assets.py tests/test_public_card_art.py
+          python -m py_compile \
+            src/holodori_decksim/card_assets.py \
+            src/holodori_decksim/public_card_art.py \
+            scripts/sync-card-assets.py
 
       - name: Audit missing selectable-card portraits
         id: audit
@@ -68,9 +72,8 @@ jobs:
           print("missing_ids=" + ",".join(item['id'] for item in report['missing']))
           PY
 
-      - name: Resolve, download, extract, and normalize missing portraits
+      - name: Resolve, download, extract, normalize, and repair portraits
         id: sync_assets
-        if: steps.audit.outputs.missing_count != '0'
         run: |
           python scripts/sync-card-assets.py \
             --sync \
@@ -81,13 +84,13 @@ jobs:
           import json
           report = json.load(open('/tmp/card-asset-sync.json', encoding='utf-8'))
           print(f"imported_count={report['imported_count']}")
+          print(f"repair_count={report.get('public_repair_count', 0)}")
           print(f"unresolved_count={report['unresolved_count']}")
           print(f"catalog_revision={report['catalog_revision']}")
           print("imported_ids=" + ",".join(item['id'] for item in report['imported']))
           PY
 
       - name: Validate completed portrait set
-        if: steps.audit.outputs.missing_count != '0'
         run: |
           python scripts/sync-card-assets.py --require-complete
           python scripts/validate-generated-data.py
@@ -106,7 +109,9 @@ jobs:
                       raise SystemExit(f"portrait unexpectedly small: {path} {image.size}")
                   if image.width > 768 or image.height > 768:
                       raise SystemExit(f"portrait exceeds normalized bounds: {path} {image.size}")
-          print(f"validated {len(report['imported'])} imported WebP portraits")
+                  if row.get('asset_class') == 'card-illustration' and image.width <= image.height:
+                      raise SystemExit(f"synced illustration is not landscape: {path} {image.size}")
+          print(f"validated {len(report['imported'])} imported/repaired WebP portraits")
           PY
 
       - name: Detect asset diff
@@ -157,22 +162,26 @@ jobs:
 
           This PR was generated from the current `main` card Master and is intentionally **not auto-merged**.
 
-          - Asset tool: `{report['asset_tool_repository']}@{report['asset_tool_commit']}`
+          - Public source: `{report.get('public_source_repository')}`@`{report.get('public_source_commit')}`
+          - Public repairs: {report.get('public_repair_count', 0)}
+          - Octo fallback tool: `{report['asset_tool_repository']}@{report['asset_tool_commit']}`
           - Octo catalog revision: `{report['catalog_revision']}`
           - Missing before sync: {report['before']['missing_count']}
-          - Imported: {report['imported_count']}
+          - Imported/repaired: {report['imported_count']}
           - Missing after sync: {report['after']['missing_count']}
 
-          ### Imported portraits
+          ### Imported / repaired portraits
           {rows}
 
           ### Validation
           - only ★4/★5 cards are portrait targets
-          - existing committed portraits are never overwritten
-          - each imported file is normalized to WebP within 768×768
+          - original bootstrap portraits are not overwritten by routine sync
+          - wrong-class public snapshot icons may be repaired to landscape illustrations
+          - automated outputs are validated WebP within 768×768
+          - public snapshot illustrations must remain landscape
           - post-sync audit requires zero missing selectable-card portraits
           - generated Master validation remains unchanged
-          - source bundle/object and SHA-256 provenance is recorded in `assets/card-portrait-sync.json`
+          - source/output dimensions and SHA-256 provenance are recorded in `assets/card-portrait-sync.json`
           """
           Path('/tmp/card-asset-pr-body.md').write_text(
               '\n'.join(line.strip() for line in body.splitlines()) + '\n',
@@ -197,8 +206,9 @@ jobs:
         run: |
           {
             echo "## Holodori card asset sync"
-            echo "- missing before: ${{ steps.audit.outputs.missing_count || 'unknown' }}"
-            echo "- imported: ${{ steps.sync_assets.outputs.imported_count || '0' }}"
+            echo "- physically missing before: ${{ steps.audit.outputs.missing_count || 'unknown' }}"
+            echo "- imported/repaired: ${{ steps.sync_assets.outputs.imported_count || '0' }}"
+            echo "- public repairs: ${{ steps.sync_assets.outputs.repair_count || '0' }}"
             echo "- unresolved: ${{ steps.sync_assets.outputs.unresolved_count || '0' }}"
             echo "- Octo catalog revision: ${{ steps.sync_assets.outputs.catalog_revision || 'n/a' }}"
             echo "- generated diff: ${{ steps.diff.outputs.has_diff || 'false' }}"
