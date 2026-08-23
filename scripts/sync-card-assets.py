@@ -102,6 +102,7 @@ def main() -> int:
         result = {
             "public_source_repository": public["source_repository"],
             "public_source_commit": public["source_commit"],
+            "public_repair_count": public.get("repair_count", 0),
             "public_imported_count": public["imported_count"],
             "asset_tool_repository": octo["asset_tool_repository"],
             "asset_tool_commit": octo["asset_tool_commit"],
