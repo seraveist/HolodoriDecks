@@ -1,5 +1,6 @@
 from holodori_decksim.sources import LOCALES, MASTER_FILES
 from holodori_decksim.sync import (
+    NORMALIZER_VERSION,
     _camel_case,
     _data_index,
     _enum_suffix,
@@ -90,5 +91,8 @@ def test_sync_sources_are_explicit_and_cover_three_locales() -> None:
     assert set(LOCALES) == {"ko", "en", "ja"}
     assert all(config["repository"].startswith("HolodoriDB/") for config in LOCALES.values())
     assert "Card.json" in MASTER_FILES
+    assert "Music.json" in MASTER_FILES
+    assert "LangMusic_Kor.json" in MASTER_FILES
     assert "LiveSpecialSkillLevel.json" in MASTER_FILES
     assert "LangGeneratedLiveLeaderSkill_Kor.json" in MASTER_FILES
+    assert NORMALIZER_VERSION >= 2
