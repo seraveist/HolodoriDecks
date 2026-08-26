@@ -30,6 +30,7 @@ GENERATED_FILES = (
     "master_refs.json",
     "manifest.json",
 )
+NORMALIZER_VERSION = 2
 
 
 def _request_text(url: str, *, accept: str = "application/vnd.github+json") -> str:
@@ -141,6 +142,8 @@ def _resolve_snapshot(force: bool = False) -> dict[str, Any]:
     previous_upstream = _read_json_file(UPSTREAM_META_FILE, {}) or {}
     changed_refs: list[str] = []
 
+    if previous_upstream.get("normalizerVersion") != NORMALIZER_VERSION:
+        changed_refs.append("normalizer_version")
     if previous_manifest.get("master_version") != master_version:
         changed_refs.append("master_version")
     previous_hashes = previous_upstream.get("fileHashes", {})
@@ -371,6 +374,7 @@ def normalize(snapshot: dict[str, Any]) -> dict[str, int]:
                 "character_ids": data.get("characterIds", []),
                 "jacket_asset_id": data.get("jacketAssetId"),
                 "asset_id": data.get("assetId"),
+                "start_time": data.get("startTime"),
                 "playing_seconds": data.get("playingSeconds"),
                 "category_type": data.get("categoryType"),
                 "release_type": data.get("releaseType"),
@@ -517,6 +521,7 @@ def _write_sync_metadata(snapshot: dict[str, Any], counts: dict[str, int]) -> No
         "ref": UPSTREAM_REF,
         "commit": snapshot["upstream_commit"],
         "master_version": snapshot["master_version"],
+        "normalizerVersion": NORMALIZER_VERSION,
         "locales": snapshot["locales"],
         "files": list(MASTER_FILES),
         "fileHashes": snapshot["file_hashes"],
@@ -530,6 +535,7 @@ def _write_sync_metadata(snapshot: dict[str, Any], counts: dict[str, int]) -> No
             {
                 "master_version": snapshot["master_version"],
                 "upstream_commit": snapshot["upstream_commit"],
+                "normalizer_version": NORMALIZER_VERSION,
                 "locales": {
                     locale: config["commit"] for locale, config in snapshot["locales"].items()
                 },
