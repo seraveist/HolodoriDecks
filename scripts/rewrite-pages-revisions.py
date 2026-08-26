@@ -11,6 +11,7 @@ from holodori_decksim.music_search import build_music_search_index
 HTML_REVISION_RE = re.compile(r'(<html\b[^>]*\bdata-card-asset-revision=")[^"]*(")')
 HTML_TAG_RE = re.compile(r'(<html\b[^>]*)(>)')
 APP_SCRIPT_RE = re.compile(r'(src="\./js/app\.js)(?:\?v=[^"]+)?(")')
+STYLESHEET_RE = re.compile(r'(href="\./styles\.css)(?:\?v=[^"]+)?(")')
 JS_RELATIVE_REF_RE = re.compile(
     r'((?:\.\.?/)+[^"\'\s?]+\.js)(?:\?v=[^"\'\s]+)?(?=["\'])'
 )
@@ -31,6 +32,7 @@ def rewrite_index(index: str, revision: str) -> str:
     index, count = APP_SCRIPT_RE.subn(rf'\1?v={revision}\2', index, count=1)
     if count != 1:
         raise ValueError('index.html is missing the ./js/app.js module script')
+    index = STYLESHEET_RE.sub(rf'\1?v={revision}\2', index, count=1)
     return index
 
 
@@ -73,6 +75,8 @@ def rewrite_site(root: Path, revision: str) -> None:
         raise RuntimeError('card asset revision was not injected')
     if f'./js/app.js?v={revision}' not in deployed_index:
         raise RuntimeError('app module revision was not injected')
+    if f'./styles.css?v={revision}' not in deployed_index:
+        raise RuntimeError('stylesheet revision was not injected')
 
     cards = (js_root / 'ui/cards.js').read_text(encoding='utf-8')
     if 'dataset.cardAssetRevision' not in cards:
