@@ -1,0 +1,173 @@
+.music-grid {
+  grid-template-columns: minmax(360px, 1fr) minmax(120px, 0.24fr) minmax(170px, 0.34fr);
+  align-items: end;
+}
+
+.music-combobox-field {
+  min-width: 0;
+}
+
+.music-combobox {
+  position: relative;
+}
+
+.music-combobox-control {
+  position: relative;
+}
+
+.music-combobox-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 46px 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink-800);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.music-combobox-input:hover {
+  border-color: var(--line-strong);
+}
+
+.music-combobox-input:focus,
+.music-combobox.is-open .music-combobox-input {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 4px rgba(55, 103, 232, 0.08);
+}
+
+.music-combobox-toggle {
+  width: 42px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  border: 0;
+  border-radius: 0 11px 11px 0;
+  background: transparent;
+  color: var(--ink-500);
+  cursor: pointer;
+}
+
+.music-combobox-toggle::before {
+  width: 7px;
+  height: 7px;
+  content: "";
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 160ms ease;
+}
+
+.music-combobox.is-open .music-combobox-toggle::before {
+  transform: translateY(2px) rotate(225deg);
+}
+
+.music-combobox-options {
+  width: 100%;
+  max-height: 320px;
+  overflow-y: auto;
+  position: absolute;
+  z-index: 80;
+  top: calc(100% + 7px);
+  left: 0;
+  padding: 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: 0 18px 40px rgba(29, 44, 72, 0.18);
+}
+
+.music-combobox-options[hidden] {
+  display: none;
+}
+
+.music-combobox-option {
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 10px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink-800);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.music-combobox-option:hover,
+.music-combobox-option.is-active {
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+}
+
+.music-combobox-option[aria-selected="true"] {
+  font-weight: var(--weight-extrabold);
+}
+
+.music-combobox-option strong,
+.music-combobox-option small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.music-combobox-option strong {
+  min-width: 0;
+  font-size: var(--type-body-sm);
+}
+
+.music-combobox-option small {
+  max-width: 210px;
+  color: var(--ink-500);
+  font-size: var(--type-caption);
+  font-weight: 700;
+}
+
+.music-combobox-option.is-average {
+  border-bottom: 1px solid var(--line);
+  border-radius: 8px 8px 4px 4px;
+  color: var(--brand);
+}
+
+.music-combobox-empty {
+  padding: 14px 12px;
+  color: var(--ink-500);
+  font-size: var(--type-label);
+  font-weight: 700;
+  text-align: center;
+}
+
+@media (max-width: 820px) {
+  .music-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .music-combobox-field {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .music-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .music-combobox-field {
+    grid-column: auto;
+  }
+
+  .music-combobox-option small {
+    max-width: 120px;
+  }
+}
