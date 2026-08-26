@@ -75,6 +75,7 @@ export function mountMusicControls(music, store) {
   const musicField = musicSelect.closest(".field");
   const musicGrid = musicField?.closest(".music-grid");
   const musicById = new Map(music.map((song) => [song.id, song]));
+  const hasReleaseTime = music.some((song) => Number.isFinite(Number(song.start_time)) && Number(song.start_time) > 0);
   const labels = copy();
 
   const toolbar = document.createElement("div");
@@ -89,7 +90,7 @@ export function mountMusicControls(music, store) {
       <span>${escapeHtml(labels.sortLabel)}</span>
       <select id="music-sort" aria-label="${escapeHtml(labels.sortLabel)}">
         <option value="game" selected>${escapeHtml(labels.gameOrder)}</option>
-        <option value="latest">${escapeHtml(labels.latest)}</option>
+        <option value="latest"${hasReleaseTime ? "" : " disabled"}>${escapeHtml(labels.latest)}</option>
         <option value="title">${escapeHtml(labels.title)}</option>
         <option value="singer">${escapeHtml(labels.singer)}</option>
       </select>
