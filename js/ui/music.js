@@ -77,32 +77,30 @@ function musicExactlyMatches(song, query) {
 
 function mountComboboxField() {
   const nativeSelect = requiredElement("#music-select");
-  if (nativeSelect.tagName !== "SELECT") {
-    return {
-      input: nativeSelect,
-      toggle: requiredElement("#music-combobox-toggle"),
-      list: requiredElement("#music-options"),
-      combobox: nativeSelect.closest(".music-combobox"),
-    };
-  }
-
   const field = nativeSelect.closest(".field");
   if (!field) throw new Error("#music-select field is missing");
   const fieldLabel = field.querySelector(":scope > span")?.textContent?.trim() || t("music.name");
+
   const replacement = document.createElement("div");
   replacement.className = `${field.className} music-combobox-field`;
   replacement.innerHTML = `
     <span id="music-combobox-label">${escapeHtml(fieldLabel)}</span>
     <div class="music-combobox">
       <div class="music-combobox-control">
-        <input id="music-select" class="music-combobox-input" type="search" role="combobox" aria-labelledby="music-combobox-label" aria-autocomplete="list" aria-controls="music-options" aria-expanded="false" autocomplete="off">
-        <button id="music-combobox-toggle" class="music-combobox-toggle" type="button" tabindex="-1"></button>
+        <input id="music-search-input" class="music-combobox-input" type="search" role="combobox" aria-labelledby="music-combobox-label" aria-autocomplete="list" aria-controls="music-options" aria-expanded="false" autocomplete="off">
+        <button id="music-combobox-toggle" class="music-combobox-toggle" type="button"></button>
       </div>
       <div id="music-options" class="music-combobox-options" role="listbox" hidden></div>
     </div>`;
   field.replaceWith(replacement);
+  nativeSelect.hidden = true;
+  nativeSelect.tabIndex = -1;
+  nativeSelect.setAttribute("aria-hidden", "true");
+  replacement.appendChild(nativeSelect);
+
   return {
-    input: requiredElement("#music-select"),
+    nativeSelect,
+    input: requiredElement("#music-search-input"),
     toggle: requiredElement("#music-combobox-toggle"),
     list: requiredElement("#music-options"),
     combobox: replacement.querySelector(".music-combobox"),
@@ -110,7 +108,7 @@ function mountComboboxField() {
 }
 
 export function mountMusicControls(music, store) {
-  const { input, toggle, list, combobox } = mountComboboxField();
+  const { nativeSelect, input, toggle, list, combobox } = mountComboboxField();
   const difficultySelect = requiredElement("#difficulty-select");
   const playModeSelect = requiredElement("#play-mode");
   const musicById = new Map(music.map((song) => [song.id, song]));
@@ -122,6 +120,10 @@ export function mountMusicControls(music, store) {
 
   input.placeholder = labels.placeholder;
   toggle.setAttribute("aria-label", labels.toggleAria);
+  nativeSelect.innerHTML = [
+    `<option value="">${escapeHtml(t("music.average"))}</option>`,
+    ...sortedMusic.map((song) => `<option value="${escapeHtml(song.id)}">${escapeHtml(displaySong(song))}</option>`),
+  ].join("");
 
   function selectedLabel(musicId) {
     const song = musicId ? musicById.get(musicId) : null;
@@ -132,6 +134,7 @@ export function mountMusicControls(music, store) {
     const id = musicId || "";
     input.dataset.selectedId = id;
     input.value = selectedLabel(id);
+    nativeSelect.value = id;
   }
 
   function averageMatches(query) {
@@ -301,12 +304,14 @@ export function mountMusicControls(music, store) {
     if (!combobox?.contains(event.target)) closeList();
   });
 
+  nativeSelect.addEventListener("change", () => selectMusicId(nativeSelect.value));
   difficultySelect.addEventListener("change", () => store.setState({ difficulty: difficultySelect.value }));
   playModeSelect.addEventListener("change", () => store.setState({ playMode: playModeSelect.value }));
 
   return function syncMusicControls(state) {
     const selectedId = state.musicId || "";
     if (input.dataset.selectedId !== selectedId) setInputFromState(selectedId);
+    nativeSelect.value = selectedId;
     difficultySelect.value = state.difficulty;
     playModeSelect.value = state.playMode;
   };
