@@ -75,11 +75,42 @@ function musicExactlyMatches(song, query) {
   return corpus.some((value) => normalizeMusicSearch(value) === normalizedQuery);
 }
 
+function mountComboboxField() {
+  const nativeSelect = requiredElement("#music-select");
+  if (nativeSelect.tagName !== "SELECT") {
+    return {
+      input: nativeSelect,
+      toggle: requiredElement("#music-combobox-toggle"),
+      list: requiredElement("#music-options"),
+      combobox: nativeSelect.closest(".music-combobox"),
+    };
+  }
+
+  const field = nativeSelect.closest(".field");
+  if (!field) throw new Error("#music-select field is missing");
+  const fieldLabel = field.querySelector(":scope > span")?.textContent?.trim() || t("music.name");
+  const replacement = document.createElement("div");
+  replacement.className = `${field.className} music-combobox-field`;
+  replacement.innerHTML = `
+    <span id="music-combobox-label">${escapeHtml(fieldLabel)}</span>
+    <div class="music-combobox">
+      <div class="music-combobox-control">
+        <input id="music-select" class="music-combobox-input" type="search" role="combobox" aria-labelledby="music-combobox-label" aria-autocomplete="list" aria-controls="music-options" aria-expanded="false" autocomplete="off">
+        <button id="music-combobox-toggle" class="music-combobox-toggle" type="button" tabindex="-1"></button>
+      </div>
+      <div id="music-options" class="music-combobox-options" role="listbox" hidden></div>
+    </div>`;
+  field.replaceWith(replacement);
+  return {
+    input: requiredElement("#music-select"),
+    toggle: requiredElement("#music-combobox-toggle"),
+    list: requiredElement("#music-options"),
+    combobox: replacement.querySelector(".music-combobox"),
+  };
+}
+
 export function mountMusicControls(music, store) {
-  const input = requiredElement("#music-select");
-  const toggle = requiredElement("#music-combobox-toggle");
-  const list = requiredElement("#music-options");
-  const combobox = input.closest(".music-combobox");
+  const { input, toggle, list, combobox } = mountComboboxField();
   const difficultySelect = requiredElement("#difficulty-select");
   const playModeSelect = requiredElement("#play-mode");
   const musicById = new Map(music.map((song) => [song.id, song]));
@@ -190,7 +221,8 @@ export function mountMusicControls(music, store) {
       return;
     }
 
-    const averageExact = averageAliases.some((alias) => normalizeMusicSearch(alias) === normalizeMusicSearch(raw));
+    const normalizedRaw = normalizeMusicSearch(raw);
+    const averageExact = averageAliases.some((alias) => normalizeMusicSearch(alias) === normalizedRaw);
     if (averageExact) {
       selectMusicId("");
       return;
