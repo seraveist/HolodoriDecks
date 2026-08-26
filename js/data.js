@@ -5,11 +5,24 @@ const DATA_URLS = {
   cards: new URL("../data/generated/cards.json", import.meta.url),
   characters: new URL("../data/generated/characters.json", import.meta.url),
   music: new URL("../data/generated/music.json", import.meta.url),
+  musicSearch: new URL("../data/generated/music-search.json", import.meta.url),
   masterRefs: new URL("../data/generated/master_refs.json", import.meta.url),
 };
 
 async function fetchJson(url) {
   const response = await fetch(url, { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(t("data.requestFailed", {
+      path: new URL(url, window.location.href).pathname,
+      status: response.status,
+    }));
+  }
+  return response.json();
+}
+
+async function fetchOptionalJson(url) {
+  const response = await fetch(url, { cache: "no-store" });
+  if (response.status === 404) return null;
   if (!response.ok) {
     throw new Error(t("data.requestFailed", {
       path: new URL(url, window.location.href).pathname,
@@ -36,10 +49,11 @@ export async function loadManifest() {
 export async function loadAppData(providedManifest = null) {
   const manifest = providedManifest ?? await loadManifest();
   const dataVersion = manifest.source_commit || manifest.master_version || Date.now();
-  const [cards, characters, music, masterRefs] = await Promise.all([
+  const [cards, characters, music, musicSearch, masterRefs] = await Promise.all([
     fetchJson(versionedUrl(DATA_URLS.cards, dataVersion)),
     fetchJson(versionedUrl(DATA_URLS.characters, dataVersion)),
     fetchJson(versionedUrl(DATA_URLS.music, dataVersion)),
+    fetchOptionalJson(versionedUrl(DATA_URLS.musicSearch, dataVersion)),
     fetchJson(versionedUrl(DATA_URLS.masterRefs, dataVersion)),
   ]);
 
@@ -52,15 +66,24 @@ export async function loadAppData(providedManifest = null) {
     || Number(manifest.music_count) !== music.length) {
     throw new Error(t("data.countMismatch"));
   }
+  if (musicSearch && (Number(musicSearch.music_count) !== music.length || !musicSearch.items)) {
+    throw new Error(t("data.invalid"));
+  }
+
+  const searchItems = musicSearch?.items ?? {};
+  const searchableMusic = music.map((song) => ({
+    ...song,
+    search: searchItems[song.id] ?? null,
+  }));
 
   return {
     manifest,
     cards,
     characters,
-    music,
+    music: searchableMusic,
     masterRefs,
     cardsById: indexById(cards),
     charactersById: indexById(characters),
-    musicById: indexById(music),
+    musicById: indexById(searchableMusic),
   };
 }

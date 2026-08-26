@@ -2,12 +2,16 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 from pathlib import Path
+
+from holodori_decksim.music_search import build_music_search_index
 
 HTML_REVISION_RE = re.compile(r'(<html\b[^>]*\bdata-card-asset-revision=")[^"]*(")')
 HTML_TAG_RE = re.compile(r'(<html\b[^>]*)(>)')
 APP_SCRIPT_RE = re.compile(r'(src="\./js/app\.js)(?:\?v=[^"]+)?(")')
+STYLESHEET_RE = re.compile(r'(href="\./styles\.css)(?:\?v=[^"]+)?(")')
 JS_RELATIVE_REF_RE = re.compile(
     r'((?:\.\.?/)+[^"\'\s?]+\.js)(?:\?v=[^"\'\s]+)?(?=["\'])'
 )
@@ -28,11 +32,27 @@ def rewrite_index(index: str, revision: str) -> str:
     index, count = APP_SCRIPT_RE.subn(rf'\1?v={revision}\2', index, count=1)
     if count != 1:
         raise ValueError('index.html is missing the ./js/app.js module script')
+    index = STYLESHEET_RE.sub(rf'\1?v={revision}\2', index, count=1)
     return index
 
 
 def rewrite_js_references(text: str, revision: str) -> str:
     return JS_RELATIVE_REF_RE.sub(lambda match: f'{match.group(1)}?v={revision}', text)
+
+
+def build_deployed_music_search(root: Path) -> None:
+    generated = root / 'data' / 'generated'
+    i18n = generated / 'i18n'
+    music = json.loads((generated / 'music.json').read_text(encoding='utf-8'))
+    packs = {
+        locale: json.loads((i18n / f'{locale}.json').read_text(encoding='utf-8'))
+        for locale in ('ko', 'en', 'ja')
+    }
+    payload = build_music_search_index(music, packs)
+    (generated / 'music-search.json').write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + '\n',
+        encoding='utf-8',
+    )
 
 
 def rewrite_site(root: Path, revision: str) -> None:
@@ -48,11 +68,15 @@ def rewrite_site(root: Path, revision: str) -> None:
         rewritten = rewrite_js_references(original, revision)
         path.write_text(rewritten, encoding='utf-8')
 
+    build_deployed_music_search(root)
+
     deployed_index = index_path.read_text(encoding='utf-8')
     if f'data-card-asset-revision="{revision}"' not in deployed_index:
         raise RuntimeError('card asset revision was not injected')
     if f'./js/app.js?v={revision}' not in deployed_index:
         raise RuntimeError('app module revision was not injected')
+    if f'./styles.css?v={revision}' not in deployed_index:
+        raise RuntimeError('stylesheet revision was not injected')
 
     cards = (js_root / 'ui/cards.js').read_text(encoding='utf-8')
     if 'dataset.cardAssetRevision' not in cards:
@@ -64,6 +88,7 @@ def rewrite_site(root: Path, revision: str) -> None:
         '../data/generated/cards.json',
         '../data/generated/characters.json',
         '../data/generated/music.json',
+        '../data/generated/music-search.json',
         '../data/generated/master_refs.json',
     ]
     for path in required_json_paths:
@@ -71,6 +96,10 @@ def rewrite_site(root: Path, revision: str) -> None:
             raise RuntimeError(f'JSON data path was corrupted during revision rewrite: {path}')
     if 'manifest.js?v=' in data_js or 'cards.js?v=' in data_js:
         raise RuntimeError('JSON filename was incorrectly rewritten as JavaScript')
+
+    search_index = json.loads((root / 'data' / 'generated' / 'music-search.json').read_text(encoding='utf-8'))
+    if not search_index.get('items') or search_index.get('music_count') != len(search_index['items']):
+        raise RuntimeError('music search index is missing or inconsistent')
 
 
 def main() -> int:
