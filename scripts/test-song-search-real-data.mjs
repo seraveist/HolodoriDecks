@@ -48,8 +48,14 @@ function compositionKey(result) {
 }
 
 function rankTuple(result, simulationTarget) {
+  if (simulationTarget === "potential") {
+    return [
+      Number(result.score?.potentialRankingScore) || 0,
+      Number(result.score?.unitScore) || 0,
+      Number(result.score?.potentialUnitScore) || 0,
+    ];
+  }
   return [
-    recommendationValue(result.score, simulationTarget),
     Number(result.score?.rankingScore) || 0,
     Number(result.score?.unitScore) || 0,
   ];
