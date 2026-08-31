@@ -20,8 +20,11 @@ jobs:
       - name: Check test syntax
         run: |
           node --check scripts/diagnose-m0008-order.mjs
+          node --check scripts/test-m0049-exact-real.mjs
           node --check scripts/test-song-search-real-data.mjs
       - name: Diagnose master-song order sensitivity
         run: node scripts/diagnose-m0008-order.mjs
-      - name: Compare song-specific optimizer with Exact
+      - name: Validate Local Exact chart search
+        run: node scripts/test-m0049-exact-real.mjs
+      - name: Compare Master-song optimizer with Exact
         run: node scripts/test-song-search-real-data.mjs
