@@ -33,16 +33,18 @@ jobs:
           from pathlib import Path
 
           project = tomllib.loads(Path('pyproject.toml').read_text(encoding='utf-8'))['project']
-          core = project.get('dependencies', [])
+          core = [str(item) for item in project.get('dependencies', [])]
           extras = project.get('optional-dependencies', {})
-          if any(str(item).lower().startswith('hunmin') for item in core):
-              raise SystemExit('hunmin must not be a core project dependency')
-          music = extras.get('music-search', [])
-          if not any(str(item).lower().startswith('hunmin') for item in music):
-              raise SystemExit('music-search extra must declare hunmin explicitly')
+          music = [str(item) for item in extras.get('music-search', [])]
+          all_dependencies = core + [str(item) for values in extras.values() for item in values]
+          if any('hunmin' in item.lower() for item in all_dependencies):
+              raise SystemExit('hunmin must not be reintroduced; music-search uses local Japanese transliteration')
+          for required in ('pykakasi', 'hanja'):
+              if not any(item.lower().startswith(required) for item in music):
+                  raise SystemExit(f'music-search extra must declare {required} explicitly')
           if 'test' not in extras:
               raise SystemExit('test extra is missing')
-          print('[deps] core sync tooling is isolated from music-search dependencies')
+          print('[deps] core sync tooling is isolated and music-search is hunmin-free')
           PY
 
       - name: Install full validation tooling
@@ -57,7 +59,7 @@ jobs:
             fi
             echo "::warning::Full validation tooling install failed (attempt ${attempt}/3)."
             if [ "$attempt" -eq 3 ]; then
-              python -m pip index versions hunmin --index-url https://pypi.org/simple || true
+              python -m pip config list -v || true
               exit 1
             fi
             sleep $((attempt * 10))
