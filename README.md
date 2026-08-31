@@ -149,14 +149,16 @@ Runtime Exact는 699개의 변환 timeline JSON을 이 저장소에 bulk-publish
 
 ## 검색 알고리즘
 
-조합 수가 작을 때는 모든 조합을 평가하고, 큰 경우 Beam Search로 전환합니다.
+작은 멤버 조합은 리더별로 Exact Search를 수행하고, 리더 하나의 후보 조합이 커지면 mixed-rarity pruning과 Beam Search를 사용합니다.
 
 ```text
-EXACT_CASE_LIMIT = 650,000
+PER_LEADER_EXACT_CASE_LIMIT = 60,000
 BEAM_MEMBER_LIMIT = 52
 BEAM_WIDTH = 360
 BEAM_SECONDARY_WIDTH = 180
 ```
+
+대형 보유풀에서는 ★5 멤버 후보를 모두 보존하고, ★4는 개별 평가·리더 조건·패시브/스페셜 시너지를 기준으로 후보를 줄입니다. 1차 탐색 뒤에는 상위 리더를 대상으로 폭을 확대한 2차 Beam, 가능한 ★5 조합 Exact 재검증, 상위 후보 주변의 국소 멤버 교체 탐색을 수행합니다. 같은 `리더 + 멤버 5장 집합`은 멤버 순서가 달라도 하나의 조합으로 취급하고 최고 결과만 남깁니다.
 
 Exact 채보에서는 조합 선정과 SP 순서를 분리합니다.
 
@@ -170,6 +172,19 @@ Master-only 1차 조합 탐색
 v1.1.2의 shortlist는 기존 고정 10개가 아니라 대략 12~30개입니다. 고밀도 채보는 성능을 위해 좁히고, 작은 보유 카드 풀은 가능한 전체 조합을 보존합니다. 작은 synthetic pool에서는 `모든 조합 × 120순열` 완전탐색과 staged optimizer의 결과가 동일한지 회귀 테스트합니다.
 
 곡 context·콤보 평균·song kernel은 캐시하며, SP 순열에서는 동일 5인 조합의 리더/패시브/파라미터 계산을 재사용합니다. 브라우저에서는 편성 탐색을 module Web Worker로 실행하고 Worker를 사용할 수 없는 환경에서는 같은 계산 코어를 메인 스레드에서 fallback 실행합니다. 계산 입력이 바뀌면 기존 요청 session을 무효화하여 늦게 끝난 이전 계산이 새 결과를 덮어쓰지 못하게 합니다.
+
+### 리더 메커니즘 업데이트 안전장치
+
+검색 최적화가 이해하는 리더 조건/효과는 `js/leader-support.js`의 Master enum 레지스트리로 관리합니다. 카드 이름이나 현재 리더 템플릿을 하드코딩하지 않고, 실제 `LiveSkillTrigger`와 `LivePassiveSkillEffect`의 구조를 검사합니다.
+
+Master sync에서 다음 중 하나가 발견되면 카드 준비 회귀 검증이 실패하여 자동 반영을 중단합니다.
+
+- 처음 보는 리더 trigger enum
+- 처음 보는 리더 effect enum
+- 기존 enum에서 필수 필드가 사라진 경우
+- 기존 effect enum에 현재 지원하지 않는 target이 추가된 경우
+
+따라서 새 리더 메커니즘은 의미를 확인하고 레지스트리/계산/검색 지원을 추가하기 전까지 기존 로직에 조용히 섞이지 않습니다.
 
 ## v1.1 계산 범위와 제한
 
@@ -212,116 +227,10 @@ KO/EN/JA는 동일 `master_version` snapshot으로 정렬합니다.
 ```text
 upstream 변경 감지
 → 같은 master_version의 KO/EN/JA snapshot 해석
-→ cards / characters / music / skills 생성
-→ i18n 생성
-→ Master chart index / score rules 생성
-→ pinned Runtime Exact index를 새 Master에 맞춰 재생성
-→ 구조/회귀/Runtime coherence 검증
-→ automation/master-data-sync 브랜치
-→ 자동 검토 PR
-→ 사람이 확인 후 merge
+→ cards / characters / music / master_refs 정규화
+→ i18n / chart index / Runtime Exact index 재생성
+→ 데이터·점수·검색·리더 메커니즘 레지스트리 회귀 검증
+→ 안전성 gate 통과 시 자동 sync PR 생성/병합
 ```
 
-Runtime Exact source가 새 Master의 일부 채보와 더 이상 맞지 않으면 해당 채보는 새 index에서 제외되고 Master fallback을 사용합니다. sync는 자동으로 `main`에 merge하지 않습니다. 자세한 내용은 [DATA_SYNC.md](DATA_SYNC.md)를 참고하세요.
-
-카드 portrait는 `.github/workflows/sync-card-assets.yml`에서 ★4/★5 대상만 별도로 감사합니다. 누락되거나 자동 import provenance상 잘못된 asset class가 확인되면 검증된 public card-art snapshot을 우선 사용하고, 필요한 경우 Octo/UnityPy 경로를 fallback으로 사용하여 `automation/card-asset-sync` 검토 PR을 만듭니다. 자세한 내용은 [CARD_ASSET_SYNC.md](CARD_ASSET_SYNC.md)를 참고하세요.
-
-## 검증
-
-PR과 배포 파이프라인에서 다음을 자동 검증합니다.
-
-- Python sync unit tests / release metadata
-- JavaScript syntax와 ESM import
-- Unit Score calibration fixture
-- 프리셋 포함 조건 및 SP 120순열
-- 대상 지정 Passive Support 회귀
-- 작은 pool의 Exact 글로벌 완전탐색 parity
-- Runtime Exact Content-Range / SHA / current-Master coherence
-- stale A → 최신 B 역순 완료 시 최신 요청만 commit되는 session 회귀
-- 계산 취소 시 Runtime/Local chart fetch AbortSignal 전파 회귀
-- generated data와 KO/EN/JA completeness
-- CSS semantic theme layering
-- Pages 배포 후 `holosims.net`의 배포 SHA / manifest / JSON 경로 / 카드 WebP Production smoke
-
-수동 브라우저 확인 항목은 [LOCAL_TEST.md](LOCAL_TEST.md)를 참고하세요.
-
-## 로컬 실행
-
-요구 환경:
-
-- Node.js 24 이상
-- Python 3.11 이상
-
-```bash
-python -m pip install -e '.[test]'
-node scripts/build-i18n.mjs
-node scripts/build-chart-index.mjs
-python scripts/validate-generated-data.py
-python -m pytest -q
-node scripts/test-chart-scoring.mjs
-node scripts/test-targeted-passive-support.mjs
-node scripts/test-card-preparation.mjs
-node scripts/test-simulation-targets.mjs
-node scripts/test-collision-choice.mjs
-node scripts/test-exact-global-search.mjs
-node scripts/test-exact-pruning.mjs
-node scripts/test-beam-search.mjs
-node scripts/test-exact-runtime-source.mjs
-node scripts/test-optimization-session.mjs
-node scripts/test-chart-abort.mjs
-node scripts/test-browser-smoke.mjs
-python -m http.server 8000
-```
-
-브라우저에서 `http://localhost:8000/`을 엽니다.
-
-## 주요 구조
-
-```text
-index.html
-styles.css
-css/
-js/
-  app.js
-  state.js
-  recommend.js
-  score.js
-  card-prepare.js
-  chart-data.js
-  chart-score.js
-  order.js
-  optimizer-core.js
-  optimizer-client.js
-  optimizer-worker.js
-  optimization-session.js
-  ui/
-src/holodori_decksim/
-scripts/
-data/generated/
-  manifest.json
-  cards.json
-  characters.json
-  music.json
-  chart-index.json
-  exact-runtime-index.json
-  live-score-rules.json
-  charts/
-  i18n/
-.github/workflows/
-  validate.yml
-  pages.yml
-  sync-master-data.yml
-  sync-card-assets.yml
-  production-smoke.yml
-  release.yml
-VERSION
-CHANGELOG.md
-LICENSE
-NOTICE.md
-```
-
-## 라이선스와 출처
-
-이 저장소에서 프로젝트 제작자가 직접 작성한 소스 코드와 문서는 `LICENSE`의 MIT License를 따릅니다. 게임 파생 데이터·이미지·상표와 외부 chart/SUS 자료의 권리는 각 원 출처 및 권리자에게 있으며 프로젝트의 MIT License로 재허가되지 않습니다.
-
-자세한 출처와 권리 범위는 [NOTICE.md](NOTICE.md)를 확인하세요.
+지원하지 않는 새로운 리더 메커니즘처럼 계산 의미를 먼저 확인해야 하는 변화는 검증 단계에서 중단되므로 자동 병합되지 않습니다.
