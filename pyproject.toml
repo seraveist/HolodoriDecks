@@ -9,10 +9,10 @@ description = "Hololive Dreams deck simulator master-data synchronization tools"
 requires-python = ">=3.11"
 license = { file = "LICENSE" }
 readme = "README.md"
-dependencies = ["hunmin[cjk]>=3.44.1,<4"]
 
 [project.optional-dependencies]
 test = ["pytest>=8"]
+music-search = ["hunmin[cjk]==3.44.1"]
 
 [project.scripts]
 holodori-sync = "holodori_decksim.sync:main"
