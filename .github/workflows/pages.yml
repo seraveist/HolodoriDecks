@@ -176,9 +176,23 @@ jobs:
           console.log(`[pages] ${manifest.required_entry_count} required LangIds; ${runtime.runtimeExactCount}/${chart.chart_count} Runtime Exact charts coherent`);
           NODE
 
-      - name: Validate release metadata
+      - name: Install full Python validation tooling
         run: |
-          python -m pip install --disable-pip-version-check -e '.[test]'
+          python --version
+          python -m pip --version
+          for attempt in 1 2 3; do
+            if python -m pip install --disable-pip-version-check --retries 5 --timeout 30 \
+              --index-url https://pypi.org/simple \
+              -e '.[test,music-search]'; then
+              break
+            fi
+            echo "::warning::Pages Python tooling install failed (attempt ${attempt}/3)."
+            if [ "$attempt" -eq 3 ]; then
+              python -m pip index versions hunmin --index-url https://pypi.org/simple || true
+              exit 1
+            fi
+            sleep $((attempt * 10))
+          done
           python -m pytest -q
 
       - name: Prepare Pages artifact
@@ -195,6 +209,7 @@ jobs:
             --revision "$CARD_ASSET_REVISION"
           grep -q '../data/generated/manifest.json' _site/js/data.js
           if grep -q 'manifest.js?v=' _site/js/data.js; then exit 1; fi
+          test -s _site/data/generated/music-search.json
 
       - uses: actions/upload-pages-artifact@v3
         with:
