@@ -1,5 +1,5 @@
 import { exactShortlistSize, optimizeOwnedDeck } from "./recommend.js?v=1.1.1";
-import { optimizeRecommendationOrders } from "./order.js?v=1.1.0";
+import { optimizeRecommendationOrders } from "./order.js?v=1.1.2";
 
 export function runOptimization({
   preparedCards,
@@ -15,10 +15,20 @@ export function runOptimization({
   hasExactOrder = false,
   resultCount = 5,
 }) {
-  const noteCount = exactMusic?._chart?.metadata?.notes?.length ?? 0;
-  const shortlistCount = hasExactOrder
+  // Keep the compatibility flag in the payload, but order optimization is now
+  // required for every selected song because limited-target passives can depend
+  // on member position even when Exact SP metadata is unavailable.
+  void hasExactOrder;
+
+  const songSelected = Boolean(exactMusic);
+  const noteCount = exactMusic?._chart?.metadata?.notes?.length
+    ?? exactMusic?._chart?.fullComboNoteCount
+    ?? searchMusic?._chart?.fullComboNoteCount
+    ?? 0;
+  const shortlistCount = songSelected
     ? exactShortlistSize(noteCount, ownedCardIds?.length ?? 0)
     : resultCount;
+
   let result = optimizeOwnedDeck({
     preparedCards,
     ownedCardIds,

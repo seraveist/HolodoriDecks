@@ -1,4 +1,4 @@
-import { runOptimization } from "./optimizer-core.js?v=1.1.1";
+import { runOptimization } from "./optimizer-core.js?v=1.1.2";
 
 let requestId = 0;
 
@@ -11,7 +11,7 @@ export async function runOptimizationAsync(payload, {
   if (!preferWorker || typeof Worker === "undefined") return runOptimization(payload);
   let worker;
   try {
-    worker = new Worker(new URL("./optimizer-worker.js?v=1.1.1", import.meta.url), { type: "module" });
+    worker = new Worker(new URL("./optimizer-worker.js?v=1.1.2", import.meta.url), { type: "module" });
   } catch {
     return runOptimization(payload);
   }

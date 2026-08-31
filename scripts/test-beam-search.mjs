@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { optimizeOwnedDeck } from "../js/recommend.js";
+import { memberCandidatePool, optimizeOwnedDeck } from "../js/recommend.js";
+import { dedupeRecommendationResults } from "../js/order.js";
 
 function member(index) {
   const activeScore = 20 + index * 7;
@@ -77,4 +78,175 @@ for (const simulationTarget of ["score", "potential"]) {
     `${simulationTarget}: beam selected a different deck from exhaustive search`);
 }
 
-console.log("beam-search quality regression: OK");
+function searchCard(id, {
+  rarity = 5,
+  parameter = 10000,
+  attribute = 1,
+  groupings = [],
+  leaderCondition = [],
+} = {}) {
+  return {
+    id,
+    raw: { rarity },
+    characterId: `char-${id}`,
+    characterName: id,
+    attribute,
+    groupings: new Set(groupings),
+    profile: { level: 80, currentLevel: 80, maxLevel: 80, potential: 0, levelMode: "max" },
+    stats: { p: parameter, t: 0, s: 0 },
+    enhancementPermyriad: 0,
+    passive: null,
+    active: {
+      level: 1,
+      interval: 20,
+      probability: 0,
+      duration: 0,
+      baseScoreUp: 0,
+      conditionalScoreUp: 0,
+      condition: null,
+      description: id,
+    },
+    special: {
+      level: 1,
+      duration: 0,
+      support: 0,
+      activationRateUp: 0,
+      condition: null,
+      description: id,
+    },
+    leader: {
+      primaryCondition: leaderCondition,
+      primaryEffects: { p: 0, t: 0, s: 0, support: 0 },
+      additionalCondition: [],
+      additionalEffects: { p: 0, t: 0, s: 0, support: 0 },
+      description: "",
+    },
+  };
+}
+
+// The Exact threshold is applied per leader rather than to the global sum of all leaders.
+{
+  const rows = Array.from({ length: 12 }, (_, index) => searchCard(`E${index}`, { parameter: 10000 + index * 100 }));
+  const exactPerLeader = optimizeOwnedDeck({
+    preparedCards: new Map(rows.map((row) => [row.id, row])),
+    ownedCardIds: rows.map((row) => row.id),
+    currentMembers: [null, null, null, null, null, null],
+    lockedSlots: [false, false, false, false, false, false],
+    simulationTarget: "score",
+    separateRole: true,
+    resultCount: 5,
+    exactCaseLimit: 500,
+  });
+  assert.equal(exactPerLeader.ok, true);
+  assert.equal(exactPerLeader.searchMode, "exact");
+  assert.equal(exactPerLeader.exactLeaderCount, 12);
+  assert.equal(exactPerLeader.beamLeaderCount, 0);
+  assert.equal(exactPerLeader.prunedLeaderCount, 0);
+  assert.equal(exactPerLeader.evaluatedCount, 12 * 462);
+}
+
+// Mixed-rarity pruning keeps every 5-star and protects a 4-star that satisfies the leader condition.
+{
+  const conditionLeader = searchCard("COND-L", {
+    leaderCondition: [{ kind: "group", value: "needed", count: 1 }],
+  });
+  const fiveStars = Array.from({ length: 25 }, (_, index) => searchCard(`F5-${index}`, {
+    rarity: 5,
+    parameter: 20000 + index,
+  }));
+  const fourStars = Array.from({ length: 20 }, (_, index) => searchCard(`F4-${index}`, {
+    rarity: 4,
+    parameter: 5000 + index,
+  }));
+  fourStars[0].groupings.add("needed");
+  const pool = memberCandidatePool([...fiveStars, ...fourStars], conditionLeader, [], "score");
+  assert.equal(pool.filter((row) => Number(row.raw.rarity) === 5).length, fiveStars.length);
+  assert.ok(pool.some((row) => row.id === "F4-0"), "leader-condition 4-star was pruned");
+  assert.ok(pool.length < fiveStars.length + fourStars.length, "mixed pool was not pruned");
+}
+
+// A large 4-star tail cannot displace a stronger 5-star core after the high-rarity refinement pass.
+{
+  const lockedLeader = searchCard("LOCKED-L");
+  const fiveStars = Array.from({ length: 6 }, (_, index) => searchCard(`CORE-${index}`, {
+    rarity: 5,
+    parameter: 30000 - index * 1000,
+  }));
+  const fourStars = Array.from({ length: 40 }, (_, index) => searchCard(`TAIL-${index}`, {
+    rarity: 4,
+    parameter: 5000 + index,
+  }));
+  const rows = [lockedLeader, ...fiveStars, ...fourStars];
+  const refined = optimizeOwnedDeck({
+    preparedCards: new Map(rows.map((row) => [row.id, row])),
+    ownedCardIds: rows.map((row) => row.id),
+    currentMembers: [lockedLeader.id, null, null, null, null, null],
+    lockedSlots: [true, false, false, false, false, false],
+    simulationTarget: "score",
+    separateRole: true,
+    resultCount: 5,
+  });
+  assert.equal(refined.ok, true);
+  assert.equal(refined.prunedLeaderCount, 1);
+  assert.equal(refined.refinedLeaderCount, 1);
+  assert.ok(refined.refinementEvaluatedCount > 0);
+  assert.deepEqual(new Set(refined.members.slice(1)), new Set(fiveStars.slice(0, 5).map((row) => row.id)));
+}
+
+// A wider second-pass Beam recovers a synergy island that is individually weaker than filler cards.
+{
+  const lockedLeader = searchCard("ISLAND-L");
+  const synergy = Array.from({ length: 5 }, (_, index) => searchCard(`ISLAND-${index}`, {
+    rarity: 5,
+    parameter: 9000,
+    groupings: ["island"],
+  }));
+  synergy.forEach((row) => {
+    row.passive = {
+      level: 1,
+      description: "island synergy",
+      condition: { kind: "group", value: "island", count: 5 },
+      effect: { kind: "all", stat: null, value: 100, target: { kind: "all", count: 5 } },
+    };
+  });
+  const fillers = Array.from({ length: 34 }, (_, index) => searchCard(`ISLAND-FILLER-${index}`, {
+    rarity: 5,
+    parameter: 10000,
+  }));
+  const rows = [lockedLeader, ...synergy, ...fillers];
+  const islandCommon = {
+    preparedCards: new Map(rows.map((row) => [row.id, row])),
+    ownedCardIds: rows.map((row) => row.id),
+    currentMembers: [lockedLeader.id, null, null, null, null, null],
+    lockedSlots: [true, false, false, false, false, false],
+    simulationTarget: "score",
+    separateRole: true,
+    resultCount: 5,
+  };
+  const refined = optimizeOwnedDeck(islandCommon);
+  const exhaustive = optimizeOwnedDeck({ ...islandCommon, exactCaseLimit: 1_000_000 });
+  assert.equal(refined.ok, true);
+  assert.equal(exhaustive.ok, true);
+  assert.equal(refined.searchMode, "beam");
+  assert.equal(refined.results[0].rankingValue, exhaustive.results[0].rankingValue);
+  assert.deepEqual(
+    new Set(refined.members.slice(1)),
+    new Set(synergy.map((row) => row.id)),
+    "second-pass refinement missed the five-card synergy island",
+  );
+}
+
+// Member order is not a distinct result, but changing the leader still is.
+{
+  const score = (value) => ({ rankingScore: value, unitScore: value });
+  const deduped = dedupeRecommendationResults([
+    { members: ["L1", "A", "B", "C", "D", "E"], score: score(100), rankingValue: 100 },
+    { members: ["L1", "E", "D", "C", "B", "A"], score: score(110), rankingValue: 110 },
+    { members: ["L2", "A", "B", "C", "D", "E"], score: score(105), rankingValue: 105 },
+  ]);
+  assert.equal(deduped.length, 2);
+  assert.equal(deduped[0].rankingValue, 110);
+  assert.equal(deduped[1].members[0], "L2");
+}
+
+console.log("beam-search quality/pruning regression: OK");

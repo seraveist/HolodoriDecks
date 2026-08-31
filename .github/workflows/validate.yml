@@ -82,6 +82,8 @@ jobs:
           node --check scripts/test-exact-runtime-source.mjs
           node --check scripts/test-optimization-session.mjs
           node --check scripts/test-chart-abort.mjs
+          node --check scripts/test-m0049-exact-real.mjs
+          node --check scripts/test-song-search-real-data.mjs
           node --check scripts/test-browser-smoke.mjs
           node --check scripts/test-production-smoke.mjs
           node --check scripts/import-chart-timeline-corpus.mjs
@@ -130,6 +132,8 @@ jobs:
           node scripts/test-exact-runtime-source.mjs
           node scripts/test-optimization-session.mjs
           node scripts/test-chart-abort.mjs
+          node scripts/test-m0049-exact-real.mjs
+          node scripts/test-song-search-real-data.mjs
           node scripts/test-browser-smoke.mjs
           node --input-type=module <<'NODE'
           import { scoreEngineSelfTest } from './js/score.js';

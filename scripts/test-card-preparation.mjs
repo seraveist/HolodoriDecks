@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import { auditPotentialEffects, prepareScoreCards } from "../js/card-prepare.js";
+import { auditLeaderSupport, leaderSupportStatus } from "../js/leader-support.js";
 import { prepareScoreCards as legacyPrepareScoreCards } from "../js/score.js";
 
 const cards = JSON.parse(fs.readFileSync(new URL("../data/generated/cards.json", import.meta.url), "utf8"));
@@ -10,6 +11,33 @@ const charactersById = new Map(characters.map((row) => [row.id, row]));
 const selectable = cards.filter((card) => [4, 5].includes(Number(card.rarity)));
 
 assert.equal(auditPotentialEffects(cards).length, 0, "unexpected CardPotential effect type");
+const leaderAudit = auditLeaderSupport(selectable);
+assert.equal(
+  leaderAudit.understood,
+  true,
+  `unsupported leader mechanics detected: ${JSON.stringify({
+    issues: leaderAudit.issues,
+    cards: leaderAudit.unknownCards.slice(0, 10),
+  })}`,
+);
+
+const syntheticUnknownLeader = {
+  trigger: [{ type: "LiveSkillTriggerType_FUTURE_UNKNOWN" }],
+  effect: [{ type: "LivePassiveSkillEffectType_FUTURE_UNKNOWN", value: 999 }],
+};
+assert.equal(leaderSupportStatus(syntheticUnknownLeader).understood, false,
+  "future leader mechanics must default to unsupported");
+
+const syntheticUnsupportedTarget = {
+  trigger: [],
+  effect: [{
+    type: "LivePassiveSkillEffectType_LIVE_PASSIVE_SKILL_EFFECT_TYPE_ALL_PARAMETER_UP_PERMIL_UP",
+    value: 500,
+    liveSkillEffectTargetId: "live_skill_effect_target-future",
+  }],
+};
+assert.equal(leaderSupportStatus(syntheticUnsupportedTarget).understood, false,
+  "known leader effect types with new targets must require explicit support");
 
 function comparable(row) {
   return {
@@ -18,7 +46,13 @@ function comparable(row) {
     active: row.active,
     passive: row.passive,
     special: row.special,
-    leader: row.leader,
+    leader: {
+      primaryCondition: row.leader.primaryCondition,
+      primaryEffects: row.leader.primaryEffects,
+      additionalCondition: row.leader.additionalCondition,
+      additionalEffects: row.leader.additionalEffects,
+      description: row.leader.description,
+    },
   };
 }
 
@@ -67,4 +101,4 @@ assert.equal(maxLevelPrepared.profile.level, maxLevel);
 assert.equal(currentLevelPrepared.profile.parameterPermilUp, 100);
 assert.equal(maxLevelPrepared.profile.parameterPermilUp, 100);
 
-console.log(`card preparation regression: ${selectable.length} selectable cards × 6 awakening states`);
+console.log(`card preparation regression: ${selectable.length} selectable cards × 6 awakening states; leader registry v${leaderAudit.registryVersion}`);

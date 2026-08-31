@@ -5,7 +5,15 @@ import {
   memberPotentialValue,
 } from "./score.js?v=1.1.0";
 
-const EXACT_CASE_LIMIT = 650_000;
+const EXACT_CASE_LIMIT = 60_000;
+const MEMBER_PRUNE_THRESHOLD = 36;
+const FOUR_STAR_VALUE_LIMIT = 12;
+const FOUR_STAR_SYNERGY_LIMIT = 18;
+const REFINE_LEADER_LIMIT = 8;
+const REFINE_FOUR_STAR_ANCHORS = 6;
+const REFINE_LOCAL_ANCHORS = 20;
+const REFINE_LOCAL_ROUNDS = 2;
+const REFINE_BEAM_SCALE = 4;
 const BEAM_MEMBER_LIMIT = 52;
 const BEAM_WIDTH = 360;
 const BEAM_SECONDARY_WIDTH = 180;
@@ -116,6 +124,74 @@ function relevantToLeader(member, leader) {
   ));
 }
 
+function memberRarity(member) {
+  const rarity = Number(member?.raw?.rarity);
+  return Number.isFinite(rarity) && rarity > 0 ? rarity : 5;
+}
+
+function memberMatchesStaticCondition(member, condition) {
+  if (condition?.kind === "attribute") return member.attribute === condition.value;
+  if (condition?.kind === "group") return member.groupings.has(condition.value);
+  return false;
+}
+
+function targetMatchesMember(target, member) {
+  if (!target || target.kind === "all") return true;
+  if (target.kind === "attribute") return member.attribute === target.value;
+  if (target.kind === "group") return member.groupings.has(target.value);
+  return false;
+}
+
+function fourStarSynergyValue(member, leader, coreMembers) {
+  let value = 0;
+  if (relevantToLeader(member, leader)) value += 100_000;
+
+  for (const core of coreMembers) {
+    if (memberMatchesStaticCondition(member, core.passive?.condition)) value += 8_000;
+  }
+
+  const passive = member.passive;
+  if (passive?.effect) {
+    const targetCount = coreMembers.filter((core) => targetMatchesMember(passive.effect.target, core)).length;
+    value += Number(passive.effect.value || 0) * Math.max(1, targetCount) * 120;
+    if (!passive.condition) value += 2_000;
+    else {
+      const currentMatches = coreMembers.filter((core) => memberMatchesStaticCondition(core, passive.condition)).length;
+      value += Math.min(currentMatches, Number(passive.condition.count) || 1) * 1_200;
+    }
+  }
+
+  value += Number(member.special?.support || 0) * 80;
+  value += Number(member.special?.activationRateUp || 0) * 40;
+  return value;
+}
+
+export function memberCandidatePool(pool, leader, fixedMembers = [], concept = "score") {
+  if (pool.length <= MEMBER_PRUNE_THRESHOLD) return [...pool];
+
+  const highRarity = pool.filter((member) => memberRarity(member) >= 5);
+  const fourStars = pool.filter((member) => memberRarity(member) === 4);
+  if (!fourStars.length) return [...pool];
+
+  const selected = new Map(highRarity.map((member) => [member.id, member]));
+  const coreMembers = [...fixedMembers, ...highRarity];
+  const byValue = [...fourStars].sort((left, right) => (
+    conceptMemberValue(right, concept) - conceptMemberValue(left, concept)
+  ));
+  byValue.slice(0, FOUR_STAR_VALUE_LIMIT).forEach((member) => selected.set(member.id, member));
+
+  const bySynergy = [...fourStars].sort((left, right) => (
+    fourStarSynergyValue(right, leader, coreMembers) - fourStarSynergyValue(left, leader, coreMembers)
+      || conceptMemberValue(right, concept) - conceptMemberValue(left, concept)
+  ));
+  bySynergy.slice(0, FOUR_STAR_SYNERGY_LIMIT).forEach((member) => selected.set(member.id, member));
+
+  fourStars.filter((member) => relevantToLeader(member, leader))
+    .forEach((member) => selected.set(member.id, member));
+
+  return pool.filter((member) => selected.has(member.id));
+}
+
 function memberBeamPool(pool, leader, concept) {
   const ranked = [...pool].sort((left, right) => conceptMemberValue(right, concept) - conceptMemberValue(left, concept));
   const selected = new Map(ranked.slice(0, BEAM_MEMBER_LIMIT).map((member) => [member.id, member]));
@@ -146,22 +222,32 @@ function beamCombinations(pool, size, leader, fixedMembers, concept, width = BEA
   return beams.map((beam) => beam.selected);
 }
 
-function combinedBeamCandidates(memberPool, size, leader, fixedMembers, concept) {
+function combinedBeamCandidates(memberPool, size, leader, fixedMembers, concept, widthScale = 1) {
   const heuristics = concept === "potential"
     ? ["potential", "score", "performance", "technique", "sense"]
     : ["score", "performance", "technique", "sense"];
   const candidates = new Map();
-  heuristics.forEach((heuristic, index) => {
-    const width = index === 0 ? BEAM_WIDTH : BEAM_SECONDARY_WIDTH;
-    beamCombinations(
-      memberBeamPool(memberPool, leader, heuristic),
-      size,
-      leader,
-      fixedMembers,
-      heuristic,
-      width,
-    ).forEach((cards) => candidates.set(cards.map((card) => card.id).sort().join("|"), cards));
-  });
+  const addCandidates = (pool, scale = 1) => {
+    if (pool.length < size) return;
+    heuristics.forEach((heuristic, index) => {
+      const baseWidth = index === 0 ? BEAM_WIDTH : BEAM_SECONDARY_WIDTH;
+      const width = Math.max(1, Math.round(baseWidth * scale));
+      beamCombinations(
+        memberBeamPool(pool, leader, heuristic),
+        size,
+        leader,
+        fixedMembers,
+        heuristic,
+        width,
+      ).forEach((cards) => candidates.set(cards.map((card) => card.id).sort().join("|"), cards));
+    });
+  };
+
+  addCandidates(memberPool, widthScale);
+  const highRarityPool = memberPool.filter((member) => memberRarity(member) >= 5);
+  if (highRarityPool.length >= size && highRarityPool.length < memberPool.length) {
+    addCandidates(highRarityPool, 0.75 * widthScale);
+  }
   return [...candidates.values()];
 }
 
@@ -187,7 +273,25 @@ function compareResults(left, right) {
     || right.score.unitScore - left.score.unitScore;
 }
 
+function resultCompositionKey(candidate) {
+  const leaderId = candidate.leader?.id ?? candidate.members?.[0] ?? "";
+  const memberIds = candidate.memberSlotIds ?? candidate.members?.slice?.(1) ?? [];
+  return `${leaderId}::${[...memberIds].sort().join("|")}`;
+}
+
+function memberSetKey(memberIds) {
+  return [...memberIds].sort().join("|");
+}
+
 function keepTopResults(results, candidate, limit) {
+  const key = resultCompositionKey(candidate);
+  const duplicateIndex = results.findIndex((row) => resultCompositionKey(row) === key);
+  if (duplicateIndex >= 0) {
+    if (compareResults(candidate, results[duplicateIndex]) >= 0) return;
+    results[duplicateIndex] = candidate;
+    results.sort(compareResults);
+    return;
+  }
   if (results.length < limit) {
     results.push(candidate);
     results.sort(compareResults);
@@ -244,51 +348,162 @@ export function optimizeOwnedDeck({
   if (need < 0) return { ok: false, reason: "고정 멤버가 5장을 초과했습니다." };
 
   let estimatedCases = 0;
-  for (const leader of leaders) {
-    const poolSize = owned.filter((card) => card.id !== leader.id
-      && !fixedMemberIds.has(card.id)
-      && (!separateRole || card.characterId !== leader.characterId)).length;
-    estimatedCases += combinationCount(poolSize, need, normalizedExactCaseLimit + 1);
-    if (estimatedCases > normalizedExactCaseLimit) break;
-  }
-  const exact = estimatedCases <= normalizedExactCaseLimit;
+  let exactLeaderCount = 0;
+  let beamLeaderCount = 0;
+  let prunedLeaderCount = 0;
+  let processedLeaderCount = 0;
+  let prunedMemberCount = 0;
+  let rawMemberCount = 0;
   let evaluatedCount = 0;
+  let refinementEvaluatedCount = 0;
   const topResults = [];
+  const leaderBestValues = new Map();
+  const leaderSearchState = new Map();
+  const leaderCandidateResults = new Map();
+
+  const evaluateFill = (leader, fill, refinement = false) => {
+    const memberSlotIds = composeMemberIds(fixedMemberIdList, fill);
+    const members = memberSlotIds.map((id) => preparedCards.get(id)).filter(Boolean);
+    if (members.length !== 5) return;
+    const score = evaluateDeck({
+      leader,
+      members,
+      music,
+      difficulty,
+      playMode,
+      separateRole,
+      evaluationTarget: normalizedSimulationTarget,
+    });
+    evaluatedCount += 1;
+    if (refinement) refinementEvaluatedCount += 1;
+    if (!score) return;
+    const candidate = {
+      leader,
+      fill,
+      memberSlotIds,
+      members,
+      score,
+      rankingValue: recommendationValue(score, normalizedSimulationTarget),
+    };
+    const previous = leaderBestValues.get(leader.id);
+    if (previous == null || candidate.rankingValue > previous) {
+      leaderBestValues.set(leader.id, candidate.rankingValue);
+    }
+    const leaderResults = leaderCandidateResults.get(leader.id) ?? [];
+    keepTopResults(leaderResults, candidate, Math.max(normalizedResultCount, REFINE_LOCAL_ANCHORS));
+    leaderCandidateResults.set(leader.id, leaderResults);
+    keepTopResults(topResults, candidate, normalizedResultCount);
+  };
+
   for (const leader of leaders) {
     if (separateRole && fixedMembers.some((member) => member.characterId === leader.characterId)) continue;
-    const memberPool = owned.filter((card) => card.id !== leader.id
+    const rawMemberPool = owned.filter((card) => card.id !== leader.id
       && !fixedMemberIds.has(card.id)
       && (!separateRole || card.characterId !== leader.characterId));
-    if (memberPool.length < need) continue;
-    const candidates = exact
-      ? null
-      : combinedBeamCandidates(
+    if (rawMemberPool.length < need) continue;
+
+    const rawLeaderCases = combinationCount(rawMemberPool.length, need, normalizedExactCaseLimit + 1);
+    const shouldPrune = rawLeaderCases > normalizedExactCaseLimit;
+    const memberPool = shouldPrune
+      ? memberCandidatePool(rawMemberPool, leader, fixedMembers, normalizedSimulationTarget)
+      : rawMemberPool;
+    const leaderCases = combinationCount(memberPool.length, need, normalizedExactCaseLimit + 1);
+    const leaderExact = leaderCases <= normalizedExactCaseLimit;
+    processedLeaderCount += 1;
+    if (shouldPrune && memberPool.length < rawMemberPool.length) prunedLeaderCount += 1;
+    rawMemberCount += rawMemberPool.length;
+    prunedMemberCount += memberPool.length;
+    estimatedCases += leaderCases;
+    if (leaderExact) exactLeaderCount += 1;
+    else beamLeaderCount += 1;
+    leaderSearchState.set(leader.id, { leader, rawMemberPool, memberPool, leaderExact, shouldPrune });
+
+    if (leaderExact) {
+      forEachCombination(memberPool, need, (fill) => evaluateFill(leader, fill));
+    } else {
+      combinedBeamCandidates(
         memberPool,
         need,
         leader,
         fixedMembers,
         normalizedSimulationTarget,
-      );
+      ).forEach((fill) => evaluateFill(leader, fill));
+    }
+  }
 
-    const evaluateFill = (fill) => {
-      const memberSlotIds = composeMemberIds(fixedMemberIdList, fill);
-      const members = memberSlotIds.map((id) => preparedCards.get(id)).filter(Boolean);
-      const score = evaluateDeck({ leader, members, music, difficulty, playMode, separateRole, evaluationTarget: normalizedSimulationTarget });
-      evaluatedCount += 1;
-      if (!score) return;
-      const candidate = {
-        leader,
-        fill,
-        memberSlotIds,
-        members,
-        score,
-        rankingValue: recommendationValue(score, normalizedSimulationTarget),
-      };
-      keepTopResults(topResults, candidate, normalizedResultCount);
-    };
+  const refineLeaderIds = [...leaderBestValues.entries()]
+    .sort((left, right) => right[1] - left[1])
+    .slice(0, REFINE_LEADER_LIMIT)
+    .map(([leaderId]) => leaderId);
+  let refinedLeaderCount = 0;
 
-    if (exact) forEachCombination(memberPool, need, evaluateFill);
-    else candidates.forEach(evaluateFill);
+  for (const leaderId of refineLeaderIds) {
+    const state = leaderSearchState.get(leaderId);
+    if (!state || (state.leaderExact && !state.shouldPrune)) continue;
+    const { leader, rawMemberPool, memberPool } = state;
+    const highRarityPool = rawMemberPool.filter((member) => memberRarity(member) >= 5);
+    const highRarityCases = combinationCount(highRarityPool.length, need, normalizedExactCaseLimit + 1);
+
+    refinedLeaderCount += 1;
+    combinedBeamCandidates(
+      rawMemberPool,
+      need,
+      leader,
+      fixedMembers,
+      normalizedSimulationTarget,
+      REFINE_BEAM_SCALE,
+    ).forEach((fill) => evaluateFill(leader, fill, true));
+
+    if (highRarityPool.length >= need && highRarityCases <= normalizedExactCaseLimit) {
+      forEachCombination(highRarityPool, need, (fill) => evaluateFill(leader, fill, true));
+    }
+
+    if (need <= 0) continue;
+    const seenSwaps = new Set();
+    for (let round = 0; round < REFINE_LOCAL_ROUNDS; round += 1) {
+      const anchors = [...(leaderCandidateResults.get(leader.id) ?? [])]
+        .slice(0, REFINE_LOCAL_ANCHORS);
+      if (!anchors.length) break;
+      let roundEvaluated = 0;
+      for (const anchor of anchors) {
+        for (let replaceIndex = 0; replaceIndex < anchor.fill.length; replaceIndex += 1) {
+          for (const replacement of rawMemberPool) {
+            if (anchor.memberSlotIds.includes(replacement.id)) continue;
+            const swapped = [...anchor.fill];
+            swapped[replaceIndex] = replacement;
+            const ids = composeMemberIds(fixedMemberIdList, swapped);
+            if (new Set(ids).size !== ids.length) continue;
+            const key = memberSetKey(ids);
+            if (seenSwaps.has(key)) continue;
+            seenSwaps.add(key);
+            evaluateFill(leader, swapped, true);
+            roundEvaluated += 1;
+          }
+        }
+      }
+      if (!roundEvaluated) break;
+    }
+
+    const fourStars = memberPool.filter((member) => memberRarity(member) === 4);
+    if (!fourStars.length) continue;
+    const fourStarAnchors = [...(leaderCandidateResults.get(leader.id) ?? [])]
+      .slice(0, REFINE_FOUR_STAR_ANCHORS);
+    const seenFourStarSwaps = new Set();
+    for (const anchor of fourStarAnchors) {
+      for (let replaceIndex = 0; replaceIndex < anchor.fill.length; replaceIndex += 1) {
+        for (const fourStar of fourStars) {
+          if (anchor.memberSlotIds.includes(fourStar.id)) continue;
+          const swapped = [...anchor.fill];
+          swapped[replaceIndex] = fourStar;
+          const ids = composeMemberIds(fixedMemberIdList, swapped);
+          if (new Set(ids).size !== ids.length) continue;
+          const key = memberSetKey(ids);
+          if (seenFourStarSwaps.has(key)) continue;
+          seenFourStarSwaps.add(key);
+          evaluateFill(leader, swapped, true);
+        }
+      }
+    }
   }
 
   if (!topResults.length) {
@@ -322,8 +537,18 @@ export function optimizeOwnedDeck({
     score: results[0].score,
     simulationTarget: normalizedSimulationTarget,
     evaluatedCount,
-    searchMode: exact ? "exact" : "beam",
+    searchMode: beamLeaderCount === 0 && prunedLeaderCount === 0
+      ? "exact"
+      : exactLeaderCount === 0 ? "beam" : "hybrid",
     fixedCount: locked.filter(Boolean).length,
     eligibleLeaderCount: leaders.length,
+    exactLeaderCount,
+    beamLeaderCount,
+    prunedLeaderCount,
+    refinedLeaderCount,
+    refinementEvaluatedCount,
+    estimatedCases,
+    averageRawMemberPool: processedLeaderCount ? rawMemberCount / processedLeaderCount : 0,
+    averagePrunedMemberPool: processedLeaderCount ? prunedMemberCount / processedLeaderCount : 0,
   };
 }
