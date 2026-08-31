@@ -55,11 +55,17 @@ assert.ok(Number(manifest.music_count) > 0, "manifest music count is invalid");
 const dataResponse = await request(withRevision("/js/data.js"));
 assert.equal(dataResponse.ok, true, `data.js request failed: ${dataResponse.status}`);
 const dataJs = await dataResponse.text();
-for (const path of ["manifest.json", "cards.json", "characters.json", "music.json", "master_refs.json"]) {
+for (const path of ["manifest.json", "cards.json", "characters.json", "music.json", "music-search.json", "master_refs.json"]) {
   assert.ok(dataJs.includes(path), `production data.js lost ${path}`);
 }
 assert.ok(!dataJs.includes("manifest.js?v="), "production data.js contains corrupted manifest.js URL");
 assert.ok(!dataJs.includes("cards.js?v="), "production data.js contains corrupted cards.js URL");
+
+const musicSearchResponse = await request(withRevision("/data/generated/music-search.json"));
+assert.equal(musicSearchResponse.ok, true, `music-search request failed: ${musicSearchResponse.status}`);
+const musicSearch = await musicSearchResponse.json();
+assert.equal(Number(musicSearch.music_count), Number(manifest.music_count), "music-search count does not match manifest");
+assert.equal(Object.keys(musicSearch.items ?? {}).length, Number(musicSearch.music_count), "music-search item count is invalid");
 
 const cardsResponse = await request(withRevision("/js/ui/cards.js"));
 assert.equal(cardsResponse.ok, true, `cards.js request failed: ${cardsResponse.status}`);
