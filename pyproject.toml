@@ -13,10 +13,8 @@ readme = "README.md"
 [project.optional-dependencies]
 test = ["pytest>=8"]
 music-search = [
-    "hunmin @ https://files.pythonhosted.org/packages/2c/5e/a30b796eb19d1e932937234b05f74448e951eb4fa77b07a87e229540a063/hunmin-3.44.1-py3-none-any.whl#sha256=4f49787e8c2742cfc7aa67678119ccf112bf9ad690b8feb2d585ac2c8058cd88",
-    "pykakasi>=2.2",
-    "pypinyin>=0.50",
-    "hanja>=0.13",
+    "pykakasi==2.3.0",
+    "hanja==0.15.1",
 ]
 
 [project.scripts]
