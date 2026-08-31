@@ -26,9 +26,40 @@ jobs:
         with:
           node-version: 24
 
-      - name: Validate sync tooling
+      - name: Validate dependency boundaries
         run: |
-          python -m pip install --disable-pip-version-check -e '.[test]'
+          python - <<'PY'
+          import tomllib
+          from pathlib import Path
+
+          project = tomllib.loads(Path('pyproject.toml').read_text(encoding='utf-8'))['project']
+          core = project.get('dependencies', [])
+          extras = project.get('optional-dependencies', {})
+          if any(str(item).lower().startswith('hunmin') for item in core):
+              raise SystemExit('hunmin must not be a core project dependency')
+          music = extras.get('music-search', [])
+          if not any(str(item).lower().startswith('hunmin') for item in music):
+              raise SystemExit('music-search extra must declare hunmin explicitly')
+          if 'test' not in extras:
+              raise SystemExit('test extra is missing')
+          print('[deps] core sync tooling is isolated from music-search dependencies')
+          PY
+
+      - name: Install full validation tooling
+        run: |
+          python --version
+          python -m pip --version
+          for attempt in 1 2 3; do
+            if python -m pip install --disable-pip-version-check --retries 5 --timeout 30 -e '.[test,music-search]'; then
+              break
+            fi
+            echo "::warning::Full validation tooling install failed (attempt ${attempt}/3)."
+            if [ "$attempt" -eq 3 ]; then
+              python -m pip index versions hunmin || true
+              exit 1
+            fi
+            sleep $((attempt * 10))
+          done
           python -m pytest -q
           python -m py_compile scripts/validate-generated-data.py scripts/ingest-chart-metadata.py
 
