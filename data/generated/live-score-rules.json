@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source_repository": "HolodoriDB/holodori-db-kor-diff",
-  "source_commit": "f5e3c9513edbeec7007e02c0002786291fe1d119",
+  "source_commit": "1d7c7850bf2df34239c440b5b0cc53bbd72e5d5d",
   "noteWeights": {
     "manual": {
       "flick": 1.05,
