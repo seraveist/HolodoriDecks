@@ -8,6 +8,7 @@ import {
   recommendationValue,
 } from "../js/recommend.js";
 import { optimizeRecommendationOrders } from "../js/order.js";
+import { runOptimization } from "../js/optimizer-core.js";
 
 const cards = JSON.parse(fs.readFileSync(new URL("../data/generated/cards.json", import.meta.url), "utf8"));
 const characters = JSON.parse(fs.readFileSync(new URL("../data/generated/characters.json", import.meta.url), "utf8"));
@@ -15,7 +16,6 @@ const music = JSON.parse(fs.readFileSync(new URL("../data/generated/music.json",
 const chartIndex = JSON.parse(fs.readFileSync(new URL("../data/generated/chart-index.json", import.meta.url), "utf8"));
 const rules = JSON.parse(fs.readFileSync(new URL("../data/generated/live-score-rules.json", import.meta.url), "utf8"));
 const masterRefs = JSON.parse(fs.readFileSync(new URL("../data/generated/master_refs.json", import.meta.url), "utf8"));
-const exactMetadata = JSON.parse(fs.readFileSync(new URL("../data/generated/charts/m0049-EXPERT.json", import.meta.url), "utf8"));
 
 const cardsForSearch = cards.filter((card) => [4, 5].includes(Number(card.rarity)));
 const charactersById = new Map(characters.map((row) => [row.id, row]));
@@ -71,9 +71,11 @@ function assertTopFiveParity(actual, expected, label) {
   const target = actual.simulationTarget;
   const actualTop = actual.results.slice(0, 5);
   const expectedTop = expected.results.slice(0, 5);
-  const actualTuples = actualTop.map((row) => rankTuple(row, target));
-  const expectedTuples = expectedTop.map((row) => rankTuple(row, target));
-  assert.deepEqual(actualTuples, expectedTuples, `${label}: TOP5 ranking tuples differ`);
+  assert.deepEqual(
+    actualTop.map((row) => rankTuple(row, target)),
+    expectedTop.map((row) => rankTuple(row, target)),
+    `${label}: TOP5 ranking tuples differ`,
+  );
 
   const exactKeysByTuple = new Map();
   for (const row of expected.results) {
@@ -82,7 +84,6 @@ function assertTopFiveParity(actual, expected, label) {
     keys.add(compositionKey(row));
     exactKeysByTuple.set(tuple, keys);
   }
-
   for (let index = 0; index < actualTop.length; index += 1) {
     const tuple = rankTupleKey(actualTop[index], target);
     const allowed = exactKeysByTuple.get(tuple) ?? new Set();
@@ -114,6 +115,13 @@ function permutations(values) {
   return result;
 }
 
+function masterSongContext(musicId) {
+  const song = musicById.get(musicId);
+  const chart = chartIndex.charts?.[`${musicId}:EXPERT`];
+  assert.ok(song && chart, `missing real song/chart fixture: ${musicId}`);
+  return { ...song, _chart: { ...chart, metadata: null }, _scoreRules: rules };
+}
+
 const leaderRaw = cardsForSearch.find((card) => {
   const prepared = preparedCards.get(card.id);
   return prepared?.leader?.primaryCondition?.length === 0
@@ -124,8 +132,10 @@ const leader = preparedCards.get(leaderRaw.id);
 const eligibleRaw = cardsForSearch.filter((card) => card.id !== leader.id && card.character_id !== leader.characterId);
 const shuffled = seededShuffle(eligibleRaw, 20260831);
 
-// Master-only song contexts: fixed leader + 27 real member cards gives C(27,5)=80,730,
-// which deliberately crosses the default per-leader Exact threshold of 60,000.
+// Large Master-only fixture: fixed leader + 27 real members gives C(27,5)=80,730,
+// deliberately crossing the per-leader Exact threshold. Compare the actual app
+// pipeline (Beam/Hybrid shortlist -> all 5! orders) with an Exact stage-one
+// shortlist followed by the same all-order refinement.
 const masterPoolRaw = shuffled.slice(0, 27);
 assert.equal(masterPoolRaw.length, 27);
 const masterOwned = [leader.id, ...masterPoolRaw.map((card) => card.id)];
@@ -141,85 +151,79 @@ const commonMaster = {
 };
 
 for (const musicId of ["m0129", "m0008"]) {
-  const song = musicById.get(musicId);
-  const chart = chartIndex.charts?.[`${musicId}:EXPERT`];
-  assert.ok(song && chart, `missing real song/chart fixture: ${musicId}`);
-  const songContext = { ...song, _chart: { ...chart, metadata: null }, _scoreRules: rules };
+  const songContext = masterSongContext(musicId);
+  const shortlist = exactShortlistSize(songContext._chart.fullComboNoteCount, masterOwned.length);
   for (const simulationTarget of ["score", "potential"]) {
-    const optimized = optimizeOwnedDeck({ ...commonMaster, music: songContext, simulationTarget });
-    const exact = optimizeOwnedDeck({
+    const optimized = runOptimization({
+      ...commonMaster,
+      searchMusic: songContext,
+      exactMusic: songContext,
+      simulationTarget,
+      hasExactOrder: false,
+    });
+
+    let exact = optimizeOwnedDeck({
       ...commonMaster,
       music: songContext,
       simulationTarget,
-      resultCount: 30,
+      resultCount: shortlist,
       exactCaseLimit: 10_000_000,
     });
-    assert.notEqual(optimized.searchMode, "exact", `${musicId}/${simulationTarget}: fixture did not exercise Beam/Hybrid`);
     assert.equal(exact.searchMode, "exact", `${musicId}/${simulationTarget}: forced Exact did not stay Exact`);
+    exact = optimizeRecommendationOrders({
+      recommendation: exact,
+      preparedCards,
+      currentMembers: commonMaster.currentMembers,
+      lockedSlots: commonMaster.lockedSlots,
+      music: songContext,
+      difficulty: "EXPERT",
+      playMode: "auto",
+      simulationTarget,
+      separateRole: true,
+      resultCount: 5,
+    });
+
+    assert.notEqual(optimized.searchMode, "exact", `${musicId}/${simulationTarget}: fixture did not exercise Beam/Hybrid`);
+    assert.equal(optimized.orderOptimization?.chartMode, "estimated", `${musicId}/${simulationTarget}: Master order optimization did not run`);
     assertTopFiveParity(optimized, exact, `${musicId}/EXPERT/${simulationTarget}`);
-    console.log(`[song-search] ${musicId}/EXPERT/${simulationTarget}: ${optimized.searchMode}, evaluated=${optimized.evaluatedCount}, exact=${exact.evaluatedCount}`);
+    console.log(
+      `[song-search] ${musicId}/EXPERT/${simulationTarget}: ${optimized.searchMode}, `
+      + `stage=${optimized.evaluatedCount}, orders=${optimized.orderOptimization?.evaluatedCount ?? 0}, exactStage=${exact.evaluatedCount}`,
+    );
   }
 }
 
-// Local Exact song: evaluate the staged shortlist + best SP order against every
-// 5-member combination and all 5! orders using the real 720-note chart.
-const exactSongRaw = musicById.get("m0049");
-const exactChartEntry = chartIndex.charts?.["m0049:EXPERT"];
-assert.ok(exactSongRaw && exactChartEntry, "missing m0049 EXPERT fixture");
-assert.equal(exactMetadata.notes?.length, Number(exactChartEntry.fullComboNoteCount), "m0049 note count drift");
-assert.equal(exactMetadata.skills?.length, 5, "m0049 SP marker drift");
-const exactMusic = {
-  ...exactSongRaw,
-  _chart: { ...exactChartEntry, metadata: exactMetadata },
-  _scoreRules: rules,
-};
-const searchMusic = {
-  ...exactSongRaw,
-  _chart: { ...exactChartEntry, metadata: null },
-  _scoreRules: rules,
-};
-const exactMembersRaw = shuffled.slice(27, 36);
-assert.equal(exactMembersRaw.length, 9);
-const exactMembers = exactMembersRaw.map((card) => preparedCards.get(card.id));
-const exactOwned = [leader.id, ...exactMembers.map((member) => member.id)];
-const shortlist = exactShortlistSize(exactMetadata.notes.length, exactOwned.length);
-assert.equal(shortlist, 30, "small real-card pool should keep 30 stage-one candidates");
+// Small real Master fixture: verify the complete app pipeline against the true
+// global optimum across every 5-member combination and every 5! member order.
+const smallSong = masterSongContext("m0008");
+const smallMembers = shuffled.slice(27, 36).map((card) => preparedCards.get(card.id));
+assert.equal(smallMembers.length, 9);
+const smallOwned = [leader.id, ...smallMembers.map((member) => member.id)];
 
 for (const simulationTarget of ["score", "potential"]) {
-  let staged = optimizeOwnedDeck({
+  const optimized = runOptimization({
     preparedCards,
-    ownedCardIds: exactOwned,
+    ownedCardIds: smallOwned,
     currentMembers: [leader.id, null, null, null, null, null],
     lockedSlots: [true, false, false, false, false, false],
-    music: searchMusic,
+    searchMusic: smallSong,
+    exactMusic: smallSong,
     difficulty: "EXPERT",
     playMode: "auto",
     simulationTarget,
     separateRole: true,
-    resultCount: shortlist,
-    exactCaseLimit: 10_000_000,
-  });
-  staged = optimizeRecommendationOrders({
-    recommendation: staged,
-    preparedCards,
-    currentMembers: [leader.id, null, null, null, null, null],
-    lockedSlots: [true, false, false, false, false, false],
-    music: exactMusic,
-    difficulty: "EXPERT",
-    playMode: "auto",
-    simulationTarget,
-    separateRole: true,
+    hasExactOrder: false,
     resultCount: 5,
   });
 
   const exhaustive = [];
-  for (const combo of combinations(exactMembers, 5)) {
+  for (const combo of combinations(smallMembers, 5)) {
     let best = null;
     for (const order of permutations(combo)) {
       const score = evaluateDeck({
         leader,
         members: order,
-        music: exactMusic,
+        music: smallSong,
         difficulty: "EXPERT",
         playMode: "auto",
         separateRole: true,
@@ -236,13 +240,12 @@ for (const simulationTarget of ["score", "potential"]) {
     if (best) exhaustive.push(best);
   }
   exhaustive.sort(compareResults);
-  const expected = {
-    ok: true,
-    results: exhaustive,
-    simulationTarget,
-  };
-  assertTopFiveParity(staged, expected, `m0049/EXPERT/exact-order/${simulationTarget}`);
-  console.log(`[song-search] m0049/EXPERT/${simulationTarget}: staged ${staged.orderOptimization?.evaluatedCount ?? 0} order evaluations vs exhaustive ${exhaustive.length * 120}`);
+  const expected = { ok: true, results: exhaustive, simulationTarget };
+  assertTopFiveParity(optimized, expected, `m0008/EXPERT/global-order/${simulationTarget}`);
+  console.log(
+    `[song-search] m0008/EXPERT/global-order/${simulationTarget}: `
+    + `shortlistOrders=${optimized.orderOptimization?.evaluatedCount ?? 0}, exhaustiveOrders=${exhaustive.length * 120}`,
+  );
 }
 
-console.log("real-data song-specific search regression: OK");
+console.log("real-data Master song search regression: OK");
