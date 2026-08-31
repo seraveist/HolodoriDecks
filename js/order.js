@@ -69,34 +69,48 @@ export function optimizeRecommendationOrders({
   separateRole = true,
   resultCount = 5,
 }) {
+  // Member presets are inclusion constraints, not positional locks. Once a song is
+  // selected, evaluate all 5! member orders because targeted passives and Exact SP
+  // slots can both make the same five-card composition order-sensitive.
   void currentMembers;
   void lockedSlots;
 
-  const exactSkills = music?._chart?.metadata?.skills;
-  if (!recommendation?.ok || !Array.isArray(exactSkills) || exactSkills.length === 0) {
+  if (!recommendation?.ok || !music) {
     if (recommendation?.ok) {
       recommendation.results = dedupeRecommendationResults(recommendation.results).slice(0, resultCount);
       recommendation.members = recommendation.results[0]?.members ?? recommendation.members;
       recommendation.score = recommendation.results[0]?.score ?? recommendation.score;
-      recommendation.orderOptimization = { mode: "skipped", evaluatedCount: 0, shortlistedCount: recommendation.results.length };
+      recommendation.orderOptimization = {
+        mode: "skipped",
+        chartMode: "none",
+        evaluatedCount: 0,
+        shortlistedCount: recommendation.results.length,
+      };
     }
     return recommendation;
   }
 
+  const exactSkills = music?._chart?.metadata?.skills;
+  const chartMode = Array.isArray(exactSkills) && exactSkills.length > 0 ? "exact" : "estimated";
   let evaluatedCount = 0;
   const orderedCandidates = [];
+
   for (const result of recommendation.results) {
     const leader = preparedCards.get(result.members[0]);
     if (!leader) continue;
     const selectedMemberIds = orderableMemberIds(result);
-    const selectedMembers = selectedMemberIds.map((id) => preparedCards.get(id));
-    if (selectedMembers.some((member) => !member)) continue;
-    const preparedComposition = prepareDeckComposition({ leader, members: selectedMembers, separateRole });
-    if (!preparedComposition) continue;
     let best = null;
+
     for (const memberIds of permutations(selectedMemberIds)) {
       const members = memberIds.map((id) => preparedCards.get(id));
       if (members.some((member) => !member)) continue;
+
+      // Passive target selection is order-sensitive for limited-count targets.
+      // Rebuild the composition for every permutation; reusing the composition
+      // prepared for the first order leaks its passive target map into later orders.
+      const preparedComposition = prepareDeckComposition({ leader, members, separateRole });
+      if (!preparedComposition) continue;
+
       const score = evaluateDeck({
         leader,
         members,
@@ -109,6 +123,7 @@ export function optimizeRecommendationOrders({
       });
       evaluatedCount += 1;
       if (!score) continue;
+
       const candidate = {
         members: [leader.id, ...memberIds],
         score,
@@ -151,6 +166,7 @@ export function optimizeRecommendationOrders({
     score: finalResults[0].score,
     orderOptimization: {
       mode: "exact",
+      chartMode,
       evaluatedCount,
       shortlistedCount: recommendation.results.length,
     },
