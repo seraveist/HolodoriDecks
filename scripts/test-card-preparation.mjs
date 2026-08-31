@@ -15,6 +15,17 @@ const masterRefs = JSON.parse(fs.readFileSync(new URL("../data/generated/master_
 const charactersById = new Map(characters.map((row) => [row.id, row]));
 const selectable = cards.filter((card) => [4, 5].includes(Number(card.rarity)));
 
+const bijou = cards.find((card) => card.id === "card-04014-5-uniq-0053-00");
+assert.ok(bijou, "expected Koseki Bijou rarity-5 calibration card");
+const bijouPrepared = prepareScoreCards([bijou], charactersById, {
+  [bijou.id]: { level: 60, potential: 0 },
+}, { levelMode: "current", masterRefs }).get(bijou.id);
+assert.deepEqual(
+  bijouPrepared.stats,
+  { p: 4859, t: 5487, s: 8129 },
+  "in-game Bijou Lv60 P/T/S fixture requires independent per-stat ceil rounding",
+);
+
 assert.equal(auditPotentialEffects(cards).length, 0, "unexpected CardPotential effect type");
 const leaderAudit = auditLeaderSupport(selectable);
 assert.equal(

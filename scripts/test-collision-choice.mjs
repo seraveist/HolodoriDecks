@@ -74,16 +74,16 @@ function run({ bParameter, cParameter }) {
   return result;
 }
 
-const avoidCollision = run({ bParameter: 10000, cParameter: 10000 });
-assert.ok(avoidCollision.members.includes("C"),
-  "different-cycle C should beat same-cycle B when their base parameter is equal");
-assert.ok(!avoidCollision.members.includes("B"),
-  "same-cycle B should be dropped when collision loss makes it inferior");
+const sameParameter = run({ bParameter: 10000, cParameter: 10000 });
+assert.ok(sameParameter.members.includes("B"),
+  "unit-score Active must use independent expectation instead of penalizing B for A's same cycle");
+assert.ok(!sameParameter.members.includes("C"),
+  "a weaker different-cycle Active must not win solely by avoiding a Unit Score collision penalty");
 
-const tolerateCollision = run({ bParameter: 30000, cParameter: 10000 });
-assert.ok(tolerateCollision.members.includes("B"),
-  "same-cycle B must remain eligible when its parameter advantage beats the collision loss");
-assert.ok(!tolerateCollision.members.includes("C"),
-  "collision is a score penalty, not a hard exclusion rule");
+const parameterAdvantage = run({ bParameter: 30000, cParameter: 10000 });
+assert.ok(parameterAdvantage.members.includes("B"),
+  "same-cycle B must remain eligible when it also has a parameter advantage");
+assert.ok(!parameterAdvantage.members.includes("C"),
+  "same-cycle overlap remains a song-timeline concern, not a Unit Score hard/soft penalty");
 
-console.log("same-cycle soft-constraint regression: OK");
+console.log("unit active independent-overlap regression: OK");

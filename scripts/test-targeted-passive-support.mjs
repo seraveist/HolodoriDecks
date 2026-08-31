@@ -46,6 +46,8 @@ const first = evaluate(true);
 const second = evaluate(false);
 assert.equal(first.songProjection.context.chartAccuracy, "exact");
 assert.ok(first.songProjection.expected.skillMultiplier > second.songProjection.expected.skillMultiplier);
+assert.ok(first.detail.scoreBonus.passive > second.detail.scoreBonus.passive,
+  "Unit Score passive support must be weighted by the targeted member's Active contribution");
 const firstDetails = new Map(first.songProjection.expected.details.map((row) => [row.cardId, row]));
 const secondDetails = new Map(second.songProjection.expected.details.map((row) => [row.cardId, row]));
 assert.equal(firstDetails.get("A").staticSupportPct, 10);
