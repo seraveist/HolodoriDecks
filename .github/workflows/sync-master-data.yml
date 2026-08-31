@@ -9,15 +9,21 @@ on:
         default: false
         type: boolean
       dry_run:
-        description: Validate changes without pushing the sync branch or PR
+        description: Validate changes without pushing a sync branch or PR
         required: false
         default: false
+        type: boolean
+      auto_merge:
+        description: Automatically merge a validated, non-anomalous sync PR
+        required: false
+        default: true
         type: boolean
   schedule:
     # 00:15 KST every day.
     - cron: "15 15 * * *"
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -28,7 +34,7 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@v4
@@ -62,8 +68,14 @@ jobs:
           done
           exit 1
 
-      - name: Preserve baseline manifest
-        run: cp data/generated/manifest.json /tmp/manifest-before.json
+      - name: Preserve automation baseline
+        run: |
+          cp data/generated/manifest.json /tmp/manifest-before.json
+          cp data/generated/cards.json /tmp/cards-before.json
+          cp data/generated/characters.json /tmp/characters-before.json
+          cp data/generated/music.json /tmp/music-before.json
+          cp data/generated/chart-index.json /tmp/chart-index-before.json
+          cp data/generated/exact-runtime-index.json /tmp/exact-runtime-index-before.json
 
       - name: Resolve and normalize upstream snapshot
         id: sync
@@ -98,6 +110,7 @@ jobs:
         run: |
           python scripts/validate-generated-data.py --baseline /tmp/manifest-before.json
           python -m pytest -q
+          python -m py_compile scripts/check-automation-gate.py
           node scripts/test-chart-scoring.mjs
           node scripts/test-targeted-passive-support.mjs
           node scripts/test-card-preparation.mjs
@@ -113,13 +126,29 @@ jobs:
           node --check scripts/build-i18n.mjs
           node --check scripts/build-chart-index.mjs
           node --check scripts/build-exact-runtime-index.mjs
-          node --check scripts/test-card-preparation.mjs
-          node --check scripts/test-simulation-targets.mjs
-          node --check scripts/test-collision-choice.mjs
-          node --check scripts/test-exact-pruning.mjs
-          node --check scripts/test-beam-search.mjs
-          node --check scripts/test-optimization-session.mjs
-          node --check scripts/test-chart-abort.mjs
+
+      - name: Evaluate Master auto-merge safety
+        id: gate
+        if: steps.sync.outputs.changed == 'true'
+        run: |
+          python scripts/check-automation-gate.py master \
+            --previous-cards /tmp/cards-before.json \
+            --current-cards data/generated/cards.json \
+            --previous-characters /tmp/characters-before.json \
+            --current-characters data/generated/characters.json \
+            --previous-music /tmp/music-before.json \
+            --current-music data/generated/music.json \
+            --previous-chart-index /tmp/chart-index-before.json \
+            --current-chart-index data/generated/chart-index.json \
+            --previous-runtime-index /tmp/exact-runtime-index-before.json \
+            --current-runtime-index data/generated/exact-runtime-index.json \
+            --output /tmp/master-automerge-gate.json
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          gate = json.load(open('/tmp/master-automerge-gate.json', encoding='utf-8'))
+          print(f"safe={str(bool(gate['safe'])).lower()}")
+          print(f"reason_count={len(gate['reasons'])}")
+          PY
 
       - name: Detect generated diff
         id: diff
@@ -136,8 +165,10 @@ jobs:
         run: |
           git status --short -- data/generated data/upstream.json data/sync_state.json
           git diff --stat -- data/generated data/upstream.json data/sync_state.json
+          cat /tmp/master-automerge-gate.json
 
       - name: Commit sync branch
+        id: sync_commit
         if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run != true
         env:
           SYNC_BRANCH: automation/master-data-sync
@@ -148,6 +179,7 @@ jobs:
           git add data/generated data/upstream.json data/sync_state.json
           git commit -m "Sync Holodori master data to ${{ steps.sync.outputs.master_version }}"
           git push --force origin "$SYNC_BRANCH"
+          echo "head_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Create or refresh sync pull request
         id: sync_pr
@@ -156,7 +188,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           SYNC_BRANCH: automation/master-data-sync
           MASTER_VERSION: ${{ steps.sync.outputs.master_version }}
-          UPSTREAM_COMMIT: ${{ steps.sync.outputs.upstream_commit }}
         run: |
           python - <<'PY'
           import json
@@ -166,15 +197,21 @@ jobs:
           manifest = json.loads(Path('data/generated/manifest.json').read_text(encoding='utf-8'))
           chart = json.loads(Path('data/generated/chart-index.json').read_text(encoding='utf-8'))
           runtime = json.loads(Path('data/generated/exact-runtime-index.json').read_text(encoding='utf-8'))
+          gate = json.loads(Path('/tmp/master-automerge-gate.json').read_text(encoding='utf-8'))
           locale_text = '\n'.join(
               f"- {name}: `{config['commit']}` ({config['repository']})"
               for name, config in manifest['locales'].items()
           )
           changed = ', '.join(state.get('changed_refs', [])) or 'generated normalization'
           counts = state.get('counts', {})
+          if gate['safe']:
+              gate_text = '- Status: **eligible for automatic merge**\n- No anomaly gate was triggered.'
+          else:
+              reasons = '\n'.join(f"- {reason}" for reason in gate['reasons'])
+              gate_text = f'- Status: **manual review required**\n{reasons}'
           body = f"""## Automated Holodori master-data sync
 
-          This PR was generated from version-aligned upstream snapshots and is intentionally **not auto-merged**.
+          This PR was generated from version-aligned upstream snapshots. Safe additive updates are automatically merged; anomalous updates remain open for administrator review.
 
           - Master version: `{manifest['master_version']}`
           - Core snapshot: `{manifest['source_repository']}@{manifest['source_commit']}`
@@ -183,30 +220,29 @@ jobs:
           - Characters: {counts.get('characters', manifest['character_count'])}
           - Music: {counts.get('music', manifest['music_count'])}
           - Difficulty charts: {chart.get('chart_count', 0)}
-          - Local Exact chart metadata enabled: {chart.get('exact_metadata_count', 0)}
           - Runtime Exact compatible charts: {runtime.get('runtimeExactCount', 0)}
           - Runtime Exact rejected available charts: {runtime.get('rejectedAvailableCount', 0)}
           - Runtime Exact source-unavailable charts: {runtime.get('unavailableCount', 0)}
-          - Stale Local Exact chart metadata disabled: {chart.get('stale_metadata_count', 0)}
+          - Stale Local Exact chart metadata: {chart.get('stale_metadata_count', 0)}
+
+          ### Automatic merge gate
+          {gate_text}
 
           ### Locale snapshots
           {locale_text}
 
           ### Validation performed before this PR
-          - KO/EN/JA `version.txt` aligned to the same master version
-          - generated-data structural and catastrophic-drop validation
-          - locale pack completeness validation
-          - CardPotential / structured skill preparation regression for selectable cards
-          - expected-vs-potential target divergence and same-cycle soft-constraint regressions
-          - Exact shortlist pruning and Beam-vs-exhaustive search regressions
-          - stale-request reverse-completion and chart-fetch cancellation regressions
-          - Local Exact chart hash/note-count validation
-          - Runtime Exact index rebuilt against the new Master snapshot
-          - Runtime Exact current-Master coherence regression
-          - Python sync unit tests
-          - JavaScript syntax checks
+          - KO/EN/JA version alignment and generated-data structural validation
+          - no catastrophic data drop
+          - CardPotential / structured skill preparation regression
+          - score / potential / collision / Exact / Beam / cancellation regressions
+          - Runtime Exact current-Master coherence
+          - Python sync tests and JavaScript syntax checks
           """
-          Path('/tmp/sync-pr-body.md').write_text('\n'.join(line.strip() for line in body.splitlines()) + '\n', encoding='utf-8')
+          Path('/tmp/sync-pr-body.md').write_text(
+              '\n'.join(line.strip() for line in body.splitlines()) + '\n',
+              encoding='utf-8',
+          )
           PY
 
           short="${MASTER_VERSION:0:12}"
@@ -214,35 +250,49 @@ jobs:
           number="$(gh pr list --base main --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number // empty')"
           if [ -n "$number" ]; then
             gh pr edit "$number" --title "$title" --body-file /tmp/sync-pr-body.md
-            echo "state=updated" >> "$GITHUB_OUTPUT"
-            echo "number=$number" >> "$GITHUB_OUTPUT"
-            echo "Updated sync PR #$number"
+            state=updated
           else
             set +e
             output="$(gh pr create --base main --head "$SYNC_BRANCH" --title "$title" --body-file /tmp/sync-pr-body.md 2>&1)"
             status=$?
             set -e
-            if [ "$status" -eq 0 ]; then
-              echo "$output"
-              echo "state=created" >> "$GITHUB_OUTPUT"
-            elif printf '%s' "$output" | grep -q 'GitHub Actions is not permitted to create or approve pull requests'; then
-              compare_url="https://github.com/${GITHUB_REPOSITORY}/compare/main...${SYNC_BRANCH}?expand=1"
-              echo "state=blocked" >> "$GITHUB_OUTPUT"
-              echo "compare_url=$compare_url" >> "$GITHUB_OUTPUT"
-              echo "::warning::Validated sync branch was pushed, but repository settings block GitHub Actions from creating pull requests. Enable Settings > Actions > General > Workflow permissions > Allow GitHub Actions to create and approve pull requests, or open the compare URL from the job summary."
-              {
-                echo "### Sync branch ready, automatic PR creation is disabled"
-                echo
-                echo "All data validation passed and \`${SYNC_BRANCH}\` was pushed successfully."
-                echo
-                echo "- [Open a pull request from the validated sync branch](${compare_url})"
-                echo "- To restore automatic PR creation: **Settings → Actions → General → Workflow permissions → Allow GitHub Actions to create and approve pull requests**"
-              } >> "$GITHUB_STEP_SUMMARY"
-            else
+            if [ "$status" -ne 0 ]; then
               printf '%s\n' "$output" >&2
               exit "$status"
             fi
+            echo "$output"
+            state=created
+            number="$(gh pr list --base main --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number // empty')"
           fi
+          test -n "$number"
+          echo "state=$state" >> "$GITHUB_OUTPUT"
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+
+      - name: Auto-merge safe Master sync
+        id: auto_merge
+        if: >-
+          steps.diff.outputs.has_diff == 'true' &&
+          inputs.dry_run != true &&
+          steps.gate.outputs.safe == 'true' &&
+          steps.sync_pr.outputs.number != '' &&
+          (github.event_name != 'workflow_dispatch' || inputs.auto_merge == true)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.sync_pr.outputs.number }}
+          EXPECTED_HEAD: ${{ steps.sync_commit.outputs.head_sha }}
+        run: |
+          actual_head="$(gh pr view "$PR_NUMBER" --json headRefOid --jq '.headRefOid')"
+          test "$actual_head" = "$EXPECTED_HEAD"
+          gh pr merge "$PR_NUMBER" --squash --match-head-commit "$EXPECTED_HEAD"
+          echo "merged=true" >> "$GITHUB_OUTPUT"
+          echo "Dispatching card-asset validation before production deployment."
+          gh workflow run sync-card-assets.yml --ref main -f deploy_on_success=true
+
+      - name: Flag anomaly for administrator review
+        if: steps.diff.outputs.has_diff == 'true' && steps.gate.outputs.safe == 'false'
+        run: |
+          echo "::warning::Master sync passed structural validation but tripped the automatic-merge anomaly gate. PR #${{ steps.sync_pr.outputs.number }} remains open for administrator review."
+          cat /tmp/master-automerge-gate.json
 
       - name: Job summary
         if: always()
@@ -252,9 +302,8 @@ jobs:
             echo "- upstream change detected: ${{ steps.sync.outputs.changed || 'unknown' }}"
             echo "- generated diff: ${{ steps.diff.outputs.has_diff || 'false' }}"
             echo "- master version: ${{ steps.sync.outputs.master_version || 'n/a' }}"
+            echo "- auto-merge safe: ${{ steps.gate.outputs.safe || 'n/a' }}"
+            echo "- auto-merged: ${{ steps.auto_merge.outputs.merged || 'false' }}"
+            echo "- sync PR: ${{ steps.sync_pr.outputs.number || 'not-needed' }}"
             echo "- dry run: ${{ inputs.dry_run || false }}"
-            echo "- review PR state: ${{ steps.sync_pr.outputs.state || 'not-needed' }}"
-            if [ -n "${{ steps.sync_pr.outputs.compare_url }}" ]; then
-              echo "- compare URL: ${{ steps.sync_pr.outputs.compare_url }}"
-            fi
           } >> "$GITHUB_STEP_SUMMARY"
