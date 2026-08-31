@@ -1,6 +1,6 @@
 import { buildSongContext, songKernel, timelineSongProjection } from "./chart-score.js?v=1.1.0";
 
-export const SCORE_ENGINE_VERSION = "unit-score-v0.5-potential + song-score-v0.4-chart-timeline";
+export const SCORE_ENGINE_VERSION = "unit-score-v0.6-fixture-calibrated + song-score-v0.4-chart-timeline";
 export const UNIT_SCORE_K = 2.037342;
 export const CALIBRATION_FIXTURES = Object.freeze([
   { power: 67629, bonus: 106.8, score: 284936 },
@@ -16,6 +16,7 @@ export const CALIBRATION_FIXTURES = Object.freeze([
 ]);
 
 const UNIT_CONTEXT = Object.freeze({ duration: 110, notes: 800, coefficient: 5, kind: "unit" });
+const DEFAULT_ACCOUNT_BONUSES = Object.freeze({ memberEnhancementPermyriad: 0, boardScoreBonusPct: 0 });
 const COMBO_AVERAGE_CACHE = new Map();
 const GENERIC_CONTEXT_CACHE = new Map();
 const MUSIC_CONTEXT_CACHE = new WeakMap();
@@ -65,21 +66,12 @@ function growthAtLevel(card, requestedLevel) {
 function distributeStats(card, parameterBaseValue, potential) {
   const base = finite(parameterBaseValue);
   const ratio = card?.parameter_ratio_permil ?? {};
-  const raw = {
-    p: base * finite(ratio.performance) / 1000,
-    t: base * finite(ratio.technique) / 1000,
-    s: base * finite(ratio.sense) / 1000,
+  const multiplier = potential >= 2 ? 1.1 : 1;
+  return {
+    p: Math.ceil(base * finite(ratio.performance) / 1000 * multiplier),
+    t: Math.ceil(base * finite(ratio.technique) / 1000 * multiplier),
+    s: Math.ceil(base * finite(ratio.sense) / 1000 * multiplier),
   };
-  const stats = { p: Math.floor(raw.p), t: Math.floor(raw.t), s: Math.floor(raw.s) };
-  let remainder = Math.max(0, Math.round(base - stats.p - stats.t - stats.s));
-  const order = ["p", "t", "s"].sort(
-    (left, right) => (raw[right] - Math.floor(raw[right])) - (raw[left] - Math.floor(raw[left])),
-  );
-  for (let index = 0; index < remainder; index += 1) stats[order[index % 3]] += 1;
-  if (potential >= 2) {
-    for (const stat of ["p", "t", "s"]) stats[stat] = Math.round(stats[stat] * 1.1);
-  }
-  return stats;
 }
 
 function conditionFromId(groupId) {
@@ -306,9 +298,11 @@ function passiveEvaluation(members) {
     }
     for (const target of targets) {
       if (effect.kind === "selfAll" || effect.kind === "all") {
-        for (const stat of ["p", "t", "s"]) bonusByMember.get(target.id)[stat] += target.stats[stat] * effect.value / 100;
+        for (const stat of ["p", "t", "s"]) {
+          bonusByMember.get(target.id)[stat] += Math.ceil(target.stats[stat] * effect.value / 100);
+        }
       } else if (effect.kind === "stat") {
-        bonusByMember.get(target.id)[effect.stat] += target.stats[effect.stat] * effect.value / 100;
+        bonusByMember.get(target.id)[effect.stat] += Math.ceil(target.stats[effect.stat] * effect.value / 100);
       }
     }
   }
@@ -402,6 +396,15 @@ function expectedMaximum(items, probabilityKey) {
     noStronger *= 1 - probability;
   }
   return expected;
+}
+
+function unitPassiveSupportBonus(details, supportByMember = {}) {
+  const baseline = expectedMaximum(details, "coverage");
+  const supported = details.map((detail) => ({
+    ...detail,
+    scoreUpPct: detail.scoreUpPct * (1 + finite(supportByMember?.[detail.cardId]) / 100),
+  }));
+  return Math.max(0, expectedMaximum(supported, "coverage") - baseline);
 }
 
 function exactSameIntervalExpected(group, liveDuration) {
@@ -646,11 +649,27 @@ function diagnostics(members, context, passiveStates, leader, additionalLeaderCo
   });
 }
 
-function buildDeckComposition({ leader, members, separateRole = true, includePotential = true }) {
+function normalizeAccountBonuses(accountBonuses = null) {
+  const source = accountBonuses ?? DEFAULT_ACCOUNT_BONUSES;
+  const explicitPermyriad = source?.memberEnhancementPermyriad;
+  const fromPct = finite(source?.memberEnhancementPct) * 100;
+  return {
+    memberEnhancementPermyriad: Math.max(0, finite(explicitPermyriad, fromPct)),
+    boardScoreBonusPct: Math.max(0, finite(source?.boardScoreBonusPct)),
+  };
+}
+
+function accountBonusKey(accountBonuses) {
+  const normalized = normalizeAccountBonuses(accountBonuses);
+  return `${normalized.memberEnhancementPermyriad}|${normalized.boardScoreBonusPct}`;
+}
+
+function buildDeckComposition({ leader, members, separateRole = true, includePotential = true, accountBonuses = null }) {
   if (!leader || members.length !== 5 || members.some((member) => !member)) return null;
   if (separateRole && members.some((member) => member.characterId === leader.characterId)) return null;
-  if (!allConditionsMet(leader.leader.primaryCondition, members)) return null;
 
+  const normalizedAccountBonuses = normalizeAccountBonuses(accountBonuses);
+  const primaryMet = allConditionsMet(leader.leader.primaryCondition, members);
   const baseStats = members.reduce((total, member) => ({
     p: total.p + member.stats.p,
     t: total.t + member.stats.t,
@@ -658,8 +677,8 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   }), { p: 0, t: 0, s: 0 });
   const passive = passiveEvaluation(members);
   const leaderEffects = { p: 0, t: 0, s: 0, support: 0 };
-  addEffects(leaderEffects, leader.leader.primaryEffects);
-  const additionalMet = allConditionsMet(leader.leader.additionalCondition, members);
+  if (primaryMet) addEffects(leaderEffects, leader.leader.primaryEffects);
+  const additionalMet = primaryMet && allConditionsMet(leader.leader.additionalCondition, members);
   if (additionalMet) addEffects(leaderEffects, leader.leader.additionalEffects);
   const leaderBonusStats = {
     p: baseStats.p * leaderEffects.p / 100,
@@ -671,7 +690,7 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
     t: baseStats.t + leaderBonusStats.t + passive.bonusStats.t,
     s: baseStats.s + leaderBonusStats.s + passive.bonusStats.s,
   };
-  const enhancementRate = members.reduce((sum, member) => sum + member.enhancementPermyriad, 0) / 10000;
+  const enhancementRate = normalizedAccountBonuses.memberEnhancementPermyriad / 10000;
   const deckStats = {
     p: Math.round(preEnhancementStats.p * (1 + enhancementRate)),
     t: Math.round(preEnhancementStats.t * (1 + enhancementRate)),
@@ -683,16 +702,22 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   const overallPower = deckStats.p + deckStats.t + deckStats.s;
   const enhancementPower = Math.max(0, Math.round(overallPower - baseParameter - leaderPower - passivePower));
 
-  const unitSkill = skillEvaluation(members, UNIT_CONTEXT, true);
-  const active = unitSkill.active.correctedPct;
-  const activeBase = unitSkill.activeBase.correctedPct;
-  const rateGain = Math.max(0, active - activeBase);
+  // Unit Score display and song timeline intentionally use different overlap semantics.
+  // The in-game Unit Active detail tracks the independent expected maximum; same-cycle
+  // collision remains available to the Special internal expectation and song simulation.
+  const unitSkill = skillEvaluation(members, UNIT_CONTEXT, false);
+  const active = unitSkill.active.independentPct;
+  const activeBase = unitSkill.activeBase.independentPct;
+  const internalActive = unitSkill.active.correctedPct;
+  const internalActiveBase = unitSkill.activeBase.correctedPct;
+  const rateGain = Math.max(0, internalActive - internalActiveBase);
+  const passiveSkillBonus = unitPassiveSupportBonus(unitSkill.details, passive.supportByMember);
   const scoreBonusDetail = {
     outfit: round1(active * leaderEffects.support / 100),
     active: round1(active),
-    board: 0,
-    passive: round1(active * passive.supportPoints / 100),
-    special: round1(activeBase * unitSkill.special.supportAveragePct / 100 + rateGain),
+    board: round1(normalizedAccountBonuses.boardScoreBonusPct),
+    passive: round1(passiveSkillBonus),
+    special: round1(internalActiveBase * unitSkill.special.supportAveragePct / 100 + rateGain),
   };
   const scoreBonusPct = round1(Object.values(scoreBonusDetail).reduce((sum, value) => sum + value, 0));
   const unitScore = unitScoreFromDisplayed(overallPower, scoreBonusPct);
@@ -700,16 +725,18 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   let potentialUnitScore = unitScore;
   let potentialScoreBonusPct = scoreBonusPct;
   if (includePotential) {
-    const potentialUnitSkill = skillEvaluation(members, UNIT_CONTEXT, true, true);
-    const potentialActive = potentialUnitSkill.active.correctedPct;
-    const potentialActiveBase = potentialUnitSkill.activeBase.correctedPct;
-    const potentialRateGain = Math.max(0, potentialActive - potentialActiveBase);
+    const potentialUnitSkill = skillEvaluation(members, UNIT_CONTEXT, false, true);
+    const potentialActive = potentialUnitSkill.active.independentPct;
+    const potentialInternalActive = potentialUnitSkill.active.correctedPct;
+    const potentialInternalActiveBase = potentialUnitSkill.activeBase.correctedPct;
+    const potentialRateGain = Math.max(0, potentialInternalActive - potentialInternalActiveBase);
+    const potentialPassiveSkillBonus = unitPassiveSupportBonus(potentialUnitSkill.details, passive.supportByMember);
     const potentialScoreBonusDetail = {
       outfit: round1(potentialActive * leaderEffects.support / 100),
       active: round1(potentialActive),
-      board: 0,
-      passive: round1(potentialActive * passive.supportPoints / 100),
-      special: round1(potentialActiveBase * potentialUnitSkill.special.supportAveragePct / 100 + potentialRateGain),
+      board: round1(normalizedAccountBonuses.boardScoreBonusPct),
+      passive: round1(potentialPassiveSkillBonus),
+      special: round1(potentialInternalActiveBase * potentialUnitSkill.special.supportAveragePct / 100 + potentialRateGain),
     };
     potentialScoreBonusPct = round1(Object.values(potentialScoreBonusDetail).reduce((sum, value) => sum + value, 0));
     potentialUnitScore = Math.max(unitScore, unitScoreFromDisplayed(overallPower, potentialScoreBonusPct));
@@ -717,6 +744,9 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
 
   return {
     potentialComputed: includePotential,
+    accountBonusKey: accountBonusKey(normalizedAccountBonuses),
+    accountBonuses: normalizedAccountBonuses,
+    primaryMet,
     baseStats,
     passive,
     leaderEffects,
@@ -730,6 +760,8 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
     unitSkill,
     active,
     activeBase,
+    internalActive,
+    internalActiveBase,
     rateGain,
     scoreBonusDetail,
     scoreBonusPct,
@@ -744,8 +776,8 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   };
 }
 
-export function prepareDeckComposition({ leader, members, separateRole = true }) {
-  return buildDeckComposition({ leader, members, separateRole, includePotential: true });
+export function prepareDeckComposition({ leader, members, separateRole = true, accountBonuses = null }) {
+  return buildDeckComposition({ leader, members, separateRole, includePotential: true, accountBonuses });
 }
 
 export function evaluateDeck({
@@ -757,12 +789,22 @@ export function evaluateDeck({
   separateRole = true,
   includeDiagnostics = false,
   evaluationTarget = "both",
+  accountBonuses = null,
   preparedComposition = null,
 }) {
   const needPotential = evaluationTarget !== "score";
+  const requestedAccountBonusKey = accountBonusKey(accountBonuses);
   let composition = preparedComposition;
-  if (!composition || (needPotential && !composition.potentialComputed)) {
-    composition = buildDeckComposition({ leader, members, separateRole, includePotential: needPotential });
+  if (!composition
+    || (needPotential && !composition.potentialComputed)
+    || composition.accountBonusKey !== requestedAccountBonusKey) {
+    composition = buildDeckComposition({
+      leader,
+      members,
+      separateRole,
+      includePotential: needPotential,
+      accountBonuses,
+    });
   }
   if (!composition) return null;
 
@@ -803,7 +845,7 @@ export function evaluateDeck({
     songKernelRatio: songProjection?.baseRatio ?? 1,
     context: diagnosticContext,
     leaderCondition: {
-      primaryMet: true,
+      primaryMet: composition.primaryMet,
       primaryCount: leader.leader.primaryCondition.length,
       additionalMet: composition.additionalMet,
       additionalCount: leader.leader.additionalCondition.length,
@@ -821,6 +863,7 @@ export function evaluateDeck({
       collision: {
         groups: composition.unitSkill.active.duplicateGroups,
         lossPct: round1(composition.unitSkill.active.collisionLossPct),
+        appliedToUnitActive: false,
       },
     },
     passiveStates: composition.passive.activeStates,
