@@ -43,7 +43,7 @@ async function waitForDeployment() {
 }
 
 const html = await waitForDeployment();
-assert.ok(html.includes('class="calculation-scope"'), "calculation scope disclosure missing from production HTML");
+assert.ok(!html.includes('class="calculation-scope"'), "removed calculation scope disclosure unexpectedly present in production HTML");
 
 const manifestResponse = await request(withRevision("/data/generated/manifest.json"));
 assert.equal(manifestResponse.ok, true, `manifest request failed: ${manifestResponse.status}`);
