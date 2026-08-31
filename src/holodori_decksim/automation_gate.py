@@ -179,10 +179,10 @@ def evaluate_card_asset_gate(
     if unexpected_changes:
         reasons.append(f"asset sync touched {unexpected_changes} unexpected path(s)")
     if portrait_changes > 24:
-        reasons.append(f"too many portrait files changed: {portrait_changes} (automatic limit 24)")
-    if portrait_changes != imported_count:
+        reasons.append(f"too many tracked portrait files changed: {portrait_changes} (automatic limit 24)")
+    if portrait_changes and portrait_changes != imported_count:
         reasons.append(
-            f"reported portrait count does not match changed WebP files: report={imported_count}, changed={portrait_changes}"
+            f"reported portrait count does not match changed tracked WebP files: report={imported_count}, changed={portrait_changes}"
         )
 
     return GateResult(safe=not reasons, reasons=tuple(reasons), metrics=metrics)
