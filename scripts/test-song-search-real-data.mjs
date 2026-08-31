@@ -17,14 +17,14 @@ const rules = JSON.parse(fs.readFileSync(new URL("../data/generated/live-score-r
 const masterRefs = JSON.parse(fs.readFileSync(new URL("../data/generated/master_refs.json", import.meta.url), "utf8"));
 const exactMetadata = JSON.parse(fs.readFileSync(new URL("../data/generated/charts/m0049-EXPERT.json", import.meta.url), "utf8"));
 
-const selectable = cards.filter((card) => [4, 5].includes(Number(card.rarity)));
+const cardsForSearch = cards.filter((card) => [4, 5].includes(Number(card.rarity)));
 const charactersById = new Map(characters.map((row) => [row.id, row]));
 const musicById = new Map(music.map((row) => [row.id, row]));
-const settings = Object.fromEntries(selectable.map((card) => {
+const settings = Object.fromEntries(cardsForSearch.map((card) => {
   const maxLevel = Math.max(1, ...(card.growth?.levels ?? []).map((row) => Number(row.level) || 1));
   return [card.id, { level: maxLevel, potential: 0 }];
 }));
-const preparedCards = prepareScoreCards(selectable, charactersById, settings, {
+const preparedCards = prepareScoreCards(cardsForSearch, charactersById, settings, {
   levelMode: "max",
   masterRefs,
 });
@@ -47,30 +47,50 @@ function compositionKey(result) {
   return `${result.members[0]}::${result.members.slice(1).sort().join("|")}`;
 }
 
+function rankTuple(result, simulationTarget) {
+  return [
+    recommendationValue(result.score, simulationTarget),
+    Number(result.score?.rankingScore) || 0,
+    Number(result.score?.unitScore) || 0,
+  ];
+}
+
+function rankTupleKey(result, simulationTarget) {
+  return JSON.stringify(rankTuple(result, simulationTarget));
+}
+
 function compareResults(left, right) {
   return right.rankingValue - left.rankingValue
     || (Number(right.score?.rankingScore) || 0) - (Number(left.score?.rankingScore) || 0)
-    || (Number(right.score?.unitScore) || 0) - (Number(left.score?.unitScore) || 0)
-    || compositionKey(left).localeCompare(compositionKey(right));
+    || (Number(right.score?.unitScore) || 0) - (Number(left.score?.unitScore) || 0);
 }
 
 function assertTopFiveParity(actual, expected, label) {
   assert.equal(actual.ok, true, `${label}: optimized result failed`);
   assert.equal(expected.ok, true, `${label}: exact result failed`);
-  const actualRows = actual.results.slice(0, 5).map((row) => ({
-    key: compositionKey(row),
-    value: recommendationValue(row.score, actual.simulationTarget),
-  }));
-  const expectedRows = expected.results.slice(0, 5).map((row) => ({
-    key: compositionKey(row),
-    value: recommendationValue(row.score, expected.simulationTarget),
-  }));
-  assert.deepEqual(actualRows.map((row) => row.key), expectedRows.map((row) => row.key),
-    `${label}: TOP5 compositions differ`);
-  actualRows.forEach((row, index) => {
-    assert.ok(Math.abs(row.value - expectedRows[index].value) < 1e-6,
-      `${label}: ranking value differs at ${index + 1}: ${row.value} != ${expectedRows[index].value}`);
-  });
+  const target = actual.simulationTarget;
+  const actualTop = actual.results.slice(0, 5);
+  const expectedTop = expected.results.slice(0, 5);
+  const actualTuples = actualTop.map((row) => rankTuple(row, target));
+  const expectedTuples = expectedTop.map((row) => rankTuple(row, target));
+  assert.deepEqual(actualTuples, expectedTuples, `${label}: TOP5 ranking tuples differ`);
+
+  const exactKeysByTuple = new Map();
+  for (const row of expected.results) {
+    const tuple = rankTupleKey(row, target);
+    const keys = exactKeysByTuple.get(tuple) ?? new Set();
+    keys.add(compositionKey(row));
+    exactKeysByTuple.set(tuple, keys);
+  }
+
+  for (let index = 0; index < actualTop.length; index += 1) {
+    const tuple = rankTupleKey(actualTop[index], target);
+    const allowed = exactKeysByTuple.get(tuple) ?? new Set();
+    assert.ok(
+      allowed.has(compositionKey(actualTop[index])),
+      `${label}: optimized rank ${index + 1} is not part of the Exact tie group`,
+    );
+  }
 }
 
 function combinations(values, size, start = 0, selected = [], out = []) {
@@ -94,14 +114,14 @@ function permutations(values) {
   return result;
 }
 
-const leaderRaw = selectable.find((card) => {
+const leaderRaw = cardsForSearch.find((card) => {
   const prepared = preparedCards.get(card.id);
   return prepared?.leader?.primaryCondition?.length === 0
     && Number(card.rarity) === 4;
 });
 assert.ok(leaderRaw, "real-data song test requires an unconditional rarity-4 leader");
 const leader = preparedCards.get(leaderRaw.id);
-const eligibleRaw = selectable.filter((card) => card.id !== leader.id && card.character_id !== leader.characterId);
+const eligibleRaw = cardsForSearch.filter((card) => card.id !== leader.id && card.character_id !== leader.characterId);
 const shuffled = seededShuffle(eligibleRaw, 20260831);
 
 // Master-only song contexts: fixed leader + 27 real member cards gives C(27,5)=80,730,
@@ -131,6 +151,7 @@ for (const musicId of ["m0129", "m0008"]) {
       ...commonMaster,
       music: songContext,
       simulationTarget,
+      resultCount: 30,
       exactCaseLimit: 10_000_000,
     });
     assert.notEqual(optimized.searchMode, "exact", `${musicId}/${simulationTarget}: fixture did not exercise Beam/Hybrid`);
@@ -217,7 +238,7 @@ for (const simulationTarget of ["score", "potential"]) {
   exhaustive.sort(compareResults);
   const expected = {
     ok: true,
-    results: exhaustive.slice(0, 5),
+    results: exhaustive,
     simulationTarget,
   };
   assertTopFiveParity(staged, expected, `m0049/EXPERT/exact-order/${simulationTarget}`);
