@@ -14,6 +14,22 @@ function compareResults(left, right) {
     || finite(right.score?.unitScore) - finite(left.score?.unitScore);
 }
 
+function compositionKey(result) {
+  const leaderId = result?.members?.[0] ?? "";
+  const memberIds = result?.members?.slice?.(1, 6) ?? [];
+  return `${leaderId}::${[...memberIds].sort().join("|")}`;
+}
+
+export function dedupeRecommendationResults(results = []) {
+  const bestByComposition = new Map();
+  for (const result of results) {
+    const key = compositionKey(result);
+    const previous = bestByComposition.get(key);
+    if (!previous || compareResults(result, previous) < 0) bestByComposition.set(key, result);
+  }
+  return [...bestByComposition.values()].sort(compareResults);
+}
+
 function permutations(values) {
   if (values.length <= 1) return [values];
   const result = [];
@@ -59,7 +75,7 @@ export function optimizeRecommendationOrders({
   const exactSkills = music?._chart?.metadata?.skills;
   if (!recommendation?.ok || !Array.isArray(exactSkills) || exactSkills.length === 0) {
     if (recommendation?.ok) {
-      recommendation.results = recommendation.results.slice(0, resultCount);
+      recommendation.results = dedupeRecommendationResults(recommendation.results).slice(0, resultCount);
       recommendation.members = recommendation.results[0]?.members ?? recommendation.members;
       recommendation.score = recommendation.results[0]?.score ?? recommendation.score;
       recommendation.orderOptimization = { mode: "skipped", evaluatedCount: 0, shortlistedCount: recommendation.results.length };
@@ -104,8 +120,8 @@ export function optimizeRecommendationOrders({
     if (best) orderedCandidates.push(best);
   }
 
-  orderedCandidates.sort(compareResults);
-  const finalResults = orderedCandidates.slice(0, Math.max(1, resultCount)).map((result) => {
+  const dedupedCandidates = dedupeRecommendationResults(orderedCandidates);
+  const finalResults = dedupedCandidates.slice(0, Math.max(1, resultCount)).map((result) => {
     const leader = preparedCards.get(result.members[0]);
     const members = result.members.slice(1).map((id) => preparedCards.get(id));
     const score = evaluateDeck({
