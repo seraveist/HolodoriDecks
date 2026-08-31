@@ -193,6 +193,49 @@ function searchCard(id, {
   assert.deepEqual(new Set(refined.members.slice(1)), new Set(fiveStars.slice(0, 5).map((row) => row.id)));
 }
 
+// A wider second-pass Beam recovers a synergy island that is individually weaker than filler cards.
+{
+  const lockedLeader = searchCard("ISLAND-L");
+  const synergy = Array.from({ length: 5 }, (_, index) => searchCard(`ISLAND-${index}`, {
+    rarity: 5,
+    parameter: 9000,
+    groupings: ["island"],
+  }));
+  synergy.forEach((row) => {
+    row.passive = {
+      level: 1,
+      description: "island synergy",
+      condition: { kind: "group", value: "island", count: 5 },
+      effect: { kind: "all", stat: null, value: 100, target: { kind: "all", count: 5 } },
+    };
+  });
+  const fillers = Array.from({ length: 34 }, (_, index) => searchCard(`ISLAND-FILLER-${index}`, {
+    rarity: 5,
+    parameter: 10000,
+  }));
+  const rows = [lockedLeader, ...synergy, ...fillers];
+  const islandCommon = {
+    preparedCards: new Map(rows.map((row) => [row.id, row])),
+    ownedCardIds: rows.map((row) => row.id),
+    currentMembers: [lockedLeader.id, null, null, null, null, null],
+    lockedSlots: [true, false, false, false, false, false],
+    simulationTarget: "score",
+    separateRole: true,
+    resultCount: 5,
+  };
+  const refined = optimizeOwnedDeck(islandCommon);
+  const exhaustive = optimizeOwnedDeck({ ...islandCommon, exactCaseLimit: 1_000_000 });
+  assert.equal(refined.ok, true);
+  assert.equal(exhaustive.ok, true);
+  assert.equal(refined.searchMode, "beam");
+  assert.equal(refined.results[0].rankingValue, exhaustive.results[0].rankingValue);
+  assert.deepEqual(
+    new Set(refined.members.slice(1)),
+    new Set(synergy.map((row) => row.id)),
+    "second-pass refinement missed the five-card synergy island",
+  );
+}
+
 // Member order is not a distinct result, but changing the leader still is.
 {
   const score = (value) => ({ rankingScore: value, unitScore: value });
