@@ -18,6 +18,10 @@ jobs:
         with:
           node-version: 24
       - name: Check test syntax
-        run: node --check scripts/test-song-search-real-data.mjs
+        run: |
+          node --check scripts/diagnose-m0008-order.mjs
+          node --check scripts/test-song-search-real-data.mjs
+      - name: Diagnose master-song order sensitivity
+        run: node scripts/diagnose-m0008-order.mjs
       - name: Compare song-specific optimizer with Exact
         run: node scripts/test-song-search-real-data.mjs
