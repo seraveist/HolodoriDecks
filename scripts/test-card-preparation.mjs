@@ -2,6 +2,11 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import { auditPotentialEffects, prepareScoreCards } from "../js/card-prepare.js";
 import { auditLeaderSupport, leaderSupportStatus } from "../js/leader-support.js";
+import {
+  CARD_SKILL_SUPPORT_REGISTRY,
+  auditCardSkillSupport,
+  cardSkillSupportStatus,
+} from "../js/skill-support.js";
 import { prepareScoreCards as legacyPrepareScoreCards } from "../js/score.js";
 
 const cards = JSON.parse(fs.readFileSync(new URL("../data/generated/cards.json", import.meta.url), "utf8"));
@@ -18,6 +23,16 @@ assert.equal(
   `unsupported leader mechanics detected: ${JSON.stringify({
     issues: leaderAudit.issues,
     cards: leaderAudit.unknownCards.slice(0, 10),
+  })}`,
+);
+
+const skillAudit = auditCardSkillSupport(selectable, masterRefs);
+assert.equal(
+  skillAudit.understood,
+  true,
+  `unsupported card skill mechanics detected: ${JSON.stringify({
+    issues: skillAudit.issues.slice(0, 20),
+    cards: skillAudit.unknownCards.slice(0, 10),
   })}`,
 );
 
@@ -38,6 +53,152 @@ const syntheticUnsupportedTarget = {
 };
 assert.equal(leaderSupportStatus(syntheticUnsupportedTarget).understood, false,
   "known leader effect types with new targets must require explicit support");
+
+function syntheticBaseCard(id = "synthetic-card") {
+  return {
+    id,
+    character_name: "Synthetic",
+    growth: { potential_effects: [] },
+    skills: { active: { levels: [] }, passive: { levels: [] }, special: { levels: [] } },
+  };
+}
+
+const knownScoreEffect = {
+  groupId: "synthetic-score-effect",
+  number: 1,
+  type: "LiveActiveSkillEffectType_LIVE_ACTIVE_SKILL_EFFECT_TYPE_SCORE_UP_PERMIL_UP",
+  value: "500",
+};
+const syntheticUnknownTriggerRefs = {
+  ...masterRefs,
+  active_effects: {
+    ...masterRefs.active_effects,
+    "synthetic-score-effect": [knownScoreEffect],
+  },
+  triggers: {
+    ...masterRefs.triggers,
+    "synthetic-future-trigger": [{
+      groupId: "synthetic-future-trigger",
+      number: 1,
+      type: "LiveSkillTriggerType_FUTURE_UNKNOWN",
+      threshold: "1",
+    }],
+  },
+};
+const syntheticUnknownTriggerCard = syntheticBaseCard("synthetic-unknown-trigger");
+syntheticUnknownTriggerCard.skills.active.levels.push({
+  level: 1,
+  liveActiveSkillEffectGroupId: "synthetic-score-effect",
+  additionalLiveSkillTriggerGroupId: "synthetic-future-trigger",
+  additionalLiveActiveSkillEffectGroupId: "synthetic-score-effect",
+  coolTimeMillisecond: 30000,
+  activationProbabilityPermilMultiply: 500,
+  effectDurationMillisecond: 10000,
+});
+assert.equal(
+  cardSkillSupportStatus(syntheticUnknownTriggerCard, syntheticUnknownTriggerRefs).understood,
+  false,
+  "future active/special trigger types must default to unsupported",
+);
+
+const syntheticUnknownEffectRefs = {
+  ...masterRefs,
+  active_effects: {
+    ...masterRefs.active_effects,
+    "synthetic-future-effect": [{
+      groupId: "synthetic-future-effect",
+      number: 1,
+      type: "LiveActiveSkillEffectType_FUTURE_UNKNOWN",
+      value: "500",
+    }],
+  },
+};
+const syntheticUnknownEffectCard = syntheticBaseCard("synthetic-unknown-effect");
+syntheticUnknownEffectCard.skills.active.levels.push({
+  level: 1,
+  liveActiveSkillEffectGroupId: "synthetic-future-effect",
+  coolTimeMillisecond: 30000,
+  activationProbabilityPermilMultiply: 500,
+  effectDurationMillisecond: 10000,
+});
+assert.equal(
+  cardSkillSupportStatus(syntheticUnknownEffectCard, syntheticUnknownEffectRefs).understood,
+  false,
+  "future active effect types must default to unsupported",
+);
+
+const syntheticPassiveTargetRefs = {
+  ...masterRefs,
+  passive_effects: {
+    ...masterRefs.passive_effects,
+    "synthetic-passive-target": [{
+      groupId: "synthetic-passive-target",
+      number: 1,
+      type: "LivePassiveSkillEffectType_LIVE_PASSIVE_SKILL_EFFECT_TYPE_ALL_PARAMETER_UP_PERMIL_UP",
+      value: "200",
+      liveSkillEffectTargetId: "live_skill_effect_target-future",
+    }],
+  },
+};
+const syntheticPassiveTargetCard = syntheticBaseCard("synthetic-passive-target");
+syntheticPassiveTargetCard.skills.passive.levels.push({
+  level: 1,
+  livePassiveSkillEffectGroupId: "synthetic-passive-target",
+});
+assert.equal(
+  cardSkillSupportStatus(syntheticPassiveTargetCard, syntheticPassiveTargetRefs).understood,
+  false,
+  "known passive effects with a new target shape must require explicit support",
+);
+
+const syntheticWrongContextRefs = {
+  ...masterRefs,
+  active_effects: {
+    ...masterRefs.active_effects,
+    "synthetic-life-recovery": [{
+      groupId: "synthetic-life-recovery",
+      number: 1,
+      type: "LiveActiveSkillEffectType_LIVE_ACTIVE_SKILL_EFFECT_TYPE_LIFE_RECOVERY",
+      value: "300",
+    }],
+  },
+};
+const syntheticWrongContextCard = syntheticBaseCard("synthetic-wrong-context");
+syntheticWrongContextCard.skills.active.levels.push({
+  level: 1,
+  liveActiveSkillEffectGroupId: "synthetic-life-recovery",
+  coolTimeMillisecond: 30000,
+  activationProbabilityPermilMultiply: 500,
+  effectDurationMillisecond: 10000,
+});
+assert.equal(
+  cardSkillSupportStatus(syntheticWrongContextCard, syntheticWrongContextRefs).understood,
+  false,
+  "known effects used in an unsupported skill context must not be silently accepted",
+);
+
+const syntheticUnknownPotentialCard = syntheticBaseCard("synthetic-unknown-potential");
+syntheticUnknownPotentialCard.growth.potential_effects.push({
+  upgradeCount: 1,
+  effectType: "CardPotentialEffectType_FUTURE_UNKNOWN",
+  value: "2",
+});
+assert.equal(
+  cardSkillSupportStatus(syntheticUnknownPotentialCard, masterRefs).understood,
+  false,
+  "future potential effect types must default to unsupported",
+);
+
+const syntheticIgnoredPotentialCard = syntheticBaseCard("synthetic-ignored-potential");
+syntheticIgnoredPotentialCard.growth.potential_effects.push({
+  upgradeCount: 5,
+  effectType: "CardPotentialEffectType_CARD_POTENTIAL_EFFECT_TYPE_SKILL_TREE_CONNECT_EFFECT_LEVEL_UP",
+});
+const ignoredPotentialStatus = cardSkillSupportStatus(syntheticIgnoredPotentialCard, masterRefs);
+assert.equal(ignoredPotentialStatus.understood, true,
+  "known out-of-score potential effects must remain supported");
+assert.ok(ignoredPotentialStatus.ignored.length > 0,
+  "known out-of-score effects must be explicitly recorded as ignored");
 
 function comparable(row) {
   return {
@@ -101,4 +262,10 @@ assert.equal(maxLevelPrepared.profile.level, maxLevel);
 assert.equal(currentLevelPrepared.profile.parameterPermilUp, 100);
 assert.equal(maxLevelPrepared.profile.parameterPermilUp, 100);
 
-console.log(`card preparation regression: ${selectable.length} selectable cards × 6 awakening states; leader registry v${leaderAudit.registryVersion}`);
+console.log(
+  `card preparation regression: ${selectable.length} selectable cards × 6 awakening states; `
+  + `leader registry v${leaderAudit.registryVersion}; card-skill registry v${CARD_SKILL_SUPPORT_REGISTRY.version}; `
+  + `triggers=${skillAudit.observedTriggerTypes.length}, activeEffects=${skillAudit.observedActiveEffectTypes.length}, `
+  + `passiveEffects=${skillAudit.observedPassiveEffectTypes.length}, potentialEffects=${skillAudit.observedPotentialEffectTypes.length}, `
+  + `knownIgnored=${skillAudit.ignoredScoreEffects.length}`,
+);

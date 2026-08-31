@@ -1,14 +1,9 @@
 import { prepareScoreCards as legacyPrepareScoreCards } from "./score.js?v=1.1.0";
-
-const POTENTIAL_TYPE = Object.freeze({
-  active: "ACTIVE_SKILL_LEVEL_UP",
-  passive: "PASSIVE_SKILL_LEVEL_UP",
-  special: "SPECIAL_SKILL_LEVEL_UP",
-  parameter: "ALL_PARAMETER_UP_PERMIL_UP",
-  skillTree: "SKILL_TREE_CONNECT_EFFECT_LEVEL_UP",
-});
-
-const SUPPORTED_POTENTIAL_SUFFIXES = new Set(Object.values(POTENTIAL_TYPE));
+import {
+  POTENTIAL_EFFECT_TYPE as POTENTIAL_TYPE,
+  auditPotentialSupport,
+  potentialEffectTypeSuffix,
+} from "./skill-support.js?v=1.1.0";
 
 const finite = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -33,8 +28,7 @@ function growthAtLevel(card, requestedLevel) {
 }
 
 function effectTypeSuffix(effect) {
-  const value = String(effect?.effectType ?? effect?.type ?? "");
-  return [...SUPPORTED_POTENTIAL_SUFFIXES].find((suffix) => value.endsWith(suffix)) ?? value;
+  return potentialEffectTypeSuffix(effect);
 }
 
 function potentialRows(card, potential) {
@@ -57,21 +51,7 @@ function potentialParameterPermil(rows) {
 }
 
 export function auditPotentialEffects(cards) {
-  const unsupported = [];
-  for (const card of cards ?? []) {
-    for (const effect of card?.growth?.potential_effects ?? []) {
-      const suffix = effectTypeSuffix(effect);
-      if (!SUPPORTED_POTENTIAL_SUFFIXES.has(suffix)) {
-        unsupported.push({
-          cardId: card.id,
-          upgradeCount: finite(effect?.upgradeCount),
-          effectType: String(effect?.effectType ?? effect?.type ?? ""),
-          value: effect?.value ?? null,
-        });
-      }
-    }
-  }
-  return unsupported;
+  return auditPotentialSupport(cards);
 }
 
 function skillLevel(skill, requestedLevel) {
