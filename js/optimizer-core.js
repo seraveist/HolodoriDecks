@@ -1,5 +1,5 @@
 import { exactShortlistSize, optimizeOwnedDeck } from "./recommend.js?v=1.1.1";
-import { optimizeRecommendationOrders } from "./order.js?v=1.1.1";
+import { optimizeRecommendationOrders } from "./order.js?v=1.1.2";
 
 export function runOptimization({
   preparedCards,
