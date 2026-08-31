@@ -1,6 +1,5 @@
 import pytest
 
-pytest.importorskip("hunmin", reason="music-search extra is not installed")
 pytest.importorskip("hanja", reason="music-search extra is not installed")
 pytest.importorskip("pykakasi", reason="music-search extra is not installed")
 
@@ -15,6 +14,7 @@ from holodori_decksim.music_search import (
 def test_japanese_search_alias_transforms() -> None:
     assert "shukusei" in romanize_japanese("シュクセイ").lower()
     assert transcribe_japanese_to_hangul("モグモグ") == "모구모구"
+    assert transcribe_japanese_to_hangul("セイモグモグ") == "세이모구모구"
     mixed = korean_hanja_kana_alias("聖モグ神")
     assert "성" in mixed
     assert "모구" in mixed
