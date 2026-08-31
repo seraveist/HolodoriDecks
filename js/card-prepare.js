@@ -230,23 +230,12 @@ function parseLeaderEffects(effects) {
 function distributeStats(card, parameterBaseValue, parameterPermilUp) {
   const base = finite(parameterBaseValue);
   const ratio = card?.parameter_ratio_permil ?? {};
-  const raw = {
-    p: base * finite(ratio.performance) / 1000,
-    t: base * finite(ratio.technique) / 1000,
-    s: base * finite(ratio.sense) / 1000,
+  const multiplier = 1 + finite(parameterPermilUp) / 1000;
+  return {
+    p: Math.ceil(base * finite(ratio.performance) / 1000 * multiplier),
+    t: Math.ceil(base * finite(ratio.technique) / 1000 * multiplier),
+    s: Math.ceil(base * finite(ratio.sense) / 1000 * multiplier),
   };
-  const stats = { p: Math.floor(raw.p), t: Math.floor(raw.t), s: Math.floor(raw.s) };
-  let remainder = Math.max(0, Math.round(base - stats.p - stats.t - stats.s));
-  const order = ["p", "t", "s"].sort(
-    (left, right) => (raw[right] - Math.floor(raw[right])) - (raw[left] - Math.floor(raw[left])),
-  );
-  for (let index = 0; index < remainder; index += 1) stats[order[index % 3]] += 1;
-  if (parameterPermilUp) {
-    for (const stat of ["p", "t", "s"]) {
-      stats[stat] = Math.round(stats[stat] * (1 + parameterPermilUp / 1000));
-    }
-  }
-  return stats;
 }
 
 export function prepareScoreCards(cards, charactersById, ownedCardSettings = {}, {
