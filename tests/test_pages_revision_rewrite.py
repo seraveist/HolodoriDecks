@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import importlib.util
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -10,6 +12,32 @@ spec = importlib.util.spec_from_file_location("rewrite_pages_revisions", SCRIPT)
 assert spec and spec.loader
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
+
+
+def test_revision_helpers_import_without_music_search_dependencies() -> None:
+    probe = f'''
+import builtins
+import importlib.util
+from pathlib import Path
+
+blocked = {{"hunmin", "hanja", "pykakasi", "pypinyin"}}
+original_import = builtins.__import__
+
+def guarded_import(name, *args, **kwargs):
+    if name.split(".", 1)[0] in blocked:
+        raise RuntimeError(f"optional music-search dependency imported during module load: {{name}}")
+    return original_import(name, *args, **kwargs)
+
+builtins.__import__ = guarded_import
+script = Path({str(SCRIPT)!r})
+spec = importlib.util.spec_from_file_location("rewrite_pages_core_probe", script)
+assert spec and spec.loader
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+assert callable(module.rewrite_index)
+assert callable(module.rewrite_js_references)
+'''
+    subprocess.run([sys.executable, "-c", probe], cwd=ROOT, check=True)
 
 
 def test_js_rewrite_updates_only_complete_js_string_paths() -> None:
