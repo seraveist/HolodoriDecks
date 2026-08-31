@@ -6,8 +6,6 @@ import json
 import re
 from pathlib import Path
 
-from holodori_decksim.music_search import build_music_search_index
-
 HTML_REVISION_RE = re.compile(r'(<html\b[^>]*\bdata-card-asset-revision=")[^"]*(")')
 HTML_TAG_RE = re.compile(r'(<html\b[^>]*)(>)')
 APP_SCRIPT_RE = re.compile(r'(src="\./js/app\.js)(?:\?v=[^"]+)?(")')
@@ -41,6 +39,11 @@ def rewrite_js_references(text: str, revision: str) -> str:
 
 
 def build_deployed_music_search(root: Path) -> None:
+    # The multilingual transcription stack is a Pages-only optional dependency.
+    # Keep this import lazy so Master/Card sync and rewrite-unit tests can use
+    # the revision helpers with only the core project dependencies installed.
+    from holodori_decksim.music_search import build_music_search_index
+
     generated = root / 'data' / 'generated'
     i18n = generated / 'i18n'
     music = json.loads((generated / 'music.json').read_text(encoding='utf-8'))
