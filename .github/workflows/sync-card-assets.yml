@@ -7,12 +7,24 @@ on:
       - "data/generated/cards.json"
       - "src/holodori_decksim/card_assets.py"
       - "src/holodori_decksim/public_card_art.py"
+      - "src/holodori_decksim/automation_gate.py"
       - "scripts/sync-card-assets.py"
+      - "scripts/check-automation-gate.py"
       - ".github/workflows/sync-card-assets.yml"
   workflow_dispatch:
     inputs:
       dry_run:
-        description: Resolve and extract missing/repairable portraits without pushing a branch or PR
+        description: Resolve and validate missing/repairable portraits without pushing a branch or PR
+        required: false
+        default: false
+        type: boolean
+      auto_merge:
+        description: Automatically merge a validated, non-anomalous asset PR
+        required: false
+        default: true
+        type: boolean
+      deploy_on_success:
+        description: Deploy Pages after a successful no-op asset audit; used by automated Master sync chaining
         required: false
         default: false
         type: boolean
@@ -21,6 +33,7 @@ on:
     - cron: "45 15 * * *"
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -35,7 +48,7 @@ env:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
 
     steps:
       - uses: actions/checkout@v4
@@ -81,11 +94,13 @@ jobs:
 
       - name: Validate card asset sync helpers
         run: |
-          python -m pytest -q tests/test_card_assets.py tests/test_public_card_art.py
+          python -m pytest -q tests/test_card_assets.py tests/test_public_card_art.py tests/test_automation_gate.py
           python -m py_compile \
             src/holodori_decksim/card_assets.py \
             src/holodori_decksim/public_card_art.py \
-            scripts/sync-card-assets.py
+            src/holodori_decksim/automation_gate.py \
+            scripts/sync-card-assets.py \
+            scripts/check-automation-gate.py
 
       - name: Audit missing selectable-card portraits
         id: audit
@@ -143,19 +158,37 @@ jobs:
       - name: Detect asset diff
         id: diff
         run: |
+          git diff --name-status -- assets/cards assets/card-portrait-sync.json > /tmp/card-asset-diff.txt
+          git status --porcelain -- assets/cards assets/card-portrait-sync.json
           if [ -n "$(git status --porcelain -- assets/cards assets/card-portrait-sync.json)" ]; then
             echo "has_diff=true" >> "$GITHUB_OUTPUT"
           else
             echo "has_diff=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Evaluate card-asset auto-merge safety
+        id: gate
+        run: |
+          python scripts/check-automation-gate.py card-assets \
+            --report /tmp/card-asset-sync.json \
+            --diff /tmp/card-asset-diff.txt \
+            --output /tmp/card-asset-automerge-gate.json
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          gate = json.load(open('/tmp/card-asset-automerge-gate.json', encoding='utf-8'))
+          print(f"safe={str(bool(gate['safe'])).lower()}")
+          print(f"reason_count={len(gate['reasons'])}")
+          PY
+
       - name: Show dry-run summary
         if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run == true
         run: |
           git status --short -- assets/cards assets/card-portrait-sync.json
           git diff --stat -- assets/cards assets/card-portrait-sync.json
+          cat /tmp/card-asset-automerge-gate.json
 
       - name: Commit asset sync branch
+        id: asset_commit
         if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run != true
         env:
           SYNC_BRANCH: automation/card-asset-sync
@@ -166,6 +199,7 @@ jobs:
           git add assets/cards assets/card-portrait-sync.json
           git commit -m "Sync Holodori card portraits"
           git push --force origin "$SYNC_BRANCH"
+          echo "head_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Create or refresh card asset pull request
         id: asset_pr
@@ -179,14 +213,20 @@ jobs:
           from pathlib import Path
 
           report = json.loads(Path('/tmp/card-asset-sync.json').read_text(encoding='utf-8'))
+          gate = json.loads(Path('/tmp/card-asset-automerge-gate.json').read_text(encoding='utf-8'))
           imported = report.get('imported', [])
           rows = '\n'.join(
               f"- `{row['id']}` ← `{row['asset_id']}` ({row['unity_object_type']} `{row['unity_object']}`)"
               for row in imported
           ) or '- none'
+          if gate['safe']:
+              gate_text = '- Status: **eligible for automatic merge**\n- All portrait safety checks passed.'
+          else:
+              reasons = '\n'.join(f"- {reason}" for reason in gate['reasons'])
+              gate_text = f'- Status: **manual review required**\n{reasons}'
           body = f"""## Automated Holodori card portrait sync
 
-          This PR was generated from the current `main` card Master and is intentionally **not auto-merged**.
+          This PR was generated from the current `main` card Master. Safe, complete portrait batches are automatically merged; anomalous batches remain open for administrator review.
 
           - Public source: `{report.get('public_source_repository')}`@`{report.get('public_source_commit')}`
           - Public repairs: {report.get('public_repair_count', 0)}
@@ -195,6 +235,9 @@ jobs:
           - Missing before sync: {report['before']['missing_count']}
           - Imported/repaired: {report['imported_count']}
           - Missing after sync: {report['after']['missing_count']}
+
+          ### Automatic merge gate
+          {gate_text}
 
           ### Imported / repaired portraits
           {rows}
@@ -206,8 +249,7 @@ jobs:
           - automated outputs are validated WebP within 768×768
           - public snapshot illustrations must remain landscape
           - post-sync audit requires zero missing selectable-card portraits
-          - generated Master validation remains unchanged
-          - source/output dimensions and SHA-256 provenance are recorded in `assets/card-portrait-sync.json`
+          - source/output dimensions and SHA-256 provenance are recorded
           """
           Path('/tmp/card-asset-pr-body.md').write_text(
               '\n'.join(line.strip() for line in body.splitlines()) + '\n',
@@ -219,13 +261,55 @@ jobs:
           number="$(gh pr list --base main --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number // empty')"
           if [ -n "$number" ]; then
             gh pr edit "$number" --title "$title" --body-file /tmp/card-asset-pr-body.md
-            echo "state=updated" >> "$GITHUB_OUTPUT"
-            echo "number=$number" >> "$GITHUB_OUTPUT"
+            state=updated
           else
             output="$(gh pr create --base main --head "$SYNC_BRANCH" --title "$title" --body-file /tmp/card-asset-pr-body.md)"
             echo "$output"
-            echo "state=created" >> "$GITHUB_OUTPUT"
+            state=created
+            number="$(gh pr list --base main --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number // empty')"
           fi
+          test -n "$number"
+          echo "state=$state" >> "$GITHUB_OUTPUT"
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+
+      - name: Auto-merge safe card asset sync
+        id: auto_merge
+        if: >-
+          steps.diff.outputs.has_diff == 'true' &&
+          inputs.dry_run != true &&
+          steps.gate.outputs.safe == 'true' &&
+          steps.asset_pr.outputs.number != '' &&
+          (github.event_name != 'workflow_dispatch' || inputs.auto_merge == true)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.asset_pr.outputs.number }}
+          EXPECTED_HEAD: ${{ steps.asset_commit.outputs.head_sha }}
+        run: |
+          actual_head="$(gh pr view "$PR_NUMBER" --json headRefOid --jq '.headRefOid')"
+          test "$actual_head" = "$EXPECTED_HEAD"
+          gh pr merge "$PR_NUMBER" --squash --match-head-commit "$EXPECTED_HEAD"
+          echo "merged=true" >> "$GITHUB_OUTPUT"
+          echo "Dispatching Pages for the merged portrait set."
+          gh workflow run pages.yml --ref main
+
+      - name: Deploy after complete no-op asset audit
+        id: noop_deploy
+        if: >-
+          steps.diff.outputs.has_diff == 'false' &&
+          inputs.dry_run != true &&
+          github.event_name == 'workflow_dispatch' &&
+          inputs.deploy_on_success == true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run pages.yml --ref main
+          echo "dispatched=true" >> "$GITHUB_OUTPUT"
+
+      - name: Flag anomaly for administrator review
+        if: steps.diff.outputs.has_diff == 'true' && steps.gate.outputs.safe == 'false'
+        run: |
+          echo "::warning::Card asset sync completed but tripped the automatic-merge anomaly gate. PR #${{ steps.asset_pr.outputs.number }} remains open for administrator review."
+          cat /tmp/card-asset-automerge-gate.json
 
       - name: Job summary
         if: always()
@@ -236,8 +320,10 @@ jobs:
             echo "- imported/repaired: ${{ steps.sync_assets.outputs.imported_count || '0' }}"
             echo "- public repairs: ${{ steps.sync_assets.outputs.repair_count || '0' }}"
             echo "- unresolved: ${{ steps.sync_assets.outputs.unresolved_count || '0' }}"
-            echo "- Octo catalog revision: ${{ steps.sync_assets.outputs.catalog_revision || 'n/a' }}"
             echo "- generated diff: ${{ steps.diff.outputs.has_diff || 'false' }}"
+            echo "- auto-merge safe: ${{ steps.gate.outputs.safe || 'n/a' }}"
+            echo "- auto-merged: ${{ steps.auto_merge.outputs.merged || 'false' }}"
+            echo "- asset PR: ${{ steps.asset_pr.outputs.number || 'not-needed' }}"
+            echo "- no-op Pages dispatch: ${{ steps.noop_deploy.outputs.dispatched || 'false' }}"
             echo "- dry run: ${{ inputs.dry_run || false }}"
-            echo "- review PR state: ${{ steps.asset_pr.outputs.state || 'not-needed' }}"
           } >> "$GITHUB_STEP_SUMMARY"
