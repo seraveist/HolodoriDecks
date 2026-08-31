@@ -50,12 +50,14 @@ jobs:
           python --version
           python -m pip --version
           for attempt in 1 2 3; do
-            if python -m pip install --disable-pip-version-check --retries 5 --timeout 30 -e '.[test,music-search]'; then
+            if python -m pip install --disable-pip-version-check --retries 5 --timeout 30 \
+              --index-url https://pypi.org/simple \
+              -e '.[test,music-search]'; then
               break
             fi
             echo "::warning::Full validation tooling install failed (attempt ${attempt}/3)."
             if [ "$attempt" -eq 3 ]; then
-              python -m pip index versions hunmin || true
+              python -m pip index versions hunmin --index-url https://pypi.org/simple || true
               exit 1
             fi
             sleep $((attempt * 10))
