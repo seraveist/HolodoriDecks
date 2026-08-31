@@ -1,3 +1,9 @@
+import pytest
+
+pytest.importorskip("hunmin", reason="music-search extra is not installed")
+pytest.importorskip("hanja", reason="music-search extra is not installed")
+pytest.importorskip("pykakasi", reason="music-search extra is not installed")
+
 from holodori_decksim.music_search import (
     build_music_search_index,
     korean_hanja_kana_alias,
