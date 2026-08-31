@@ -1,0 +1,23 @@
+name: Validate Song Search Real Data
+
+on:
+  push:
+    branches: [improve-search-pruning-20260831]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-song-search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Check test syntax
+        run: node --check scripts/test-song-search-real-data.mjs
+      - name: Compare song-specific optimizer with Exact
+        run: node scripts/test-song-search-real-data.mjs
