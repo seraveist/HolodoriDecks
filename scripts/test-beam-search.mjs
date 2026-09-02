@@ -84,11 +84,12 @@ function searchCard(id, {
   attribute = 1,
   groupings = [],
   leaderCondition = [],
+  characterId = null,
 } = {}) {
   return {
     id,
     raw: { rarity },
-    characterId: `char-${id}`,
+    characterId: characterId ?? `char-${id}`,
     characterName: id,
     attribute,
     groupings: new Set(groupings),
@@ -234,6 +235,53 @@ function searchCard(id, {
     new Set(synergy.map((row) => row.id)),
     "second-pass refinement missed the five-card synergy island",
   );
+}
+
+// Different cards of the same holomem can never coexist in member slots.
+{
+  const lockedLeader = searchCard("UNIQUE-L");
+  const flareNormal = searchCard("FLARE-NORMAL", {
+    parameter: 50000,
+    characterId: "char-flare",
+  });
+  const flareSwim = searchCard("FLARE-SWIM", {
+    parameter: 49000,
+    characterId: "char-flare",
+  });
+  const fillers = Array.from({ length: 4 }, (_, index) => searchCard(`UNIQUE-FILLER-${index}`, {
+    parameter: 10000 - index * 100,
+  }));
+  const rows = [lockedLeader, flareNormal, flareSwim, ...fillers];
+  const uniqueCommon = {
+    preparedCards: new Map(rows.map((row) => [row.id, row])),
+    ownedCardIds: rows.map((row) => row.id),
+    currentMembers: [lockedLeader.id, null, null, null, null, null],
+    lockedSlots: [true, false, false, false, false, false],
+    simulationTarget: "score",
+    separateRole: true,
+    resultCount: 5,
+  };
+
+  for (const exactCaseLimit of [1_000_000, 1]) {
+    const result = optimizeOwnedDeck({ ...uniqueCommon, exactCaseLimit });
+    assert.equal(result.ok, true);
+    for (const candidate of result.results) {
+      const selected = candidate.members.slice(1).map((id) => uniqueCommon.preparedCards.get(id));
+      const characterIds = selected.map((row) => row.characterId);
+      assert.equal(new Set(characterIds).size, characterIds.length,
+        "same holomem variants appeared together in a recommended deck");
+      assert.ok(!(candidate.members.includes(flareNormal.id) && candidate.members.includes(flareSwim.id)),
+        "normal and swimsuit variants of the same holomem were selected together");
+    }
+  }
+
+  const invalidPreset = optimizeOwnedDeck({
+    ...uniqueCommon,
+    currentMembers: [lockedLeader.id, flareNormal.id, flareSwim.id, null, null, null],
+    lockedSlots: [true, true, true, false, false, false],
+  });
+  assert.equal(invalidPreset.ok, false);
+  assert.match(invalidPreset.reason, /같은 홀로멤/);
 }
 
 // Member order is not a distinct result, but changing the leader still is.
