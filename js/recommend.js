@@ -56,13 +56,44 @@ function combinationCount(total, selected, cap = Number.MAX_SAFE_INTEGER) {
   return Math.round(value);
 }
 
-function forEachCombination(rows, size, callback) {
+function memberCharacterKey(member) {
+  const characterId = String(member?.characterId ?? "");
+  return characterId || `card:${String(member?.id ?? "")}`;
+}
+
+function hasDuplicateMemberCharacters(members) {
+  const keys = (members ?? []).map(memberCharacterKey);
+  return new Set(keys).size !== keys.length;
+}
+
+function combinationCountByCharacter(rows, selected, cap = Number.MAX_SAFE_INTEGER) {
+  if (selected < 0) return 0;
+  if (selected === 0) return 1;
+  const variantCounts = new Map();
+  for (const row of rows) {
+    const key = memberCharacterKey(row);
+    variantCounts.set(key, (variantCounts.get(key) ?? 0) + 1);
+  }
+  if (variantCounts.size < selected) return 0;
+
+  const ways = Array(selected + 1).fill(0);
+  ways[0] = 1;
+  for (const variants of variantCounts.values()) {
+    for (let count = selected; count >= 1; count -= 1) {
+      ways[count] = Math.min(cap, ways[count] + ways[count - 1] * variants);
+    }
+  }
+  return Math.min(cap, Math.round(ways[selected]));
+}
+
+function forEachCombination(rows, size, callback, fixedMembers = []) {
   if (size === 0) {
     callback([]);
     return 1;
   }
   if (size < 0 || rows.length < size) return 0;
   const selected = [];
+  const usedCharacters = new Set(fixedMembers.map(memberCharacterKey));
   let count = 0;
   function visit(start) {
     if (selected.length === size) {
@@ -72,9 +103,14 @@ function forEachCombination(rows, size, callback) {
     }
     const remaining = size - selected.length;
     for (let index = start; index <= rows.length - remaining; index += 1) {
-      selected.push(rows[index]);
+      const row = rows[index];
+      const characterKey = memberCharacterKey(row);
+      if (usedCharacters.has(characterKey)) continue;
+      usedCharacters.add(characterKey);
+      selected.push(row);
       visit(index + 1);
       selected.pop();
+      usedCharacters.delete(characterKey);
     }
   }
   visit(0);
@@ -166,6 +202,23 @@ function fourStarSynergyValue(member, leader, coreMembers) {
   return value;
 }
 
+function bestVariantsByCharacter(pool, concept) {
+  const best = new Map();
+  for (const member of pool) {
+    const key = memberCharacterKey(member);
+    const current = best.get(key);
+    if (!current || conceptMemberValue(member, concept) > conceptMemberValue(current, concept)) {
+      best.set(key, member);
+    }
+  }
+  return [...best.values()];
+}
+
+function expandSelectedCharacterVariants(pool, selectedMembers) {
+  const selectedCharacters = new Set([...selectedMembers].map(memberCharacterKey));
+  return pool.filter((member) => selectedCharacters.has(memberCharacterKey(member)));
+}
+
 export function memberCandidatePool(pool, leader, fixedMembers = [], concept = "score") {
   if (pool.length <= MEMBER_PRUNE_THRESHOLD) return [...pool];
 
@@ -174,7 +227,7 @@ export function memberCandidatePool(pool, leader, fixedMembers = [], concept = "
   if (!fourStars.length) return [...pool];
 
   const selected = new Map(highRarity.map((member) => [member.id, member]));
-  const coreMembers = [...fixedMembers, ...highRarity];
+  const coreMembers = [...fixedMembers, ...bestVariantsByCharacter(highRarity, concept)];
   const byValue = [...fourStars].sort((left, right) => (
     conceptMemberValue(right, concept) - conceptMemberValue(left, concept)
   ));
@@ -189,15 +242,32 @@ export function memberCandidatePool(pool, leader, fixedMembers = [], concept = "
   fourStars.filter((member) => relevantToLeader(member, leader))
     .forEach((member) => selected.set(member.id, member));
 
-  return pool.filter((member) => selected.has(member.id));
+  return expandSelectedCharacterVariants(pool, selected.values());
 }
 
-function memberBeamPool(pool, leader, concept) {
-  const ranked = [...pool].sort((left, right) => conceptMemberValue(right, concept) - conceptMemberValue(left, concept));
-  const selected = new Map(ranked.slice(0, BEAM_MEMBER_LIMIT).map((member) => [member.id, member]));
-  ranked.filter((member) => relevantToLeader(member, leader)).slice(0, 18)
-    .forEach((member) => selected.set(member.id, member));
-  return [...selected.values()];
+export function memberBeamPool(pool, leader, concept) {
+  const grouped = new Map();
+  for (const member of pool) {
+    const key = memberCharacterKey(member);
+    if (!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key).push(member);
+  }
+
+  const characters = [...grouped.entries()].map(([key, variants]) => ({
+    key,
+    variants,
+    bestValue: Math.max(...variants.map((member) => conceptMemberValue(member, concept))),
+    relevant: variants.some((member) => relevantToLeader(member, leader)),
+  })).sort((left, right) => right.bestValue - left.bestValue || left.key.localeCompare(right.key));
+
+  const selectedCharacters = new Set(
+    characters.slice(0, BEAM_MEMBER_LIMIT).map((entry) => entry.key),
+  );
+  characters.filter((entry) => entry.relevant)
+    .slice(0, 18)
+    .forEach((entry) => selectedCharacters.add(entry.key));
+
+  return pool.filter((member) => selectedCharacters.has(memberCharacterKey(member)));
 }
 
 function beamCombinations(pool, size, leader, fixedMembers, concept, width = BEAM_WIDTH) {
@@ -209,6 +279,7 @@ function beamCombinations(pool, size, leader, fixedMembers, concept, width = BEA
       const remaining = size - depth;
       for (let index = beam.start; index <= pool.length - remaining; index += 1) {
         const selected = [...beam.selected, pool[index]];
+        if (hasDuplicateMemberCharacters([...fixedMembers, ...selected])) continue;
         expanded.push({
           selected,
           start: index + 1,
@@ -325,6 +396,7 @@ export function optimizeOwnedDeck({
   const fixedMemberIdList = currentMembers.slice(1, 6).filter((id, index) => locked[index + 1] && id);
   const fixedMemberIds = new Set(fixedMemberIdList);
   const fixedMembers = fixedMemberIdList.map((id) => preparedCards.get(id)).filter(Boolean);
+  const fixedMemberCharacters = new Set(fixedMembers.map(memberCharacterKey));
   const fixedLeader = locked[0] ? preparedCards.get(currentMembers[0]) : null;
 
   if (owned.length < 6) {
@@ -333,6 +405,9 @@ export function optimizeOwnedDeck({
 
   if (fixedMemberIds.size !== fixedMemberIdList.length) {
     return { ok: false, reason: "같은 카드를 멤버 슬롯에 두 번 고정할 수 없습니다." };
+  }
+  if (hasDuplicateMemberCharacters(fixedMembers)) {
+    return { ok: false, reason: "같은 홀로멤의 다른 카드를 멤버 슬롯에 동시에 고정할 수 없습니다." };
   }
   if (separateRole && fixedLeader && fixedMembers.some((card) => card.characterId === fixedLeader.characterId)) {
     return { ok: false, reason: "리더/멤버 분리 조건 때문에 고정 리더와 같은 홀로멤을 멤버로 사용할 수 없습니다." };
@@ -364,7 +439,7 @@ export function optimizeOwnedDeck({
   const evaluateFill = (leader, fill, refinement = false) => {
     const memberSlotIds = composeMemberIds(fixedMemberIdList, fill);
     const members = memberSlotIds.map((id) => preparedCards.get(id)).filter(Boolean);
-    if (members.length !== 5) return;
+    if (members.length !== 5 || hasDuplicateMemberCharacters(members)) return;
     const score = evaluateDeck({
       leader,
       members,
@@ -399,15 +474,16 @@ export function optimizeOwnedDeck({
     if (separateRole && fixedMembers.some((member) => member.characterId === leader.characterId)) continue;
     const rawMemberPool = owned.filter((card) => card.id !== leader.id
       && !fixedMemberIds.has(card.id)
+      && !fixedMemberCharacters.has(memberCharacterKey(card))
       && (!separateRole || card.characterId !== leader.characterId));
     if (rawMemberPool.length < need) continue;
 
-    const rawLeaderCases = combinationCount(rawMemberPool.length, need, normalizedExactCaseLimit + 1);
+    const rawLeaderCases = combinationCountByCharacter(rawMemberPool, need, normalizedExactCaseLimit + 1);
     const shouldPrune = rawLeaderCases > normalizedExactCaseLimit;
     const memberPool = shouldPrune
       ? memberCandidatePool(rawMemberPool, leader, fixedMembers, normalizedSimulationTarget)
       : rawMemberPool;
-    const leaderCases = combinationCount(memberPool.length, need, normalizedExactCaseLimit + 1);
+    const leaderCases = combinationCountByCharacter(memberPool, need, normalizedExactCaseLimit + 1);
     const leaderExact = leaderCases <= normalizedExactCaseLimit;
     processedLeaderCount += 1;
     if (shouldPrune && memberPool.length < rawMemberPool.length) prunedLeaderCount += 1;
@@ -419,7 +495,7 @@ export function optimizeOwnedDeck({
     leaderSearchState.set(leader.id, { leader, rawMemberPool, memberPool, leaderExact, shouldPrune });
 
     if (leaderExact) {
-      forEachCombination(memberPool, need, (fill) => evaluateFill(leader, fill));
+      forEachCombination(memberPool, need, (fill) => evaluateFill(leader, fill), fixedMembers);
     } else {
       combinedBeamCandidates(
         memberPool,
@@ -442,7 +518,7 @@ export function optimizeOwnedDeck({
     if (!state || (state.leaderExact && !state.shouldPrune)) continue;
     const { leader, rawMemberPool, memberPool } = state;
     const highRarityPool = rawMemberPool.filter((member) => memberRarity(member) >= 5);
-    const highRarityCases = combinationCount(highRarityPool.length, need, normalizedExactCaseLimit + 1);
+    const highRarityCases = combinationCountByCharacter(highRarityPool, need, normalizedExactCaseLimit + 1);
 
     refinedLeaderCount += 1;
     combinedBeamCandidates(
@@ -455,7 +531,7 @@ export function optimizeOwnedDeck({
     ).forEach((fill) => evaluateFill(leader, fill, true));
 
     if (highRarityPool.length >= need && highRarityCases <= normalizedExactCaseLimit) {
-      forEachCombination(highRarityPool, need, (fill) => evaluateFill(leader, fill, true));
+      forEachCombination(highRarityPool, need, (fill) => evaluateFill(leader, fill, true), fixedMembers);
     }
 
     if (need <= 0) continue;
@@ -473,6 +549,7 @@ export function optimizeOwnedDeck({
             swapped[replaceIndex] = replacement;
             const ids = composeMemberIds(fixedMemberIdList, swapped);
             if (new Set(ids).size !== ids.length) continue;
+            if (hasDuplicateMemberCharacters([...fixedMembers, ...swapped])) continue;
             const key = memberSetKey(ids);
             if (seenSwaps.has(key)) continue;
             seenSwaps.add(key);
@@ -497,6 +574,7 @@ export function optimizeOwnedDeck({
           swapped[replaceIndex] = fourStar;
           const ids = composeMemberIds(fixedMemberIdList, swapped);
           if (new Set(ids).size !== ids.length) continue;
+          if (hasDuplicateMemberCharacters([...fixedMembers, ...swapped])) continue;
           const key = memberSetKey(ids);
           if (seenFourStarSwaps.has(key)) continue;
           seenFourStarSwaps.add(key);
@@ -509,7 +587,7 @@ export function optimizeOwnedDeck({
   if (!topResults.length) {
     return {
       ok: false,
-      reason: "고정 프리셋과 리더 발동 조건을 함께 만족하는 편성을 찾지 못했습니다.",
+      reason: "고정 프리셋을 만족하는 유효한 편성을 찾지 못했습니다.",
       evaluatedCount,
     };
   }

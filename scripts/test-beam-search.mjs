@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { memberCandidatePool, optimizeOwnedDeck } from "../js/recommend.js";
+import { memberBeamPool, memberCandidatePool, optimizeOwnedDeck } from "../js/recommend.js";
 import { dedupeRecommendationResults } from "../js/order.js";
 
 function member(index) {
@@ -84,11 +84,12 @@ function searchCard(id, {
   attribute = 1,
   groupings = [],
   leaderCondition = [],
+  characterId = null,
 } = {}) {
   return {
     id,
     raw: { rarity },
-    characterId: `char-${id}`,
+    characterId: characterId ?? `char-${id}`,
     characterName: id,
     attribute,
     groupings: new Set(groupings),
@@ -165,6 +166,38 @@ function searchCard(id, {
   assert.ok(pool.length < fiveStars.length + fourStars.length, "mixed pool was not pruned");
 }
 
+// Once a character survives mixed-rarity pruning, all of that character's variants stay available.
+{
+  const variantLeader = searchCard("PRUNE-VARIANT-L");
+  const fiveVariant = searchCard("PRUNE-VARIANT-5", {
+    rarity: 5,
+    parameter: 30000,
+    characterId: "char-prune-variant",
+  });
+  const weakFourVariant = searchCard("PRUNE-VARIANT-4", {
+    rarity: 4,
+    parameter: 1,
+    characterId: "char-prune-variant",
+  });
+  const otherFiveStars = Array.from({ length: 24 }, (_, index) => searchCard(`PRUNE-F5-${index}`, {
+    rarity: 5,
+    parameter: 20000 + index,
+  }));
+  const otherFourStars = Array.from({ length: 24 }, (_, index) => searchCard(`PRUNE-F4-${index}`, {
+    rarity: 4,
+    parameter: 6000 + index,
+  }));
+  const pruned = memberCandidatePool(
+    [fiveVariant, weakFourVariant, ...otherFiveStars, ...otherFourStars],
+    variantLeader,
+    [],
+    "score",
+  );
+  assert.ok(pruned.some((row) => row.id === fiveVariant.id));
+  assert.ok(pruned.some((row) => row.id === weakFourVariant.id),
+    "a weaker variant was lost after its character survived pruning");
+}
+
 // A large 4-star tail cannot displace a stronger 5-star core after the high-rarity refinement pass.
 {
   const lockedLeader = searchCard("LOCKED-L");
@@ -234,6 +267,124 @@ function searchCard(id, {
     new Set(synergy.map((row) => row.id)),
     "second-pass refinement missed the five-card synergy island",
   );
+}
+
+// Different cards of the same holomem can never coexist in member slots.
+{
+  const lockedLeader = searchCard("UNIQUE-L");
+  const flareNormal = searchCard("FLARE-NORMAL", {
+    parameter: 50000,
+    characterId: "char-flare",
+  });
+  const flareSwim = searchCard("FLARE-SWIM", {
+    parameter: 49000,
+    characterId: "char-flare",
+  });
+  const fillers = Array.from({ length: 4 }, (_, index) => searchCard(`UNIQUE-FILLER-${index}`, {
+    parameter: 10000 - index * 100,
+  }));
+  const rows = [lockedLeader, flareNormal, flareSwim, ...fillers];
+  const uniqueCommon = {
+    preparedCards: new Map(rows.map((row) => [row.id, row])),
+    ownedCardIds: rows.map((row) => row.id),
+    currentMembers: [lockedLeader.id, null, null, null, null, null],
+    lockedSlots: [true, false, false, false, false, false],
+    simulationTarget: "score",
+    separateRole: true,
+    resultCount: 5,
+  };
+
+  for (const exactCaseLimit of [1_000_000, 1]) {
+    const result = optimizeOwnedDeck({ ...uniqueCommon, exactCaseLimit });
+    assert.equal(result.ok, true);
+    for (const candidate of result.results) {
+      const selected = candidate.members.slice(1).map((id) => uniqueCommon.preparedCards.get(id));
+      const characterIds = selected.map((row) => row.characterId);
+      assert.equal(new Set(characterIds).size, characterIds.length,
+        "same holomem variants appeared together in a recommended deck");
+      assert.ok(!(candidate.members.includes(flareNormal.id) && candidate.members.includes(flareSwim.id)),
+        "normal and swimsuit variants of the same holomem were selected together");
+    }
+  }
+
+  const invalidPreset = optimizeOwnedDeck({
+    ...uniqueCommon,
+    currentMembers: [lockedLeader.id, flareNormal.id, flareSwim.id, null, null, null],
+    lockedSlots: [true, true, true, false, false, false],
+  });
+  assert.equal(invalidPreset.ok, false);
+  assert.match(invalidPreset.reason, /같은 홀로멤/);
+}
+
+// Beam slots are allocated per character; every variant of a selected character is retained.
+{
+  const variantLeader = searchCard("BEAM-VARIANT-L");
+  const strongVariant = searchCard("BEAM-VARIANT-STRONG", {
+    parameter: 20000,
+    characterId: "char-beam-variant",
+  });
+  const hiddenVariant = searchCard("BEAM-VARIANT-HIDDEN", {
+    parameter: 9000,
+    characterId: "char-beam-variant",
+  });
+  const fillers = Array.from({ length: 55 }, (_, index) => searchCard(`BEAM-LIMIT-${index}`, {
+    parameter: 10000 + index,
+  }));
+  const pool = memberBeamPool([strongVariant, hiddenVariant, ...fillers], variantLeader, "score");
+  assert.ok(pool.some((row) => row.id === strongVariant.id));
+  assert.ok(pool.some((row) => row.id === hiddenVariant.id),
+    "the weaker variant was pushed out by the per-card Beam limit");
+  assert.equal(new Set(pool.map((row) => row.characterId)).size, 52,
+    "Beam should reserve its base limit for characters, not individual cards");
+}
+
+// A weaker standalone variant can still be the optimal card once its full-team synergy is active.
+{
+  const variantLeader = searchCard("VARIANT-SYNERGY-L");
+  const normal = searchCard("VARIANT-NORMAL", {
+    parameter: 11000,
+    characterId: "char-variant-synergy",
+  });
+  const synergyVariant = searchCard("VARIANT-SYNERGY", {
+    parameter: 9000,
+    characterId: "char-variant-synergy",
+    groupings: ["variant-team"],
+  });
+  synergyVariant.passive = {
+    level: 1,
+    description: "variant team synergy",
+    condition: { kind: "group", value: "variant-team", count: 5 },
+    effect: { kind: "all", stat: null, value: 100, target: { kind: "all", count: 5 } },
+  };
+  const partners = Array.from({ length: 4 }, (_, index) => searchCard(`VARIANT-PARTNER-${index}`, {
+    parameter: 10000,
+    groupings: ["variant-team"],
+  }));
+  const fillers = Array.from({ length: 8 }, (_, index) => searchCard(`VARIANT-FILLER-${index}`, {
+    parameter: 9500 - index * 10,
+  }));
+  const rows = [variantLeader, normal, synergyVariant, ...partners, ...fillers];
+  const variantCommon = {
+    preparedCards: new Map(rows.map((row) => [row.id, row])),
+    ownedCardIds: rows.map((row) => row.id),
+    currentMembers: [variantLeader.id, null, null, null, null, null],
+    lockedSlots: [true, false, false, false, false, false],
+    simulationTarget: "score",
+    separateRole: true,
+    resultCount: 1,
+  };
+  const exact = optimizeOwnedDeck({ ...variantCommon, exactCaseLimit: 1_000_000 });
+  const beam = optimizeOwnedDeck({ ...variantCommon, exactCaseLimit: 1 });
+  assert.equal(exact.ok, true);
+  assert.equal(beam.ok, true);
+  assert.ok(exact.members.includes(synergyVariant.id),
+    "exhaustive search did not select the synergistic variant");
+  assert.ok(!exact.members.includes(normal.id),
+    "exhaustive search preferred the stronger standalone variant unexpectedly");
+  assert.ok(beam.members.includes(synergyVariant.id),
+    "Beam lost the weaker standalone variant even though it forms the best deck");
+  assert.equal(beam.score.rankingScore, exact.score.rankingScore,
+    "Beam did not recover the optimal variant-dependent deck");
 }
 
 // Member order is not a distinct result, but changing the leader still is.
