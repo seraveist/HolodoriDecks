@@ -202,6 +202,23 @@ function fourStarSynergyValue(member, leader, coreMembers) {
   return value;
 }
 
+function bestVariantsByCharacter(pool, concept) {
+  const best = new Map();
+  for (const member of pool) {
+    const key = memberCharacterKey(member);
+    const current = best.get(key);
+    if (!current || conceptMemberValue(member, concept) > conceptMemberValue(current, concept)) {
+      best.set(key, member);
+    }
+  }
+  return [...best.values()];
+}
+
+function expandSelectedCharacterVariants(pool, selectedMembers) {
+  const selectedCharacters = new Set([...selectedMembers].map(memberCharacterKey));
+  return pool.filter((member) => selectedCharacters.has(memberCharacterKey(member)));
+}
+
 export function memberCandidatePool(pool, leader, fixedMembers = [], concept = "score") {
   if (pool.length <= MEMBER_PRUNE_THRESHOLD) return [...pool];
 
@@ -210,7 +227,7 @@ export function memberCandidatePool(pool, leader, fixedMembers = [], concept = "
   if (!fourStars.length) return [...pool];
 
   const selected = new Map(highRarity.map((member) => [member.id, member]));
-  const coreMembers = [...fixedMembers, ...highRarity];
+  const coreMembers = [...fixedMembers, ...bestVariantsByCharacter(highRarity, concept)];
   const byValue = [...fourStars].sort((left, right) => (
     conceptMemberValue(right, concept) - conceptMemberValue(left, concept)
   ));
@@ -225,15 +242,32 @@ export function memberCandidatePool(pool, leader, fixedMembers = [], concept = "
   fourStars.filter((member) => relevantToLeader(member, leader))
     .forEach((member) => selected.set(member.id, member));
 
-  return pool.filter((member) => selected.has(member.id));
+  return expandSelectedCharacterVariants(pool, selected.values());
 }
 
-function memberBeamPool(pool, leader, concept) {
-  const ranked = [...pool].sort((left, right) => conceptMemberValue(right, concept) - conceptMemberValue(left, concept));
-  const selected = new Map(ranked.slice(0, BEAM_MEMBER_LIMIT).map((member) => [member.id, member]));
-  ranked.filter((member) => relevantToLeader(member, leader)).slice(0, 18)
-    .forEach((member) => selected.set(member.id, member));
-  return [...selected.values()];
+export function memberBeamPool(pool, leader, concept) {
+  const grouped = new Map();
+  for (const member of pool) {
+    const key = memberCharacterKey(member);
+    if (!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key).push(member);
+  }
+
+  const characters = [...grouped.entries()].map(([key, variants]) => ({
+    key,
+    variants,
+    bestValue: Math.max(...variants.map((member) => conceptMemberValue(member, concept))),
+    relevant: variants.some((member) => relevantToLeader(member, leader)),
+  })).sort((left, right) => right.bestValue - left.bestValue || left.key.localeCompare(right.key));
+
+  const selectedCharacters = new Set(
+    characters.slice(0, BEAM_MEMBER_LIMIT).map((entry) => entry.key),
+  );
+  characters.filter((entry) => entry.relevant)
+    .slice(0, 18)
+    .forEach((entry) => selectedCharacters.add(entry.key));
+
+  return pool.filter((member) => selectedCharacters.has(memberCharacterKey(member)));
 }
 
 function beamCombinations(pool, size, leader, fixedMembers, concept, width = BEAM_WIDTH) {
