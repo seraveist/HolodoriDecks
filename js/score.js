@@ -433,7 +433,6 @@ function unitScoreBonusBreakdown(members, passive, leaderSupportPct = 0, maximiz
     active: round1(activeStage),
     passive: round1(Math.max(0, passiveStage - activeStage)),
     special: round1(Math.max(0, specialStage - passiveStage)),
-    special,
   };
 }
 
