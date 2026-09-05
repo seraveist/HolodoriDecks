@@ -14,15 +14,16 @@ const LOCAL_COPY = Object.freeze({
   ko: {
     notSelected: "미선택",
     overallPower: "종합력",
-    leaderOutfit: "리더 의상 스킬",
+    leaderOutfit: "의상 스킬",
+    boardEffect: "Holo멤버 보드 효과",
+    passiveSkill: "패시브 스킬",
+    memoryEffect: "메모리 효과",
     memberEnhancement: "멤버 강화 보너스",
-    boardMemory: "보드·메모리",
-    leaderSupport: "리더 서포트",
-    passiveSupport: "패시브 서포트",
-    collisionLoss: "동일 주기 충돌 손실",
-    genericEvaluation: "110초 · 800노트 범용 유닛 평가 기준입니다.",
-    selectedSongAverage: "선택 악곡 예상 평균",
-    allActiveMaximum: "모든 유효 액티브 성공 시 근사 최대",
+    genericLabel: "범용 유닛 평가",
+    genericEvaluation: "인게임 유닛 스코어 기준 · 110초 범용 시간축으로 스킬 주기를 참고합니다.",
+    selectedSongAverage: "예상 평균 스코어",
+    potentialSongScore: "잠재 스코어",
+    allActiveMaximum: "모든 유효 액티브 성공 기준 잠재 스코어",
     songMeta: (duration, notes, mode, accuracy) => `${duration}초 · ${accuracy === "estimated" ? "약 " : ""}${notes}노트 · ${mode === "auto" ? "AUTO (콤보 보너스 없음)" : "Manual PERFECT FC"}`,
     chartExact: "실제 채보 노트·SP 순서 반영",
     chartMaster: "Master 풀콤보 노트 수 반영 · SP 타이밍 근사",
@@ -46,7 +47,6 @@ const LOCAL_COPY = Object.freeze({
     songProgress: "곡 진행",
     expectedAverageScore: "예상 평균 스코어",
     potentialUnitScore: "잠재 유닛 스코어",
-    approximateMax: "근사 최대",
     detailsShow: "+ 상세 보기",
     detailsHide: "- 접기",
     recommendationAria: (rank) => `추천 TOP ${rank} 편성 카드`,
@@ -55,15 +55,16 @@ const LOCAL_COPY = Object.freeze({
   en: {
     notSelected: "Not selected",
     overallPower: "Overall Power",
-    leaderOutfit: "Leader Outfit Skill",
-    memberEnhancement: "Member Enhancement",
-    boardMemory: "Board · Memory",
-    leaderSupport: "Leader Support",
-    passiveSupport: "Passive Support",
-    collisionLoss: "Same-Cycle Collision Loss",
-    genericEvaluation: "Generic unit evaluation: 110s · 800 notes.",
-    selectedSongAverage: "Selected Song Estimated Avg.",
-    allActiveMaximum: "Approx. max if all valid Active Skills succeed",
+    leaderOutfit: "Outfit Skill",
+    boardEffect: "Holo Member Board Effect",
+    passiveSkill: "Passive Skill",
+    memoryEffect: "Memory Effect",
+    memberEnhancement: "Member Enhancement Bonus",
+    genericLabel: "Generic Unit Evaluation",
+    genericEvaluation: "Uses in-game Unit Score with a generic 110s timeline for skill-cycle reference.",
+    selectedSongAverage: "Estimated Average Score",
+    potentialSongScore: "Potential Score",
+    allActiveMaximum: "Potential score if all valid Active Skills succeed",
     songMeta: (duration, notes, mode, accuracy) => `${duration}s · ${accuracy === "estimated" ? "approx. " : ""}${notes} notes · ${mode === "auto" ? "AUTO (no combo bonus)" : "Manual PERFECT FC"}`,
     chartExact: "Exact chart notes and SP order applied",
     chartMaster: "Master full-combo note count applied · SP timing approximated",
@@ -87,7 +88,6 @@ const LOCAL_COPY = Object.freeze({
     songProgress: "Song Progress",
     expectedAverageScore: "Estimated Average Score",
     potentialUnitScore: "Potential Unit Score",
-    approximateMax: "Approx. Max",
     detailsShow: "+ View Details",
     detailsHide: "- Collapse",
     recommendationAria: (rank) => `Recommended TOP ${rank} deck cards`,
@@ -96,15 +96,16 @@ const LOCAL_COPY = Object.freeze({
   ja: {
     notSelected: "未選択",
     overallPower: "総合力",
-    leaderOutfit: "リーダー衣装スキル",
+    leaderOutfit: "衣装スキル",
+    boardEffect: "Holoメンバーボード効果",
+    passiveSkill: "パッシブスキル",
+    memoryEffect: "メモリー効果",
     memberEnhancement: "メンバー強化ボーナス",
-    boardMemory: "ボード・メモリー",
-    leaderSupport: "リーダーサポート",
-    passiveSupport: "パッシブサポート",
-    collisionLoss: "同一周期の競合損失",
-    genericEvaluation: "110秒 · 800ノーツの汎用ユニット評価基準です。",
-    selectedSongAverage: "選択楽曲の予想平均",
-    allActiveMaximum: "有効なアクティブがすべて成功した場合の近似最大",
+    genericLabel: "汎用ユニット評価",
+    genericEvaluation: "ゲーム内ユニットスコアを基準に、110秒の汎用時間軸でスキル周期を確認します。",
+    selectedSongAverage: "予想平均スコア",
+    potentialSongScore: "潜在スコア",
+    allActiveMaximum: "有効なアクティブがすべて成功した場合の潜在スコア",
     songMeta: (duration, notes, mode, accuracy) => `${duration}秒 · ${accuracy === "estimated" ? "約" : ""}${notes}ノーツ · ${mode === "auto" ? "AUTO（コンボボーナスなし）" : "Manual PERFECT FC"}`,
     chartExact: "実譜面ノーツ・SP順序を反映",
     chartMaster: "Masterのフルコンボ数を反映 · SP時刻は近似",
@@ -128,7 +129,6 @@ const LOCAL_COPY = Object.freeze({
     songProgress: "楽曲進行",
     expectedAverageScore: "予想平均スコア",
     potentialUnitScore: "潜在ユニットスコア",
-    approximateMax: "近似最大",
     detailsShow: "+ 詳細を見る",
     detailsHide: "- 閉じる",
     recommendationAria: (rank) => `おすすめ TOP ${rank} 編成カード`,
@@ -304,6 +304,7 @@ function calculationRow(label, value, suffix = "") {
 function calculationBreakdown(score) {
   const power = score.detail?.power ?? {};
   const bonus = score.detail?.scoreBonus ?? {};
+  const activeBonus = Number(bonus.active || 0) + Number(bonus.outfit || 0);
   return `
     <div class="calculation-breakdown">
       <article class="calculation-card">
@@ -311,19 +312,19 @@ function calculationBreakdown(score) {
         <div class="calculation-rows">
           ${calculationRow(t("power.member"), power.memberParameter)}
           ${calculationRow(copy().leaderOutfit, power.outfit)}
-          ${calculationRow(t("power.passive"), power.passive)}
+          ${calculationRow(copy().boardEffect, power.board ?? 0)}
+          ${calculationRow(copy().passiveSkill, power.passive)}
+          ${calculationRow(copy().memoryEffect, power.memory ?? 0)}
           ${calculationRow(copy().memberEnhancement, power.enhancement)}
-          ${calculationRow(copy().boardMemory, (power.board ?? 0) + (power.memory ?? 0))}
         </div>
       </article>
       <article class="calculation-card">
         <header><span>${t("result.scoreBonus")}</span><strong>${formatPercent(score.scoreBonusPct)}</strong></header>
         <div class="calculation-rows">
-          ${calculationRow(copy().leaderSupport, bonus.outfit, "%")}
-          ${calculationRow(t("bonus.active"), bonus.active, "%")}
-          ${calculationRow(copy().passiveSupport, bonus.passive, "%")}
+          ${calculationRow(t("bonus.active"), activeBonus, "%")}
+          ${calculationRow(copy().boardEffect, bonus.board ?? 0, "%")}
+          ${calculationRow(copy().passiveSkill, bonus.passive, "%")}
           ${calculationRow(t("bonus.special"), bonus.special, "%")}
-          ${calculationRow(copy().collisionLoss, score.detail?.collision?.lossPct, "%")}
         </div>
       </article>
     </div>`;
@@ -338,14 +339,14 @@ function specialSkillTimeline(projection) {
 function songProjection(score, song, difficulty) {
   const projection = score.songProjection;
   if (!projection || !song) {
-    return `<div class="song-projection is-generic"><strong>${t("music.average")}</strong><span>${escapeHtml(copy().genericEvaluation)}</span></div>`;
+    return `<div class="song-projection is-generic"><strong>${escapeHtml(copy().genericLabel)}</strong><span>${escapeHtml(copy().genericEvaluation)}</span></div>`;
   }
   const accuracy = projection.context.chartAccuracy ?? "estimated";
   const accuracyText = accuracy === "exact" ? copy().chartExact : accuracy === "master" ? copy().chartMaster : copy().chartEstimated;
   return `
     <div class="song-projection">
       <div class="song-projection-score"><span>${escapeHtml(copy().selectedSongAverage)}</span><strong>${formatNumber(projection.averageScore)}</strong></div>
-      <div class="song-projection-score"><span>${escapeHtml(copy().allActiveMaximum)}</span><strong>${formatNumber(projection.maxScore)}</strong></div>
+      <div class="song-projection-score"><span>${escapeHtml(copy().potentialSongScore)}</span><strong>${formatNumber(projection.maxScore)}</strong></div>
       <p><b>${escapeHtml(song.title)} · ${escapeHtml(difficulty)}</b><span>${escapeHtml(copy().songMeta(projection.context.duration, formatNumber(projection.context.notes), projection.playMode, accuracy))}</span></p>
       <p class="song-projection-accuracy"><span>${escapeHtml(accuracyText)}</span></p>
       ${specialSkillTimeline(projection)}
@@ -493,7 +494,7 @@ function resultDetails(result, index, data, state, song, open) {
     || Number(score.potentialUnitScore)
     || expectedValue;
   const expectedLabel = song ? copy().expectedAverageScore : t("result.unitScore");
-  const potentialLabel = song ? copy().approximateMax : copy().potentialUnitScore;
+  const potentialLabel = song ? copy().potentialSongScore : copy().potentialUnitScore;
   const potentialTarget = state.simulationTarget === "potential";
   const targetLabel = potentialTarget ? potentialLabel : expectedLabel;
   const targetValue = potentialTarget ? potentialValue : expectedValue;
