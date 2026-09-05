@@ -8,24 +8,18 @@ const MUSIC_COPY = Object.freeze({
     toggleAria: "악곡 목록 열기",
     noResults: "검색 결과가 없습니다.",
     genericLabel: "범용 유닛 평가",
-    genericNote: "인게임 유닛 스코어 기준 · 110초 범용 시간축으로 스킬 주기를 참고합니다.",
-    songNote: "선택 악곡의 예상 평균·잠재 스코어와 멤버/SP 배치를 최적화합니다.",
   },
   en: {
     placeholder: "Search title, talent, or Music ID",
     toggleAria: "Open song list",
     noResults: "No matching songs.",
     genericLabel: "Generic Unit Evaluation",
-    genericNote: "Uses in-game Unit Score with a generic 110s timeline for skill-cycle reference.",
-    songNote: "Optimizes estimated average/potential score and member/SP placement for the selected song.",
   },
   ja: {
     placeholder: "曲名、ホロメン、Music IDで検索",
     toggleAria: "楽曲一覧を開く",
     noResults: "該当する楽曲がありません。",
     genericLabel: "汎用ユニット評価",
-    genericNote: "ゲーム内ユニットスコアを基準に、110秒の汎用時間軸でスキル周期を確認します。",
-    songNote: "選択楽曲の予想平均・潜在スコアとメンバー/SP配置を最適化します。",
   },
 });
 
@@ -134,9 +128,6 @@ export function mountMusicControls(music, store) {
     "全体平均",
     "汎用ユニット評価",
   ];
-  const modeNote = document.createElement("p");
-  modeNote.className = "preset-guide music-mode-note";
-  difficultySelect.closest(".select-grid")?.after(modeNote);
   let visibleItems = [];
   let activeIndex = -1;
 
@@ -339,6 +330,5 @@ export function mountMusicControls(music, store) {
     const songSelected = Boolean(selectedId);
     difficultySelect.disabled = !songSelected;
     playModeSelect.disabled = !songSelected;
-    modeNote.textContent = songSelected ? copy().songNote : copy().genericNote;
   };
 }
