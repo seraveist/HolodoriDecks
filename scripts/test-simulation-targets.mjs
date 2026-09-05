@@ -84,6 +84,18 @@ function optimize(simulationTarget, music = null) {
 function assertDivergence(music, label) {
   const expected = optimize("score", music);
   const potential = optimize("potential", music);
+  console.log(`[target-debug] ${label}`, JSON.stringify({
+    expectedMembers: expected.members,
+    expectedRanking: expected.score.rankingScore,
+    expectedPotential: expected.score.potentialRankingScore,
+    expectedBonus: expected.score.scoreBonusPct,
+    expectedPotentialBonus: expected.score.potentialScoreBonusPct,
+    potentialMembers: potential.members,
+    potentialRanking: potential.score.rankingScore,
+    potentialPotential: potential.score.potentialRankingScore,
+    potentialBonus: potential.score.scoreBonusPct,
+    potentialPotentialBonus: potential.score.potentialScoreBonusPct,
+  }));
   assert.ok(expected.members.includes("RELIABLE"), `${label}: expected target should keep RELIABLE`);
   assert.ok(!expected.members.includes("VOLATILE"), `${label}: expected target should drop VOLATILE`);
   assert.ok(potential.members.includes("VOLATILE"), `${label}: potential target should keep VOLATILE`);
