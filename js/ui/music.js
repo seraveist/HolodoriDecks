@@ -7,16 +7,25 @@ const MUSIC_COPY = Object.freeze({
     placeholder: "곡명, 홀로멤 또는 Music ID 검색",
     toggleAria: "악곡 목록 열기",
     noResults: "검색 결과가 없습니다.",
+    genericLabel: "범용 유닛 평가",
+    genericNote: "인게임 유닛 스코어 기준 · 110초 범용 시간축으로 스킬 주기를 참고합니다.",
+    songNote: "선택 악곡의 예상 평균·잠재 스코어와 멤버/SP 배치를 최적화합니다.",
   },
   en: {
     placeholder: "Search title, talent, or Music ID",
     toggleAria: "Open song list",
     noResults: "No matching songs.",
+    genericLabel: "Generic Unit Evaluation",
+    genericNote: "Uses in-game Unit Score with a generic 110s timeline for skill-cycle reference.",
+    songNote: "Optimizes estimated average/potential score and member/SP placement for the selected song.",
   },
   ja: {
     placeholder: "曲名、ホロメン、Music IDで検索",
     toggleAria: "楽曲一覧を開く",
     noResults: "該当する楽曲がありません。",
+    genericLabel: "汎用ユニット評価",
+    genericNote: "ゲーム内ユニットスコアを基準に、110秒の汎用時間軸でスキル周期を確認します。",
+    songNote: "選択楽曲の予想平均・潜在スコアとメンバー/SP配置を最適化します。",
   },
 });
 
@@ -114,20 +123,33 @@ export function mountMusicControls(music, store) {
   const musicById = new Map(music.map((song) => [song.id, song]));
   const sortedMusic = [...music].sort(compareMusicAlphabetical);
   const labels = copy();
-  const averageAliases = [t("music.average"), "전체 평균", "average", "all average", "全体平均"];
+  const averageAliases = [
+    labels.genericLabel,
+    t("music.average"),
+    "전체 평균",
+    "범용 유닛 평가",
+    "average",
+    "all average",
+    "generic unit evaluation",
+    "全体平均",
+    "汎用ユニット評価",
+  ];
+  const modeNote = document.createElement("p");
+  modeNote.className = "preset-guide music-mode-note";
+  difficultySelect.closest(".select-grid")?.after(modeNote);
   let visibleItems = [];
   let activeIndex = -1;
 
   input.placeholder = labels.placeholder;
   toggle.setAttribute("aria-label", labels.toggleAria);
   nativeSelect.innerHTML = [
-    `<option value="">${escapeHtml(t("music.average"))}</option>`,
+    `<option value="">${escapeHtml(labels.genericLabel)}</option>`,
     ...sortedMusic.map((song) => `<option value="${escapeHtml(song.id)}">${escapeHtml(displaySong(song))}</option>`),
   ].join("");
 
   function selectedLabel(musicId) {
     const song = musicId ? musicById.get(musicId) : null;
-    return song ? displaySong(song) : t("music.average");
+    return song ? displaySong(song) : copy().genericLabel;
   }
 
   function setInputFromState(musicId) {
@@ -175,7 +197,7 @@ export function mountMusicControls(music, store) {
 
     list.innerHTML = visibleItems.map((item, index) => {
       if (item.average) {
-        return `<button id="music-option-${index}" class="music-combobox-option is-average" type="button" role="option" data-music-option-index="${index}" aria-selected="${selectedId === ""}"><strong>${escapeHtml(t("music.average"))}</strong></button>`;
+        return `<button id="music-option-${index}" class="music-combobox-option is-average" type="button" role="option" data-music-option-index="${index}" aria-selected="${selectedId === ""}"><strong>${escapeHtml(copy().genericLabel)}</strong></button>`;
       }
       return `<button id="music-option-${index}" class="music-combobox-option" type="button" role="option" data-music-option-index="${index}" aria-selected="${selectedId === item.id}"><strong>${escapeHtml(item.song.title)}</strong><small>${escapeHtml(item.song.singer_name || item.song.id)}</small></button>`;
     }).join("");
@@ -314,5 +336,9 @@ export function mountMusicControls(music, store) {
     nativeSelect.value = selectedId;
     difficultySelect.value = state.difficulty;
     playModeSelect.value = state.playMode;
+    const songSelected = Boolean(selectedId);
+    difficultySelect.disabled = !songSelected;
+    playModeSelect.disabled = !songSelected;
+    modeNote.textContent = songSelected ? copy().songNote : copy().genericNote;
   };
 }
