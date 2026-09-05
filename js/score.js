@@ -1,6 +1,6 @@
 import { buildSongContext, songKernel, timelineSongProjection } from "./chart-score.js?v=1.1.0";
 
-export const SCORE_ENGINE_VERSION = "unit-score-v0.6-fixture-calibrated + song-score-v0.4-chart-timeline";
+export const SCORE_ENGINE_VERSION = "unit-score-v0.7-ingame-breakdown + song-score-v0.4-chart-timeline";
 export const UNIT_SCORE_K = 2.037342;
 export const CALIBRATION_FIXTURES = Object.freeze([
   { power: 67629, bonus: 106.8, score: 284936 },
@@ -398,13 +398,43 @@ function expectedMaximum(items, probabilityKey) {
   return expected;
 }
 
-function unitPassiveSupportBonus(details, supportByMember = {}) {
-  const baseline = expectedMaximum(details, "coverage");
-  const supported = details.map((detail) => ({
+function applyUnitSupport(details, leaderSupportPct = 0, supportByMember = {}) {
+  return details.map((detail) => ({
     ...detail,
-    scoreUpPct: detail.scoreUpPct * (1 + finite(supportByMember?.[detail.cardId]) / 100),
+    scoreUpPct: detail.scoreUpPct * (1 + (
+      finite(leaderSupportPct) + finite(supportByMember?.[detail.cardId])
+    ) / 100),
   }));
-  return Math.max(0, expectedMaximum(supported, "coverage") - baseline);
+}
+
+function unitScoreBonusBreakdown(members, passive, leaderSupportPct = 0, maximize = false) {
+  const special = specialAverages(members, UNIT_CONTEXT, false);
+  const baseDetails = activeDetails(members, UNIT_CONTEXT, 0, maximize);
+  const activeStage = expectedMaximum(
+    applyUnitSupport(baseDetails, leaderSupportPct),
+    "coverage",
+  );
+  const passiveStage = expectedMaximum(
+    applyUnitSupport(baseDetails, leaderSupportPct, passive.supportByMember),
+    "coverage",
+  );
+  const rateDetails = activeDetails(
+    members,
+    UNIT_CONTEXT,
+    special.activationRateAveragePct,
+    maximize,
+  );
+  const specialRateStage = expectedMaximum(
+    applyUnitSupport(rateDetails, leaderSupportPct, passive.supportByMember),
+    "coverage",
+  );
+  const specialStage = specialRateStage * (1 + special.supportAveragePct / 100);
+  return {
+    active: round1(activeStage),
+    passive: round1(Math.max(0, passiveStage - activeStage)),
+    special: round1(Math.max(0, specialStage - passiveStage)),
+    special,
+  };
 }
 
 function exactSameIntervalExpected(group, liveDuration) {
@@ -680,11 +710,12 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   if (primaryMet) addEffects(leaderEffects, leader.leader.primaryEffects);
   const additionalMet = primaryMet && allConditionsMet(leader.leader.additionalCondition, members);
   if (additionalMet) addEffects(leaderEffects, leader.leader.additionalEffects);
-  const leaderBonusStats = {
-    p: baseStats.p * leaderEffects.p / 100,
-    t: baseStats.t * leaderEffects.t / 100,
-    s: baseStats.s * leaderEffects.s / 100,
-  };
+  const leaderBonusStats = { p: 0, t: 0, s: 0 };
+  for (const member of members) {
+    for (const stat of ["p", "t", "s"]) {
+      leaderBonusStats[stat] += Math.ceil(member.stats[stat] * finite(leaderEffects[stat]) / 100);
+    }
+  }
   const preEnhancementStats = {
     p: baseStats.p + leaderBonusStats.p + passive.bonusStats.p,
     t: baseStats.t + leaderBonusStats.t + passive.bonusStats.t,
@@ -699,25 +730,25 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   const baseParameter = baseStats.p + baseStats.t + baseStats.s;
   const leaderPower = leaderBonusStats.p + leaderBonusStats.t + leaderBonusStats.s;
   const passivePower = passive.bonusStats.p + passive.bonusStats.t + passive.bonusStats.s;
+  const preEnhancementPower = preEnhancementStats.p + preEnhancementStats.t + preEnhancementStats.s;
   const overallPower = deckStats.p + deckStats.t + deckStats.s;
-  const enhancementPower = Math.max(0, Math.round(overallPower - baseParameter - leaderPower - passivePower));
+  const enhancementPower = Math.max(0, overallPower - preEnhancementPower);
 
-  // Unit Score display and song timeline intentionally use different overlap semantics.
-  // The in-game Unit Active detail tracks the independent expected maximum; same-cycle
-  // collision remains available to the Special internal expectation and song simulation.
+  // Unit Score detail is decomposed by mechanic category without double-counting.
+  // Same-cycle overlap correction remains an internal song/timeline concern.
   const unitSkill = skillEvaluation(members, UNIT_CONTEXT, false);
   const active = unitSkill.active.independentPct;
   const activeBase = unitSkill.activeBase.independentPct;
   const internalActive = unitSkill.active.correctedPct;
   const internalActiveBase = unitSkill.activeBase.correctedPct;
   const rateGain = Math.max(0, internalActive - internalActiveBase);
-  const passiveSkillBonus = unitPassiveSupportBonus(unitSkill.details, passive.supportByMember);
+  const unitBreakdown = unitScoreBonusBreakdown(members, passive, leaderEffects.support, false);
   const scoreBonusDetail = {
-    outfit: round1(active * leaderEffects.support / 100),
-    active: round1(active),
+    outfit: 0,
+    active: unitBreakdown.active,
     board: round1(normalizedAccountBonuses.boardScoreBonusPct),
-    passive: round1(passiveSkillBonus),
-    special: round1(internalActiveBase * unitSkill.special.supportAveragePct / 100 + rateGain),
+    passive: unitBreakdown.passive,
+    special: unitBreakdown.special,
   };
   const scoreBonusPct = round1(Object.values(scoreBonusDetail).reduce((sum, value) => sum + value, 0));
   const unitScore = unitScoreFromDisplayed(overallPower, scoreBonusPct);
@@ -725,18 +756,13 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   let potentialUnitScore = unitScore;
   let potentialScoreBonusPct = scoreBonusPct;
   if (includePotential) {
-    const potentialUnitSkill = skillEvaluation(members, UNIT_CONTEXT, false, true);
-    const potentialActive = potentialUnitSkill.active.independentPct;
-    const potentialInternalActive = potentialUnitSkill.active.correctedPct;
-    const potentialInternalActiveBase = potentialUnitSkill.activeBase.correctedPct;
-    const potentialRateGain = Math.max(0, potentialInternalActive - potentialInternalActiveBase);
-    const potentialPassiveSkillBonus = unitPassiveSupportBonus(potentialUnitSkill.details, passive.supportByMember);
+    const potentialBreakdown = unitScoreBonusBreakdown(members, passive, leaderEffects.support, true);
     const potentialScoreBonusDetail = {
-      outfit: round1(potentialActive * leaderEffects.support / 100),
-      active: round1(potentialActive),
+      outfit: 0,
+      active: potentialBreakdown.active,
       board: round1(normalizedAccountBonuses.boardScoreBonusPct),
-      passive: round1(potentialPassiveSkillBonus),
-      special: round1(potentialInternalActiveBase * potentialUnitSkill.special.supportAveragePct / 100 + potentialRateGain),
+      passive: potentialBreakdown.passive,
+      special: potentialBreakdown.special,
     };
     potentialScoreBonusPct = round1(Object.values(potentialScoreBonusDetail).reduce((sum, value) => sum + value, 0));
     potentialUnitScore = Math.max(unitScore, unitScoreFromDisplayed(overallPower, potentialScoreBonusPct));
@@ -853,9 +879,9 @@ export function evaluateDeck({
     detail: {
       power: {
         memberParameter: composition.baseParameter,
-        outfit: Math.round(composition.leaderPower),
+        outfit: composition.leaderPower,
         board: 0,
-        passive: Math.round(composition.passivePower),
+        passive: composition.passivePower,
         memory: 0,
         enhancement: composition.enhancementPower,
       },
