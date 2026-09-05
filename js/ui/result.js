@@ -305,6 +305,8 @@ function calculationBreakdown(score) {
   const power = score.detail?.power ?? {};
   const bonus = score.detail?.scoreBonus ?? {};
   const activeBonus = Number(bonus.active || 0) + Number(bonus.outfit || 0);
+  const rawEnhancement = Math.max(0, Number(power.enhancement) || 0);
+  const displayedEnhancement = rawEnhancement <= 1 ? 0 : rawEnhancement;
   return `
     <div class="calculation-breakdown">
       <article class="calculation-card">
@@ -315,7 +317,7 @@ function calculationBreakdown(score) {
           ${calculationRow(copy().boardEffect, power.board ?? 0)}
           ${calculationRow(copy().passiveSkill, power.passive)}
           ${calculationRow(copy().memoryEffect, power.memory ?? 0)}
-          ${calculationRow(copy().memberEnhancement, power.enhancement)}
+          ${calculationRow(copy().memberEnhancement, displayedEnhancement)}
         </div>
       </article>
       <article class="calculation-card">
