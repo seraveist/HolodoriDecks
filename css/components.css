@@ -716,21 +716,6 @@
   margin-top: 4px;
 }
 
-.song-projection.is-generic {
-  grid-template-columns: auto minmax(0, 1fr);
-  border-color: var(--line);
-  background: var(--surface-soft);
-  color: var(--ink-650);
-  font-size: var(--type-label);
-}
-
-.result-estimate-note {
-  margin: 0;
-  color: var(--ink-650);
-  font-size: var(--type-label);
-  line-height: 1.6;
-}
-
 .calculation-breakdown {
   margin-top: 18px;
   display: grid;

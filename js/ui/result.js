@@ -19,13 +19,6 @@ const LOCAL_COPY = Object.freeze({
     passiveSkill: "패시브 스킬",
     memoryEffect: "메모리 효과",
     memberEnhancement: "멤버 강화 보너스",
-    genericLabel: "범용 유닛 평가",
-    genericEvaluation: "실측으로 검증한 범용 유닛 스코어 추정값입니다. 배치 순서는 공통 채보에서 별도로 비교합니다.",
-    estimateNote: "편성 비교용 추정값입니다. 보드·메모리·멤버 강화는 미반영이며, 스킬 보너스는 인게임과 차이가 있을 수 있습니다.",
-    referenceOrder: "잠재 기준 추천 배치",
-    referencePotential: "공통 채보 잠재 스코어",
-    referenceOrderNote: (duration, notes) => `${duration}초·${notes}노트·균등 배치한 SP 5개 지점 기준입니다. 같은 조합은 잠재 점수가 가장 높은 순서 하나만 표시하며, 실제 곡의 최적 순서는 달라질 수 있습니다.`,
-    referenceSpecialTimeline: "공통 채보의 SP 배치",
     selectedSongAverage: "예상 평균 스코어",
     potentialSongScore: "잠재 스코어",
     allActiveMaximum: "모든 유효 액티브 성공 기준 잠재 스코어",
@@ -65,13 +58,6 @@ const LOCAL_COPY = Object.freeze({
     passiveSkill: "Passive Skill",
     memoryEffect: "Memory Effect",
     memberEnhancement: "Member Enhancement Bonus",
-    genericLabel: "Generic Unit Evaluation",
-    genericEvaluation: "Estimated Unit Score calibrated against in-game observations. Placement is compared separately on a reference chart.",
-    estimateNote: "Estimates for comparing decks. Board, memory and member enhancement effects are excluded; skill bonuses may differ in game.",
-    referenceOrder: "Recommended order by potential",
-    referencePotential: "Reference Chart Potential",
-    referenceOrderNote: (duration, notes) => `Uses ${duration}s, ${notes} notes and five evenly spaced SP points. Each composition shows its highest-potential order once. The best order can differ by song.`,
-    referenceSpecialTimeline: "Reference Chart SP Order",
     selectedSongAverage: "Estimated Average Score",
     potentialSongScore: "Potential Score",
     allActiveMaximum: "Potential score if all valid Active Skills succeed",
@@ -111,13 +97,6 @@ const LOCAL_COPY = Object.freeze({
     passiveSkill: "パッシブスキル",
     memoryEffect: "メモリー効果",
     memberEnhancement: "メンバー強化ボーナス",
-    genericLabel: "汎用ユニット評価",
-    genericEvaluation: "実測に基づくユニットスコアの推定値です。配置順は共通譜面で別途比較します。",
-    estimateNote: "編成比較用の推定値です。ボード・メモリー・メンバー強化は未反映で、スキルボーナスはゲーム内の値と異なる場合があります。",
-    referenceOrder: "潜在スコア基準のおすすめ順序",
-    referencePotential: "共通譜面の潜在スコア",
-    referenceOrderNote: (duration, notes) => `${duration}秒・${notes}ノーツ・等間隔のSP 5地点が基準です。同じ編成は潜在スコアが最も高い順序を1つだけ表示します。実際の楽曲では最適な順序が変わる場合があります。`,
-    referenceSpecialTimeline: "共通譜面のSP配置",
     selectedSongAverage: "予想平均スコア",
     potentialSongScore: "潜在スコア",
     allActiveMaximum: "有効なアクティブがすべて成功した場合の潜在スコア",
@@ -353,18 +332,9 @@ function specialSkillTimeline(projection, label = copy().specialTimeline) {
   return `<div class="special-skill-order"><strong>${escapeHtml(label)}</strong><ol>${windows.map((window) => `<li><b>SP ${window.slot}</b><span>${escapeHtml(window.characterName)} · ${formatSeconds(window.start)}–${formatSeconds(window.end)}</span></li>`).join("")}</ol></div>`;
 }
 
-function songProjection(score, song, difficulty, orderEvaluation = null) {
+function songProjection(score, song, difficulty) {
   const projection = score.songProjection;
-  if (!song && orderEvaluation?.basis === "reference") {
-    return `<div class="song-projection is-generic" data-order-basis="reference">
-      <div class="song-projection-score"><span>${escapeHtml(copy().referencePotential)}</span><strong>${formatNumber(orderEvaluation.potentialScore)}</strong></div>
-      <p><b>${escapeHtml(copy().referenceOrder)}</b><span>${escapeHtml(copy().referenceOrderNote(orderEvaluation.duration, formatNumber(orderEvaluation.noteCount)))}</span></p>
-      ${specialSkillTimeline(orderEvaluation, copy().referenceSpecialTimeline)}
-    </div>`;
-  }
-  if (!projection || !song) {
-    return `<div class="song-projection is-generic"><strong>${escapeHtml(copy().genericLabel)}</strong><span>${escapeHtml(copy().genericEvaluation)}</span></div>`;
-  }
+  if (!projection || !song) return "";
   const accuracy = projection.context.chartAccuracy ?? "estimated";
   const accuracyText = accuracy === "exact" ? copy().chartExact : accuracy === "master" ? copy().chartMaster : copy().chartEstimated;
   return `
@@ -554,7 +524,7 @@ function resultDetails(result, index, data, state, song, open) {
         </div>
       </summary>
       <div class="recommendation-result-body">
-        ${songProjection(score, song, state.difficulty, result.orderEvaluation)}
+        ${songProjection(score, song, state.difficulty)}
         <div class="result-context-row">
           <div class="result-metrics">
             ${metric(expectedLabel, expectedValue, potentialTarget ? "" : "is-concept")}
@@ -583,7 +553,7 @@ export function renderResult(data, state, recommendation = null) {
     return;
   }
 
-  container.innerHTML = `<p class="result-estimate-note">${escapeHtml(copy().estimateNote)}</p>` + results.map((result, index) => resultDetails(
+  container.innerHTML = results.map((result, index) => resultDetails(
     result,
     index,
     data,

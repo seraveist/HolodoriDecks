@@ -11,7 +11,7 @@ import { optimizeOwnedDeck } from "../js/recommend.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const host = "127.0.0.1";
-const appPort = 4173;
+const appPort = Number(process.env.BROWSER_SMOKE_PORT || 4173);
 const appUrl = `http://${host}:${appPort}/`;
 const storageKey = "holodori-decksim:v2";
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -244,13 +244,14 @@ try {
     && document.querySelectorAll(".recommendation-result-card").length === 5)`),
   30_000, "generic TOP 5 calculation did not complete");
 
-  const genericOrders = await evaluate(`([...document.querySelectorAll('.recommendation-result-card')].map(card => ({
-    reference: card.querySelector('[data-order-basis="reference"]')?.textContent,
-    slots: card.querySelectorAll('[data-order-basis="reference"] .special-skill-order li').length,
-  })))`);
-  assert.equal(genericOrders.length, 5);
-  assert.ok(genericOrders.every(row => row.reference?.includes("잠재 기준 추천 배치") && row.slots === 5),
-    "Every generic result must show its common-chart potential order and five SP slots");
+  const genericDisplay = await evaluate(`({
+    count: document.querySelectorAll('.recommendation-result-card').length,
+    projectionPanels: document.querySelectorAll('.recommendation-result-card .song-projection').length,
+    estimateNotes: document.querySelectorAll('.result-estimate-note').length,
+  })`);
+  assert.equal(genericDisplay.count, 5);
+  assert.equal(genericDisplay.projectionPanels, 0, 'Generic results must not show reference-chart panels');
+  assert.equal(genericDisplay.estimateNotes, 0, 'Do not prepend estimate disclaimers');
 
   // Optional screenshots also exercise the opened result at desktop/mobile sizes.
   if (process.env.BROWSER_SMOKE_ARTIFACT_DIR) {
@@ -260,7 +261,7 @@ try {
       await evaluate(`(() => {
         const card = document.querySelector('.recommendation-result-card');
         card.open = true;
-        card.querySelector('[data-order-basis="reference"]').scrollIntoView({ block: 'start' });
+        card.querySelector('.recommendation-result-body').scrollIntoView({ block: 'start' });
       })()`);
       await evaluate(`new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))`);
       const { data } = await command("Page.captureScreenshot", { format: "png" });

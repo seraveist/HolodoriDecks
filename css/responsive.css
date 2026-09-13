@@ -333,10 +333,6 @@
     grid-column: auto;
   }
 
-  .song-projection.is-generic {
-    grid-template-columns: 1fr;
-  }
-
   .rank-lockup img {
     width: 54px;
     height: 54px;
