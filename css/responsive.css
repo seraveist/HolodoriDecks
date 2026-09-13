@@ -191,21 +191,38 @@
     padding: 16px;
   }
 
-  .card-detail-hero,
-  .card-detail-skills {
-    grid-template-columns: 1fr;
+  .card-detail-hero {
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 12px;
   }
 
   .card-detail-identity {
-    padding: 0 16px 18px;
+    padding: 12px 12px 12px 0;
   }
 
-  .card-detail-stats {
+  .card-detail-identity h3 {
+    margin-top: 4px;
+  }
+
+  .card-detail-identity > strong {
+    margin-top: 8px;
+  }
+
+  .card-detail-stat {
     grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 10px 8px;
+    text-align: center;
   }
 
-  .card-detail-leader {
-    grid-column: auto;
+  .card-detail-stat small {
+    text-align: center;
+  }
+
+  .card-detail-skill {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 12px 12px 12px 9px;
   }
 
   .modal-header,

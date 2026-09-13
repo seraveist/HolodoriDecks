@@ -21,7 +21,7 @@ import { mountMemberOptions } from "./ui/target.js?v=20260812.1";
 import { requiredElement } from "./ui/dom.js?v=20260812.1";
 import { createCardDetail } from "./ui/card-detail.js?v=20260812.1";
 
-const APP_VERSION = "1.2.2";
+const APP_VERSION = "1.2.3";
 const RESULT_COUNT = 5;
 
 const EXTRA_COPY = Object.freeze({

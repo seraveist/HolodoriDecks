@@ -142,8 +142,6 @@ textarea {
 
 .result-summary-score small,
 .result-metric span,
-.card-detail-stat small,
-.card-detail-skill-meta span,
 .diagnostic-timeline-scale > div {
   font-size: var(--type-caption);
   font-weight: var(--weight-bold);
@@ -184,9 +182,6 @@ textarea {
 .diagnostic-timeline-columns,
 .diagnostic-timeline-row strong,
 .diagnostic-timeline-row > span,
-.card-detail-rarity,
-.card-detail-skill header span,
-.card-detail-skill-meta span,
 .owned-card-settings span {
   font-weight: var(--weight-bold);
 }

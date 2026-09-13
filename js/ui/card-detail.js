@@ -14,23 +14,17 @@ const LOCAL_COPY = Object.freeze({
   ko: {
     unownedProfile: "미보유 · MAX · 개화 0 기준",
     statsAria: "카드 파라미터",
-    interval: (value) => `${value}초 주기`,
     rate: (value) => `발동률 ${value}%`,
-    duration: (value) => `${value}초 지속`,
   },
   en: {
     unownedProfile: "Unowned · MAX · Awakening 0",
     statsAria: "Card parameters",
-    interval: (value) => `${value}s cycle`,
     rate: (value) => `Activation ${value}%`,
-    duration: (value) => `${value}s duration`,
   },
   ja: {
     unownedProfile: "未所持 · MAX · 覚醒0基準",
     statsAria: "カードパラメータ",
-    interval: (value) => `${value}秒周期`,
     rate: (value) => `発動率 ${value}%`,
-    duration: (value) => `${value}秒持続`,
   },
 });
 
@@ -46,12 +40,11 @@ function statLabels() {
   };
 }
 
-function skillBlock(title, skill, meta = []) {
+function skillBlock(kind, skill, rate = "") {
   const description = cleanGameMarkup(skill?.description) || t("card.infoNone");
-  return `<article class="card-detail-skill">
-    <header><strong>${escapeHtml(title)}</strong><span>Lv${Number(skill?.level) || 1}</span></header>
-    ${meta.length ? `<div class="card-detail-skill-meta">${meta.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div>` : ""}
-    <p>${escapeHtml(description)}</p>
+  return `<article class="card-detail-skill card-detail-skill--${kind}">
+    <header><strong>${escapeHtml(t(`skill.${kind}`))}</strong>${kind !== "leader" ? `<span>Lv${Number(skill?.level) || 1}</span>` : ""}</header>
+    <p>${escapeHtml(description)}${rate ? ` <span class="card-detail-skill-rate">${escapeHtml(rate)}</span>` : ""}</p>
   </article>`;
 }
 
@@ -72,17 +65,13 @@ function renderDetail(card, charactersById, state) {
     <div class="card-detail-stat">
       <span>${escapeHtml(label)}</span>
       <strong>${formatNumber(Math.round(current.stats[stat]))}</strong>
-      <small>MAX ${formatNumber(Math.round(maximum.stats[stat]))}</small>
+      ${Math.round(current.stats[stat]) !== Math.round(maximum.stats[stat])
+        ? `<small>MAX ${formatNumber(Math.round(maximum.stats[stat]))}</small>` : ""}
     </div>`).join("");
-  const activeMeta = [
-    copy().interval(current.active.interval),
-    copy().rate(Math.round(current.active.probability * 100)),
-    copy().duration(current.active.duration),
-  ];
 
   return `<div class="card-detail-layout" style="${attributeStyle(card)}">
     <div class="card-detail-hero">
-      <div class="card-detail-art">${renderLandscapeCardArt(card, { lazy: false })}</div>
+      <div class="card-detail-art">${renderLandscapeCardArt(card, { lazy: false, showMeta: false })}</div>
       <div class="card-detail-identity">
         <span class="card-detail-rarity">★${Number(card.rarity)} · ${escapeHtml(attribute.name)}</span>
         <h3>${escapeHtml(card.character_name)}</h3>
@@ -92,13 +81,10 @@ function renderDetail(card, charactersById, state) {
     </div>
     <section class="card-detail-stats" aria-label="${escapeHtml(copy().statsAria)}">${statRows}</section>
     <section class="card-detail-skills">
-      ${skillBlock(t("skill.active"), current.active, activeMeta)}
-      ${skillBlock(t("skill.passive"), current.passive)}
-      ${skillBlock(t("skill.special"), current.special)}
-      <article class="card-detail-skill card-detail-leader">
-        <header><strong>${t("skill.leader")}</strong></header>
-        <p>${escapeHtml(cleanGameMarkup(current.leader.description) || t("card.infoNone"))}</p>
-      </article>
+      ${skillBlock("active", current.active, copy().rate(Math.round(current.active.probability * 100)))}
+      ${skillBlock("passive", current.passive)}
+      ${skillBlock("special", current.special)}
+      ${skillBlock("leader", current.leader)}
     </section>
   </div>`;
 }
