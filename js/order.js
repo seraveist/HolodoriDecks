@@ -94,6 +94,16 @@ export function optimizeRecommendationOrders({
   const compositions = dedupeRecommendationResults(recommendation.results);
 
   for (const result of compositions) {
+    // Generic search provides a true maximum over all unit-score-relevant
+    // orders. Once that bound cannot improve TOP K, no further SP permutations
+    // can promote this composition. Song shortlists have no such bound.
+    if (generic && Number.isFinite(result.orderScoreUpperBound)
+      && orderedCandidates.length >= resultCount) {
+      const cutoff = [...orderedCandidates].sort(compareResults)[resultCount - 1];
+      if (result.orderScoreUpperBound < cutoff.rankingValue
+        || (result.orderScoreUpperBound === cutoff.rankingValue
+          && result.orderUnitUpperBound <= cutoff.score.unitScore)) continue;
+    }
     const leader = preparedCards.get(result.members[0]);
     if (!leader) continue;
     const selectedMemberIds = orderableMemberIds(result);

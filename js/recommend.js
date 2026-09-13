@@ -4,6 +4,7 @@ import {
   memberIntrinsicValue,
   memberPotentialValue,
 } from "./score.js?v=1.1.0";
+import { unitScoreOrders } from "./search-order-bounds.js";
 
 const EXACT_CASE_LIMIT = 60_000;
 const MEMBER_PRUNE_THRESHOLD = 36;
@@ -13,6 +14,7 @@ const REFINE_LEADER_LIMIT = 8;
 const REFINE_FOUR_STAR_ANCHORS = 6;
 const REFINE_LOCAL_ANCHORS = 20;
 const REFINE_LOCAL_ROUNDS = 2;
+const EXPLORE_LOCAL_ANCHORS = 8;
 const REFINE_BEAM_SCALE = 4;
 const BEAM_MEMBER_LIMIT = 52;
 const BEAM_WIDTH = 360;
@@ -385,13 +387,19 @@ export function optimizeOwnedDeck({
   separateRole = true,
   resultCount = DEFAULT_RESULT_COUNT,
   exactCaseLimit = EXACT_CASE_LIMIT,
+  exactTotalCaseLimit = Infinity,
+  retainOrderBounds = false,
 }) {
   const normalizedResultCount = Math.max(1, Math.min(MAX_RESULT_COUNT, Number(resultCount) || DEFAULT_RESULT_COUNT));
+  retainOrderBounds = retainOrderBounds && !music;
   const normalizedSimulationTarget = ["score", "potential"].includes(simulationTarget)
     ? simulationTarget
     : "score";
-  const normalizedExactCaseLimit = Math.max(1, Math.round(Number(exactCaseLimit) || EXACT_CASE_LIMIT));
-  const owned = ownedCardIds.map((id) => preparedCards.get(id)).filter(Boolean);
+  let normalizedExactCaseLimit = Math.max(1, Math.round(Number(exactCaseLimit) || EXACT_CASE_LIMIT));
+  // Selection/import order is not a search signal. Use the catalog's stable
+  // order and set semantics so toggling ownership cannot change the beam path.
+  const ownedIds = new Set(ownedCardIds);
+  const owned = [...preparedCards.values()].filter((card) => ownedIds.has(card.id));
   const locked = Array.from({ length: 6 }, (_, index) => Boolean(lockedSlots?.[index] && currentMembers?.[index]));
   const fixedMemberIdList = currentMembers.slice(1, 6).filter((id, index) => locked[index + 1] && id);
   const fixedMemberIds = new Set(fixedMemberIdList);
@@ -421,6 +429,9 @@ export function optimizeOwnedDeck({
   }
   const need = 5 - fixedMembers.length;
   if (need < 0) return { ok: false, reason: "고정 멤버가 5장을 초과했습니다." };
+  // Bound the cost of the entire request, not just each individual leader.
+  normalizedExactCaseLimit = Math.min(normalizedExactCaseLimit,
+    Math.max(1, Math.floor(exactTotalCaseLimit / leaders.length)));
 
   let estimatedCases = 0;
   let exactLeaderCount = 0;
@@ -435,29 +446,61 @@ export function optimizeOwnedDeck({
   const leaderBestValues = new Map();
   const leaderSearchState = new Map();
   const leaderCandidateResults = new Map();
+  const seenByLeader = new Map();
+  const orderCandidates = new Map();
+  const constantOrderCandidates = [];
+  const guaranteedValues = [];
+  let orderCutoff = -Infinity;
+  let lastPrunedCutoff = -Infinity;
 
   const evaluateFill = (leader, fill, refinement = false) => {
     const memberSlotIds = composeMemberIds(fixedMemberIdList, fill);
     const members = memberSlotIds.map((id) => preparedCards.get(id)).filter(Boolean);
     if (members.length !== 5 || hasDuplicateMemberCharacters(members)) return;
-    const score = evaluateDeck({
+    const key = memberSetKey(memberSlotIds);
+    const seen = seenByLeader.get(leader.id) ?? new Set();
+    // In the generic bounded search all score-relevant orders are evaluated.
+    // Song search retains ordered keys because its first-stage timing differs.
+    const evaluationKey = retainOrderBounds ? key : memberSlotIds.join("|");
+    if (seen.has(evaluationKey)) return;
+    seen.add(evaluationKey);
+    seenByLeader.set(leader.id, seen);
+    const evaluate = (orderedMembers) => evaluateDeck({
       leader,
-      members,
+      members: orderedMembers,
       music,
       difficulty,
       playMode,
       separateRole,
       evaluationTarget: normalizedSimulationTarget,
     });
-    evaluatedCount += 1;
-    if (refinement) refinementEvaluatedCount += 1;
+    let score = null;
+    let bestMembers = members;
+    let lowerBound = Infinity;
+    let unitLowerBound = Infinity;
+    let unitUpperBound = -Infinity;
+    for (const order of retainOrderBounds ? unitScoreOrders(members) : [members]) {
+      const next = evaluate(order);
+      evaluatedCount += 1;
+      if (refinement) refinementEvaluatedCount += 1;
+      if (!next) continue;
+      const value = recommendationValue(next, normalizedSimulationTarget);
+      lowerBound = Math.min(lowerBound, value);
+      unitLowerBound = Math.min(unitLowerBound, next.unitScore);
+      unitUpperBound = Math.max(unitUpperBound, next.unitScore);
+      if (!score || value > recommendationValue(score, normalizedSimulationTarget)) {
+        score = next;
+        bestMembers = order;
+      }
+    }
     if (!score) return;
     const candidate = {
       leader,
       fill,
-      memberSlotIds,
-      members,
+      memberSlotIds: bestMembers.map((member) => member.id),
+      members: bestMembers,
       score,
+      orderUnitUpperBound: unitUpperBound,
       rankingValue: recommendationValue(score, normalizedSimulationTarget),
     };
     const previous = leaderBestValues.get(leader.id);
@@ -468,6 +511,28 @@ export function optimizeOwnedDeck({
     keepTopResults(leaderResults, candidate, Math.max(normalizedResultCount, REFINE_LOCAL_ANCHORS));
     leaderCandidateResults.set(leader.id, leaderResults);
     keepTopResults(topResults, candidate, normalizedResultCount);
+    if (retainOrderBounds) {
+      // Every representative is at least this composition's minimum score.
+      // Discard only when even its maximum cannot reach the current TOP K.
+      if (guaranteedValues.length < normalizedResultCount || lowerBound > guaranteedValues.at(-1)) {
+        guaranteedValues.push(lowerBound);
+        guaranteedValues.sort((a, b) => b - a);
+        guaranteedValues.length = Math.min(guaranteedValues.length, normalizedResultCount);
+        if (guaranteedValues.length === normalizedResultCount) orderCutoff = guaranteedValues.at(-1);
+      }
+      if (lowerBound === candidate.rankingValue && unitLowerBound === unitUpperBound) {
+        // Their final rank is known, even though the SP order is not.
+        keepTopResults(constantOrderCandidates, candidate, normalizedResultCount);
+      } else if (candidate.rankingValue >= orderCutoff) {
+        orderCandidates.set(`${leader.id}::${key}`, candidate);
+      }
+      if (orderCandidates.size > 1000 && orderCutoff > lastPrunedCutoff) {
+        lastPrunedCutoff = orderCutoff;
+        for (const [candidateKey, row] of orderCandidates) {
+          if (row.rankingValue < orderCutoff) orderCandidates.delete(candidateKey);
+        }
+      }
+    }
   };
 
   for (const leader of leaders) {
@@ -507,6 +572,35 @@ export function optimizeOwnedDeck({
     }
   }
 
+  const exploreReplacements = (state, anchorCount) => {
+    const { leader, rawMemberPool } = state;
+    for (let round = 0; round < REFINE_LOCAL_ROUNDS; round += 1) {
+      const anchors = [...(leaderCandidateResults.get(leader.id) ?? [])].slice(0, anchorCount);
+      const before = evaluatedCount;
+      for (const anchor of anchors) {
+        for (let index = 0; index < anchor.fill.length; index += 1) {
+          for (const replacement of rawMemberPool) {
+            if (anchor.memberSlotIds.includes(replacement.id)) continue;
+            const swapped = [...anchor.fill];
+            swapped[index] = replacement;
+            evaluateFill(leader, swapped, true);
+          }
+        }
+      }
+      if (evaluatedCount === before) break;
+    }
+  };
+
+  // Initial beam rank is not a bound on a leader's best deck. Give every
+  // non-exhaustive leader a real-score neighborhood search before selecting
+  // which leaders receive the wider, more expensive beam pass.
+  let exploredLeaderCount = 0;
+  for (const state of leaderSearchState.values()) {
+    if (state.leaderExact && !state.shouldPrune) continue;
+    exploredLeaderCount += 1;
+    exploreReplacements(state, EXPLORE_LOCAL_ANCHORS);
+  }
+
   const refineLeaderIds = [...leaderBestValues.entries()]
     .sort((left, right) => right[1] - left[1])
     .slice(0, REFINE_LEADER_LIMIT)
@@ -535,31 +629,7 @@ export function optimizeOwnedDeck({
     }
 
     if (need <= 0) continue;
-    const seenSwaps = new Set();
-    for (let round = 0; round < REFINE_LOCAL_ROUNDS; round += 1) {
-      const anchors = [...(leaderCandidateResults.get(leader.id) ?? [])]
-        .slice(0, REFINE_LOCAL_ANCHORS);
-      if (!anchors.length) break;
-      let roundEvaluated = 0;
-      for (const anchor of anchors) {
-        for (let replaceIndex = 0; replaceIndex < anchor.fill.length; replaceIndex += 1) {
-          for (const replacement of rawMemberPool) {
-            if (anchor.memberSlotIds.includes(replacement.id)) continue;
-            const swapped = [...anchor.fill];
-            swapped[replaceIndex] = replacement;
-            const ids = composeMemberIds(fixedMemberIdList, swapped);
-            if (new Set(ids).size !== ids.length) continue;
-            if (hasDuplicateMemberCharacters([...fixedMembers, ...swapped])) continue;
-            const key = memberSetKey(ids);
-            if (seenSwaps.has(key)) continue;
-            seenSwaps.add(key);
-            evaluateFill(leader, swapped, true);
-            roundEvaluated += 1;
-          }
-        }
-      }
-      if (!roundEvaluated) break;
-    }
+    exploreReplacements(state, REFINE_LOCAL_ANCHORS);
 
     const fourStars = memberPool.filter((member) => memberRarity(member) === 4);
     if (!fourStars.length) continue;
@@ -584,6 +654,23 @@ export function optimizeOwnedDeck({
     }
   }
 
+  // Strong member sets discovered under one leader must also get a chance
+  // under the other eligible leaders, including leaders whose own beam followed
+  // a different synergy path. Presets and character exclusions still apply.
+  const sharedFills = new Map();
+  for (const rows of leaderCandidateResults.values()) {
+    for (const row of rows.slice(0, REFINE_LOCAL_ANCHORS)) {
+      sharedFills.set(memberSetKey(row.fill.map((member) => member.id)), row.fill);
+    }
+  }
+  for (const state of leaderSearchState.values()) {
+    if (state.leaderExact && !state.shouldPrune) continue;
+    const eligible = new Set(state.rawMemberPool.map((member) => member.id));
+    for (const fill of sharedFills.values()) {
+      if (fill.every((member) => eligible.has(member.id))) evaluateFill(state.leader, fill, true);
+    }
+  }
+
   if (!topResults.length) {
     return {
       ok: false,
@@ -592,7 +679,11 @@ export function optimizeOwnedDeck({
     };
   }
 
-  const results = topResults.map((result) => {
+  const finalists = retainOrderBounds
+    ? [...orderCandidates.values(), ...constantOrderCandidates]
+      .filter((row) => row.rankingValue >= orderCutoff).sort(compareResults)
+    : topResults;
+  const results = finalists.map((result) => {
     const score = evaluateDeck({
       leader: result.leader,
       members: result.members,
@@ -606,6 +697,8 @@ export function optimizeOwnedDeck({
       members: [result.leader.id, ...result.memberSlotIds],
       score,
       rankingValue: recommendationValue(score, normalizedSimulationTarget),
+      ...(retainOrderBounds ? { orderScoreUpperBound: result.rankingValue,
+        orderUnitUpperBound: result.orderUnitUpperBound } : {}),
     };
   }).sort(compareResults);
   return {
@@ -624,6 +717,7 @@ export function optimizeOwnedDeck({
     beamLeaderCount,
     prunedLeaderCount,
     refinedLeaderCount,
+    exploredLeaderCount,
     refinementEvaluatedCount,
     estimatedCases,
     averageRawMemberPool: processedLeaderCount ? rawMemberCount / processedLeaderCount : 0,

@@ -21,7 +21,7 @@ import { mountMemberOptions } from "./ui/target.js?v=20260812.1";
 import { requiredElement } from "./ui/dom.js?v=20260812.1";
 import { createCardDetail } from "./ui/card-detail.js?v=20260812.1";
 
-const APP_VERSION = "1.2.1";
+const APP_VERSION = "1.2.2";
 const RESULT_COUNT = 5;
 
 const EXTRA_COPY = Object.freeze({
@@ -46,6 +46,11 @@ const EXTRA_COPY = Object.freeze({
 });
 
 const OPTIMIZER_REASON = Object.freeze({
+  "계산을 완료하지 못했습니다. 다시 시도해 주세요.": {
+    ko: "계산을 완료하지 못했습니다. 다시 시도해 주세요.",
+    en: "The calculation could not finish. Please try again.",
+    ja: "計算を完了できませんでした。もう一度お試しください。",
+  },
   "리더 1장과 멤버 5장을 구성하려면 보유 카드가 최소 6장 필요합니다.": {
     ko: "리더 1장과 멤버 5장을 구성하려면 보유 카드가 최소 6장 필요합니다.",
     en: "At least 6 owned cards are required to form 1 leader and 5 members.",

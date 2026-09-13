@@ -4,16 +4,18 @@ let requestId = 0;
 
 export async function runOptimizationAsync(payload, {
   preferWorker = true,
-  timeoutMs = 30_000,
+  timeoutMs = 120_000,
   signal = null,
 } = {}) {
   if (signal?.aborted) return { ok: false, cancelled: true };
-  if (!preferWorker || typeof Worker === "undefined") return runOptimization(payload);
+  if (!preferWorker) return runOptimization(payload);
+  const failed = () => ({ ok: false, reason: "계산을 완료하지 못했습니다. 다시 시도해 주세요." });
+  if (typeof Worker === "undefined") return failed();
   let worker;
   try {
     worker = new Worker(new URL("./optimizer-worker.js?v=1.1.2", import.meta.url), { type: "module" });
   } catch {
-    return runOptimization(payload);
+    return failed();
   }
   const id = ++requestId;
   return await new Promise((resolve) => {
@@ -28,28 +30,30 @@ export async function runOptimizationAsync(payload, {
       worker.terminate();
       resolve(result);
     };
-    const fallback = () => {
+    const fail = () => {
       if (signal?.aborted) {
         cancel();
         return;
       }
-      finish(runOptimization(payload));
+      finish(failed());
     };
     worker.addEventListener("message", (event) => {
       if (event.data?.id !== id || settled) return;
       if (!event.data?.ok) {
-        fallback();
+        fail();
         return;
       }
       finish(event.data.result);
     });
-    worker.addEventListener("error", fallback, { once: true });
+    worker.addEventListener("error", fail, { once: true });
     signal?.addEventListener?.("abort", cancel, { once: true });
-    timer = setTimeout(fallback, Math.max(1_000, Number(timeoutMs) || 30_000));
+    // A deadline ends this request. Never restart the same expensive search on
+    // the UI thread while a worker is still computing it.
+    timer = setTimeout(fail, Math.max(1_000, Number(timeoutMs) || 120_000));
     try {
       worker.postMessage({ id, payload });
     } catch {
-      fallback();
+      fail();
     }
   });
 }

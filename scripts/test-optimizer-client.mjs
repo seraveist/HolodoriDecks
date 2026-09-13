@@ -101,10 +101,40 @@ try {
   assert.equal(HangingWorker.instances[0].terminated, true, "cancelled Worker should terminate immediately");
 
   HangingWorker.instances.length = 0;
-  const fallback = await runOptimizationAsync(payload, { timeoutMs: 1_000 });
-  assert.equal(fallback.ok, true, "Worker watchdog should fall back to synchronous optimization");
+  // An invalid payload would throw if any failure path tried a main-thread
+  // recomputation. The pending worker must instead end with a recoverable error.
+  const fallback = await runOptimizationAsync({}, { timeoutMs: 1_000 });
+  assert.equal(fallback.ok, false, "Worker watchdog must not restart the search on the UI thread");
+  assert.ok(fallback.reason);
   assert.equal(HangingWorker.instances.length, 1);
   assert.equal(HangingWorker.instances[0].terminated, true, "timed-out Worker should terminate before fallback result is used");
+
+  for (const event of ["error", "message"]) {
+    const promise = runOptimizationAsync({});
+    const worker = HangingWorker.instances.at(-1);
+    for (const listener of worker.listeners.get(event)) {
+      listener({ data: { id: worker.message.id, ok: false } });
+    }
+    assert.equal((await promise).ok, false);
+    assert.ok(worker.terminated);
+  }
+
+  const pending = runOptimizationAsync({}, { timeoutMs: 5_000 });
+  const responsive = HangingWorker.instances.at(-1);
+  const success = { ok: true, results: [] };
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  for (const listener of responsive.listeners.get("message")) {
+    listener({ data: { id: responsive.message.id, ok: true, result: success } });
+  }
+  assert.equal(await pending, success, "Use the worker's result without recomputing it");
+  assert.ok(responsive.terminated);
+
+  globalThis.Worker = class { constructor() { throw new Error("unavailable"); } };
+  assert.equal((await runOptimizationAsync({})).ok, false);
+  globalThis.Worker = class extends HangingWorker {
+    postMessage() { throw new Error("clone failed"); }
+  };
+  assert.equal((await runOptimizationAsync({})).ok, false);
 } finally {
   if (originalWorker === undefined) delete globalThis.Worker;
   else globalThis.Worker = originalWorker;

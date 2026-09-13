@@ -104,6 +104,9 @@ jobs:
           node scripts/test-exact-global-search.mjs
           node scripts/test-exact-pruning.mjs
           node scripts/test-beam-search.mjs
+          node scripts/test-search-order-bounds.mjs
+          node scripts/test-recommendation-inventories.mjs
+          node scripts/test-optimizer-client.mjs
           node scripts/test-exact-runtime-source.mjs
           node scripts/test-optimization-session.mjs
           node scripts/test-chart-abort.mjs

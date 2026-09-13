@@ -40,7 +40,10 @@ export function runOptimization({
     simulationTarget,
     separateRole,
     resultCount: shortlistCount,
+    exactTotalCaseLimit: 120_000,
+    retainOrderBounds: !songSelected,
   });
+  const stageOneShortlistCount = result.results?.length ?? 0;
   if (result.ok) {
     result = optimizeRecommendationOrders({
       recommendation: result,
@@ -55,5 +58,5 @@ export function runOptimization({
       resultCount,
     });
   }
-  return { ...result, stageOneShortlistCount: shortlistCount };
+  return { ...result, stageOneShortlistCount };
 }
