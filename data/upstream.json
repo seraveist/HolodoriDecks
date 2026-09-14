@@ -1,23 +1,23 @@
 {
   "repository": "HolodoriDB/holodori-db-kor-diff",
   "ref": "main",
-  "commit": "0a3836eeb516f03fc358f26a0c423ab51f109bd9",
-  "master_version": "e50116c3c75a4da07b27936baa10bdc1eabd71955406848104f2a0e0241ac508",
+  "commit": "9234a7d99c5cfba9b71803c24a6de4c005c4842f",
+  "master_version": "251ae0da8534222b8e4d002d8e9825e5d175e98c71dfe8240bf7a3395bacfa03",
   "normalizerVersion": 2,
   "locales": {
     "ko": {
       "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "0a3836eeb516f03fc358f26a0c423ab51f109bd9",
+      "commit": "9234a7d99c5cfba9b71803c24a6de4c005c4842f",
       "suffix": "Kor"
     },
     "en": {
       "repository": "HolodoriDB/holodori-db-eng-diff",
-      "commit": "16d5b81b35cb90cf254a50bdde2a0bcbc328e521",
+      "commit": "562efed1611caeb15379b46de7344dc832e29561",
       "suffix": "Eng"
     },
     "ja": {
       "repository": "HolodoriDB/holodori-db-jpn-diff",
-      "commit": "fbbb04b06ede3276a6272d35d87fd7d1ce4b6ed7",
+      "commit": "f086e9093b07eaa47a102da307e7bfa58c3a9df6",
       "suffix": "Jpn"
     }
   },
@@ -48,7 +48,7 @@
     "LangGeneratedLivePassiveSkillEffect_Kor.json"
   ],
   "fileHashes": {
-    "version.txt": "198721a62d03c5ea3eb892c5319d6d06d6b71038c5bbe54835d9810f842a52ea",
+    "version.txt": "d9b9e14f2771e3e0d7e9906d482afbb68eb78a7efea641dcc34a0690df328add",
     "Card.json": "a4d78bd538f902988ee757aebf0605784e0fbd4f26c58f65e339085de949ef9d",
     "Character.json": "0cec0ffa96731e25461f47a2125dd3db2111f730c1a912490b7dac74e72a9aec",
     "LangCard_Kor.json": "66c58d2ad82efea4bb7232b34a3d1f9f6967544735d189f5264cbe6f22a38eb6",
