@@ -1,13 +1,12 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import fs from "node:fs";
-import { mkdtemp, rm } from "node:fs/promises";
-import { tmpdir } from "node:os";
 import path from "node:path";
 import { spawn, spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { prepareScoreCards } from "../js/card-prepare.js";
 import { optimizeOwnedDeck } from "../js/recommend.js";
+import { launchSmokeBrowser } from "./smoke-browser-launch.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const host = "127.0.0.1";
@@ -139,7 +138,6 @@ async function terminate(child) {
   ]);
 }
 
-const profileDir = await mkdtemp(path.join(tmpdir(), "holodori-browser-smoke-"));
 const server = spawn(process.env.PYTHON_BIN ?? (process.platform === "win32" ? "py" : "python3"), ["-m", "http.server", String(appPort), "--bind", host], {
   cwd: root,
   windowsHide: true,
@@ -151,30 +149,8 @@ let socket = null;
 try {
   await waitFor(async () => (await fetch(appUrl)).ok, 10_000, "local server did not start");
 
-  let chromeStderr = "";
-  chrome = spawn(resolveChrome(), [
-    "--headless=new",
-    "--no-sandbox",
-    "--disable-gpu",
-    "--disable-dev-shm-usage",
-    "--no-first-run",
-    "--no-default-browser-check",
-    "--remote-allow-origins=*",
-    "--remote-debugging-address=127.0.0.1",
-    "--remote-debugging-port=0",
-    `--user-data-dir=${profileDir}`,
-    "about:blank",
-  ], { windowsHide: true, stdio: ["ignore", "ignore", "pipe"] });
-  chrome.stderr.setEncoding("utf8");
-  chrome.stderr.on("data", (chunk) => { chromeStderr += chunk; });
-
-  const browserDebuggerUrl = await waitFor(() => {
-    if (chrome.exitCode !== null) {
-      throw new Error(`Chrome exited with ${chrome.exitCode}: ${chromeStderr.slice(-2000)}`);
-    }
-    return chromeStderr.match(/DevTools listening on (ws:\/\/[^\s]+)/)?.[1] ?? null;
-  }, 15_000, "Chrome remote debugging did not start");
-  const debuggerUrl = new URL(browserDebuggerUrl);
+  chrome = await launchSmokeBrowser(resolveChrome());
+  const debuggerUrl = new URL(chrome.debuggerUrl);
   const debugOrigin = `http://${debuggerUrl.hostname}:${debuggerUrl.port}`;
 
   const targetResponse = await fetch(
@@ -481,9 +457,5 @@ try {
   console.log("browser smoke: three goals, state migration, song retention, leader exclusion, responsive/localized UI, Exact/fallback and TOP 5 OK");
 } finally {
   try { socket?.close(); } catch { /* ignore */ }
-  await terminate(chrome);
-  await terminate(server);
-  assert.equal(path.dirname(path.resolve(profileDir)), path.resolve(tmpdir()), "Delete only this test's temporary profile");
-  assert.ok(path.basename(profileDir).startsWith("holodori-browser-smoke-"));
-  await rm(profileDir, { recursive: true, force: true }).catch(() => {});
+  try { await chrome?.close(); } finally { await terminate(server); }
 }

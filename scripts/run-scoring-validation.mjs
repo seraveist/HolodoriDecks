@@ -8,6 +8,7 @@ if (Number(process.versions.node.split('.')[0]) < 24) throw new Error('Node.js 2
 const args = process.argv.slice(2);
 if (args.some(a => a !== '--research-grid')) throw new Error('Usage: node scripts/run-scoring-validation.mjs [--research-grid]');
 const tests = [
+  'scripts/test-historical-scoring-workspace.mjs',
   'scripts/test-unit-display.mjs',
   'scripts/test-unit-observations.mjs', 'scripts/test-passive-stat-rounding.mjs',
   'scripts/test-passive-target-priority.mjs', 'scripts/test-support-stacking.mjs',

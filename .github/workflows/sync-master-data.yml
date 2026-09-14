@@ -38,7 +38,8 @@ jobs:
     outputs:
       has_diff: ${{ steps.diff.outputs.has_diff }}
       safe: ${{ steps.gate.outputs.safe }}
-      pr_number: ${{ steps.sync_pr.outputs.number }}
+      pr_title: ${{ steps.pr_body.outputs.title }}
+      pr_body: ${{ steps.pr_body.outputs.body }}
       head_sha: ${{ steps.sync_commit.outputs.head_sha }}
 
     steps:
@@ -180,11 +181,13 @@ jobs:
           git diff --stat -- data/generated data/upstream.json data/sync_state.json
           cat /tmp/master-automerge-gate.json
 
-      - name: Commit sync branch
+      # Keep failed candidates off the PR branch: pushing an existing PR head
+      # also creates a synchronize event and an approval notification.
+      - name: Commit validation candidate
         id: sync_commit
         if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run != true
         env:
-          SYNC_BRANCH: automation/master-data-sync
+          SYNC_BRANCH: automation/master-data-candidate
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -194,16 +197,16 @@ jobs:
           git push --force origin "$SYNC_BRANCH"
           echo "head_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Create or refresh sync pull request
-        id: sync_pr
+      - name: Prepare validated PR description
+        id: pr_body
         if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run != true
         env:
-          GH_TOKEN: ${{ github.token }}
-          SYNC_BRANCH: automation/master-data-sync
           MASTER_VERSION: ${{ steps.sync.outputs.master_version }}
         run: |
-          python - <<'PY'
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import base64
           import json
+          import os
           from pathlib import Path
 
           state = json.loads(Path('data/sync_state.json').read_text(encoding='utf-8'))
@@ -251,22 +254,82 @@ jobs:
           - score / potential / collision / Exact / Beam / cancellation regressions
           - Runtime Exact current-Master coherence
           - Python sync tests and JavaScript syntax checks
+          - Full static-app, browser and portable historical scoring validation on this exact commit
           """
-          Path('/tmp/sync-pr-body.md').write_text(
-              '\n'.join(line.strip() for line in body.splitlines()) + '\n',
-              encoding='utf-8',
-          )
+          encoded = base64.b64encode(('\n'.join(line.strip() for line in body.splitlines()) + '\n').encode()).decode()
+          print(f"body={encoded}")
+          print(f"title=Sync Holodori master data ({os.environ['MASTER_VERSION'][:12]})")
           PY
 
-          short="${MASTER_VERSION:0:12}"
-          title="Sync Holodori master data (${short})"
+      - name: Flag anomaly for administrator review
+        if: steps.diff.outputs.has_diff == 'true' && steps.gate.outputs.safe == 'false'
+        run: |
+          echo "::warning::Master sync passed structural validation but tripped the automatic-merge anomaly gate. A review PR will be published only after full validation passes."
+          cat /tmp/master-automerge-gate.json
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "## Holodori master sync"
+            echo "- upstream change detected: ${{ steps.sync.outputs.changed || 'unknown' }}"
+            echo "- generated diff: ${{ steps.diff.outputs.has_diff || 'false' }}"
+            echo "- master version: ${{ steps.sync.outputs.master_version || 'n/a' }}"
+            echo "- auto-merge safe: ${{ steps.gate.outputs.safe || 'n/a' }}"
+            echo "- validation candidate: ${{ steps.sync_commit.outputs.head_sha || 'not-needed' }}"
+            echo "- dry run: ${{ inputs.dry_run || false }}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  validate_sync:
+    needs: sync
+    if: >-
+      needs.sync.outputs.has_diff == 'true' &&
+      inputs.dry_run != true
+    permissions:
+      contents: read
+    uses: ./.github/workflows/validate.yml
+    with:
+      checkout_ref: ${{ needs.sync.outputs.head_sha }}
+
+  merge:
+    needs: [sync, validate_sync]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      pr_number: ${{ steps.sync_pr.outputs.number }}
+      merged: ${{ steps.auto_merge.outputs.merged }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.sync.outputs.head_sha }}
+      - name: Publish the validated candidate to the PR branch
+        env:
+          EXPECTED_HEAD: ${{ needs.sync.outputs.head_sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          git push --force origin HEAD:refs/heads/automation/master-data-sync
+
+      - name: Create or refresh sync pull request
+        id: sync_pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SYNC_BRANCH: automation/master-data-sync
+          PR_TITLE: ${{ needs.sync.outputs.pr_title }}
+          PR_BODY: ${{ needs.sync.outputs.pr_body }}
+        run: |
+          python - <<'PY'
+          import base64
+          import os
+          from pathlib import Path
+          Path('/tmp/sync-pr-body.md').write_bytes(base64.b64decode(os.environ['PR_BODY'], validate=True))
+          PY
           number="$(gh pr list --base main --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number // empty')"
           if [ -n "$number" ]; then
-            gh pr edit "$number" --title "$title" --body-file /tmp/sync-pr-body.md
+            gh pr edit "$number" --title "$PR_TITLE" --body-file /tmp/sync-pr-body.md
             state=updated
           else
             set +e
-            output="$(gh pr create --base main --head "$SYNC_BRANCH" --title "$title" --body-file /tmp/sync-pr-body.md 2>&1)"
+            output="$(gh pr create --base main --head "$SYNC_BRANCH" --title "$PR_TITLE" --body-file /tmp/sync-pr-body.md 2>&1)"
             status=$?
             set -e
             if [ "$status" -ne 0 ]; then
@@ -281,55 +344,28 @@ jobs:
           echo "state=$state" >> "$GITHUB_OUTPUT"
           echo "number=$number" >> "$GITHUB_OUTPUT"
 
-      - name: Flag anomaly for administrator review
-        if: steps.diff.outputs.has_diff == 'true' && steps.gate.outputs.safe == 'false'
-        run: |
-          echo "::warning::Master sync passed structural validation but tripped the automatic-merge anomaly gate. PR #${{ steps.sync_pr.outputs.number }} remains open for administrator review."
-          cat /tmp/master-automerge-gate.json
-
-      - name: Job summary
-        if: always()
-        run: |
-          {
-            echo "## Holodori master sync"
-            echo "- upstream change detected: ${{ steps.sync.outputs.changed || 'unknown' }}"
-            echo "- generated diff: ${{ steps.diff.outputs.has_diff || 'false' }}"
-            echo "- master version: ${{ steps.sync.outputs.master_version || 'n/a' }}"
-            echo "- auto-merge safe: ${{ steps.gate.outputs.safe || 'n/a' }}"
-            echo "- sync PR: ${{ steps.sync_pr.outputs.number || 'not-needed' }}"
-            echo "- dry run: ${{ inputs.dry_run || false }}"
-          } >> "$GITHUB_STEP_SUMMARY"
-
-  validate_sync:
-    needs: sync
-    if: >-
-      needs.sync.outputs.has_diff == 'true' &&
-      inputs.dry_run != true &&
-      needs.sync.outputs.safe == 'true' &&
-      needs.sync.outputs.pr_number != '' &&
-      (github.event_name != 'workflow_dispatch' || inputs.auto_merge == true)
-    permissions:
-      contents: read
-    uses: ./.github/workflows/validate.yml
-    with:
-      checkout_ref: ${{ needs.sync.outputs.head_sha }}
-
-  merge:
-    needs: [sync, validate_sync]
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v4
       - name: Merge the validated Master commit
+        id: auto_merge
+        if: >-
+          needs.sync.outputs.safe == 'true' &&
+          (github.event_name != 'workflow_dispatch' || inputs.auto_merge == true)
         env:
           GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ needs.sync.outputs.pr_number }}
+          PR_NUMBER: ${{ steps.sync_pr.outputs.number }}
           EXPECTED_HEAD: ${{ needs.sync.outputs.head_sha }}
         run: |
           test "$(gh pr view "$PR_NUMBER" --json headRefOid --jq '.headRefOid')" = "$EXPECTED_HEAD"
           gh pr merge "$PR_NUMBER" --squash --match-head-commit "$EXPECTED_HEAD"
           test "$(gh pr view "$PR_NUMBER" --json state --jq '.state')" = "MERGED"
-          echo "Master PR #$PR_NUMBER merged after validation of $EXPECTED_HEAD." >> "$GITHUB_STEP_SUMMARY"
+          echo "merged=true" >> "$GITHUB_OUTPUT"
+
+      - name: PR summary
+        env:
+          PR_NUMBER: ${{ steps.sync_pr.outputs.number }}
+          MERGED: ${{ steps.auto_merge.outputs.merged }}
+          EXPECTED_HEAD: ${{ needs.sync.outputs.head_sha }}
+        run: |
+          echo "Master PR #$PR_NUMBER passed full validation at $EXPECTED_HEAD; merged = ${MERGED:-false}." >> "$GITHUB_STEP_SUMMARY"
 
   deploy:
     needs: [sync, merge]
@@ -339,7 +375,7 @@ jobs:
       inputs.dry_run != true &&
       (github.event_name != 'workflow_dispatch' || inputs.auto_merge == true) &&
       needs.sync.result == 'success' &&
-      (needs.merge.result == 'success' || needs.sync.outputs.has_diff != 'true')
+      ((needs.merge.result == 'success' && needs.merge.outputs.merged == 'true') || needs.sync.outputs.has_diff != 'true')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

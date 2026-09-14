@@ -1,8 +1,21 @@
 {
   "schemaVersion": 1,
-  "gitCommit": "bac0619",
+  "gitCommit": "bac061984f94268e15a8ee28d527cb867a66ccc0",
   "sourcePath": "js/score.js",
   "archivedPath": "analysis/unit-score/archive/score-v0.9.js",
   "scoreSHA256": "67a90121a5228d084cb77297654e896cb94a48d4455f405da55c88a8dcd22987",
-  "purpose": "Reproduce the original A-AZ forecasts in an isolated workspace. Current production is tested separately against the observations through BJ."
+  "purpose": "Reproduce the original A-AZ forecasts in an isolated workspace. Current production is tested separately against the observations through BJ.",
+  "inputs": {
+    "path": "analysis/unit-score/archive/runtime-v0.9-inputs.json.gz",
+    "sha256": "e7a272ffecf4cd5d279a8879b810b2504f8c665542067bcb4f6dd65d14558c6a",
+    "files": {
+      "data/generated/cards.json": "f645be886dd9b15d44ef91247093f0061f89b7a0d4d3f45069fc3f2f3f9b0393",
+      "data/generated/characters.json": "9080678cddccda9d54afdf585d13fb3e5eee50d96979d63aadbc95bc4de2e2b3",
+      "data/generated/master_refs.json": "a220ef9070432df81af7a8a220a61206d9bfbeb5ff838dd8f26d766047b36d57",
+      "js/chart-score.js": "69567a01067090d97cbe1c4b250ef3dcf74a0044623a95cad92930545e06cb35",
+      "js/card-prepare.js": "2881eb129366690401d69bb4478be05bfba85fdad0e5bd965adf5f9b01d5efc8",
+      "js/skill-support.js": "9ca956b3a3dea6f7954640ed4dd00faf63c1e5f09a1c11952e0cbbd6303edc14",
+      "js/order-reference.js": "e831dd56c2d13662e15b64c10cdebe21b69dc95cc4d64426db66c1b050fc78ba"
+    }
+  }
 }

@@ -35,20 +35,60 @@ def test_master_validation_is_called_directly_on_generated_commit():
     assert "--event pull_request" not in str(jobs)
 
 
-@pytest.mark.parametrize("diff,merged,sync_result,dry_run,expected", [
-    ("true", "success", "success", False, True),
-    ("false", "skipped", "success", False, True),
-    ("true", "failure", "success", False, False),
-    ("true", "skipped", "success", False, False),
-    ("false", "skipped", "failure", False, False),
-    ("true", "success", "success", True, False),
+def test_master_pr_branch_is_not_updated_until_full_validation_passes():
+    jobs = workflow("sync-master-data.yml")["jobs"]
+    sync = jobs["sync"]["steps"]
+    candidate = next(step for step in sync if step.get("id") == "sync_commit")
+    assert candidate["env"]["SYNC_BRANCH"] == "automation/master-data-candidate"
+    assert not any("gh pr " in step.get("run", "") for step in sync)
+    assert "automation/master-data-sync" not in str(sync)
+    publish = jobs["merge"]
+    assert set(publish["needs"]) == {"sync", "validate_sync"}
+    assert "if" not in publish  # default success() blocks publication after failed/skipped validation
+    assert publish["steps"][0]["with"]["ref"] == "${{ needs.sync.outputs.head_sha }}"
+    push = next(step for step in publish["steps"] if "git push" in step.get("run", ""))
+    assert 'test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"' in push["run"]
+    assert "HEAD:refs/heads/automation/master-data-sync" in push["run"]
+    merge = next(step for step in publish["steps"] if step.get("id") == "auto_merge")
+    assert '--match-head-commit "$EXPECTED_HEAD"' in merge["run"]
+    assert merge["run"].index('= "MERGED"') < merge["run"].index('echo "merged=true"')
+
+
+@pytest.mark.parametrize("safe,event,auto_merge,can_merge", [
+    ("true", "schedule", False, True),
+    ("false", "schedule", False, False),
+    ("true", "workflow_dispatch", True, True),
+    ("true", "workflow_dispatch", False, False),
+    ("false", "workflow_dispatch", True, False),
 ])
-def test_data_deployment_does_not_depend_on_portrait_result(diff, merged, sync_result, dry_run, expected):
+def test_review_only_updates_still_require_full_validation(safe, event, auto_merge, can_merge):
+    jobs = workflow("sync-master-data.yml")["jobs"]
+    values = {"needs.sync.outputs.has_diff": "true", "inputs.dry_run": False,
+              "needs.sync.outputs.safe": safe, "github.event_name": event, "inputs.auto_merge": auto_merge}
+    assert condition(jobs["validate_sync"]["if"], values)
+    merge = next(step for step in jobs["merge"]["steps"] if step.get("id") == "auto_merge")
+    assert condition(merge["if"], values) is can_merge
+    assert not condition(jobs["validate_sync"]["if"], {**values, "inputs.dry_run": True})
+    assert not condition(jobs["validate_sync"]["if"], {**values, "needs.sync.outputs.has_diff": "false"})
+
+
+@pytest.mark.parametrize("diff,merge_result,merged,sync_result,dry_run,expected", [
+    ("true", "success", "true", "success", False, True),
+    ("false", "skipped", "", "success", False, True),
+    ("true", "failure", "", "success", False, False),
+    ("true", "failure", "true", "success", False, False),
+    ("true", "skipped", "", "success", False, False),
+    ("true", "success", "", "success", False, False),  # review PR, not merged
+    ("false", "skipped", "", "failure", False, False),
+    ("true", "success", "true", "success", True, False),
+])
+def test_data_deployment_does_not_depend_on_portrait_result(diff, merge_result, merged, sync_result, dry_run, expected):
     job = workflow("sync-master-data.yml")["jobs"]["deploy"]
     assert set(job["needs"]) == {"sync", "merge"}
     assert "sync-card-assets" not in str(job)
     assert condition(job["if"], {"github.event_name": "schedule", "inputs.dry_run": dry_run,
-        "needs.sync.result": sync_result, "needs.merge.result": merged,
+        "needs.sync.result": sync_result, "needs.merge.result": merge_result,
+        "needs.merge.outputs.merged": merged,
         "needs.sync.outputs.has_diff": diff}) is expected
 
 
