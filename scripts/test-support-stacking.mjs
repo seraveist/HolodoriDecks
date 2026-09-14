@@ -30,6 +30,20 @@ assert.ok(Math.abs(aggregate.songProjection.expected.skillMultiplier - aggregate
   "Aggregate song support must add SP to static support before averaging");
 assert.ok(Math.abs(aggregate.songProjection.maximum.skillMultiplier - aggregateMultiplier) < 1e-12);
 
+// Different intervals must use their joint windows, including the song end.
+// A: [10,20), [20,25); B: [15,25), both 50% likely to activate.
+// [10,15): E=50%, [15,25): E=max(A100,B200)=125%.
+const overlapMembers = [member("A", 100), member("B", 200), ...["C", "D", "E"].map(id => member(id, 0))];
+overlapMembers[0].active.probability = 0.5;
+overlapMembers[1].active = { ...overlapMembers[1].active, interval: 15, probability: 0.5 };
+const overlapSong = { id: "joint-active-windows", playing_seconds: 25, live_score_coefficient_permil: 5 };
+const overlap = evaluateDeck({ leader: leader(), members: overlapMembers, music: overlapSong, includeDiagnostics: true });
+assert.ok(Math.abs(overlap.songProjection.expected.skillMultiplier - 1.6) < 1e-12);
+assert.ok(Math.abs(overlap.songProjection.maximum.skillMultiplier - 2) < 1e-12);
+assert.ok(Math.abs(overlap.diagnostics[0].coverage - 0.3) < 1e-12, "song diagnostics must use clipped song coverage");
+const singleMaximum = evaluateDeck({ leader: leader(), members: overlapMembers, music: overlapSong, evaluationTarget: "potential" });
+assert.equal(singleMaximum.potentialRankingScore, overlap.potentialRankingScore);
+
 const exactMusic = { ...music, _chart: { chartHash: "support-addition-exact", fullComboNoteCount: 3,
   metadata: { notes: [["tap", 12], ["tap", 15], ["tap", 19]], skills: [{ slot: 1, time: 10, combo: 0 }], fever: null } } };
 const exact = evaluateDeck({ leader: leader(20), members, music: exactMusic });

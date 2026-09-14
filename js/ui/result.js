@@ -1,4 +1,4 @@
-import { formatNumber as formatLocaleNumber, getLocale, t } from "../i18n.js?v=20260812.1";
+import { formatNumber as formatLocaleNumber, getLocale, t } from "../i18n.js?v=1.3.0";
 import {
   ATTRIBUTE_META,
   attributeStyle,
@@ -6,9 +6,10 @@ import {
   escapeHtml,
   renderLandscapeCardArt,
   wirePortraitFallback,
-} from "./cards.js?v=20260813.2";
-import { getSlotLabel } from "./member.js?v=20260812.1";
-import { requiredElement } from "./dom.js?v=20260812.1";
+} from "./cards.js?v=1.3.0";
+import { getSlotLabel } from "./member.js?v=1.3.0";
+import { requiredElement } from "./dom.js?v=1.3.0";
+import { calculationSettings } from "../calculation-mode.js?v=1.3.0";
 
 const LOCAL_COPY = Object.freeze({
   ko: {
@@ -19,10 +20,9 @@ const LOCAL_COPY = Object.freeze({
     passiveSkill: "패시브 스킬",
     memoryEffect: "메모리 효과",
     memberEnhancement: "멤버 강화 보너스",
-    selectedSongAverage: "예상 평균 스코어",
-    potentialSongScore: "잠재 스코어",
-    allActiveMaximum: "모든 유효 액티브 성공 기준 잠재 스코어",
-    songMeta: (duration, notes, mode, accuracy) => `${duration}초 · ${accuracy === "estimated" ? "약 " : ""}${notes}노트 · ${mode === "auto" ? "AUTO (콤보 보너스 없음)" : "Manual PERFECT FC"}`,
+    selectedSongAverage: "악곡 기대 스코어",
+    potentialSongScore: "악곡 최대 스코어",
+    songMeta: (duration, notes, mode, accuracy) => `${duration}초 · ${accuracy === "estimated" ? "약 " : ""}${notes}노트 · ${mode === "auto" ? "AUTO 플레이" : "수동 ALL PERFECT"}`,
     chartExact: "실제 채보 노트·SP 순서 반영",
     chartMaster: "Master 풀콤보 노트 수 반영 · SP 타이밍 근사",
     chartEstimated: "노트 밀도 추정",
@@ -43,12 +43,11 @@ const LOCAL_COPY = Object.freeze({
     timelineNote: "청록은 발동 구간, 빨강은 중복 가능 구간입니다.",
     member: "멤버",
     songProgress: "곡 진행",
-    expectedAverageScore: "예상 평균 스코어",
+    expectedAverageScore: "악곡 기대 스코어",
     potentialUnitScore: "잠재 유닛 스코어",
     detailsShow: "+ 상세 보기",
     detailsHide: "- 접기",
     recommendationAria: (rank) => `추천 TOP ${rank} 편성 카드`,
-    resultInitial: "악곡 아래의 계산 버튼을 누르면 선택한 목표의 추천 편성 TOP 5가 표시됩니다.",
   },
   en: {
     notSelected: "Not selected",
@@ -58,10 +57,9 @@ const LOCAL_COPY = Object.freeze({
     passiveSkill: "Passive Skill",
     memoryEffect: "Memory Effect",
     memberEnhancement: "Member Enhancement Bonus",
-    selectedSongAverage: "Estimated Average Score",
-    potentialSongScore: "Potential Score",
-    allActiveMaximum: "Potential score if all valid Active Skills succeed",
-    songMeta: (duration, notes, mode, accuracy) => `${duration}s · ${accuracy === "estimated" ? "approx. " : ""}${notes} notes · ${mode === "auto" ? "AUTO (no combo bonus)" : "Manual PERFECT FC"}`,
+    selectedSongAverage: "Expected Song Score",
+    potentialSongScore: "Maximum Song Score",
+    songMeta: (duration, notes, mode, accuracy) => `${duration}s · ${accuracy === "estimated" ? "approx. " : ""}${notes} notes · ${mode === "auto" ? "AUTO Play" : "Manual ALL PERFECT"}`,
     chartExact: "Exact chart notes and SP order applied",
     chartMaster: "Master full-combo note count applied · SP timing approximated",
     chartEstimated: "Estimated from note density",
@@ -82,12 +80,11 @@ const LOCAL_COPY = Object.freeze({
     timelineNote: "Teal shows activation windows; red shows possible overlap.",
     member: "Member",
     songProgress: "Song Progress",
-    expectedAverageScore: "Estimated Average Score",
+    expectedAverageScore: "Expected Song Score",
     potentialUnitScore: "Potential Unit Score",
     detailsShow: "+ View Details",
     detailsHide: "- Collapse",
     recommendationAria: (rank) => `Recommended TOP ${rank} deck cards`,
-    resultInitial: "Press the calculation button under Song Settings to show the TOP 5 recommendations for the selected target.",
   },
   ja: {
     notSelected: "未選択",
@@ -97,10 +94,9 @@ const LOCAL_COPY = Object.freeze({
     passiveSkill: "パッシブスキル",
     memoryEffect: "メモリー効果",
     memberEnhancement: "メンバー強化ボーナス",
-    selectedSongAverage: "予想平均スコア",
-    potentialSongScore: "潜在スコア",
-    allActiveMaximum: "有効なアクティブがすべて成功した場合の潜在スコア",
-    songMeta: (duration, notes, mode, accuracy) => `${duration}秒 · ${accuracy === "estimated" ? "約" : ""}${notes}ノーツ · ${mode === "auto" ? "AUTO（コンボボーナスなし）" : "Manual PERFECT FC"}`,
+    selectedSongAverage: "楽曲期待スコア",
+    potentialSongScore: "楽曲最大スコア",
+    songMeta: (duration, notes, mode, accuracy) => `${duration}秒 · ${accuracy === "estimated" ? "約" : ""}${notes}ノーツ · ${mode === "auto" ? "AUTOプレイ" : "手動 ALL PERFECT"}`,
     chartExact: "実譜面ノーツ・SP順序を反映",
     chartMaster: "Masterのフルコンボ数を反映 · SP時刻は近似",
     chartEstimated: "ノーツ密度から推定",
@@ -121,12 +117,11 @@ const LOCAL_COPY = Object.freeze({
     timelineNote: "青緑は発動区間、赤は重複可能区間です。",
     member: "メンバー",
     songProgress: "楽曲進行",
-    expectedAverageScore: "予想平均スコア",
+    expectedAverageScore: "楽曲期待スコア",
     potentialUnitScore: "潜在ユニットスコア",
     detailsShow: "+ 詳細を見る",
     detailsHide: "- 閉じる",
     recommendationAria: (rank) => `おすすめ TOP ${rank} 編成カード`,
-    resultInitial: "楽曲設定の計算ボタンを押すと、選択した目標のおすすめ編成 TOP 5 が表示されます。",
   },
 });
 
@@ -489,7 +484,7 @@ function resultDetails(result, index, data, state, song, open) {
     || expectedValue;
   const expectedLabel = song ? copy().expectedAverageScore : t("result.unitScore");
   const potentialLabel = song ? copy().potentialSongScore : copy().potentialUnitScore;
-  const potentialTarget = state.simulationTarget === "potential";
+  const potentialTarget = calculationSettings(state).simulationTarget === "potential";
   const targetLabel = potentialTarget ? potentialLabel : expectedLabel;
   const targetValue = potentialTarget ? potentialValue : expectedValue;
   const comparisonLabel = potentialTarget ? expectedLabel : potentialLabel;
@@ -545,11 +540,12 @@ export function renderResult(data, state, recommendation = null) {
     [...container.querySelectorAll("details[open]")].map((details) => details.dataset.resultIndex),
   );
   const results = recommendation?.results ?? [];
-  const song = state.musicId ? data.musicById.get(state.musicId) : null;
+  const settings = calculationSettings(state);
+  const song = settings.musicId ? data.musicById.get(settings.musicId) : null;
 
   if (!results.length) {
     hideDiagnosticTooltip();
-    container.innerHTML = `<div class="empty-state result-empty-state"><span aria-hidden="true">✦</span><p>${escapeHtml(copy().resultInitial)}</p></div>`;
+    container.innerHTML = `<div class="empty-state result-empty-state"><span aria-hidden="true">✦</span><p>${escapeHtml(t("result.initial"))}</p></div>`;
     return;
   }
 

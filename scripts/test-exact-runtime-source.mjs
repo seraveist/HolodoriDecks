@@ -3,6 +3,7 @@ import fs from "node:fs";
 import assert from "node:assert/strict";
 import {
   chartKey,
+  chartMetadataMatchesEntry,
   convertRuntimeChartObject,
   loadSelectedChart,
   runtimeEntryMatchesChart,
@@ -58,6 +59,7 @@ assert.deepEqual(converted.skills[0], { slot: 1, time: 0.5, combo: 0 });
 assert.deepEqual(converted.fever, { start: 3, end: 4 });
 assert.deepEqual(converted.feverCharge, { start: 2, end: 2.5 });
 assert.equal(converted.sourceRuntime, true);
+assert.equal(chartMetadataMatchesEntry(converted, chartEntry), true);
 
 assert.throws(() => convertRuntimeChartObject({
   ...sourceChart,
@@ -99,12 +101,46 @@ try {
   assert.equal(result.metadata.sourceRuntime, true);
   assert.equal(result.metadata.notes.length, 3);
 
+  const runtimeFetch = globalThis.fetch;
+  const localResources = {
+    ...resources,
+    chartsByKey: new Map([["mtest:EXPERT", { ...chartEntry, metadataPath: "./charts/mtest-EXPERT.json" }]]),
+  };
+  const brokenMetadata = [
+    { ...converted, chartHash: "old" },
+    { ...converted, difficulty: "HARD" },
+    { ...converted, notes: converted.notes.slice(1) },
+    { ...converted, notes: [...converted.notes].reverse() },
+    { ...converted, notes: [["unknown", 1], ...converted.notes.slice(1)] },
+    { ...converted, skills: converted.skills.slice(1) },
+    { ...converted, skills: converted.skills.map(s => ({ ...s, slot: 1 })) },
+    { ...converted, skills: converted.skills.map(s => ({ ...s, combo: 999 })) },
+  ];
+  for (const metadata of [converted, ...brokenMetadata]) {
+    globalThis.fetch = async (url, options) => String(url).includes("mtest-EXPERT.json")
+      ? { ok: true, json: async () => metadata }
+      : runtimeFetch(url, options);
+    const before = requests;
+    const selected = await loadSelectedChart(localResources, "mtest", "EXPERT");
+    assert.equal(selected.metadata.notes.length, 3);
+    assert.equal(requests - before, metadata === converted ? 0 : 1,
+      "invalid local metadata must continue to validated Runtime Exact instead of omitting notes or SP");
+  }
+  globalThis.fetch = async (url) => String(url).includes("mtest-EXPERT.json")
+    ? { ok: true, json: async () => brokenMetadata[0] }
+    : { status: 503, body: { cancel: async () => {} } };
+  const fallback = await loadSelectedChart(localResources, "mtest", "EXPERT");
+  assert.equal(fallback.metadata, null);
+  assert.equal(fallback.fullComboNoteCount, chartEntry.fullComboNoteCount);
+  globalThis.fetch = runtimeFetch;
+
   const staleResources = {
     ...resources,
     runtimeChartsByKey: new Map([["mtest:EXPERT", { ...runtimeEntry, chartHash: "stale" }]]),
   };
+  const beforeStale = requests;
   const stale = await loadSelectedChart(staleResources, "mtest", "EXPERT");
-  assert.equal(requests, 1, "stale range entry should be rejected before network access");
+  assert.equal(requests, beforeStale, "stale range entry should be rejected before network access");
   assert.equal(stale.metadata, null);
 } finally {
   globalThis.fetch = originalFetch;

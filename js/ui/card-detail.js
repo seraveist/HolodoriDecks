@@ -1,5 +1,5 @@
-import { formatNumber, getLocale, t } from "../i18n.js?v=20260812.1";
-import { prepareScoreCards } from "../score.js?v=20260811.19";
+import { formatNumber, getLocale, t } from "../i18n.js?v=1.3.0";
+import { prepareScoreCards } from "../score.js?v=1.3.0";
 import {
   ATTRIBUTE_META,
   attributeStyle,
@@ -7,8 +7,8 @@ import {
   escapeHtml,
   renderLandscapeCardArt,
   wirePortraitFallback,
-} from "./cards.js?v=20260813.2";
-import { requiredElement } from "./dom.js?v=20260812.1";
+} from "./cards.js?v=1.3.0";
+import { requiredElement } from "./dom.js?v=1.3.0";
 
 const LOCAL_COPY = Object.freeze({
   ko: {

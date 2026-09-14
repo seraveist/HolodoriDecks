@@ -1,7 +1,7 @@
-import { buildSongContext, songKernel, timelineSongProjection } from "./chart-score.js?v=1.1.0";
-import { unitDisplayBonuses, UNIT_DISPLAY_MODEL, UNIT_DISPLAY_CONTEXT } from "./unit-score.js?v=1.2.0";
+import { buildSongContext, songKernel, timelineSongProjection } from "./chart-score.js?v=1.3.0";
+import { unitDisplayBonuses, UNIT_DISPLAY_MODEL, UNIT_DISPLAY_CONTEXT } from "./unit-score.js?v=1.3.0";
 
-export const SCORE_ENGINE_VERSION = "unit-score-v1.0-verified-display + song-score-v0.4-chart-timeline";
+export const SCORE_ENGINE_VERSION = "unit-score-v1.0-verified-display + song-score-v0.5-independent-song-base";
 export const UNIT_SCORE_K = 2.037342;
 export const CALIBRATION_FIXTURES = Object.freeze([
   { power: 67629, bonus: 106.8, score: 284936 },
@@ -22,6 +22,7 @@ const COMBO_AVERAGE_CACHE = new Map();
 const GENERIC_CONTEXT_CACHE = new Map();
 const MUSIC_CONTEXT_CACHE = new WeakMap();
 const SONG_KERNEL_CACHE = new WeakMap();
+const SONG_ACTIVE_WINDOWS_CACHE = new WeakMap();
 const DIFFICULTY_NOTE_DENSITY = Object.freeze({
   EASY: 3.0,
   NORMAL: 4.5,
@@ -379,7 +380,8 @@ function activeDetails(members, context, activationRateAveragePct, maximize = fa
   return members.map((member) => {
     const active = member.active;
     const checks = Math.floor(context.duration / Math.max(0.001, active.interval));
-    const effectiveProbability = maximize ? 1 : clamp(active.probability * (1 + activationRateAveragePct / 100), 0, 1);
+    const probability = clamp(active.probability * (1 + activationRateAveragePct / 100), 0, 1);
+    const effectiveProbability = maximize && probability > 0 ? 1 : probability;
     const expectedActivations = checks * effectiveProbability;
     const coverage = clamp(expectedActivations * Math.min(active.duration, active.interval) / context.duration, 0, 1);
     return {
@@ -624,28 +626,93 @@ function applyStaticSupport(details, supportProfile = {}, specialSupportAverageP
 function songSkillMultiplier(members, context, supportProfile = {}, maximize = false) {
   const special = specialAverages(members, context);
   const rawDetails = activeDetails(members, context, special.activationRateAveragePct, maximize);
-  const details = applyStaticSupport(rawDetails, supportProfile, special.supportAveragePct);
-  const active = aggregateActiveScore(details, context);
+  const supported = applyStaticSupport(rawDetails, supportProfile, special.supportAveragePct);
+  const { details, active } = uniformSongActiveEvaluation(supported, context);
   return { skillMultiplier: 1 + active.correctedPct / 100, special, details, active };
 }
 
-function projectSong(unitScore, members, music, difficulty, supportProfile = {}, playMode = "auto", evaluationTarget = "both") {
+// Without a note timeline, assume uniform note density, but preserve the
+// actual Active check intervals, overlaps and clipped end-of-song windows.
+// Pairwise collision corrections can produce a lower all-success score than
+// the expectation; integrating the joint windows is monotone in probability.
+function uniformSongActiveWindows(details, context) {
+  let cache = SONG_ACTIVE_WINDOWS_CACHE.get(context);
+  if (!cache) {
+    cache = new Map();
+    SONG_ACTIVE_WINDOWS_CACHE.set(context, cache);
+  }
+  const key = details.map(d => `${d.interval}:${d.duration}`).join("|");
+  if (cache.has(key)) return cache.get(key);
+  const events = [];
+  details.forEach((detail, index) => {
+    const interval = Math.max(0.001, finite(detail.interval, 30));
+    const duration = Math.max(0, finite(detail.duration));
+    if (!duration) return;
+    for (let time = interval; time < context.duration; time += interval) {
+      events.push({ time, index, delta: 1 });
+      events.push({ time: Math.min(context.duration, time + duration), index, delta: -1 });
+    }
+  });
+  events.sort((a, b) => a.time - b.time);
+  const groups = new Map();
+  const counts = details.map(() => 0);
+  let previous = 0;
+  for (const event of events) {
+    if (event.time > previous) {
+      const signature = counts.join(",");
+      const group = groups.get(signature) ?? { counts: [...counts], weight: 0 };
+      group.weight += (event.time - previous) / context.duration;
+      groups.set(signature, group);
+    }
+    counts[event.index] += event.delta;
+    previous = event.time;
+  }
+  const windows = [...groups.values()];
+  if (cache.size >= 512) cache.delete(cache.keys().next().value);
+  cache.set(key, windows);
+  return windows;
+}
+
+function uniformSongActiveEvaluation(details, context) {
+  const windows = uniformSongActiveWindows(details, context);
+  const sorted = details.map((detail, index) => ({ ...detail, index }))
+    .sort((a, b) => b.scoreUpPct - a.scoreUpPct);
+  const coverage = details.map(() => 0);
+  let correctedPct = 0;
+  for (const window of windows) {
+    let noStronger = 1;
+    for (const detail of sorted) {
+      const count = window.counts[detail.index];
+      const probability = count === 1 ? detail.effectiveProbability
+        : count > 1 ? 1 - (1 - detail.effectiveProbability) ** count : 0;
+      correctedPct += window.weight * detail.scoreUpPct * probability * noStronger;
+      coverage[detail.index] += window.weight * probability;
+      noStronger *= 1 - probability;
+    }
+  }
+  const resolved = details.map((detail, index) => ({ ...detail, coverage: coverage[index] }));
+  const independentPct = expectedMaximum(resolved, "coverage");
+  return {
+    details: resolved,
+    active: { independentPct, correctedPct, collisionLossPct: Math.max(0, independentPct - correctedPct) },
+  };
+}
+
+function projectSong(baseScore, members, music, difficulty, supportProfile = {}, playMode = "auto", evaluationTarget = "both") {
   if (!music) return null;
   const selected = contextFromMusic(music, difficulty);
   const generic = contextFromMusic(null, difficulty);
   const scoreRules = music?._scoreRules ?? null;
-  const genericExpected = songSkillMultiplier(members, generic, supportProfile);
   const needExpected = evaluationTarget !== "potential";
   const needMaximum = evaluationTarget !== "score";
   if (selected.chartAccuracy === "exact" && selected.noteTimeline.length) {
     return timelineSongProjection({
-      unitScore,
+      baseScore,
       members,
       context: selected,
       genericContext: generic,
       supportProfile,
       playMode,
-      genericSkillMultiplier: genericExpected.skillMultiplier,
       scoreRules,
       evaluationTarget,
     });
@@ -654,21 +721,16 @@ function projectSong(unitScore, members, music, difficulty, supportProfile = {},
   const selectedMaximum = needMaximum ? songSkillMultiplier(members, selected, supportProfile, true) : null;
   const manual = playMode === "manual";
   const selectedKernel = cachedSongKernel(selected, playMode, scoreRules);
-  const genericKernel = cachedSongKernel(generic, playMode, scoreRules);
+  const genericKernel = cachedSongKernel(generic, "auto", scoreRules);
   const baseRatio = genericKernel > 0 ? selectedKernel / genericKernel : 1;
-  const skillRatio = selectedExpected && genericExpected.skillMultiplier > 0
-    ? selectedExpected.skillMultiplier / genericExpected.skillMultiplier
-    : 1;
-  const maxSkillRatio = selectedMaximum && genericExpected.skillMultiplier > 0
-    ? selectedMaximum.skillMultiplier / genericExpected.skillMultiplier
-    : 1;
+  const skillRatio = selectedExpected?.skillMultiplier ?? 1;
+  const maxSkillRatio = selectedMaximum?.skillMultiplier ?? 1;
   const averageScore = selectedExpected
-    ? Math.max(0, Math.round(unitScore * baseRatio * skillRatio))
+    ? Math.max(0, Math.round(baseScore * baseRatio * skillRatio))
     : null;
-  const rawMaxScore = selectedMaximum
-    ? Math.max(0, Math.round(unitScore * baseRatio * maxSkillRatio))
+  const maxScore = selectedMaximum
+    ? Math.max(0, Math.round(baseScore * baseRatio * maxSkillRatio))
     : null;
-  const maxScore = rawMaxScore == null ? null : Math.max(averageScore ?? 0, rawMaxScore);
   return {
     averageScore,
     maxScore,
@@ -894,7 +956,10 @@ export function evaluateDeck({
   if (!composition) return null;
 
   const songProjection = projectSong(
-    composition.unitScore,
+    // Keep the calibrated power scale, but apply only this song's skills.
+    // Displayed Unit bonuses use a different model and cannot be removed by
+    // dividing by an aggregate generic skill multiplier.
+    composition.overallPower * UNIT_SCORE_K,
     members,
     music,
     difficulty,
@@ -905,9 +970,7 @@ export function evaluateDeck({
   const rankingScore = songProjection?.averageScore ?? composition.unitScore;
   const potentialRankingScore = songProjection?.maxScore ?? composition.potentialUnitScore;
   const diagnosticContext = songProjection?.context ?? UNIT_CONTEXT;
-  const projectedDiagnostics = songProjection?.context?.chartAccuracy === "exact"
-    ? songProjection?.expected?.details ?? null
-    : null;
+  const projectedDiagnostics = songProjection?.expected?.details ?? songProjection?.maximum?.details ?? null;
 
   return {
     rankingScore,

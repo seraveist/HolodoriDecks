@@ -1,0 +1,79 @@
+.calculation-modes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+  padding: 5px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface-soft);
+}
+
+.calculation-mode { position: relative; display: flex; min-width: 0; cursor: pointer; }
+.calculation-mode input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.calculation-mode-label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 46px;
+  padding: 8px 5px;
+  border-radius: 9px;
+  color: var(--ink-650);
+  font-size: var(--type-body);
+  font-weight: var(--weight-bold);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.calculation-mode input:checked + .calculation-mode-label {
+  background: var(--brand);
+  color: var(--ink-inverse);
+}
+.calculation-mode input:focus-visible + .calculation-mode-label {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+.calculation-panel .music-grid {
+  min-width: 0;
+  margin: 20px 0 0;
+  padding: 0;
+  border: 0;
+  grid-template-columns: minmax(0, 1.6fr) minmax(120px, .75fr) minmax(190px, 1.15fr);
+}
+.calculation-panel .music-grid[hidden] { display: none; }
+.calculation-panel .calculate-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.calculation-panel .calculate-row output { flex: 1; }
+.calculation-panel .calculate-button { min-width: 0; padding: 10px 20px; }
+.calculation-panel .field > span { font-size: var(--type-label); }
+.calculation-panel .field select,
+.calculation-panel .music-combobox-input { font-size: var(--type-body); font-weight: var(--weight-semibold); }
+
+@media (max-width: 820px) {
+  .calculation-panel .music-grid { grid-template-columns: minmax(0, .9fr) minmax(0, 1.25fr); }
+  .calculation-panel .music-combobox-field { grid-column: 1 / -1; }
+}
+@media (max-width: 600px) {
+  .calculation-panel { padding: 20px 16px; }
+  .calculation-mode-label { flex-direction: column; gap: 0; min-height: 58px; }
+  .calculation-panel .calculate-row { flex-direction: column; align-items: stretch; }
+  .calculation-panel .field select,
+  .calculation-panel .music-combobox-input { font-size: 16px; }
+}
+@media (max-width: 420px) {
+  .calculation-panel .music-grid { grid-template-columns: minmax(0, 1fr); }
+}

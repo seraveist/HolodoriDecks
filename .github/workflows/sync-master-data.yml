@@ -117,6 +117,8 @@ jobs:
           python -m pytest -q
           python -m py_compile scripts/check-automation-gate.py
           node scripts/test-chart-scoring.mjs
+          node scripts/test-song-score-invariants.mjs
+          node scripts/test-song-corpus.mjs
           node scripts/test-targeted-passive-support.mjs
           node scripts/test-passive-stat-rounding.mjs
           node scripts/test-passive-target-priority.mjs

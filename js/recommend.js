@@ -3,7 +3,7 @@ import {
   leaderPotential,
   memberIntrinsicValue,
   memberPotentialValue,
-} from "./score.js?v=1.1.0";
+} from "./score.js?v=1.3.0";
 import { unitScoreOrders } from "./search-order-bounds.js";
 
 const EXACT_CASE_LIMIT = 60_000;

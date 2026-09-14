@@ -229,10 +229,10 @@ try {
   20_000, "application did not load");
 
   const policy = await evaluate(`({
-    targets: [...document.querySelector("#simulation-target").options].map((option) => option.value),
+    targets: [...document.querySelectorAll('[name="calculation-mode"]')].map((input) => input.value),
     rarities: [...document.querySelector("#owned-rarity-filter").options].map((option) => option.value),
   })`);
-  assert.deepEqual(policy.targets, ["score", "potential"]);
+  assert.deepEqual(policy.targets, ["unit", "expected", "maximum"]);
   assert.ok(!policy.rarities.includes("3") && policy.rarities.includes("4") && policy.rarities.includes("5"));
 
   await evaluate(`localStorage.setItem(${JSON.stringify(storageKey)}, ${JSON.stringify(JSON.stringify(genericState))}); true`);
@@ -270,12 +270,13 @@ try {
   }
 
   for (const simulationTarget of ["score", "potential"]) {
+    const mode = simulationTarget === "potential" ? "maximum" : "expected";
     const selectedState = { ...genericState, simulationTarget, musicId: "m0049",
       members: lockedDeckIds, lockedSlots: Array(6).fill(true) };
     await evaluate(`localStorage.setItem(${JSON.stringify(storageKey)}, ${JSON.stringify(JSON.stringify(selectedState))}); true`);
     await command("Page.reload", { ignoreCache: true });
     await waitFor(() => evaluate(`document.querySelector('#music-select')?.value === 'm0049'
-      && document.querySelector('#simulation-target')?.value === ${JSON.stringify(simulationTarget)}
+      && document.querySelector('[name="calculation-mode"]:checked')?.value === ${JSON.stringify(mode)}
       && document.querySelector('#owned-tab-count')?.textContent === '12'`), 20_000, "selected song state did not reload");
     await evaluate(`document.querySelector('#auto-compose').click(); true`);
     await waitFor(() => evaluate(`!document.querySelector('#auto-compose').disabled
@@ -286,12 +287,102 @@ try {
       genericReference: document.querySelectorAll('[data-order-basis="reference"]').length,
       slots: document.querySelectorAll('.recommendation-result-card .special-skill-order li').length,
       accuracy: document.querySelector('.song-projection-accuracy')?.textContent,
+      label: document.querySelector('.result-summary-score > span')?.textContent,
+      score: document.querySelector('.result-summary-score > strong')?.textContent,
+      projected: [...document.querySelectorAll('.song-projection-score > strong')].map(el => el.textContent),
     })`);
     assert.equal(selectedResult.count, 1);
     assert.equal(selectedResult.genericReference, 0, "Selected songs must not display the generic reference");
     assert.equal(selectedResult.slots, 5);
     assert.ok(selectedResult.accuracy?.includes("실제 채보"));
+    assert.equal(selectedResult.label, mode === "maximum" ? "악곡 최대 스코어" : "악곡 기대 스코어");
+    assert.equal(selectedResult.score, selectedResult.projected[mode === "maximum" ? 1 : 0]);
   }
+
+  // Exercise the controls themselves, including remembered song settings in unit mode.
+  const retainedSong = await evaluate(`(() => {
+    document.querySelector('[name="calculation-mode"][value="unit"]').click();
+    return {
+      hidden: document.querySelector('#song-settings').hidden,
+      disabled: document.querySelector('#song-settings').disabled,
+      song: document.querySelector('#music-select').value,
+      count: document.querySelectorAll('.recommendation-result-card').length,
+      separateLabel: document.querySelector('.member-separate-toggle span').textContent,
+    };
+  })()`);
+  assert.deepEqual(retainedSong, { hidden: true, disabled: true, song: "m0049", count: 0, separateLabel: "리더를 편성에 제외" });
+  await evaluate(`document.querySelector('#auto-compose').click(); true`);
+  await waitFor(() => evaluate(`!document.querySelector('#auto-compose').disabled
+    && document.querySelectorAll('.recommendation-result-card').length === 1`), 30_000, "unit goal with remembered song");
+  assert.equal(await evaluate(`document.querySelectorAll('.song-projection').length`), 0);
+  assert.equal(await evaluate(`document.querySelector('.result-summary-score > span').textContent`), "유닛 스코어");
+  const retainedUnitScore = await evaluate(`document.querySelector('.result-summary-score > strong').textContent`);
+  await command("Page.reload", { ignoreCache: true });
+  await waitFor(() => evaluate(`document.querySelector('#owned-tab-count')?.textContent === '12'
+    && document.querySelector('#music-select')?.value === 'm0049'`), 20_000, "remembered song reload");
+  assert.equal(await evaluate(`document.querySelector('[name="calculation-mode"]:checked').value`), "unit");
+  await evaluate(`document.querySelector('[name="calculation-mode"][value="expected"]').click(); true`);
+  assert.equal(await evaluate(`document.querySelector('#song-settings').hidden`), false);
+  assert.equal(await evaluate(`document.querySelector('#music-select').value`), "m0049");
+  assert.equal(await evaluate(`document.querySelector('#play-mode').value`), "manual");
+  const songOptions = await evaluate(`(() => {
+    const input = document.querySelector('#music-search-input');
+    input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    return {
+      canCalculate: !document.querySelector('#auto-compose').disabled,
+      genericOption: Boolean(document.querySelector('.music-combobox-option.is-average')),
+      count: document.querySelectorAll('.music-combobox-option').length,
+    };
+  })()`);
+  assert.equal(songOptions.canCalculate, false, "song goals require a song");
+  assert.equal(songOptions.genericOption, false, "generic evaluation belongs only to the goal selector");
+  assert.ok(songOptions.count > 10);
+  await evaluate(`document.querySelector('[name="calculation-mode"][value="unit"]').click(); true`);
+  assert.equal(await evaluate(`document.querySelector('#auto-compose').disabled`), false);
+  await evaluate(`document.querySelector('#auto-compose').click(); true`);
+  await waitFor(() => evaluate(`!document.querySelector('#auto-compose').disabled
+    && document.querySelectorAll('.recommendation-result-card').length === 1`), 30_000, "unit goal with no song");
+  assert.equal(await evaluate(`document.querySelector('.result-summary-score > strong').textContent`), retainedUnitScore,
+    "remembered song and manual play must not affect unit score");
+
+  if (process.env.BROWSER_SMOKE_ARTIFACT_DIR) {
+    for (const [label, width, theme] of [["desktop", 1280, "light"], ["mobile", 390, "dark"], ["narrow", 320, "light"]]) {
+      await command("Emulation.setDeviceMetricsOverride", { width, height: 1000, deviceScaleFactor: 1, mobile: false });
+      await evaluate(`document.documentElement.dataset.theme = ${JSON.stringify(theme)}; true`);
+      await evaluate(`document.querySelector('#music-select').value = 'm0049';
+        document.querySelector('#music-select').dispatchEvent(new Event('change')); true`);
+      for (const mode of ["unit", "expected", "maximum"]) {
+        await evaluate(`document.querySelector('[name="calculation-mode"][value="${mode}"]').click();
+          document.querySelector('#music-setting').scrollIntoView({block:'start'}); true`);
+        await evaluate(`new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))`);
+        assert.equal(await evaluate(`document.documentElement.scrollWidth > document.documentElement.clientWidth + 1`), false, `${label}/${mode} must fit the viewport`);
+        const { data } = await command("Page.captureScreenshot", { format: "png" });
+        fs.writeFileSync(path.join(process.env.BROWSER_SMOKE_ARTIFACT_DIR, `calculation-${label}-${mode}.png`), Buffer.from(data, "base64"));
+      }
+    }
+  }
+
+  const overlapIds = [
+    "card-06003-5-uniq-0059-00", "card-06003-4-cmmn-0000-00", "card-00018-5-uniq-0068-00",
+    "card-00027-5-uniq-0022-00", "card-06002-5-uniq-0066-00", "card-06004-5-uniq-0060-00",
+  ];
+  const overlapState = { ...genericState, calculationMode: "unit", ownedCardIds: overlapIds,
+    members: overlapIds, lockedSlots: Array(6).fill(true), separateRole: true };
+  await evaluate(`localStorage.setItem(${JSON.stringify(storageKey)}, ${JSON.stringify(JSON.stringify(overlapState))}); true`);
+  await command("Page.reload", { ignoreCache: true });
+  await waitFor(() => evaluate(`document.querySelector('#owned-tab-count')?.textContent === '6'
+    && document.querySelectorAll('.member-slot.filled').length === 6`), 20_000, "leader exclusion fixture");
+  assert.equal(await evaluate(`document.querySelector('#preset-status').hidden`), false);
+  await evaluate(`document.querySelector('#separate-role').click(); document.querySelector('#auto-compose').click(); true`);
+  await waitFor(() => evaluate(`!document.querySelector('#auto-compose').disabled
+    && document.querySelectorAll('.recommendation-result-card').length === 1`), 30_000, "leader character permitted when exclusion is off");
+  await evaluate(`document.querySelector('#separate-role').click(); true`);
+  assert.equal(await evaluate(`document.querySelectorAll('.recommendation-result-card').length`), 0);
+  await evaluate(`document.querySelector('#auto-compose').click(); true`);
+  await waitFor(() => evaluate(`!document.querySelector('#auto-compose').disabled
+    && document.querySelector('#recommendation-status').textContent.includes('리더를 편성에 제외')`), 20_000, "leader character excluded when enabled");
+  assert.equal(await evaluate(`document.querySelectorAll('.recommendation-result-card').length`), 0);
 
   // I's support leader must render outfit separately, without adding it back
   // into Active in the UI. These are engine values, not calibrated game values.
@@ -371,7 +462,23 @@ try {
   assert.equal(runtimeProbe.notes, noteCount);
   assert.equal(runtimeProbe.fallbackMetadata, null, "browser Runtime failure did not fall back cleanly");
 
-  console.log("browser smoke: generic TOP 5, song representative for both goals, separate outfit/Active, Runtime Exact and fallback OK");
+  for (const locale of ["en", "ja"]) {
+    await evaluate(`localStorage.setItem('holodori-decksim:locale', '${locale}'); true`);
+    await command("Page.reload", { ignoreCache: true });
+    await waitFor(() => evaluate(`document.documentElement.lang === '${locale}'
+      && document.querySelector('#music-select')?.options.length > 2`), 20_000, `${locale} controls load`);
+    await command("Emulation.setDeviceMetricsOverride", { width: 320, height: 1000, deviceScaleFactor: 1, mobile: false });
+    await evaluate(`document.querySelector('[name="calculation-mode"][value="expected"]').click(); true`);
+    const translated = await evaluate(`({
+      labels: [...document.querySelectorAll('.calculation-mode-label')].map(el => el.textContent.trim()),
+      heights: [...document.querySelectorAll('.calculation-mode-label')].map(el => el.getBoundingClientRect().height),
+      overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+    })`);
+    assert.ok(translated.labels[1].includes(locale === "en" ? "Expected" : "期待"));
+    assert.equal(translated.overflow, false, `${locale} narrow layout`);
+    assert.ok(Math.max(...translated.heights) - Math.min(...translated.heights) < 1, `${locale} goal buttons have equal heights`);
+  }
+  console.log("browser smoke: three goals, state migration, song retention, leader exclusion, responsive/localized UI, Exact/fallback and TOP 5 OK");
 } finally {
   try { socket?.close(); } catch { /* ignore */ }
   await terminate(chrome);

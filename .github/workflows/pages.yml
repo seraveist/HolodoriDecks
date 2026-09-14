@@ -90,6 +90,8 @@ jobs:
           console.log('[pages] module imports resolved');
           NODE
           node scripts/test-chart-scoring.mjs
+          node scripts/test-song-score-invariants.mjs
+          node scripts/test-song-corpus.mjs
           node scripts/test-targeted-passive-support.mjs
           node scripts/test-passive-stat-rounding.mjs
           node scripts/test-passive-target-priority.mjs
@@ -100,6 +102,7 @@ jobs:
           node scripts/test-song-representative-order.mjs
           node scripts/test-card-preparation.mjs
           node scripts/test-simulation-targets.mjs
+          node scripts/test-calculation-modes.mjs
           node scripts/test-collision-choice.mjs
           node scripts/test-exact-global-search.mjs
           node scripts/test-exact-pruning.mjs
@@ -121,8 +124,8 @@ jobs:
           if (exactShortlistSize(700, 50) <= 10) throw new Error('Exact shortlist regression');
           NODE
           node scripts/check-version.mjs
-          grep -q 'Manual PERFECT FC' index.html
-          grep -q '<option value="potential">최고 잠재 스코어</option>' index.html
+          grep -q '수동 ALL PERFECT' index.html
+          grep -q 'name="calculation-mode" value="maximum"' index.html
           if grep -q '<option value="3">★3</option>' index.html; then exit 1; fi
           if grep -q 'TARGET_STATS' js/ui/result.js; then exit 1; fi
           test ! -e js/ui/result-target.js
@@ -161,7 +164,7 @@ jobs:
           }
           console.log('[theme] semantic surface hierarchy validated');
           NODE
-          grep -q 'styles.css?v=20260812.5' index.html
+          node scripts/check-version.mjs
 
       - name: Build and validate derived master data
         run: |

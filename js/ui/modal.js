@@ -4,11 +4,11 @@ import {
   renderLandscapeCardArt,
   renderLandscapeCardTitle,
   wirePortraitFallback,
-} from "./cards.js?v=20260813.2";
-import { getSlotLabel } from "./member.js?v=20260812.1";
-import { compareByPower } from "../recommend.js?v=20260811.19";
-import { localeCompare, t } from "../i18n.js?v=20260812.1";
-import { requiredElement } from "./dom.js?v=20260812.1";
+} from "./cards.js?v=1.3.0";
+import { getSlotLabel } from "./member.js?v=1.3.0";
+import { compareByPower } from "../recommend.js?v=1.3.0";
+import { localeCompare, t } from "../i18n.js?v=1.3.0";
+import { requiredElement } from "./dom.js?v=1.3.0";
 
 export function compareByRarityThenDataOrder(a, b) {
   return Number(b.rarity) - Number(a.rarity)

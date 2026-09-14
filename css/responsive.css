@@ -67,10 +67,10 @@
   }
 
   .member-level-field,
-  .member-target-field,
   .member-separate-toggle,
   .member-actions > .text-button {
     width: 100%;
+    min-width: 0;
   }
 
   .member-separate-toggle,
@@ -376,9 +376,6 @@
     grid-template-columns: 1fr;
   }
 
-  .member-actions {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,4 +1,4 @@
-import { t } from "../i18n.js?v=20260812.1";
+import { t } from "../i18n.js?v=1.3.0";
 
 export const ATTRIBUTE_META = Object.freeze({
   1: Object.freeze({

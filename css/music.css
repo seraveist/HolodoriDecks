@@ -134,12 +134,6 @@
   font-weight: 700;
 }
 
-.music-combobox-option.is-average {
-  border-bottom: 1px solid var(--line);
-  border-radius: 8px 8px 4px 4px;
-  color: var(--brand);
-}
-
 .music-combobox-empty {
   padding: 14px 12px;
   color: var(--ink-500);

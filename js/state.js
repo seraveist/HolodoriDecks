@@ -1,7 +1,9 @@
+import { getCalculationMode } from "./calculation-mode.js?v=1.3.0";
+
 export const STORAGE_KEY = "holodori-decksim:v2";
 
 export const INITIAL_STATE = Object.freeze({
-  simulationTarget: "score",
+  calculationMode: "unit",
   levelMode: "current",
   separateRole: true,
   members: [null, null, null, null, null, null],
@@ -28,6 +30,7 @@ function normalizedState(candidate, validCardIds, maxLevelsById) {
   delete cleanCandidate.resultZoom;
   delete cleanCandidate.targetMode;
   delete cleanCandidate.resultCount;
+  delete cleanCandidate.simulationTarget;
   const validIds = validCardIds instanceof Set ? validCardIds : new Set(validCardIds);
   const shouldValidateCards = validIds.size > 0;
   const ownedCardIds = [...new Set(Array.isArray(candidate.ownedCardIds) ? candidate.ownedCardIds : [])]
@@ -63,9 +66,7 @@ function normalizedState(candidate, validCardIds, maxLevelsById) {
     lockedSlots,
     ownedCardIds,
     ownedCardSettings,
-    simulationTarget: ["score", "potential"].includes(candidate.simulationTarget)
-      ? candidate.simulationTarget
-      : INITIAL_STATE.simulationTarget,
+    calculationMode: getCalculationMode(candidate),
     levelMode: ["current", "max"].includes(candidate.levelMode) ? candidate.levelMode : INITIAL_STATE.levelMode,
     separateRole: candidate.separateRole !== false,
     playMode: ["auto", "manual"].includes(candidate.playMode) ? candidate.playMode : INITIAL_STATE.playMode,
@@ -78,9 +79,12 @@ export function createStore({
   maxLevelsById = new Map(),
   storage = globalThis.localStorage ?? null,
 } = {}) {
+  const savedState = readSavedState(storage);
+  const modeSource = Object.keys(savedState ?? {}).length ? savedState : initialState;
   let state = normalizedState({
     ...initialState,
-    ...readSavedState(storage),
+    ...savedState,
+    calculationMode: getCalculationMode(modeSource),
   }, validCardIds, maxLevelsById);
   const listeners = new Set();
 

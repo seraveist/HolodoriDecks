@@ -160,23 +160,21 @@ const genericContext = {
 // SP slot order changes exact expected score.
 {
   const earlySupport = timelineSongProjection({
-    unitScore: 100000,
+    baseScore: 100000,
     members: [A, B, C, D, E],
     context,
     genericContext,
     fullSupportPct: 0,
     playMode: "manual",
-    genericSkillMultiplier: 1,
     scoreRules: rules,
   });
   const lateSupport = timelineSongProjection({
-    unitScore: 100000,
+    baseScore: 100000,
     members: [B, A, C, D, E],
     context,
     genericContext,
     fullSupportPct: 0,
     playMode: "manual",
-    genericSkillMultiplier: 1,
     scoreRules: rules,
   });
   assert.ok(earlySupport.averageScore > lateSupport.averageScore,
@@ -186,6 +184,30 @@ const genericContext = {
 }
 
 const L = leader();
+
+// The song boundary must not expire a skill which actually continues beyond
+// the final note. A real runtime chart (m0327:EXPERT) ends after playing_seconds.
+{
+  const support = member("END-SP", { specialSupport: 100, specialDuration: 10 });
+  const active = member("END-ACTIVE", { activeScore: 100, interval: 10, duration: 10 });
+  const endMembers = [support, active, B, D, E];
+  const endSong = {
+    id: "end-boundary", playing_seconds: 14, live_score_coefficient_permil: 5,
+    _chart: { fullComboNoteCount: 2, metadata: {
+      notes: [["tap", 10], ["tap", 15]], skills: [{ slot: 1, time: 10, combo: 1 }],
+    } },
+  };
+  const result = evaluateDeck({ leader: L, members: endMembers, music: endSong });
+  assert.equal(result.songProjection.context.duration, 15);
+  assert.ok(Math.abs(result.songProjection.expected.skillMultiplier - 3) < 1e-12, "Active and SP must still cover the final note");
+  assert.equal(result.songProjection.specialWindows[0].end, 15, "display window remains clipped to the song");
+  const expiring = { ...support, special: { ...support.special, duration: 5 } };
+  const expired = evaluateDeck({ leader: L, members: [expiring, ...endMembers.slice(1)], music: endSong });
+  assert.ok(Math.abs(expired.songProjection.expected.skillMultiplier - 2.5) < 1e-12, "a true SP expiration excludes that note");
+  const startsOnFinalNote = { ...active, active: { ...active.active, interval: 15 } };
+  const finalStart = evaluateDeck({ leader: L, members: [support, startsOnFinalNote, B, D, E], music: endSong });
+  assert.ok(Math.abs(finalStart.songProjection.expected.skillMultiplier - 2) < 1e-12, "a check at the final note can still activate");
+}
 
 // A song's five SP positions affect its expected and potential live scores,
 // while the same cards retain their generic Unit/Potential Unit scores.

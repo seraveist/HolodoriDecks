@@ -45,7 +45,7 @@ def test_readme_describes_current_engine_and_preset_semantics() -> None:
     assert "5! = 120" in readme
     assert "v1.1 계산 범위와 제한" in readme
     assert "Runtime Exact" in readme
-    assert "Manual PERFECT FC" in readme
+    assert "수동 ALL PERFECT" in readme
 
     stale_phrases = (
         "Unit Score Engine v0.4-potential",

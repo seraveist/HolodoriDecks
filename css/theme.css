@@ -32,6 +32,11 @@ html[data-theme="dark"] {
 }
 
 /* Theme-level exceptions only. Component surfaces use semantic tokens in their base CSS. */
+html[data-theme="dark"] .calculation-mode input:checked + .calculation-mode-label,
+html[data-theme="dark"] .calculation-panel .calculate-button {
+  color: var(--surface-soft);
+}
+
 html[data-theme="dark"] body {
   background:
     radial-gradient(circle at 5% 0%, rgba(111, 148, 255, 0.12), transparent 28rem),

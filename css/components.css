@@ -151,10 +151,6 @@
   gap: 4px;
 }
 
-.member-target-field {
-  width: 160px;
-}
-
 .member-level-field > span {
   font-size: var(--type-caption);
 }
@@ -666,7 +662,7 @@
 .result-empty-state {
   border: 1px dashed var(--line-strong);
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.72);
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
 }
 
 .song-projection {

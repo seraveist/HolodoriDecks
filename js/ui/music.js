@@ -1,25 +1,23 @@
-import { getLocale, localeCompare, t } from "../i18n.js?v=20260812.1";
-import { escapeHtml } from "./cards.js?v=20260813.2";
-import { requiredElement } from "./dom.js?v=20260812.1";
+import { getLocale, localeCompare, t } from "../i18n.js?v=1.3.0";
+import { escapeHtml } from "./cards.js?v=1.3.0";
+import { requiredElement } from "./dom.js?v=1.3.0";
+import { getCalculationMode } from "../calculation-mode.js?v=1.3.0";
 
 const MUSIC_COPY = Object.freeze({
   ko: {
     placeholder: "곡명, 홀로멤 또는 Music ID 검색",
     toggleAria: "악곡 목록 열기",
     noResults: "검색 결과가 없습니다.",
-    genericLabel: "범용 유닛 평가",
   },
   en: {
     placeholder: "Search title, talent, or Music ID",
     toggleAria: "Open song list",
     noResults: "No matching songs.",
-    genericLabel: "Generic Unit Evaluation",
   },
   ja: {
     placeholder: "曲名、ホロメン、Music IDで検索",
     toggleAria: "楽曲一覧を開く",
     noResults: "該当する楽曲がありません。",
-    genericLabel: "汎用ユニット評価",
   },
 });
 
@@ -117,30 +115,19 @@ export function mountMusicControls(music, store) {
   const musicById = new Map(music.map((song) => [song.id, song]));
   const sortedMusic = [...music].sort(compareMusicAlphabetical);
   const labels = copy();
-  const averageAliases = [
-    labels.genericLabel,
-    t("music.average"),
-    "전체 평균",
-    "범용 유닛 평가",
-    "average",
-    "all average",
-    "generic unit evaluation",
-    "全体平均",
-    "汎用ユニット評価",
-  ];
   let visibleItems = [];
   let activeIndex = -1;
 
   input.placeholder = labels.placeholder;
   toggle.setAttribute("aria-label", labels.toggleAria);
   nativeSelect.innerHTML = [
-    `<option value="">${escapeHtml(labels.genericLabel)}</option>`,
+    `<option value="" disabled hidden>${escapeHtml(labels.placeholder)}</option>`,
     ...sortedMusic.map((song) => `<option value="${escapeHtml(song.id)}">${escapeHtml(displaySong(song))}</option>`),
   ].join("");
 
   function selectedLabel(musicId) {
     const song = musicId ? musicById.get(musicId) : null;
-    return song ? displaySong(song) : copy().genericLabel;
+    return song ? displaySong(song) : "";
   }
 
   function setInputFromState(musicId) {
@@ -150,16 +137,10 @@ export function mountMusicControls(music, store) {
     nativeSelect.value = id;
   }
 
-  function averageMatches(query) {
-    const normalizedQuery = normalizeMusicSearch(query);
-    return !normalizedQuery || averageAliases.some((alias) => normalizeMusicSearch(alias).includes(normalizedQuery));
-  }
-
   function buildVisibleItems(query) {
     const items = [];
-    if (averageMatches(query)) items.push({ id: "", song: null, average: true });
     for (const song of sortedMusic) {
-      if (musicMatchesQuery(song, query)) items.push({ id: song.id, song, average: false });
+      if (musicMatchesQuery(song, query)) items.push({ id: song.id, song });
     }
     return items;
   }
@@ -187,9 +168,6 @@ export function mountMusicControls(music, store) {
     }
 
     list.innerHTML = visibleItems.map((item, index) => {
-      if (item.average) {
-        return `<button id="music-option-${index}" class="music-combobox-option is-average" type="button" role="option" data-music-option-index="${index}" aria-selected="${selectedId === ""}"><strong>${escapeHtml(copy().genericLabel)}</strong></button>`;
-      }
       return `<button id="music-option-${index}" class="music-combobox-option" type="button" role="option" data-music-option-index="${index}" aria-selected="${selectedId === item.id}"><strong>${escapeHtml(item.song.title)}</strong><small>${escapeHtml(item.song.singer_name || item.song.id)}</small></button>`;
     }).join("");
     if (activeIndex >= visibleItems.length) activeIndex = visibleItems.length - 1;
@@ -197,6 +175,7 @@ export function mountMusicControls(music, store) {
   }
 
   function openList({ resetActive = true } = {}) {
+    if (getCalculationMode(store.getState()) === "unit") return;
     if (resetActive) activeIndex = -1;
     renderOptions(input.value === selectedLabel(store.getState().musicId || "") ? "" : input.value);
     list.hidden = false;
@@ -237,13 +216,6 @@ export function mountMusicControls(music, store) {
       return;
     }
 
-    const normalizedRaw = normalizeMusicSearch(raw);
-    const averageExact = averageAliases.some((alias) => normalizeMusicSearch(alias) === normalizedRaw);
-    if (averageExact) {
-      selectMusicId("");
-      return;
-    }
-
     const matches = sortedMusic.filter((song) => musicMatchesQuery(song, raw));
     const exact = matches.filter((song) => musicExactlyMatches(song, raw));
     if (exact.length === 1) {
@@ -264,7 +236,10 @@ export function mountMusicControls(music, store) {
     input.select();
     openList();
   });
-  input.addEventListener("input", () => openList());
+  input.addEventListener("input", () => {
+    if (!input.value.trim()) store.setState({ musicId: "" });
+    openList();
+  });
   input.addEventListener("keydown", (event) => {
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
@@ -293,6 +268,7 @@ export function mountMusicControls(music, store) {
     }
   });
   input.addEventListener("blur", () => window.setTimeout(() => {
+    if (getCalculationMode(store.getState()) === "unit") return;
     if (!combobox?.contains(document.activeElement)) commitInput();
   }, 0));
 
@@ -322,12 +298,16 @@ export function mountMusicControls(music, store) {
   playModeSelect.addEventListener("change", () => store.setState({ playMode: playModeSelect.value }));
 
   return function syncMusicControls(state) {
+    if (getCalculationMode(state) === "unit") {
+      closeList();
+      setInputFromState(state.musicId);
+    }
     const selectedId = state.musicId || "";
     if (input.dataset.selectedId !== selectedId) setInputFromState(selectedId);
     nativeSelect.value = selectedId;
     difficultySelect.value = state.difficulty;
     playModeSelect.value = state.playMode;
-    const songSelected = Boolean(selectedId);
+    const songSelected = musicById.has(selectedId);
     difficultySelect.disabled = !songSelected;
     playModeSelect.disabled = !songSelected;
   };

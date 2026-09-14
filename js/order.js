@@ -1,5 +1,5 @@
-import { evaluateDeck, prepareDeckComposition } from "./score.js?v=1.1.0";
-import { ORDER_REFERENCE, ORDER_REFERENCE_MUSIC } from "./order-reference.js?v=1.1.0";
+import { evaluateDeck, prepareDeckComposition } from "./score.js?v=1.3.0";
+import { ORDER_REFERENCE, ORDER_REFERENCE_MUSIC } from "./order-reference.js?v=1.3.0";
 
 const finite = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
 

@@ -136,11 +136,13 @@ function specialWindows(members, context) {
       specialLevel: member.special?.level ?? 1,
       description: member.special?.description ?? "",
     };
-  }).filter((window) => window.end > window.start);
+  }).filter((window) => window.duration > 0 && window.start <= context.duration);
 }
 
 function activeSpecialWindows(windows, time) {
-  return windows.filter((window) => window.start <= time + 1e-9 && time < window.end - 1e-9);
+  // The displayed end is clipped to the song. Test the actual expiry so the
+  // final note can still receive a skill that continues beyond the chart.
+  return windows.filter((window) => window.start <= time + 1e-9 && time < window.start + window.duration - 1e-9);
 }
 
 function supportAt(windows, time) {
@@ -169,14 +171,13 @@ function buildActiveChecks(members, context, windows, maximize = false) {
     for (let time = interval; time <= context.duration + 1e-9; time += interval) {
       const combo = comboAt(context, time);
       const rateUp = activationRateUpAt(windows, time, members, combo);
-      const probability = maximize
-        ? 1
-        : clamp(finite(active?.probability) * (1 + rateUp / 100), 0, 1);
+      const effectiveProbability = clamp(finite(active?.probability) * (1 + rateUp / 100), 0, 1);
+      const probability = maximize && effectiveProbability > 0 ? 1 : effectiveProbability;
       const row = {
         cardId: member.id,
         characterName: member.characterName,
         time,
-        end: Math.min(context.duration, time + duration),
+        end: time + duration,
         probability,
         baseProbability: finite(active?.probability),
         rateUp,
@@ -264,7 +265,7 @@ function timelineSkillEvaluation(members, context, supportProfile, playMode, sco
       staticSupportPct: supportForMember(supportProfile, member.id),
       activationChecks: memberChecks.map((row) => ({
         time: row.time,
-        end: row.end,
+        end: Math.min(context.duration, row.end),
         probability: row.probability,
         rateUp: row.rateUp,
         scoreUpPct: row.scoreUpPct,
@@ -344,14 +345,13 @@ export function songKernel(context, playMode = "auto", scoreRules = null) {
 }
 
 export function timelineSongProjection({
-  unitScore,
+  baseScore,
   members,
   context,
   genericContext,
   fullSupportPct = 0,
   supportProfile = null,
   playMode = "auto",
-  genericSkillMultiplier = 1,
   scoreRules = null,
   evaluationTarget = "both",
 }) {
@@ -365,13 +365,14 @@ export function timelineSongProjection({
     ? timelineSkillEvaluation(members, context, resolvedSupportProfile, playMode, scoreRules, true)
     : null;
   const selectedKernel = songKernel(context, playMode, scoreRules);
-  const genericKernel = songKernel(genericContext, playMode, scoreRules);
+  // Both play modes share one AUTO reference; using the selected mode here
+  // would cancel manual PERFECT note weights and combo bonuses.
+  const genericKernel = songKernel(genericContext, "auto", scoreRules);
   const baseRatio = genericKernel > 0 ? selectedKernel / genericKernel : 1;
-  const skillRatio = expected && genericSkillMultiplier > 0 ? expected.skillMultiplier / genericSkillMultiplier : 1;
-  const maxSkillRatio = maximum && genericSkillMultiplier > 0 ? maximum.skillMultiplier / genericSkillMultiplier : 1;
-  const averageScore = expected ? Math.max(0, Math.round(unitScore * baseRatio * skillRatio)) : null;
-  const rawMaxScore = maximum ? Math.max(0, Math.round(unitScore * baseRatio * maxSkillRatio)) : null;
-  const maxScore = rawMaxScore == null ? null : Math.max(averageScore ?? 0, rawMaxScore);
+  const skillRatio = expected?.skillMultiplier ?? 1;
+  const maxSkillRatio = maximum?.skillMultiplier ?? 1;
+  const averageScore = expected ? Math.max(0, Math.round(baseScore * baseRatio * skillRatio)) : null;
+  const maxScore = maximum ? Math.max(0, Math.round(baseScore * baseRatio * maxSkillRatio)) : null;
   return {
     averageScore,
     maxScore,

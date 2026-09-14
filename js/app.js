@@ -1,45 +1,40 @@
-import { loadAppData, loadManifest } from "./data.js?v=1.1.1";
-import { loadChartResources, loadSelectedChart } from "./chart-data.js?v=1.1.2";
-import { createStore } from "./state.js?v=20260812.2";
-import { prepareScoreCards } from "./card-prepare.js?v=1.1.1";
-import { runOptimizationAsync } from "./optimizer-client.js?v=1.1.1";
-import { createOptimizationSession } from "./optimization-session.js?v=1.1.2";
+import { loadAppData, loadManifest } from "./data.js?v=1.3.0";
+import { loadChartResources, loadSelectedChart } from "./chart-data.js?v=1.3.0";
+import { createStore } from "./state.js?v=1.3.0";
+import { calculationSettings } from "./calculation-mode.js?v=1.3.0";
+import { prepareScoreCards } from "./card-prepare.js?v=1.3.0";
+import { runOptimizationAsync } from "./optimizer-client.js?v=1.3.0";
+import { createOptimizationSession } from "./optimization-session.js?v=1.3.0";
 import {
   getLocale,
   initI18n,
   localizeAppData,
   saveLocale,
   t,
-} from "./i18n.js?v=20260812.1";
-import { getThemePreference, initTheme, toggleTheme } from "./theme.js?v=20260812.3";
-import { renderMemberSlots } from "./ui/member.js?v=20260813.2";
-import { createCardPicker } from "./ui/modal.js?v=20260813.2";
-import { mountMusicControls } from "./ui/music.js?v=20260812.1";
-import { createOwnedCardsView } from "./ui/owned.js?v=20260813.2";
-import { renderResult } from "./ui/result.js?v=1.1.1";
-import { mountMemberOptions } from "./ui/target.js?v=20260812.1";
-import { requiredElement } from "./ui/dom.js?v=20260812.1";
-import { createCardDetail } from "./ui/card-detail.js?v=20260812.1";
+} from "./i18n.js?v=1.3.0";
+import { getThemePreference, initTheme, toggleTheme } from "./theme.js?v=1.3.0";
+import { renderMemberSlots } from "./ui/member.js?v=1.3.0";
+import { createCardPicker } from "./ui/modal.js?v=1.3.0";
+import { mountMusicControls } from "./ui/music.js?v=1.3.0";
+import { createOwnedCardsView } from "./ui/owned.js?v=1.3.0";
+import { renderResult } from "./ui/result.js?v=1.3.0";
+import { mountMemberOptions } from "./ui/target.js?v=1.3.0";
+import { requiredElement } from "./ui/dom.js?v=1.3.0";
+import { createCardDetail } from "./ui/card-detail.js?v=1.3.0";
 
-const APP_VERSION = "1.2.3";
+const APP_VERSION = "1.3.0";
 const RESULT_COUNT = 5;
 
 const EXTRA_COPY = Object.freeze({
   ko: {
-    targetScore: "최고 유닛 스코어",
-    targetPotential: "최고 잠재 스코어",
     themeToDark: "다크 모드로 전환",
     themeToLight: "라이트 모드로 전환",
   },
   en: {
-    targetScore: "Highest Unit Score",
-    targetPotential: "Highest Potential Score",
     themeToDark: "Switch to dark mode",
     themeToLight: "Switch to light mode",
   },
   ja: {
-    targetScore: "最高ユニットスコア",
-    targetPotential: "最高潜在スコア",
     themeToDark: "ダークモードに切り替え",
     themeToLight: "ライトモードに切り替え",
   },
@@ -62,9 +57,9 @@ const OPTIMIZER_REASON = Object.freeze({
     ja: "同じカードを複数のメンバー枠に固定することはできません。",
   },
   "리더/멤버 분리 조건 때문에 고정 리더와 같은 홀로멤을 멤버로 사용할 수 없습니다.": {
-    ko: "리더/멤버 분리 조건 때문에 고정 리더와 같은 홀로멤을 멤버로 사용할 수 없습니다.",
-    en: "With Separate Leader/Member enabled, a member cannot use the same character as the locked leader.",
-    ja: "リーダー/メンバー分離が有効なため、固定リーダーと同じホロメンをメンバーに使用できません。",
+    ko: "‘리더를 편성에 제외’가 켜져 있어 리더와 같은 홀로멤을 멤버로 사용할 수 없습니다.",
+    en: "Exclude Leader from Members is enabled, so members cannot use the leader's character.",
+    ja: "リーダーをメンバーから除外する設定のため、同じホロメンをメンバーに使用できません。",
   },
   "리더로 사용할 수 있는 보유 카드가 없습니다.": {
     ko: "리더로 사용할 수 있는 보유 카드가 없습니다.",
@@ -96,13 +91,6 @@ function syncThemeToggle(button, theme = getThemePreference()) {
 }
 
 function syncExtraStaticCopy() {
-  const copy = EXTRA_COPY[getLocale()] ?? EXTRA_COPY.ko;
-  const target = document.querySelector("#simulation-target");
-  const scoreOption = target?.querySelector('option[value="score"]');
-  const potentialOption = target?.querySelector('option[value="potential"]');
-  if (scoreOption) scoreOption.textContent = copy.targetScore;
-  if (potentialOption) potentialOption.textContent = copy.targetPotential;
-
   const themeToggle = document.querySelector("#theme-toggle");
   if (themeToggle) syncThemeToggle(themeToggle);
 }
@@ -157,11 +145,18 @@ async function start() {
   }
 
   function recommendationSignature(state) {
+    const settings = calculationSettings(state);
     const profiles = state.ownedCardIds.map((cardId) => {
       const setting = state.ownedCardSettings[cardId];
       return `${cardId}:${setting?.level ?? ""}:${setting?.potential ?? ""}`;
     }).join("|");
-    return `${state.members.join("|")}::${state.lockedSlots.join("|")}::${state.musicId}::${state.difficulty}::${state.playMode}::${state.simulationTarget}::${state.levelMode}::${state.separateRole}::${profiles}`;
+    return `${state.members.join("|")}::${state.lockedSlots.join("|")}::${settings.calculationMode}::${settings.musicId}::${settings.difficulty}::${settings.playMode}::${state.levelMode}::${state.separateRole}::${profiles}`;
+  }
+
+  function canCalculate(state) {
+    const settings = calculationSettings(state);
+    return state.ownedCardIds.length >= 6
+      && (settings.calculationMode === "unit" || data.musicById.has(settings.musicId));
   }
 
   function syncPresetStatus(state) {
@@ -194,10 +189,12 @@ async function start() {
 
   async function applyRecommendation() {
     const state = store.getState();
+    const settings = calculationSettings(state);
     if (state.ownedCardIds.length < 6) {
       setRecommendationStatus(t("calc.needSix"));
       return false;
     }
+    if (!canCalculate(state)) return false;
 
     const signature = recommendationSignature(state);
     const request = optimizationSession.begin(signature);
@@ -212,9 +209,9 @@ async function start() {
       levelMode: state.levelMode,
       masterRefs: data.masterRefs,
     });
-    const song = state.musicId ? data.musicById.get(state.musicId) : null;
+    const song = settings.musicId ? data.musicById.get(settings.musicId) : null;
     const chart = song
-      ? await loadSelectedChart(chartResources, song.id, state.difficulty, { signal: request.signal })
+      ? await loadSelectedChart(chartResources, song.id, settings.difficulty, { signal: request.signal })
       : null;
     if (!optimizationSession.isCurrent(request)) return false;
 
@@ -231,9 +228,9 @@ async function start() {
       lockedSlots: state.lockedSlots,
       searchMusic,
       exactMusic,
-      difficulty: state.difficulty,
-      playMode: state.playMode,
-      simulationTarget: state.simulationTarget,
+      difficulty: settings.difficulty,
+      playMode: settings.playMode,
+      simulationTarget: settings.simulationTarget,
       separateRole: state.separateRole,
       hasExactOrder,
       resultCount: RESULT_COUNT,
@@ -244,7 +241,7 @@ async function start() {
 
     optimizeButton.textContent = t("calculate.button");
     const currentState = store.getState();
-    optimizeButton.disabled = currentState.ownedCardIds.length < 6;
+    optimizeButton.disabled = !canCalculate(currentState);
 
     if (recommendationSignature(currentState) !== signature) {
       lastRecommendation = null;
@@ -333,7 +330,7 @@ async function start() {
     renderMemberSlots(memberSlots, data.cardsById, state, picker.open, clearPresetSlot);
     renderResult(data, state, lastRecommendation);
     ownedCardsView.render(state);
-    optimizeButton.disabled = state.ownedCardIds.length < 6;
+    optimizeButton.disabled = Boolean(optimizationSession.active) || !canCalculate(state);
     picker.refresh();
     cardDetail.refresh();
   }

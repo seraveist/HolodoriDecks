@@ -13,6 +13,9 @@ const RUNTIME_NOTE_TYPES = Object.freeze([
   "long_relay",
   "damage",
 ]);
+const SCORING_NOTE_TYPES = new Set(RUNTIME_NOTE_TYPES
+  .filter(type => type !== "damage")
+  .flatMap(type => [type, `critical_${type}`]));
 
 async function fetchOptionalJson(url, { signal = null } = {}) {
   if (signal?.aborted) return null;
@@ -56,6 +59,25 @@ export function runtimeEntryMatchesChart(runtimeEntry, chartEntry) {
     && Number(runtimeEntry.normalNoteCount) === Number(chartEntry.normalNoteCount)
     && (!runtimeEntry.chartAssetId || !chartEntry.chartAssetId
       || String(runtimeEntry.chartAssetId) === String(chartEntry.chartAssetId));
+}
+
+export function chartMetadataMatchesEntry(metadata, entry) {
+  if (!metadata || !entry) return false;
+  if (metadata.musicId !== entry.musicId
+    || String(metadata.difficulty ?? "").toUpperCase() !== String(entry.difficulty ?? "").toUpperCase()
+    || metadata.chartHash !== entry.chartHash
+    || Number(metadata.fullComboNoteCount) !== Number(entry.fullComboNoteCount)
+    || (entry.chartAssetId && metadata.chartAssetId !== entry.chartAssetId)) return false;
+  const { notes, skills } = metadata;
+  if (!Array.isArray(notes) || !notes.length || notes.length !== Number(entry.fullComboNoteCount)
+    || !Array.isArray(skills) || skills.length !== 5) return false;
+  if (!notes.every((note, index) => Array.isArray(note) && SCORING_NOTE_TYPES.has(note[0])
+    && Number.isFinite(note[1]) && note[1] >= 0
+    && (index === 0 || note[1] >= notes[index - 1][1]))) return false;
+  return skills.every((skill, index) => skill?.slot === index + 1
+    && Number.isFinite(skill.time) && skill.time >= 0
+    && Number.isInteger(skill.combo) && skill.combo >= 0 && skill.combo <= notes.length
+    && (index === 0 || (skill.time > skills[index - 1].time && skill.combo >= skills[index - 1].combo)));
 }
 
 export function convertRuntimeChartObject(sourceChart, chartEntry) {
@@ -114,7 +136,7 @@ export function convertRuntimeChartObject(sourceChart, chartEntry) {
     : null;
   if (fever && fever.end <= fever.start) throw new Error(`${key}: invalid runtime Fever window`);
 
-  return {
+  const metadata = {
     version: 1,
     musicId: chartEntry.musicId,
     difficulty: chartEntry.difficulty,
@@ -133,6 +155,8 @@ export function convertRuntimeChartObject(sourceChart, chartEntry) {
     sourceSusSha256: sourceChart?.source?.sus?.sha256 ?? null,
     sourceMetadataSha256: sourceChart?.source?.metadata?.sha256 ?? null,
   };
+  if (!chartMetadataMatchesEntry(metadata, chartEntry)) throw new Error(`${key}: invalid runtime metadata`);
+  return metadata;
 }
 
 async function sha256Hex(text) {
@@ -225,7 +249,7 @@ export async function loadSelectedChart(resources, musicId, difficulty, { signal
     const metadataUrl = versionedUrl(new URL(entry.metadataPath, CHART_INDEX_URL), resources.version);
     const metadata = await fetchOptionalJson(metadataUrl, { signal });
     if (signal?.aborted) return null;
-    if (metadata) return { ...entry, metadata };
+    if (chartMetadataMatchesEntry(metadata, entry)) return { ...entry, metadata };
   }
 
   const runtimeEntry = resources.runtimeChartsByKey?.get(key);

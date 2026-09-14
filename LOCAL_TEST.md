@@ -16,6 +16,8 @@ node scripts/build-chart-index.mjs
 python scripts/validate-generated-data.py
 python -m pytest -q
 node scripts/test-chart-scoring.mjs
+node scripts/test-song-score-invariants.mjs
+node scripts/test-song-corpus.mjs
 node scripts/test-targeted-passive-support.mjs
 node scripts/test-passive-stat-rounding.mjs
 node scripts/test-passive-target-priority.mjs
@@ -63,18 +65,20 @@ GitHub Actions와 동일한 자동 브라우저 smoke는 `node scripts/test-brow
 4. 멤버 프리셋은 최종 5명에 포함되되, 멤버 프리셋을 예를 들어 `멤버 4`에 지정해도 해당 위치에 고정되지 않는지 확인합니다.
 5. 리더/멤버 분리 옵션과 프리셋 초기화를 확인합니다.
 
-## 5. 시뮬레이션 목표 / 플레이 기준
+## 5. 계산 목표 / 플레이 기준
 
-시뮬레이션 목표는 `최고 유닛 스코어`, `최고 잠재 스코어` 두 개뿐이어야 합니다.
+`계산 설정`의 선택 버튼은 `유닛 스코어`, `악곡 기대 스코어`, `악곡 최대 스코어` 세 개입니다. 프리셋에 목표 드롭다운이 남아 있으면 안 됩니다.
 
-1. 악곡 미선택/선택에서 각각 유닛 스코어·예상 평균과 잠재 유닛 스코어·근사 최대 기준으로 TOP 5가 바뀌는지 확인합니다.
-2. AUTO가 정상 선택되는지 확인합니다.
-3. 수동 기준은 `Manual PERFECT FC`로 표시되는지 확인합니다.
-4. Manual PERFECT FC가 PERFECT 계수와 콤보 보너스를 사용하고 AUTO는 AUTO 계수·콤보 보너스 없음으로 표시되는지 확인합니다.
+1. 유닛 목표는 악곡·난이도·플레이 기준을 숨기고, 저장된 값이 있어도 계산에 사용하지 않습니다.
+2. 악곡 목표에서는 악곡 선택이 필요하며, 곡을 비우면 계산 버튼이 비활성화됩니다. 악곡 목록에는 범용 유닛 평가가 없어야 합니다.
+3. 목표 전환 시 악곡·난이도·플레이 기준은 보존하고, 기존 결과는 초기화합니다. 유닛 목표에서 새로고침해도 기억된 곡 때문에 악곡 목표로 바뀌면 안 됩니다.
+4. 플레이 기준은 `AUTO 플레이` / `수동 ALL PERFECT`로 표시합니다.
+5. 결과 대표 점수와 순위는 선택한 목표를 따라야 합니다. 악곡 결과의 기대·최대 점수는 같은 대표 순서의 값입니다.
+6. `리더를 편성에 제외`를 켜면 리더와 같은 홀로멤은 멤버로 사용할 수 없어야 합니다. 끄면 다른 카드의 같은 홀로멤을 허용합니다.
 
-악곡 미선택에서는 같은 리더·멤버 조합이 중복되지 않고, 공통 채보에서 잠재 점수가 가장 높은 순서 하나만 표시되어야 합니다. 상세의 `잠재 기준 추천 배치`와 `공통 채보 잠재 스코어`, 가정한 SP 5개 지점을 확인합니다. 기본 유닛스코어와 잠재 유닛스코어는 인게임 비교 기준을 유지합니다. 멤버 프리셋의 카드 포함은 유지되며 순서는 바뀔 수 있습니다. 악곡을 선택하면 해당 곡의 시간축과 계산 목표를 사용하고 공통 채보 안내는 사라져야 합니다.
+유닛 목표는 조합마다 공통 채보의 잠재 점수가 가장 높은 순서 하나를 표시합니다. 악곡 목표는 해당 곡에서 선택한 기대/최대 기준의 대표 순서 하나를 표시합니다. 멤버 프리셋은 카드 포함을 유지하며 순서는 최적화할 수 있습니다. 공통 채보 설명 박스는 표시하지 않습니다.
 
-악곡 선택 시에도 같은 리더·멤버 5명 조합당 결과는 하나입니다. `최고 유닛 스코어`는 그 곡의 예상 평균이 최대인 순서를, `최고 잠재 스코어`는 잠재 점수가 최대인 순서를 표시합니다. 표시된 다른 지표도 해당 순서의 값이며, 서로 다른 순서의 최고 평균·최고 잠재를 한 결과에 섞지 않습니다. Exact/Master/Estimated 및 AUTO/Manual의 두 목표를 120개 순열 전수 계산과 비교하는 회귀를 포함합니다.
+`node scripts/test-calculation-modes.mjs`와 `node scripts/test-browser-smoke.mjs`로 저장 설정 이전·목표 연결·악곡 복원·리더 제외·다국어 모바일 화면을 검증합니다. `node scripts/test-song-representative-order.mjs`는 Exact/Master/Estimated 및 AUTO/Manual의 두 악곡 목표를 120개 순열 전수 계산과 비교합니다.
 
 ## 6. Local Exact / Runtime Exact
 
@@ -161,7 +165,7 @@ node scripts/test-chart-abort.mjs
 
 다른 PC에서는 Node.js24 이상으로 `node scripts/run-scoring-validation.mjs`를 실행합니다. `node verify-handoff.mjs`는 AT까지44건·액티브/SP40/40과 미관측 AU 계획을 확인합니다. 최신 AT 관측과 AU 사전 예측은 `node scripts/test-validation-at.mjs`로 재현합니다. AK·AO·AS·AT의 미제공 값과 기존 배분식의 실패를 보존합니다. 최신 진행은 [HANDOFF_CURRENT.md](HANDOFF_CURRENT.md)를 따릅니다. `--research-grid`는 초기 후보 탐색을 재실행합니다.
 
-`node scripts/test-unit-observations.mjs`로 H 추가 후 화면 11건의 종합력과 반복 관측을 재현합니다. `--json`을 붙이면 남은 보너스 오차를 포함한 비교 결과를 JSON으로 출력합니다. 자세한 범위는 [계산식 1차 검증 기록](SCORING_VALIDATION.md)을 참고합니다. 계산 결과 상단의 추정값 안내는 악곡 선택 여부와 관계없이 한국어·영어·일본어로 표시되어야 합니다.
+`node scripts/test-unit-observations.mjs`로 H 추가 후 화면 11건의 종합력과 반복 관측을 재현합니다. `--json`을 붙이면 남은 보너스 오차를 포함한 비교 결과를 JSON으로 출력합니다. 자세한 범위는 [계산식 1차 검증 기록](SCORING_VALIDATION.md)을 참고합니다.
 
 ## 12. 릴리스 metadata
 
