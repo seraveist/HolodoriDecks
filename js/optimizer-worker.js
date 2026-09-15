@@ -1,4 +1,4 @@
-import { runOptimization } from "./optimizer-core.js?v=1.3.0";
+import { runOptimization } from "./optimizer-core.js?v=1.3.1";
 
 self.addEventListener("message", (event) => {
   const { id, payload } = event.data ?? {};

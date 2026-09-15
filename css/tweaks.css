@@ -134,13 +134,12 @@
   .app-header-actions {
     flex: 0 0 auto;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-end;
     gap: 6px;
   }
 
   .language-picker {
-    flex-direction: row;
-    align-items: center;
+    align-items: stretch;
     gap: 0;
   }
 

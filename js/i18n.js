@@ -21,8 +21,11 @@ const LANGUAGE_FILES = Object.freeze([
 
 const UI = Object.freeze({
   ko: {
+    "app.title": "홀로라이브 드림스 편성 시뮬레이터 | Holodori DeckSim",
     "app.description": "홀로라이브 드림스 6인 편성 시뮬레이터",
     "app.name": "홀로도리 편성기",
+    "app.disclaimer": "비공식 팬메이드 도구입니다. COVER 및 게임 운영사와 제휴 관계가 없습니다.",
+    "app.storageNotice": "보유 카드와 설정은 이 브라우저에 저장됩니다.",
     "skip.main": "본문으로 건너뛰기",
     "language.label": "언어",
     "nav.main": "주요 화면",
@@ -224,6 +227,9 @@ const UI = Object.freeze({
     "common.cards": "{value}장",
   },
   en: {
+    "app.title": "hololive Dreams Deck Simulator | Holodori DeckSim",
+    "app.disclaimer": "Unofficial fan-made tool. Not affiliated with COVER or the game publisher.",
+    "app.storageNotice": "Your owned cards and settings are saved in this browser.",
     "app.description": "Hololive Dreams six-member deck simulator",
     "app.name": "Holodori DeckSim",
     "skip.main": "Skip to main content",
@@ -427,6 +433,9 @@ const UI = Object.freeze({
     "common.cards": "{value} cards",
   },
   ja: {
+    "app.title": "ホロライブドリームス 編成シミュレーター | Holodori DeckSim",
+    "app.disclaimer": "非公式ファンメイドツールです。COVERおよびゲーム運営会社とは関係ありません。",
+    "app.storageNotice": "所持カードと設定は、このブラウザに保存されます。",
     "app.description": "ホロライブ ドリームス 6人編成シミュレーター",
     "app.name": "ホロドリ編成シミュレーター",
     "skip.main": "本文へスキップ",
@@ -639,6 +648,14 @@ function normalizeLocale(value) {
   return SUPPORTED.has(short) ? short : DEFAULT_LOCALE;
 }
 
+export function localeFromPath(pathname) {
+  return String(pathname ?? "").match(/^\/(ko|en|ja)(?:\/|$)/)?.[1] ?? null;
+}
+
+export function getUiTranslations(locale) {
+  return { ...UI.ko, ...UI[normalizeLocale(locale)] };
+}
+
 export function getStoredLocale() {
   try {
     return normalizeLocale(window.localStorage.getItem(LOCALE_STORAGE_KEY) || DEFAULT_LOCALE);
@@ -737,7 +754,8 @@ async function loadPack(manifest, locale) {
 }
 
 export async function initI18n(manifest) {
-  currentLocale = getStoredLocale();
+  // Explicit language URLs remain stable for visitors and search engines.
+  currentLocale = localeFromPath(window.location.pathname) ?? DEFAULT_LOCALE;
   try {
     languagePack = Object.freeze(await loadPack(manifest, currentLocale));
   } catch (error) {
@@ -746,7 +764,7 @@ export async function initI18n(manifest) {
     languagePack = Object.freeze({});
   }
   document.documentElement.lang = HTML_LANG[currentLocale] ?? "ko";
-  document.title = "Holodori DeckSim";
+  document.title = t("app.title");
   const description = document.querySelector('meta[name="description"]');
   if (description) description.setAttribute("content", t("app.description"));
   applyStaticTranslations(document);

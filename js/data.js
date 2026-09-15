@@ -1,4 +1,4 @@
-import { t } from "./i18n.js?v=1.3.0";
+import { t } from "./i18n.js?v=1.3.1";
 
 const DATA_URLS = {
   manifest: new URL("../data/generated/manifest.json", import.meta.url),

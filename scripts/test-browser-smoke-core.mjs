@@ -9,6 +9,8 @@ import { optimizeOwnedDeck } from "../js/recommend.js";
 import { launchSmokeBrowser } from "./smoke-browser-launch.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const pageBuild = spawnSync(process.env.PYTHON_BIN ?? (process.platform === "win32" ? "py" : "python3"), ["scripts/build-localized-pages.py"], { cwd: root, encoding: "utf8", windowsHide: true });
+assert.equal(pageBuild.status, 0, `localized page build failed: ${pageBuild.stderr}`);
 const host = "127.0.0.1";
 const appPort = Number(process.env.BROWSER_SMOKE_PORT || 4173);
 const appUrl = `http://${host}:${appPort}/`;
@@ -439,8 +441,8 @@ try {
   assert.equal(runtimeProbe.fallbackMetadata, null, "browser Runtime failure did not fall back cleanly");
 
   for (const locale of ["en", "ja"]) {
-    await evaluate(`localStorage.setItem('holodori-decksim:locale', '${locale}'); true`);
-    await command("Page.reload", { ignoreCache: true });
+    await evaluate(`localStorage.setItem('holodori-decksim:locale', 'ko'); true`);
+    await command("Page.navigate", { url: `${appUrl}${locale}/` });
     await waitFor(() => evaluate(`document.documentElement.lang === '${locale}'
       && document.querySelector('#music-select')?.options.length > 2`), 20_000, `${locale} controls load`);
     await command("Emulation.setDeviceMetricsOverride", { width: 320, height: 1000, deviceScaleFactor: 1, mobile: false });
@@ -453,6 +455,8 @@ try {
     assert.ok(translated.labels[1].includes(locale === "en" ? "Expected" : "期待"));
     assert.equal(translated.overflow, false, `${locale} narrow layout`);
     assert.ok(Math.max(...translated.heights) - Math.min(...translated.heights) < 1, `${locale} goal buttons have equal heights`);
+    assert.equal(await evaluate(`document.querySelector('#language-select').value`), locale, "URL language must override saved preference");
+    assert.deepEqual(await evaluate(`JSON.parse(localStorage.getItem(${JSON.stringify(storageKey)})).ownedCardIds`), outfitState.ownedCardIds, "owned cards must survive language navigation");
   }
   console.log("browser smoke: three goals, state migration, song retention, leader exclusion, responsive/localized UI, Exact/fallback and TOP 5 OK");
 } finally {

@@ -1,10 +1,14 @@
 # Holodori DeckSim
 
-**v1.3.0** · 홀로라이브 드림스 보유 카드 기반 6인 라이브 편성 시뮬레이터
+**v1.3.1** · 홀로라이브 드림스 보유 카드 기반 6인 라이브 편성 시뮬레이터
 
 > 비공식 팬메이드 도구입니다. COVER Corporation, hololive production 및 게임 운영 주체와 제휴·후원·공식 인증 관계가 없습니다.
 
 라이브 서비스: https://holosims.net/
+
+다국어 공개 주소는 `/ko/`, `/en/`, `/ja/`입니다. `python scripts/build-localized-pages.py`가 공통 HTML과 앱 번역에서 언어별 HTML, `robots.txt`, `sitemap.xml`을 생성합니다. 로컬 서버 실행 전에도 이 명령을 실행하세요. Pages에서는 배포 리비전 주입 후 자동 생성합니다. 언어 주소가 저장된 언어 설정보다 우선하며, 루트 주소는 한국어 기본 화면을 제공합니다.
+
+공개 운영 설정과 검색 등록은 [PUBLIC_SITE.md](PUBLIC_SITE.md)를 참고하세요.
 
 계산식 검증과 v1.2.0 반영 범위는 [최신 검증 기록](SCORING_VALIDATION.md)과 [인수인계](HANDOFF_CURRENT.md)에 정리했습니다. `node scripts/run-scoring-validation.mjs` 또는 `node verify-handoff.mjs`로 서비스 실측 회귀와 당시 엔진을 사용하는 과거 연구 재현을 함께 실행합니다.
 

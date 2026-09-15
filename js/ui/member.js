@@ -1,5 +1,5 @@
-import { getLocale, t } from "../i18n.js?v=1.3.0";
-import { renderLandscapeCardArt, renderCardCopy, wirePortraitFallback } from "./cards.js?v=1.3.0";
+import { getLocale, t } from "../i18n.js?v=1.3.1";
+import { escapeHtml, renderLandscapeCardArt, renderCardCopy, wirePortraitFallback } from "./cards.js?v=1.3.1";
 
 const CLEAR_COPY = Object.freeze({
   ko: { change: "카드 변경", clear: "슬롯 비우기" },
@@ -48,10 +48,10 @@ function filledSlot(index, card, locked, setting) {
       <span class="slot-role">${slot} · ${status}</span>
       ${renderLandscapeCardArt(card, { lazy: false })}
       ${renderCardCopy(card, "slot-card-copy", `Lv${profile.level} · ${t("card.potential")} ${profile.potential}`)}
-      <button class="member-slot-select" type="button" data-member-slot="${index}" aria-label="${changeLabel}">
+      <button class="member-slot-select" type="button" data-member-slot="${index}" aria-label="${escapeHtml(changeLabel)}">
         <span class="sr-only">${extraCopy().change}</span>
       </button>
-      <button class="slot-clear-button" type="button" data-clear-member-slot="${index}" aria-label="${clearLabel}" title="${clearLabel}">×</button>
+      <button class="slot-clear-button" type="button" data-clear-member-slot="${index}" aria-label="${escapeHtml(clearLabel)}" title="${escapeHtml(clearLabel)}">×</button>
     </article>`;
 }
 

@@ -1,28 +1,28 @@
-import { loadAppData, loadManifest } from "./data.js?v=1.3.0";
-import { loadChartResources, loadSelectedChart } from "./chart-data.js?v=1.3.0";
-import { createStore } from "./state.js?v=1.3.0";
-import { calculationSettings } from "./calculation-mode.js?v=1.3.0";
-import { prepareScoreCards } from "./card-prepare.js?v=1.3.0";
-import { runOptimizationAsync } from "./optimizer-client.js?v=1.3.0";
-import { createOptimizationSession } from "./optimization-session.js?v=1.3.0";
+import { loadAppData, loadManifest } from "./data.js?v=1.3.1";
+import { loadChartResources, loadSelectedChart } from "./chart-data.js?v=1.3.1";
+import { createStore } from "./state.js?v=1.3.1";
+import { calculationSettings } from "./calculation-mode.js?v=1.3.1";
+import { prepareScoreCards } from "./card-prepare.js?v=1.3.1";
+import { runOptimizationAsync } from "./optimizer-client.js?v=1.3.1";
+import { createOptimizationSession } from "./optimization-session.js?v=1.3.1";
 import {
   getLocale,
   initI18n,
   localizeAppData,
   saveLocale,
   t,
-} from "./i18n.js?v=1.3.0";
-import { getThemePreference, initTheme, toggleTheme } from "./theme.js?v=1.3.0";
-import { renderMemberSlots } from "./ui/member.js?v=1.3.0";
-import { createCardPicker } from "./ui/modal.js?v=1.3.0";
-import { mountMusicControls } from "./ui/music.js?v=1.3.0";
-import { createOwnedCardsView } from "./ui/owned.js?v=1.3.0";
-import { renderResult } from "./ui/result.js?v=1.3.0";
-import { mountMemberOptions } from "./ui/target.js?v=1.3.0";
-import { requiredElement } from "./ui/dom.js?v=1.3.0";
-import { createCardDetail } from "./ui/card-detail.js?v=1.3.0";
+} from "./i18n.js?v=1.3.1";
+import { getThemePreference, initTheme, toggleTheme } from "./theme.js?v=1.3.1";
+import { renderMemberSlots } from "./ui/member.js?v=1.3.1";
+import { createCardPicker } from "./ui/modal.js?v=1.3.1";
+import { mountMusicControls } from "./ui/music.js?v=1.3.1";
+import { createOwnedCardsView } from "./ui/owned.js?v=1.3.1";
+import { renderResult } from "./ui/result.js?v=1.3.1";
+import { mountMemberOptions } from "./ui/target.js?v=1.3.1";
+import { requiredElement } from "./ui/dom.js?v=1.3.1";
+import { createCardDetail } from "./ui/card-detail.js?v=1.3.1";
 
-const APP_VERSION = "1.3.0";
+const APP_VERSION = "1.3.1";
 const RESULT_COUNT = 5;
 
 const EXTRA_COPY = Object.freeze({
@@ -113,8 +113,8 @@ async function start() {
   const languageSelect = requiredElement("#language-select");
   languageSelect.value = getLocale();
   languageSelect.addEventListener("change", () => {
-    saveLocale(languageSelect.value);
-    window.location.reload();
+    const locale = saveLocale(languageSelect.value);
+    window.location.assign(`/${locale}/${window.location.hash}`);
   });
 
   const memberSlots = requiredElement("#member-slots");

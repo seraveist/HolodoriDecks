@@ -141,19 +141,30 @@ p {
 
 .app-header-actions {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-end;
   gap: 10px;
 }
 
 .language-picker {
-  display: flex;
-  align-items: center;
-  gap: 9px;
+  display: grid;
+  align-items: stretch;
+  gap: 0;
   color: var(--ink-650);
   font-size: var(--type-body-sm);
   font-weight: 800;
   white-space: nowrap;
+}
+
+.language-picker-heading {
+  display: block;
+  padding-bottom: 5px;
+  color: var(--ink-950);
+  font-size: var(--type-label);
+  font-weight: var(--weight-bold);
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-align: center;
 }
 
 .language-picker select {
@@ -167,6 +178,16 @@ p {
   box-shadow: var(--shadow-sm);
   font-size: var(--type-body);
   font-weight: 800;
+}
+
+.language-links {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 12px;
+}
+
+.language-links a {
+  color: var(--ink-650);
 }
 
 .status-dot {
@@ -272,9 +293,7 @@ p {
   }
 
   .language-picker {
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 4px;
+    align-items: stretch;
   }
 
   .language-picker select {

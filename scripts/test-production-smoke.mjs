@@ -44,6 +44,19 @@ async function waitForDeployment() {
 
 const html = await waitForDeployment();
 assert.ok(!html.includes('class="calculation-scope"'), "removed calculation scope disclosure unexpectedly present in production HTML");
+for (const locale of ["ko", "en", "ja"]) {
+  const response = await request(withRevision(`/${locale}/`));
+  assert.equal(response.ok, true, `${locale} page request failed`);
+  const page = await response.text();
+  assert.ok(page.includes(`lang="${locale}"`));
+  assert.ok(page.includes(`rel="canonical" href="${base.origin}/${locale}/"`));
+  assert.ok(page.includes(`data-card-asset-revision="${deploymentSha}"`));
+  assert.ok(page.includes('http-equiv="Content-Security-Policy"'));
+}
+for (const file of ["robots.txt", "sitemap.xml"]) {
+  const response = await request(withRevision(`/${file}`));
+  assert.equal(response.ok, true, `${file} request failed`);
+}
 
 const manifestResponse = await request(withRevision("/data/generated/manifest.json"));
 assert.equal(manifestResponse.ok, true, `manifest request failed: ${manifestResponse.status}`);
