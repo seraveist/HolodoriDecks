@@ -8,7 +8,7 @@
 - Run `python scripts/build-localized-pages.py` before a local preview. Pages runs it after deployment revision rewriting so language pages share the deployed JavaScript and image revision.
 - The builder uses the app's translations and escapes them into HTML. Do not edit the generated language directories by hand.
 - `robots.txt` allows crawling. `sitemap.xml` contains the three canonical app URLs.
-- Add the `holosims.net` Domain property in Google Search Console, complete DNS ownership verification, and submit `https://holosims.net/sitemap.xml`. Existing verified owners can grant access instead. Inspect each language URL after deployment. Search Console account/DNS configuration is separate from a repository deployment.
+- The `https://holosims.net/` URL-prefix property in Google Search Console covers all three language paths. Keep the `google-site-verification` meta tag in `index.html` to retain ownership verification. Submit `https://holosims.net/sitemap.xml` and inspect each language URL after deployment. A Domain property is optional if coverage of other protocols or subdomains is later needed; it requires separate DNS verification.
 
 ## Security
 
