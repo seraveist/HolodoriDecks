@@ -1,7 +1,7 @@
-import { getLocale, localeCompare, t } from "../i18n.js?v=1.3.0";
-import { escapeHtml } from "./cards.js?v=1.3.0";
-import { requiredElement } from "./dom.js?v=1.3.0";
-import { getCalculationMode } from "../calculation-mode.js?v=1.3.0";
+import { getLocale, localeCompare, t } from "../i18n.js?v=1.3.1";
+import { escapeHtml } from "./cards.js?v=1.3.1";
+import { requiredElement } from "./dom.js?v=1.3.1";
+import { getCalculationMode } from "../calculation-mode.js?v=1.3.1";
 
 const MUSIC_COPY = Object.freeze({
   ko: {

@@ -1,9 +1,9 @@
-import { prepareScoreCards as legacyPrepareScoreCards } from "./score.js?v=1.3.0";
+import { prepareScoreCards as legacyPrepareScoreCards } from "./score.js?v=1.3.1";
 import {
   POTENTIAL_EFFECT_TYPE as POTENTIAL_TYPE,
   auditPotentialSupport,
   potentialEffectTypeSuffix,
-} from "./skill-support.js?v=1.3.0";
+} from "./skill-support.js?v=1.3.1";
 
 const finite = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));

@@ -1,4 +1,4 @@
-import { formatNumber as formatLocaleNumber, getLocale, t } from "../i18n.js?v=1.3.0";
+import { formatNumber as formatLocaleNumber, getLocale, t } from "../i18n.js?v=1.3.1";
 import {
   ATTRIBUTE_META,
   attributeStyle,
@@ -6,10 +6,10 @@ import {
   escapeHtml,
   renderLandscapeCardArt,
   wirePortraitFallback,
-} from "./cards.js?v=1.3.0";
-import { getSlotLabel } from "./member.js?v=1.3.0";
-import { requiredElement } from "./dom.js?v=1.3.0";
-import { calculationSettings } from "../calculation-mode.js?v=1.3.0";
+} from "./cards.js?v=1.3.1";
+import { getSlotLabel } from "./member.js?v=1.3.1";
+import { requiredElement } from "./dom.js?v=1.3.1";
+import { calculationSettings } from "../calculation-mode.js?v=1.3.1";
 
 const LOCAL_COPY = Object.freeze({
   ko: {

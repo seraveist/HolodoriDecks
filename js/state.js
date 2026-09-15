@@ -1,4 +1,4 @@
-import { getCalculationMode } from "./calculation-mode.js?v=1.3.0";
+import { getCalculationMode } from "./calculation-mode.js?v=1.3.1";
 
 export const STORAGE_KEY = "holodori-decksim:v2";
 

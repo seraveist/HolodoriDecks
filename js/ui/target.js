@@ -1,5 +1,5 @@
-import { getCalculationMode } from "../calculation-mode.js?v=1.3.0";
-import { requiredElement } from "./dom.js?v=1.3.0";
+import { getCalculationMode } from "../calculation-mode.js?v=1.3.1";
+import { requiredElement } from "./dom.js?v=1.3.1";
 
 export function mountMemberOptions(store) {
   const modes = [...requiredElement(".calculation-modes").querySelectorAll('[name="calculation-mode"]')];

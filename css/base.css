@@ -180,6 +180,16 @@ p {
   font-weight: 800;
 }
 
+.language-links {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 12px;
+}
+
+.language-links a {
+  color: var(--ink-650);
+}
+
 .status-dot {
   width: 8px;
   height: 8px;

@@ -7,3 +7,9 @@ venv/
 .env
 node_modules/
 .local/
+_site/
+/ko/
+/en/
+/ja/
+/robots.txt
+/sitemap.xml

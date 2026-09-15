@@ -1,23 +1,23 @@
-import { t } from "../i18n.js?v=1.3.0";
+import { t } from "../i18n.js?v=1.3.1";
 
 export const ATTRIBUTE_META = Object.freeze({
   1: Object.freeze({
     get name() { return t("attribute.cute"); },
     color: "#ef718f",
     soft: "#fdebf0",
-    icon: "./assets/ui/type-cute.svg?v=20260812.1",
+    icon: new URL("../../assets/ui/type-cute.svg?v=20260812.1", import.meta.url).href,
   }),
   2: Object.freeze({
     get name() { return t("attribute.pure"); },
     color: "#4fb78d",
     soft: "#e9f7f1",
-    icon: "./assets/ui/type-pure.svg?v=20260812.1",
+    icon: new URL("../../assets/ui/type-pure.svg?v=20260812.1", import.meta.url).href,
   }),
   3: Object.freeze({
     get name() { return t("attribute.happy"); },
     color: "#f0a33f",
     soft: "#fff3df",
-    icon: "./assets/ui/type-happy.svg?v=20260812.1",
+    icon: new URL("../../assets/ui/type-happy.svg?v=20260812.1", import.meta.url).href,
   }),
 });
 
@@ -42,7 +42,7 @@ export function cardPortraitPath(card) {
     ? ""
     : document.documentElement.dataset.cardAssetRevision?.trim();
   const query = revision ? `?v=${encodeURIComponent(revision)}` : "";
-  return `./assets/cards/${encodeURIComponent(card.id)}.webp${query}`;
+  return new URL(`../../assets/cards/${encodeURIComponent(card.id)}.webp${query}`, import.meta.url).href;
 }
 
 export function hasPortrait(card) {
@@ -100,7 +100,7 @@ export function wirePortraitFallback(container) {
   container.querySelectorAll("[data-card-portrait]").forEach((image) => {
     image.addEventListener("error", () => {
       image.removeAttribute("data-card-portrait");
-      image.src = "./assets/ui/card-placeholder.svg?v=20260812.1";
+      image.src = new URL("../../assets/ui/card-placeholder.svg?v=20260812.1", import.meta.url).href;
       image.classList.add("is-fallback");
     }, { once: true });
   });

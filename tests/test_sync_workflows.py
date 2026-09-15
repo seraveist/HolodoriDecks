@@ -110,3 +110,15 @@ def test_partial_images_can_be_committed_and_merged_before_reporting_errors(pend
 
 def test_portrait_schedule_runs_twice_daily_in_korean_time():
     assert workflow("sync-card-assets.yml")["on"]["schedule"] == [{"cron": "0 2,14 * * *"}]
+
+
+@pytest.mark.parametrize("name,job", [("sync-master-data.yml", "merge"), ("sync-card-assets.yml", "sync")])
+def test_generated_commit_status_requires_successful_validation_and_exact_head(name, job):
+    definition = workflow(name)
+    assert definition["permissions"]["statuses"] == "write"
+    merge = next(step for step in definition["jobs"][job]["steps"] if step.get("id") == "auto_merge")
+    script = merge["run"]
+    assert script.index('= "$EXPECTED_HEAD"') < script.index('statuses/$EXPECTED_HEAD') < script.index('gh pr merge')
+    assert '-f context=validate' in script
+    assert '-f state=success' in script
+    assert "safe == 'true'" in merge["if"]

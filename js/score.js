@@ -1,5 +1,5 @@
-import { buildSongContext, songKernel, timelineSongProjection } from "./chart-score.js?v=1.3.0";
-import { unitDisplayBonuses, UNIT_DISPLAY_MODEL, UNIT_DISPLAY_CONTEXT } from "./unit-score.js?v=1.3.0";
+import { buildSongContext, songKernel, timelineSongProjection } from "./chart-score.js?v=1.3.1";
+import { unitDisplayBonuses, UNIT_DISPLAY_MODEL, UNIT_DISPLAY_CONTEXT } from "./unit-score.js?v=1.3.1";
 
 export const SCORE_ENGINE_VERSION = "unit-score-v1.0-verified-display + song-score-v0.5-independent-song-base";
 export const UNIT_SCORE_K = 2.037342;

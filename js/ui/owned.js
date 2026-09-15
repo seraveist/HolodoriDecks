@@ -1,13 +1,13 @@
-import { compareByPower } from "../recommend.js?v=1.3.0";
-import { getLocale, localeCompare, t } from "../i18n.js?v=1.3.0";
+import { compareByPower } from "../recommend.js?v=1.3.1";
+import { getLocale, localeCompare, t } from "../i18n.js?v=1.3.1";
 import {
   attributeStyle,
   escapeHtml,
   renderLandscapeCardArt,
   renderLandscapeCardTitle,
   wirePortraitFallback,
-} from "./cards.js?v=1.3.0";
-import { requiredElement } from "./dom.js?v=1.3.0";
+} from "./cards.js?v=1.3.1";
+import { requiredElement } from "./dom.js?v=1.3.1";
 
 const OWNED_CARD_RARITIES = new Set([4, 5]);
 const LOCAL_COPY = Object.freeze({
