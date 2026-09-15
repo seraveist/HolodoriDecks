@@ -1,3 +1,5 @@
+import { dataAssetRequest } from "./data-assets.js?v=1.3.1";
+
 const GENERATED_BASE = new URL("../data/generated/", import.meta.url);
 const CHART_INDEX_URL = new URL("chart-index.json", GENERATED_BASE);
 const SCORE_RULES_URL = new URL("live-score-rules.json", GENERATED_BASE);
@@ -17,10 +19,10 @@ const SCORING_NOTE_TYPES = new Set(RUNTIME_NOTE_TYPES
   .filter(type => type !== "damage")
   .flatMap(type => [type, `critical_${type}`]));
 
-async function fetchOptionalJson(url, { signal = null } = {}) {
+async function fetchOptionalJson(url, { signal = null, cache = "no-store" } = {}) {
   if (signal?.aborted) return null;
   try {
-    const response = await fetch(url, { cache: "no-store", signal });
+    const response = await fetch(url, { cache, signal });
     if (!response.ok || signal?.aborted) return null;
     return await response.json();
   } catch {
@@ -222,11 +224,12 @@ async function loadRuntimeMetadata(resources, chartEntry, runtimeEntry, { signal
 
 export async function loadChartResources(manifest = {}) {
   const version = manifest.source_commit || manifest.master_version || Date.now();
-  const [index, scoreRules, runtimeIndex] = await Promise.all([
-    fetchOptionalJson(versionedUrl(CHART_INDEX_URL, version)),
-    fetchOptionalJson(versionedUrl(SCORE_RULES_URL, version)),
-    fetchOptionalJson(versionedUrl(EXACT_RUNTIME_INDEX_URL, version)),
-  ]);
+  const [index, scoreRules, runtimeIndex] = await Promise.all(
+    [CHART_INDEX_URL, SCORE_RULES_URL, EXACT_RUNTIME_INDEX_URL].map(url => {
+      const request = dataAssetRequest(url, manifest);
+      return fetchOptionalJson(request.url, { cache: request.cache });
+    }),
+  );
   const charts = index?.charts && typeof index.charts === "object" ? index.charts : {};
   const runtimeCharts = runtimeIndex?.charts && typeof runtimeIndex.charts === "object" ? runtimeIndex.charts : {};
   return {
@@ -256,4 +259,21 @@ export async function loadSelectedChart(resources, musicId, difficulty, { signal
   const metadata = runtimeEntry ? await loadRuntimeMetadata(resources, entry, runtimeEntry, { signal }) : null;
   if (signal?.aborted) return null;
   return { ...entry, metadata: metadata ?? null };
+}
+
+// Deduplicate concurrent requests. A failed load remains retryable.
+export function createChartResourcesLoader(manifest, load = loadChartResources) {
+  let pending = null;
+  return function ensureChartResources() {
+    if (!pending) {
+      pending = Promise.resolve().then(() => load(manifest)).then(resources => {
+        if (!resources?.index?.chart_count || !resources?.scoreRules) pending = null;
+        return resources;
+      }, error => {
+        pending = null;
+        throw error;
+      });
+    }
+    return pending;
+  };
 }
