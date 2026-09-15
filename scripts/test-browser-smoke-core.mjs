@@ -8,8 +8,9 @@ import { prepareScoreCards } from "../js/card-prepare.js";
 import { optimizeOwnedDeck } from "../js/recommend.js";
 import { launchSmokeBrowser } from "./smoke-browser-launch.mjs";
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const pageBuild = spawnSync(process.env.PYTHON_BIN ?? (process.platform === "win32" ? "py" : "python3"), ["scripts/build-localized-pages.py"], { cwd: root, encoding: "utf8", windowsHide: true });
+const repository = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const root = path.resolve(process.env.BROWSER_SMOKE_ROOT || repository);
+const pageBuild = spawnSync(process.env.PYTHON_BIN ?? (process.platform === "win32" ? "py" : "python3"), [path.join(repository, "scripts/build-localized-pages.py"), "--root", root], { cwd: repository, encoding: "utf8", windowsHide: true });
 assert.equal(pageBuild.status, 0, `localized page build failed: ${pageBuild.stderr}`);
 const host = "127.0.0.1";
 const appPort = Number(process.env.BROWSER_SMOKE_PORT || 4173);
@@ -169,8 +170,18 @@ try {
 
   let sequence = 0;
   const pending = new Map();
+  const networkRequests = [];
+  const cacheHits = new Set();
+  const requestUrls = new Map();
   socket.addEventListener("message", (event) => {
     const message = JSON.parse(event.data);
+    if (message.method === "Network.requestWillBeSent") {
+      const { requestId, request } = message.params;
+      networkRequests.push(request.url);
+      requestUrls.set(requestId, request.url);
+    }
+    if (message.method === "Network.requestServedFromCache") cacheHits.add(message.params.requestId);
+    if (message.method === "Network.responseReceived" && message.params.response.fromDiskCache) cacheHits.add(message.params.requestId);
     if (!message.id) return;
     const waiter = pending.get(message.id);
     if (!waiter) return;
@@ -206,6 +217,23 @@ try {
     && document.querySelector("#music-select")?.options.length > 2)`),
   20_000, "application did not load");
 
+  assert.equal(await evaluate(`document.querySelector('#owned-card-list').children.length`), 0,
+    "Initial deck view must not build the hidden owned-card list");
+  assert.ok(!networkRequests.some(url => /(?:chart-index|exact-runtime-index|live-score-rules)/.test(url)),
+    "Unit mode must not request song resources on startup");
+  if (process.env.BROWSER_SMOKE_ROOT) {
+    const runtimeRequests = networkRequests.filter(url => /\/runtime\/.*\.[0-9a-f]{64}\.json/.test(url));
+    assert.ok(runtimeRequests.some(url => /\/cards\./.test(url)), "Public app did not use compact card transport");
+    assert.ok(!networkRequests.some(url => /\/cards\.json(?:\?|$)/.test(url)), "Public app fetched the legacy full cards file");
+    await command("Page.reload", { ignoreCache: false });
+    await waitFor(() => evaluate(`document.querySelector('#music-select')?.options.length > 2`), 20_000, "public cache reload");
+    await waitFor(() => [...cacheHits].some(id => /\/runtime\/cards\./.test(requestUrls.get(id) || '')),
+      5_000, "content-addressed card response was not reused from browser cache");
+    assert.ok(![...cacheHits].some(id => /\/manifest\.json(?:\?|$)/.test(requestUrls.get(id) || '')),
+      "Mutable manifest must not be served from cache");
+    console.log('[public-cache] content-addressed card response reused; manifest fetched fresh');
+  }
+
   const policy = await evaluate(`({
     targets: [...document.querySelectorAll('[name="calculation-mode"]')].map((input) => input.value),
     rarities: [...document.querySelector("#owned-rarity-filter").options].map((option) => option.value),
@@ -230,6 +258,74 @@ try {
   assert.equal(genericDisplay.count, 5);
   assert.equal(genericDisplay.projectionPanels, 0, 'Generic results must not show reference-chart panels');
   assert.equal(genericDisplay.estimateNotes, 0, 'Do not prepend estimate disclaimers');
+
+  assert.equal(await evaluate(`document.querySelector('#owned-card-list').children.length`), 0,
+    "Unit calculation must not render the hidden owned list");
+  assert.ok(!networkRequests.some(url => /(?:chart-index|exact-runtime-index|live-score-rules)/.test(url)),
+    "Unit calculation must not request song indexes");
+  await evaluate(`document.querySelector('#owned-tab').click()`);
+  await waitFor(() => evaluate(`document.querySelectorAll('#owned-card-list .owned-card').length === ${cards.filter(c => [4, 5].includes(Number(c.rarity))).length}`),
+    10_000, "owned rows did not render on tab opening");
+  const firstCardId = selectable[0].id;
+  await evaluate(`(() => {
+    const control = document.querySelector('[data-owned-level="${firstCardId}"]');
+    window.__ownedControls = { control, row: control.closest('.owned-card'),
+      rows: [...document.querySelectorAll('#owned-card-list .owned-card')], mutations: [] };
+    control.focus();
+    control.value = String(Math.max(1, Number(control.value) - 1));
+    control.dispatchEvent(new Event('change', { bubbles: true }));
+  })()`);
+  assert.deepEqual(await evaluate(`({
+    input: window.__ownedControls.control === document.querySelector('[data-owned-level="${firstCardId}"]'),
+    focus: document.activeElement === window.__ownedControls.control,
+    row: window.__ownedControls.row === document.querySelector('[data-owned-level="${firstCardId}"]').closest('.owned-card'),
+    allRows: window.__ownedControls.rows.every((row, index) => row === document.querySelectorAll('#owned-card-list .owned-card')[index]),
+  })`), { input: true, focus: true, row: true, allRows: true }, "card setting change replaced existing controls");
+  await evaluate(`(() => {
+    const input = document.querySelector('[data-owned-level="${firstCardId}"]');
+    input.value = '99999'; input.dispatchEvent(new Event('change', { bubbles: true }));
+    input.value = '99999'; input.dispatchEvent(new Event('change', { bubbles: true }));
+  })()`);
+  assert.equal(await evaluate(`document.querySelector('[data-owned-level="${firstCardId}"]').value`),
+    String(ownedCardSettings[firstCardId].level), 'Repeated clamped edits must restore the normalized value');
+  await evaluate(`(() => {
+    const select = document.querySelector('[data-owned-potential="${firstCardId}"]');
+    window.__ownedControls.potential = select;
+    select.focus(); select.value = '1'; select.dispatchEvent(new Event('change', { bubbles: true }));
+  })()`);
+  assert.equal(await evaluate(`window.__ownedControls.potential === document.activeElement
+    && window.__ownedControls.potential === document.querySelector('[data-owned-potential="${firstCardId}"]')`), true);
+  await evaluate(`document.querySelector('[data-card-detail="${firstCardId}"]').click()`);
+  assert.equal(await evaluate(`document.querySelector('#card-detail-modal').getAttribute('aria-hidden')`), 'false');
+  await evaluate(`document.querySelector('#card-detail-modal button[data-close-card-detail]').click()`);
+  assert.equal(await evaluate(`document.querySelector('#card-detail-modal').getAttribute('aria-hidden')`), 'true');
+  await evaluate(`(() => {
+    const search = document.querySelector('#owned-card-search');
+    search.value = document.querySelector('[data-owned-card-id="${firstCardId}"] .card-copy-character').textContent;
+    search.dispatchEvent(new Event('input', { bubbles: true }));
+    search.value = ''; search.dispatchEvent(new Event('input', { bubbles: true }));
+  })()`);
+  assert.equal(await evaluate(`window.__ownedControls.control === document.querySelector('[data-owned-level="${firstCardId}"]')`), true,
+    "Filtering should reuse cached card controls");
+  await evaluate(`(() => {
+    document.querySelector('#deck-tab').click();
+    window.__ownedControls.observer = new MutationObserver(records => window.__ownedControls.mutations.push(...records));
+    window.__ownedControls.observer.observe(document.querySelector('#owned-card-list'), { subtree: true, childList: true, attributes: true, characterData: true });
+    const mode = document.querySelector('#level-mode');
+    mode.value = mode.value === 'max' ? 'current' : 'max';
+    mode.dispatchEvent(new Event('change', { bubbles: true }));
+  })()`);
+  await evaluate(`new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))`);
+  assert.equal(await evaluate(`window.__ownedControls.mutations.length`), 0, "Hidden owned list mutated after unrelated state change");
+  await evaluate(`window.__ownedControls.observer.disconnect()`);
+  console.log('[owned-render] deferred first render, stable rows/inputs/focus, filters, delegated detail and zero hidden DOM mutations passed');
+
+  // Restore the fixture before the remaining scoring, cancellation and screenshot checks.
+  await evaluate(`localStorage.setItem(${JSON.stringify(storageKey)}, ${JSON.stringify(JSON.stringify(genericState))}); true`);
+  await command("Page.reload", { ignoreCache: true });
+  await waitFor(() => evaluate(`document.querySelector('#owned-tab-count')?.textContent === '12'`), 20_000, "restore owned fixture");
+  await evaluate(`document.querySelector('#auto-compose').click()`);
+  await waitFor(() => evaluate(`!document.querySelector('#auto-compose').disabled && document.querySelectorAll('.recommendation-result-card').length === 5`), 30_000, "restore unit result");
 
   // Optional screenshots also exercise the opened result at desktop/mobile sizes.
   if (process.env.BROWSER_SMOKE_ARTIFACT_DIR) {

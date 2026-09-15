@@ -226,6 +226,7 @@ jobs:
           python scripts/rewrite-pages-revisions.py \
             --root _site \
             --revision "$CARD_ASSET_REVISION"
+          node scripts/build-public-assets.mjs --root _site
           python scripts/build-localized-pages.py --root _site
           grep -q '../data/generated/manifest.json' _site/js/data.js
           if grep -q 'manifest.js?v=' _site/js/data.js; then exit 1; fi

@@ -1,3 +1,4 @@
+import { dataAssetRequest } from "./data-assets.js?v=1.3.1";
 const APP_VERSION = "20260812.1";
 const LOCALE_STORAGE_KEY = "holodori-decksim:locale";
 const DEFAULT_LOCALE = "ko";
@@ -701,8 +702,8 @@ function rawUrl(repository, commit, fileName) {
   return `https://raw.githubusercontent.com/${repository}/${commit}/${fileName}`;
 }
 
-async function fetchJson(url) {
-  const response = await fetch(url, { cache: "no-store" });
+async function fetchJson(url, cache = "no-store") {
+  const response = await fetch(url, { cache });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   return response.json();
 }
@@ -740,9 +741,9 @@ async function loadRemotePack(manifest, locale) {
 
 async function loadPack(manifest, locale) {
   const localUrl = new URL(`../data/generated/i18n/${locale}.json`, import.meta.url);
-  localUrl.searchParams.set("v", String(manifest?.master_version ?? APP_VERSION));
+  const request = dataAssetRequest(localUrl, manifest);
   try {
-    return await fetchJson(localUrl);
+    return await fetchJson(request.url, request.cache);
   } catch (error) {
     if (locale === "ko") {
       console.info("[i18n] local Korean pack unavailable; using embedded Korean data.", error);

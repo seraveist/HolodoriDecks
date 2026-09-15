@@ -1,4 +1,6 @@
 import { t } from "./i18n.js?v=1.3.1";
+import { decodeCards } from "./data-codec.js?v=1.3.1";
+import { dataAssetRequest } from "./data-assets.js?v=1.3.1";
 
 const DATA_URLS = {
   manifest: new URL("../data/generated/manifest.json", import.meta.url),
@@ -9,8 +11,8 @@ const DATA_URLS = {
   masterRefs: new URL("../data/generated/master_refs.json", import.meta.url),
 };
 
-async function fetchJson(url) {
-  const response = await fetch(url, { cache: "no-store" });
+async function fetchJson(url, cache = "no-store") {
+  const response = await fetch(url, { cache });
   if (!response.ok) {
     throw new Error(t("data.requestFailed", {
       path: new URL(url, window.location.href).pathname,
@@ -20,8 +22,8 @@ async function fetchJson(url) {
   return response.json();
 }
 
-async function fetchOptionalJson(url) {
-  const response = await fetch(url, { cache: "no-store" });
+async function fetchOptionalJson(url, cache = "no-store") {
+  const response = await fetch(url, { cache });
   if (response.status === 404) return null;
   if (!response.ok) {
     throw new Error(t("data.requestFailed", {
@@ -32,10 +34,9 @@ async function fetchOptionalJson(url) {
   return response.json();
 }
 
-function versionedUrl(url, version) {
-  const result = new URL(url);
-  result.searchParams.set("v", version);
-  return result;
+function fetchAsset(url, manifest, optional = false) {
+  const request = dataAssetRequest(url, manifest);
+  return (optional ? fetchOptionalJson : fetchJson)(request.url, request.cache);
 }
 
 function indexById(rows) {
@@ -48,14 +49,14 @@ export async function loadManifest() {
 
 export async function loadAppData(providedManifest = null) {
   const manifest = providedManifest ?? await loadManifest();
-  const dataVersion = manifest.source_commit || manifest.master_version || Date.now();
-  const [cards, characters, music, musicSearch, masterRefs] = await Promise.all([
-    fetchJson(versionedUrl(DATA_URLS.cards, dataVersion)),
-    fetchJson(versionedUrl(DATA_URLS.characters, dataVersion)),
-    fetchJson(versionedUrl(DATA_URLS.music, dataVersion)),
-    fetchOptionalJson(versionedUrl(DATA_URLS.musicSearch, dataVersion)),
-    fetchJson(versionedUrl(DATA_URLS.masterRefs, dataVersion)),
+  const [cardPayload, characters, music, musicSearch, masterRefs] = await Promise.all([
+    fetchAsset(DATA_URLS.cards, manifest),
+    fetchAsset(DATA_URLS.characters, manifest),
+    fetchAsset(DATA_URLS.music, manifest),
+    fetchAsset(DATA_URLS.musicSearch, manifest, true),
+    fetchAsset(DATA_URLS.masterRefs, manifest),
   ]);
+  const cards = decodeCards(cardPayload);
 
   if (!Array.isArray(cards) || !Array.isArray(characters) || !Array.isArray(music)
     || !masterRefs?.triggers || !masterRefs?.active_effects || !masterRefs?.passive_effects) {

@@ -1,5 +1,5 @@
 import { loadAppData, loadManifest } from "./data.js?v=1.3.1";
-import { loadChartResources, loadSelectedChart } from "./chart-data.js?v=1.3.1";
+import { createChartResourcesLoader, loadSelectedChart } from "./chart-data.js?v=1.3.1";
 import { createStore } from "./state.js?v=1.3.1";
 import { calculationSettings } from "./calculation-mode.js?v=1.3.1";
 import { prepareScoreCards } from "./card-prepare.js?v=1.3.1";
@@ -102,7 +102,7 @@ async function start() {
 
   initTheme();
   const manifest = await loadManifest();
-  await initI18n(manifest);
+  const [rawData] = await Promise.all([loadAppData(manifest), initI18n(manifest)]);
   syncExtraStaticCopy();
 
   const themeToggle = requiredElement("#theme-toggle");
@@ -120,8 +120,8 @@ async function start() {
   const memberSlots = requiredElement("#member-slots");
   memberSlots.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><span aria-hidden="true">◌</span><p>${t("app.loadingCards")}</p></div>`;
 
-  const data = localizeAppData(await loadAppData(manifest));
-  const chartResources = await loadChartResources(manifest);
+  const data = localizeAppData(rawData);
+  const ensureChartResources = createChartResourcesLoader(manifest);
   const selectableCards = data.cards.filter((card) => [4, 5].includes(Number(card.rarity)));
   const maxLevelsById = new Map(data.cards.map((card) => [
     card.id,
@@ -210,6 +210,22 @@ async function start() {
       masterRefs: data.masterRefs,
     });
     const song = settings.musicId ? data.musicById.get(settings.musicId) : null;
+    let chartResources = null;
+    if (song) {
+      try {
+        chartResources = await ensureChartResources();
+      } catch (error) {
+        if (optimizationSession.finish(request)) {
+          lastRecommendation = null;
+          optimizeButton.textContent = t("calculate.button");
+          setRecommendationStatus(localizeOptimizerReason("계산을 완료하지 못했습니다. 다시 시도해 주세요."));
+          render(store.getState());
+        }
+        console.warn("[chart-data] Could not prepare song resources", error);
+        return false;
+      }
+    }
+    if (!optimizationSession.isCurrent(request)) return false;
     const chart = song
       ? await loadSelectedChart(chartResources, song.id, settings.difficulty, { signal: request.signal })
       : null;
@@ -271,6 +287,7 @@ async function start() {
     const showOwned = activeView === "owned";
     deckView.hidden = showOwned;
     ownedView.hidden = !showOwned;
+    ownedCardsView.setVisible(showOwned);
     document.querySelectorAll("[data-view-tab]").forEach((tab) => {
       const active = tab.dataset.viewTab === activeView;
       tab.classList.toggle("is-active", active);
@@ -298,6 +315,7 @@ async function start() {
     store,
     onGoDeck: () => showView("deck"),
     onCardDetail: cardDetail.open,
+    initiallyVisible: false,
   });
   const syncMemberOptions = mountMemberOptions(store);
   const syncMusicControls = mountMusicControls(data.music, store);

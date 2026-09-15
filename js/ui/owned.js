@@ -123,7 +123,7 @@ export function normalizeOwnedCardsImport(payload, cards) {
   return { ownedCardIds, ownedCardSettings };
 }
 
-export function createOwnedCardsView({ cards, charactersById = new Map(), store, onGoDeck, onCardDetail }) {
+export function createOwnedCardsView({ cards, charactersById = new Map(), store, onGoDeck, onCardDetail, initiallyVisible = true }) {
   const displayCards = cards.filter((card) => OWNED_CARD_RARITIES.has(Number(card.rarity)));
   const list = requiredElement("#owned-card-list");
   const search = requiredElement("#owned-card-search");
@@ -134,6 +134,14 @@ export function createOwnedCardsView({ cards, charactersById = new Map(), store,
   const ownedCount = requiredElement("#owned-count");
   const visibleCount = requiredElement("#owned-visible-count");
   const tabCount = requiredElement("#owned-tab-count");
+  const cardRows = new Map();
+  const searchText = new Map(displayCards.map(card => [
+    card.id, `${card.character_name} ${card.name}`.toLocaleLowerCase(),
+  ]));
+  let isVisible = initiallyVisible;
+  let lastState = null;
+  let filteredKey = null;
+  let filteredRows = [];
 
   function maxLevel(card) {
     return Math.max(1, ...(card.growth?.levels ?? []).map((row) => Number(row.level) || 1));
@@ -149,8 +157,11 @@ export function createOwnedCardsView({ cards, charactersById = new Map(), store,
   function filteredCards(state) {
     const query = search.value.trim().toLocaleLowerCase();
     const owned = new Set(state.ownedCardIds);
+    const key = JSON.stringify([query, rarity.value, attribute.value, status.value, sort.value,
+      getLocale(), status.value === "all" ? null : state.ownedCardIds]);
+    if (key === filteredKey) return filteredRows;
     const visible = displayCards.filter((card) => {
-      const matchesQuery = !query || `${card.character_name} ${card.name}`.toLocaleLowerCase().includes(query);
+      const matchesQuery = !query || searchText.get(card.id).includes(query);
       const matchesRarity = rarity.value === "all" || Number(rarity.value) === Number(card.rarity);
       const matchesAttribute = attribute.value === "all" || Number(attribute.value) === Number(card.attribute);
       const matchesStatus = status.value === "all"
@@ -172,6 +183,8 @@ export function createOwnedCardsView({ cards, charactersById = new Map(), store,
     } else {
       visible.sort((a, b) => compareByReleaseOrder(a, b, charactersById));
     }
+    filteredKey = key;
+    filteredRows = visible;
     return visible;
   }
 
@@ -195,6 +208,9 @@ export function createOwnedCardsView({ cards, charactersById = new Map(), store,
   }
 
   function updateCardSetting(cardId, patch) {
+    // A clamped value can equal the old state; still normalize this input's DOM.
+    const row = cardRows.get(cardId);
+    if (row) row.signature = null;
     store.setState((state) => {
       const ownedCardSettings = {
         ...state.ownedCardSettings,
@@ -204,54 +220,117 @@ export function createOwnedCardsView({ cards, charactersById = new Map(), store,
     });
   }
 
-  function render(state) {
-    const owned = new Set(state.ownedCardIds);
-    const visible = filteredCards(state);
-    const ownedDisplayCount = displayCards.reduce((countValue, card) => countValue + Number(owned.has(card.id)), 0);
-    ownedCount.textContent = t("owned.count", { count: ownedDisplayCount });
-    visibleCount.textContent = copy().visibleOf(displayCards.length, visible.length);
-    tabCount.textContent = String(ownedDisplayCount);
+  function settingsMarkup(card, setting) {
+    return `<div class="owned-card-settings">
+      <label><span>${t("card.level")}</span><input type="number" min="1" max="${maxLevel(card)}" value="${setting.level}" data-owned-level="${escapeHtml(card.id)}" aria-label="${escapeHtml(copy().levelAria(card.character_name))}"></label>
+      <label><span>${t("card.potential")}</span><select data-owned-potential="${escapeHtml(card.id)}" aria-label="${escapeHtml(copy().potentialAria(card.character_name))}">${Array.from({ length: 6 }, (_, value) => `<option value="${value}"${value === setting.potential ? " selected" : ""}>${copy().potentialOption(value)}</option>`).join("")}</select></label>
+    </div>`;
+  }
 
+  function createRow(card) {
+    const element = document.createElement("article");
+    element.className = "owned-card";
+    element.dataset.ownedRowId = card.id;
+    element.setAttribute("style", attributeStyle(card));
+    element.innerHTML = `
+      <button class="owned-card-toggle" type="button" data-owned-card-id="${escapeHtml(card.id)}" aria-pressed="false">
+        <span class="owned-check" aria-hidden="true"></span>
+        ${renderLandscapeCardArt(card, { showMeta: false })}
+        <span class="landscape-card-copy">
+          ${renderLandscapeCardTitle(card)}
+          <span class="card-copy-name">${escapeHtml(card.name)}</span>
+          <small class="card-copy-meta" hidden></small>
+        </span>
+      </button>
+      <button class="card-detail-button" type="button" data-card-detail="${escapeHtml(card.id)}" aria-label="${escapeHtml(t("card.detailsAria", { character: card.character_name }))}">i</button>`;
+    wirePortraitFallback(element);
+    return { element, signature: null };
+  }
+
+  function updateRow(row, card, owned, setting) {
+    const signature = JSON.stringify([owned, setting.level, setting.potential]);
+    if (row.signature === signature) return;
+    const { element } = row;
+    element.classList.toggle("is-owned", owned);
+    element.querySelector("[data-owned-card-id]").setAttribute("aria-pressed", String(owned));
+    element.querySelector(".owned-check").textContent = owned ? copy().ownedChip : copy().registerChip;
+    const meta = element.querySelector(".card-copy-meta");
+    meta.hidden = !owned;
+    meta.textContent = owned ? `Lv${setting.level} · ${t("card.potential")} ${setting.potential}` : "";
+    let settings = element.querySelector(".owned-card-settings");
+    if (owned) {
+      if (!settings) {
+        element.insertAdjacentHTML("beforeend", settingsMarkup(card, setting));
+        settings = element.querySelector(".owned-card-settings");
+      }
+      const level = settings.querySelector("[data-owned-level]");
+      const potential = settings.querySelector("[data-owned-potential]");
+      if (level.value !== String(setting.level)) level.value = String(setting.level);
+      if (potential.value !== String(setting.potential)) potential.value = String(setting.potential);
+    } else {
+      settings?.remove();
+    }
+    row.signature = signature;
+  }
+
+  function render(state) {
+    lastState = state;
+    const owned = new Set(state.ownedCardIds);
+    const count = displayCards.reduce((total, card) => total + Number(owned.has(card.id)), 0);
+    const countText = t("owned.count", { count });
+    if (ownedCount.textContent !== countText) ownedCount.textContent = countText;
+    if (tabCount.textContent !== String(count)) tabCount.textContent = String(count);
+    // The tab count stays current, but a hidden list does no DOM/filter/sort work.
+    if (!isVisible) return;
+    const visible = filteredCards(state);
+    const visibleText = copy().visibleOf(displayCards.length, visible.length);
+    if (visibleCount.textContent !== visibleText) visibleCount.textContent = visibleText;
     if (!visible.length) {
-      list.innerHTML = `<div class="empty-state"><span aria-hidden="true">⌕</span><p>${t("owned.none")}</p></div>`;
+      if (!list.querySelector(".empty-state")) {
+        list.innerHTML = `<div class="empty-state"><span aria-hidden="true">⌕</span><p>${t("owned.none")}</p></div>`;
+      }
       return;
     }
+    list.querySelector(".empty-state")?.remove();
+    const wanted = new Set(visible.map(card => card.id));
+    let cursor = list.firstElementChild;
+    for (const card of visible) {
+      let row = cardRows.get(card.id);
+      if (!row) {
+        row = createRow(card);
+        cardRows.set(card.id, row);
+      }
+      updateRow(row, card, owned.has(card.id), cardSetting(state, card));
+      if (row.element !== cursor) list.insertBefore(row.element, cursor);
+      cursor = row.element.nextElementSibling;
+    }
+    for (const element of [...list.children]) {
+      if (!wanted.has(element.dataset.ownedRowId)) element.remove();
+    }
+  }
 
-    list.innerHTML = visible.map((card) => {
-      const isOwned = owned.has(card.id);
-      const setting = cardSetting(state, card);
-      return `
-        <article class="owned-card${isOwned ? " is-owned" : ""}" style="${attributeStyle(card)}">
-          <button class="owned-card-toggle" type="button" data-owned-card-id="${escapeHtml(card.id)}" aria-pressed="${isOwned}">
-            <span class="owned-check" aria-hidden="true">${isOwned ? copy().ownedChip : copy().registerChip}</span>
-            ${renderLandscapeCardArt(card, { showMeta: false })}
-            <span class="landscape-card-copy">
-              ${renderLandscapeCardTitle(card)}
-              <span class="card-copy-name">${escapeHtml(card.name)}</span>
-              ${isOwned ? `<small class="card-copy-meta">Lv${setting.level} · ${t("card.potential")} ${setting.potential}</small>` : ""}
-            </span>
-          </button>
-          <button class="card-detail-button" type="button" data-card-detail="${escapeHtml(card.id)}" aria-label="${escapeHtml(t("card.detailsAria", { character: card.character_name }))}">i</button>
-          ${isOwned ? `<div class="owned-card-settings">
-            <label><span>${t("card.level")}</span><input type="number" min="1" max="${maxLevel(card)}" value="${setting.level}" data-owned-level="${escapeHtml(card.id)}" aria-label="${escapeHtml(copy().levelAria(card.character_name))}"></label>
-            <label><span>${t("card.potential")}</span><select data-owned-potential="${escapeHtml(card.id)}" aria-label="${escapeHtml(copy().potentialAria(card.character_name))}">${Array.from({ length: 6 }, (_, value) => `<option value="${value}"${value === setting.potential ? " selected" : ""}>${copy().potentialOption(value)}</option>`).join("")}</select></label>
-          </div>` : ""}
-        </article>`;
-    }).join("");
+  // Delegate once instead of binding controls after every render.
+  list.addEventListener("click", event => {
+    const detail = event.target.closest("[data-card-detail]");
+    if (detail && list.contains(detail)) {
+      onCardDetail?.(detail.dataset.cardDetail, detail);
+      return;
+    }
+    const toggle = event.target.closest("[data-owned-card-id]");
+    if (toggle && list.contains(toggle)) toggleCard(toggle.dataset.ownedCardId);
+  });
+  list.addEventListener("change", event => {
+    const control = event.target;
+    if (control.matches("[data-owned-level]")) {
+      updateCardSetting(control.dataset.ownedLevel, { level: Number(control.value) });
+    } else if (control.matches("[data-owned-potential]")) {
+      updateCardSetting(control.dataset.ownedPotential, { potential: Number(control.value) });
+    }
+  });
 
-    list.querySelectorAll("[data-owned-card-id]").forEach((button) => {
-      button.addEventListener("click", () => toggleCard(button.dataset.ownedCardId));
-    });
-    list.querySelectorAll("[data-card-detail]").forEach((button) => {
-      button.addEventListener("click", () => onCardDetail?.(button.dataset.cardDetail, button));
-    });
-    list.querySelectorAll("[data-owned-level]").forEach((input) => {
-      input.addEventListener("change", () => updateCardSetting(input.dataset.ownedLevel, { level: Number(input.value) }));
-    });
-    list.querySelectorAll("[data-owned-potential]").forEach((select) => {
-      select.addEventListener("change", () => updateCardSetting(select.dataset.ownedPotential, { potential: Number(select.value) }));
-    });
-    wirePortraitFallback(list);
+  function setVisible(visible) {
+    isVisible = Boolean(visible);
+    if (isVisible) render(lastState ?? store.getState());
   }
 
   [search, rarity, attribute, status, sort].forEach((control) => {
@@ -307,5 +386,5 @@ export function createOwnedCardsView({ cards, charactersById = new Map(), store,
   });
   requiredElement("#owned-go-deck").addEventListener("click", onGoDeck);
 
-  return { render };
+  return { render, setVisible };
 }
