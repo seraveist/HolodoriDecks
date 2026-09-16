@@ -20,6 +20,7 @@ export async function buildPublicAssets(root) {
   const sizes = {};
   const logicalFiles = [
     "cards.json", "characters.json", "music.json", "music-search.json", "master_refs.json",
+    "boards.json", "memory-bonuses.json", "i18n/boards/ko.json", "i18n/boards/en.json", "i18n/boards/ja.json",
     "chart-index.json", "live-score-rules.json", "exact-runtime-index.json",
     "i18n/ko.json", "i18n/en.json", "i18n/ja.json",
   ];

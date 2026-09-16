@@ -4,10 +4,13 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+from holodori_decksim.board_data import validate_board_data
 GENERATED = ROOT / "data" / "generated"
 
 
@@ -121,6 +124,32 @@ def main() -> None:
         validate_drop(len(cards), int(baseline.get("card_count", 0)), "card")
         validate_drop(len(characters), int(baseline.get("character_count", 0)), "character")
         validate_drop(len(music), int(baseline.get("music_count", 0)), "music")
+
+    boards = load_json(GENERATED / "boards.json")
+    memory = load_json(GENERATED / "memory-bonuses.json")
+    board_counts = validate_board_data(boards, memory, character_ids, card_ids)
+    if manifest.get("board_schema_version") != 1 or manifest.get("board_counts") != board_counts:
+        raise AssertionError("board manifest counts/schema mismatch")
+    if boards["source_commit"] != source_commit or boards["master_version"] != master_version:
+        raise AssertionError("board/core Master mismatch")
+    for character in characters:
+        if character.get("board_layout_id") != boards["characters"][character["id"]]["layoutId"]:
+            raise AssertionError("character board model mismatch")
+    for card in cards:
+        if card.get("connect_effect_id") != boards["cards"][card["id"]]["connectEffectId"]:
+            raise AssertionError("card connect effect mismatch")
+    for locale in ("ko", "en", "ja"):
+        pack = load_json(GENERATED / "i18n" / "boards" / f"{locale}.json")
+        if (pack.get("master_version"), pack.get("source_commit"), pack.get("locale_commit")) != (
+            master_version, source_commit, locales[locale]["commit"]
+        ):
+            raise AssertionError(f"{locale}: board locale snapshot mismatch")
+        if pack.get("format") != "holodori-board-locale" or pack.get("version") != 1 or pack.get("locale") != locale:
+            raise AssertionError(f"{locale}: invalid board locale schema")
+        if set(pack.get("texts", {})) != set(boards["requiredLangIds"]) or not all(pack["texts"].values()):
+            raise AssertionError(f"{locale}: missing board text")
+        if not pack.get("input_hashes") or not all(re.fullmatch(r"[0-9a-f]{64}", value) for value in pack["input_hashes"].values()):
+            raise AssertionError(f"{locale}: invalid board input hashes")
 
     chart_index = load_json(GENERATED / "chart-index.json")
     score_rules = load_json(GENERATED / "live-score-rules.json")

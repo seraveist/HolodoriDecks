@@ -10,6 +10,8 @@ from typing import Any
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
+from .board_data import build_board_data, validate_board_data
+
 from .sources import (
     CORE_REPO,
     GITHUB_API_ROOT,
@@ -29,8 +31,11 @@ GENERATED_FILES = (
     "music.json",
     "master_refs.json",
     "manifest.json",
+    "boards.json",
+    "memory-bonuses.json",
+    "i18n/boards/ko.json", "i18n/boards/en.json", "i18n/boards/ja.json",
 )
-NORMALIZER_VERSION = 2
+NORMALIZER_VERSION = 3
 
 
 def _request_text(url: str, *, accept: str = "application/vnd.github+json") -> str:
@@ -108,8 +113,11 @@ def _generated_files_present() -> bool:
     return all((GENERATED_DIR / filename).exists() for filename in GENERATED_FILES)
 
 
-def _resolve_snapshot(force: bool = False) -> dict[str, Any]:
-    core_commit = _resolve_head_commit(CORE_REPO)
+def _resolve_snapshot(force: bool = False, *, pinned: bool = False) -> dict[str, Any]:
+    pinned_meta = (_read_json_file(UPSTREAM_META_FILE, {}) or {}) if pinned else {}
+    core_commit = pinned_meta.get("commit") if pinned else _resolve_head_commit(CORE_REPO)
+    if not re.fullmatch(r"[0-9a-f]{40}", str(core_commit or "")):
+        raise ValueError("Pinned synchronization requires a valid data/upstream.json")
     master_version = _download_text(CORE_REPO, core_commit, "version.txt").strip()
     if not re.fullmatch(r"[0-9a-f]{64}", master_version):
         raise ValueError(f"Unexpected master version: {master_version!r}")
@@ -117,9 +125,10 @@ def _resolve_snapshot(force: bool = False) -> dict[str, Any]:
     locale_snapshot: dict[str, dict[str, str]] = {}
     for locale, config in LOCALES.items():
         repository = config["repository"]
-        commit = core_commit if repository == CORE_REPO else _resolve_commit_for_version(
-            repository, master_version
-        )
+        commit = (pinned_meta.get("locales", {}).get(locale, {}).get("commit") if pinned else
+                  core_commit if repository == CORE_REPO else _resolve_commit_for_version(repository, master_version))
+        if not re.fullmatch(r"[0-9a-f]{40}", str(commit or "")):
+            raise ValueError(f"Missing pinned locale commit: {locale}")
         version = _download_text(repository, commit, "version.txt").strip()
         if version != master_version:
             raise ValueError(
@@ -359,6 +368,9 @@ def normalize(snapshot: dict[str, Any]) -> dict[str, int]:
                 "grouping_ids": data.get("regularCharacterGroupingIds", []),
                 "asset_id": data.get("assetId"),
                 "order": data.get("order"),
+                "board_layout_id": data.get("skillTreeNodePositionGroupId"),
+                "board_point_id": data.get("skillTreePointId"),
+                "character_level_group_id": data.get("characterLevelGroupId"),
             }
         )
 
@@ -371,6 +383,7 @@ def normalize(snapshot: dict[str, Any]) -> dict[str, int]:
                 "id": music_id,
                 "title": music_text.get(title_lang_id, title_lang_id or music_id),
                 "singer_name": music_text.get(singer_lang_id, ""),
+                "music_singer_type": data.get("musicSingerType"),
                 "character_ids": data.get("characterIds", []),
                 "jacket_asset_id": data.get("jacketAssetId"),
                 "asset_id": data.get("assetId"),
@@ -430,6 +443,7 @@ def normalize(snapshot: dict[str, Any]) -> dict[str, int]:
                 "name": card_text.get(data.get("nameLangId", ""), data.get("nameLangId")),
                 "rarity": _enum_suffix(data.get("rarity")),
                 "attribute": _enum_suffix(data.get("attributeType")),
+                "connect_effect_id": data.get("skillTreeConnectEffectId"),
                 "parameter_ratio_permil": {
                     "performance": data.get("performancePermilMultiply", 0),
                     "technique": data.get("techniquePermilMultiply", 0),
@@ -479,6 +493,12 @@ def normalize(snapshot: dict[str, Any]) -> dict[str, int]:
     music_rows.sort(key=lambda row: (row.get("order") or 999999999, row["id"]))
     normalized_cards.sort(key=lambda row: (row.get("order") or 999999, row["id"]))
 
+    # Validate the entire dependency graph before writing any new core files.
+    board_data, memory_data = build_board_data(snapshot, {r["id"] for r in character_rows}, {r["id"] for r in normalized_cards})
+    board_counts = validate_board_data(board_data, memory_data, {r["id"] for r in character_rows}, {r["id"] for r in normalized_cards})
+    _write_json("boards.json", board_data)
+    _write_json("memory-bonuses.json", memory_data)
+
     _write_json("characters.json", character_rows)
     _write_json("music.json", music_rows)
     _write_json("cards.json", normalized_cards)
@@ -501,6 +521,8 @@ def normalize(snapshot: dict[str, Any]) -> dict[str, int]:
         "card_count": len(normalized_cards),
         "music_count": len(music_rows),
         "leader_card_count": sum(1 for card in normalized_cards if card.get("leader")),
+        "board_schema_version": 1,
+        "board_counts": board_counts,
         "raden_card_count": len(raden_cards),
         "raden_leader_card_count": len(raden_leaders),
         "locales": snapshot["locales"],
@@ -508,6 +530,7 @@ def normalize(snapshot: dict[str, Any]) -> dict[str, int]:
     _write_json("manifest.json", manifest)
 
     return {
+        "boards": board_counts["characters"],
         "characters": len(character_rows),
         "cards": len(normalized_cards),
         "music": len(music_rows),
@@ -550,8 +573,8 @@ def _write_sync_metadata(snapshot: dict[str, Any], counts: dict[str, int]) -> No
     )
 
 
-def sync(force: bool = False) -> dict[str, Any]:
-    snapshot = _resolve_snapshot(force=force)
+def sync(force: bool = False, *, pinned: bool = False) -> dict[str, Any]:
+    snapshot = _resolve_snapshot(force=force, pinned=pinned)
     if not snapshot["changed"]:
         return {
             "changed": False,
@@ -584,8 +607,9 @@ def main() -> None:
         action="store_true",
         help="rebuild the resolved version-aligned snapshot even when references are unchanged",
     )
+    parser.add_argument("--pinned", action="store_true", help="rebuild the exact committed core/locale snapshots from data/upstream.json")
     args = parser.parse_args()
-    result = sync(force=args.force)
+    result = sync(force=args.force, pinned=args.pinned)
     print(json.dumps(result, ensure_ascii=False))
 
 

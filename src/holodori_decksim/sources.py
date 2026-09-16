@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from .board_data import BOARD_FILES
+
 CORE_REPO = "HolodoriDB/holodori-db-kor-diff"
 UPSTREAM_REPO = CORE_REPO
 UPSTREAM_REF = "main"
@@ -49,3 +51,5 @@ MASTER_FILES = (
     "LivePassiveSkillEffect.json",
     "LangGeneratedLivePassiveSkillEffect_Kor.json",
 )
+
+MASTER_FILES += BOARD_FILES

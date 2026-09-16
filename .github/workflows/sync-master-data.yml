@@ -77,6 +77,8 @@ jobs:
 
       - name: Preserve automation baseline
         run: |
+          if [ -f data/generated/boards.json ]; then cp data/generated/boards.json /tmp/boards-before.json; else echo null > /tmp/boards-before.json; fi
+          if [ -f data/generated/memory-bonuses.json ]; then cp data/generated/memory-bonuses.json /tmp/memory-before.json; else echo null > /tmp/memory-before.json; fi
           cp data/generated/manifest.json /tmp/manifest-before.json
           cp data/generated/cards.json /tmp/cards-before.json
           cp data/generated/characters.json /tmp/characters-before.json
@@ -117,6 +119,8 @@ jobs:
         run: |
           python scripts/validate-generated-data.py --baseline /tmp/manifest-before.json
           python -m pytest -q
+          node scripts/test-board-state.mjs
+          node scripts/test-board-data.mjs
           python -m py_compile scripts/check-automation-gate.py
           node scripts/test-chart-scoring.mjs
           node scripts/test-song-score-invariants.mjs
@@ -157,6 +161,10 @@ jobs:
             --current-chart-index data/generated/chart-index.json \
             --previous-runtime-index /tmp/exact-runtime-index-before.json \
             --current-runtime-index data/generated/exact-runtime-index.json \
+            --previous-boards /tmp/boards-before.json \
+            --current-boards data/generated/boards.json \
+            --previous-memory /tmp/memory-before.json \
+            --current-memory data/generated/memory-bonuses.json \
             --output /tmp/master-automerge-gate.json
           python - <<'PY' >> "$GITHUB_OUTPUT"
           import json
@@ -235,6 +243,8 @@ jobs:
           - Change triggers: {changed}
           - Cards: {counts.get('cards', manifest['card_count'])}
           - Characters: {counts.get('characters', manifest['character_count'])}
+          - Board-enabled characters: {manifest.get('board_counts', {}).get('characters', 0)}
+          - Board node definitions: {manifest.get('board_counts', {}).get('node_definitions', 0)}
           - Music: {counts.get('music', manifest['music_count'])}
           - Difficulty charts: {chart.get('chart_count', 0)}
           - Runtime Exact compatible charts: {runtime.get('runtimeExactCount', 0)}

@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
+from .board_data import board_change_reasons
+
 
 @dataclass(frozen=True)
 class GateResult:
@@ -45,6 +47,10 @@ def evaluate_master_gate(
     current_chart_index: dict[str, object],
     previous_runtime_index: dict[str, object],
     current_runtime_index: dict[str, object],
+    previous_boards: dict | None = None,
+    current_boards: dict | None = None,
+    previous_memory: dict | None = None,
+    current_memory: dict | None = None,
 ) -> GateResult:
     reasons: list[str] = []
 
@@ -121,6 +127,15 @@ def evaluate_master_gate(
             f"Runtime Exact rejected-chart count increased unusually: {previous_rejected} -> {current_rejected}"
         )
 
+    if current_boards is not None:
+        if current_memory is None:
+            reasons.append("board memory baseline/current data missing")
+        else:
+            reasons.extend(board_change_reasons(previous_boards, current_boards, previous_memory, current_memory))
+        metrics["board_characters"] = len(current_boards.get("resolved", {}))
+        metrics["board_unknown_effects"] = len(current_boards.get("unknownEffectTypes", []))
+    elif previous_boards is not None:
+        reasons.append("board catalog was removed")
     return GateResult(safe=not reasons, reasons=tuple(reasons), metrics=metrics)
 
 
