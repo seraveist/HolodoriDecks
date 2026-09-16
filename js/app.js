@@ -21,6 +21,7 @@ import { renderResult } from "./ui/result.js?v=1.3.1";
 import { mountMemberOptions } from "./ui/target.js?v=1.3.1";
 import { requiredElement } from "./ui/dom.js?v=1.3.1";
 import { createCardDetail } from "./ui/card-detail.js?v=1.3.1";
+import { createBoardEntry } from "./board-entry.js?v=1.3.1";
 
 const APP_VERSION = "1.3.1";
 const RESULT_COUNT = 5;
@@ -282,20 +283,34 @@ async function start() {
     return true;
   }
 
-  function showView(viewName) {
-    activeView = viewName === "owned" ? "owned" : "deck";
-    const showOwned = activeView === "owned";
-    deckView.hidden = showOwned;
-    ownedView.hidden = !showOwned;
-    ownedCardsView.setVisible(showOwned);
+  function viewFromHash() {
+    if (/^#board(?:\/|$)/.test(window.location.hash)) return "board";
+    return window.location.hash === "#owned" ? "owned" : "deck";
+  }
+
+  function showView(viewName, { updateHash = true } = {}) {
+    const nextView = ["owned", "board"].includes(viewName) ? viewName : "deck";
+    const changed = activeView !== nextView;
+    activeView = nextView;
+    if (updateHash) {
+      const hash = activeView === "board" && /^#board(?:\/|$)/.test(window.location.hash)
+        ? window.location.hash : `#${activeView}`;
+      if (window.location.hash !== hash) window.history.pushState(null, "", hash);
+    }
+    deckView.hidden = activeView !== "deck";
+    ownedView.hidden = activeView !== "owned";
+    ownedCardsView.setVisible(activeView === "owned");
+    boardView.setVisible(activeView === "board");
     document.querySelectorAll("[data-view-tab]").forEach((tab) => {
       const active = tab.dataset.viewTab === activeView;
       tab.classList.toggle("is-active", active);
       tab.setAttribute("aria-selected", String(active));
       tab.tabIndex = active ? 0 : -1;
     });
-    document.querySelector(showOwned ? "#owned-card-search" : "#member-setting")?.focus({ preventScroll: true });
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (changed && activeView !== "board") {
+      document.querySelector(activeView === "owned" ? "#owned-card-search" : "#member-setting")?.focus({ preventScroll: true });
+    }
+    if (changed) window.scrollTo({ top: 0, behavior: "auto" });
   }
 
   const cardDetail = createCardDetail({
@@ -317,6 +332,7 @@ async function start() {
     onCardDetail: cardDetail.open,
     initiallyVisible: false,
   });
+  const boardView = createBoardEntry({ data, store, onGoOwned: () => showView("owned") });
   const syncMemberOptions = mountMemberOptions(store);
   const syncMusicControls = mountMusicControls(data.music, store);
   requiredElement("#clear-members").addEventListener("click", () => {
@@ -348,13 +364,26 @@ async function start() {
     renderMemberSlots(memberSlots, data.cardsById, state, picker.open, clearPresetSlot);
     renderResult(data, state, lastRecommendation);
     ownedCardsView.render(state);
+    boardView.render(state);
     optimizeButton.disabled = Boolean(optimizationSession.active) || !canCalculate(state);
     picker.refresh();
     cardDetail.refresh();
   }
 
+  window.addEventListener("hashchange", () => showView(viewFromHash(), { updateHash: false }));
+  document.querySelector(".view-tabs").addEventListener("keydown", (event) => {
+    const tabs = [...document.querySelectorAll("[data-view-tab]")];
+    const index = tabs.indexOf(event.target);
+    if (index < 0 || !["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    const next = event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1
+      : (index + (event.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+    tabs[next].click();
+    tabs[next].focus();
+  });
   store.subscribe(render);
   render(store.getState());
+  showView(viewFromHash(), { updateHash: false });
 }
 
 start().catch((error) => {
