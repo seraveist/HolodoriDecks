@@ -5,6 +5,9 @@ on:
     paths: [.github/workflows/board-foundation-apply.yml]
 permissions:
   contents: write
+defaults:
+  run:
+    shell: bash
 jobs:
   foundation:
     if: github.repository == 'seraveist/HolodoriDecks' && github.ref == 'refs/heads/feature/member-board-ui'
@@ -15,6 +18,7 @@ jobs:
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.12'
@@ -53,7 +57,10 @@ jobs:
           print('Reconstructed', len(entries), 'source files; scoring engine paths excluded.')
           PY
       - name: Install validation dependencies
-        run: python -m pip install --disable-pip-version-check --retries 5 --timeout 30 -e '.[test,music-search]'
+        run: |
+          python -m pip install --disable-pip-version-check --retries 5 --timeout 30 -e '.[test,music-search]'
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk
       - name: Generate pinned Master boards and translations
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -65,19 +72,51 @@ jobs:
           node scripts/test-board-state.mjs | tee /tmp/board-foundation-result/board-state.log
           node scripts/test-board-data.mjs | tee /tmp/board-foundation-result/board-data.log
           find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
-      - name: Publish candidate only to the development branch
+      - name: Prepare candidate Git objects without updating any branch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           test "$GITHUB_REF" = refs/heads/feature/member-board-ui
-          test "$(git ls-remote origin refs/heads/feature/member-board-ui | cut -f1)" = "$GITHUB_SHA"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm -r .board-transfer .github/workflows/board-foundation-apply.yml .github/workflows/board-foundation-snapshot.yml
           git add BOARD_UI.md DATA_SYNC.md css/boards.css js/board* js/ui/boards.js scripts/build-board-i18n.mjs scripts/build-i18n.mjs scripts/build-public-assets.mjs scripts/check-automation-gate.py scripts/test-board*.mjs scripts/validate-generated-data.py src/holodori_decksim/automation_gate.py src/holodori_decksim/board_data.py src/holodori_decksim/sources.py src/holodori_decksim/sync.py tests/test_board_data.py data/generated data/upstream.json data/sync_state.json .github/workflows/static-performance.yml .github/workflows/sync-master-data.yml .github/workflows/validate.yml
           git diff --cached --exit-code -- js/score.js js/unit-score.js js/chart-score.js js/recommend.js js/optimizer-core.js js/order.js js/card-prepare.js
-          git commit -m 'feat: synchronize Master-backed board foundation without scoring changes'
-          git rev-parse HEAD | tee /tmp/board-foundation-result/head.txt
+          python - <<'PY'
+          import base64, hashlib, json, os, pathlib, subprocess, urllib.request
+          root = 'https://api.github.com/repos/seraveist/HolodoriDecks'
+          parent = os.environ['GITHUB_SHA']
+          def api(endpoint, payload=None):
+              body = None if payload is None else json.dumps(payload).encode()
+              request = urllib.request.Request(root + endpoint, data=body, headers={'Authorization':'Bearer ' + os.environ['GITHUB_TOKEN'], 'Accept':'application/vnd.github+json', 'Content-Type':'application/json', 'User-Agent':'board-foundation-staging'})
+              with urllib.request.urlopen(request, timeout=60) as response:
+                  return json.load(response)
+          assert api('/git/ref/heads/feature/member-board-ui')['object']['sha'] == parent
+          base_tree = api('/git/commits/' + parent)['tree']['sha']
+          entries = []
+          for row in subprocess.check_output(['git','diff','--cached','--name-status','--no-renames'], text=True).splitlines():
+              status, name = row.split('\t')
+              entry = {'path':name, 'mode':'100644', 'type':'blob'}
+              if status == 'D':
+                  entry['sha'] = None
+              else:
+                  assert status in ('A','M')
+                  content = pathlib.Path(name).read_bytes()
+                  result = api('/git/blobs', {'content':base64.b64encode(content).decode(), 'encoding':'base64'})
+                  expected = hashlib.sha1(b'blob ' + str(len(content)).encode() + b'\0' + content).hexdigest()
+                  assert result['sha'] == expected, name
+                  entry['sha'] = result['sha']
+              entries.append(entry)
+          tree = api('/git/trees', {'base_tree':base_tree, 'tree':entries})['sha']
+          assert tree == subprocess.check_output(['git','write-tree'], text=True).strip()
+          result = api('/git/commits', {'message':'feat: synchronize Master-backed board foundation without scoring changes', 'tree':tree, 'parents':[parent]})
+          pathlib.Path('/tmp/board-foundation-result/head.txt').write_text(result['sha'] + '\n')
+          pathlib.Path('/tmp/board-foundation-result/candidate.json').write_text(json.dumps({'parent':parent,'commit':result['sha'],'tree':tree,'files':entries}, indent=2))
+          print('Staged candidate:', result['sha'], 'tree:', tree, 'files:', len(entries))
+          print('No branch, pull request, main, or deployment was modified by this step.')
+          PY
+          git commit -m 'Local archive of staged board foundation candidate'
           git archive --format=tar HEAD -o /tmp/board-foundation-result/source.tar
-          git push origin HEAD:refs/heads/feature/member-board-ui
       - name: Real source browser and transport validation
         run: |
           node scripts/test-public-optimization.mjs | tee /tmp/board-foundation-result/public-optimization.log
