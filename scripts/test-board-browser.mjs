@@ -43,7 +43,14 @@ try{
     const message=JSON.parse(event.data);
     if(message.method==='Runtime.exceptionThrown') errors.push(message.params.exceptionDetails.exception?.description || message.params.exceptionDetails.text);
     if(message.method==='Network.requestWillBeSent')requests.push(message.params.request.url);
-    if(message.method==='Network.responseReceived' && message.params.response.url.startsWith(origin) && message.params.response.status>=400 && !message.params.response.url.endsWith('/favicon.ico')) failed.push(message.params.response.url);
+    if(message.method==='Network.responseReceived') {
+      const response=message.params.response, url=new URL(response.url);
+      // data.js intentionally accepts a missing optional music-search index.
+      // Only its 404 (and the browser favicon) is allowed; other failures remain fatal.
+      const optionalMissing=response.status===404 &&
+        ['/favicon.ico','/data/generated/music-search.json'].includes(url.pathname);
+      if(url.origin===origin && response.status>=400 && !optionalMissing) failed.push(response.url);
+    }
     if(message.method==='Page.javascriptDialogOpening') command('Page.handleJavaScriptDialog',{accept:true}).catch(()=>{});
     if(!message.id)return;const promise=pending.get(message.id);if(!promise)return;
     clearTimeout(promise.timer);pending.delete(message.id);message.error?promise.reject(new Error(message.error.message)):promise.resolve(message.result);
