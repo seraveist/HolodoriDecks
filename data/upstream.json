@@ -3,7 +3,7 @@
   "ref": "main",
   "commit": "9234a7d99c5cfba9b71803c24a6de4c005c4842f",
   "master_version": "251ae0da8534222b8e4d002d8e9825e5d175e98c71dfe8240bf7a3395bacfa03",
-  "normalizerVersion": 2,
+  "normalizerVersion": 3,
   "locales": {
     "ko": {
       "repository": "HolodoriDB/holodori-db-kor-diff",
@@ -45,7 +45,22 @@
     "LiveActiveSkillEffect.json",
     "LangGeneratedLiveActiveSkillEffect_Kor.json",
     "LivePassiveSkillEffect.json",
-    "LangGeneratedLivePassiveSkillEffect_Kor.json"
+    "LangGeneratedLivePassiveSkillEffect_Kor.json",
+    "SkillTreeNodePosition.json",
+    "SkillTreeNode.json",
+    "SkillTreeEffect.json",
+    "SkillTreeEffectTarget.json",
+    "SkillTreeEffectPassiveTrigger.json",
+    "SkillTreeEffectValueLimit.json",
+    "SkillTreeConnectEffect.json",
+    "SkillTreeConnectEffectExtent.json",
+    "PosterCollectEffect.json",
+    "Condition.json",
+    "Item.json",
+    "CharacterGrouping.json",
+    "CharacterLevel.json",
+    "SkillTreePoint.json",
+    "LiveActiveSkill.json"
   ],
   "fileHashes": {
     "version.txt": "d9b9e14f2771e3e0d7e9906d482afbb68eb78a7efea641dcc34a0690df328add",
@@ -71,6 +86,21 @@
     "LiveActiveSkillEffect.json": "5fba3d09bbeccd26d514c2ee5a8cf51ac37f13568e02ba6817718d51733a13c5",
     "LangGeneratedLiveActiveSkillEffect_Kor.json": "2b7ba6c54a88ef28c29bde8df2324fffa75059f56adaab6594b391d75ed678f2",
     "LivePassiveSkillEffect.json": "089e0b24cba0023dd4429435d4f6ca34b396dc22329a7ea994cb1261e782232c",
-    "LangGeneratedLivePassiveSkillEffect_Kor.json": "811d69ba8354ca8f787f36dcdc31567c9dd870fc2c8f8b452fc773106bf3b9f6"
+    "LangGeneratedLivePassiveSkillEffect_Kor.json": "811d69ba8354ca8f787f36dcdc31567c9dd870fc2c8f8b452fc773106bf3b9f6",
+    "SkillTreeNodePosition.json": "94fdbb6386ec5cd8b3fcf8125584cacb69ddb079d206aa58889dda5bd2aa722e",
+    "SkillTreeNode.json": "c47e047d0ccfeaa9be961fd6ef7ca9b989ce9841fdfa85b016c939920931c25d",
+    "SkillTreeEffect.json": "b95f3b11a106f50a5edfe8ee875593f608dd2c55c9430e22d0b3476f2934bb3b",
+    "SkillTreeEffectTarget.json": "974ea67375c3b71d1c3eac5befb7584cae55a4cd7da194095c4d75fce700d101",
+    "SkillTreeEffectPassiveTrigger.json": "0f748c9e53a9560e334fc168577d9a6995bd0811621a80242dc5fdca62d29512",
+    "SkillTreeEffectValueLimit.json": "b89c4b3b8e37658a63d9487562bed9aaaf194274b72f9161916c409c45a9380f",
+    "SkillTreeConnectEffect.json": "11268710d192a838fdc4d3be6b6beeff44a8d0631b84425616ee00da6e4a5715",
+    "SkillTreeConnectEffectExtent.json": "d747891fcf6b5dbb27d2ad355d7bf685769f5eb98825d0fec32312c1bfcf7b93",
+    "PosterCollectEffect.json": "d2dbe4f2fbc49a4243e1b77bf2eb4ed4921777849bc13842a54077dd57d482e1",
+    "Condition.json": "66b60dc294da7c3297478fe9c5e47f4f631704833a475b6951f83cb596edfa1e",
+    "Item.json": "eb22099ab2f9faf282f70c9a1026182cfb76110fb1c89908daff8c0dff196ce3",
+    "CharacterGrouping.json": "fc6f0955e9162920b5e5ade93e79443db36b664a5abab8f0f97966f114ccca07",
+    "CharacterLevel.json": "08e511b0d55750bac4f66a90a8571cfd505583b683000f91f9cb8e5932057817",
+    "SkillTreePoint.json": "7e3236507fd0a4d72ecce6f51f54e77ada8c1bd3b679dff29fca89cae945163a",
+    "LiveActiveSkill.json": "522eeadaa2cf8f53bb8b70853bb66ecb42d642b76f4adfc1a0e5de88cdb440e2"
   }
 }

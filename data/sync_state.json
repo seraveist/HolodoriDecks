@@ -1,20 +1,20 @@
 {
   "master_version": "251ae0da8534222b8e4d002d8e9825e5d175e98c71dfe8240bf7a3395bacfa03",
   "upstream_commit": "9234a7d99c5cfba9b71803c24a6de4c005c4842f",
-  "normalizer_version": 2,
+  "normalizer_version": 3,
   "locales": {
     "ko": "9234a7d99c5cfba9b71803c24a6de4c005c4842f",
     "en": "562efed1611caeb15379b46de7344dc832e29561",
     "ja": "f086e9093b07eaa47a102da307e7bfa58c3a9df6"
   },
   "changed_refs": [
-    "master_version",
+    "normalizer_version",
     "core_master_files",
-    "locale:ko",
-    "locale:en",
-    "locale:ja"
+    "generated_files_missing",
+    "forced"
   ],
   "counts": {
+    "boards": 54,
     "characters": 62,
     "cards": 181,
     "music": 199,

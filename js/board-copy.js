@@ -37,6 +37,58 @@ const COPY = {
   },
 };
 export function boardText(locale, key, args = {}) {
-  return String(COPY[locale]?.[key] ?? COPY.ko[key] ?? COPY.ko.error)
+  return String(DATA_COPY[locale]?.[key] ?? DATA_COPY.ko[key] ?? COPY[locale]?.[key] ?? COPY.ko[key] ?? COPY.ko.error)
     .replace(/\{(\w+)\}/g, (_, name) => String(args[name] ?? ""));
 }
+
+// Master-backed copy overrides the historical preview labels without changing navigation.
+const DATA_COPY = {
+  ko: {
+    preview: 'Master 데이터', notice: '실제 Master 기반 보드입니다. 노드·커넥트·메모리 입력은 보드 전용으로 저장되며 아직 편성 점수에는 반영되지 않습니다.',
+    memoryHint: '계정 공통 입력 · 비워 두면 미입력 · 보너스는 표에서 조회합니다.',
+    summary: '선택 {nodes}칸 · 커넥트 {slots}/{total}',
+    boardUnavailable: '보드 데이터 없음', unavailableDetail: '현재 Master에 이 멤버의 보드 모델 참조가 없습니다. 다른 멤버의 보드로 대체하지 않습니다.',
+    memoryBonus: '메모리 파라미터 보너스 +{value}% · 점수 미반영', memoryUnset: '메모리 개수 미입력',
+    memoryUnknown: '현재 표는 {max}개까지 확인됩니다. 초과 수량의 보너스는 추정하지 않습니다.',
+    connectLevel: 'Lv.{level}', connectUnavailable: '커넥트 효과 데이터 없음', rangeCells: '원본 상대 범위 {count}칸 · 중심은 커넥트 슬롯',
+    pointCost: '보드 Pt', materials: '소모 재료', viewCondition: '표시 조건', unlockCondition: '해금 조건',
+    recordOnly: '실제 해금 상태를 기록하는 기능입니다. 보유 재료·포인트와 선행 경로는 검사하지 않습니다.',
+    rangeNote: '범위 표시는 Master의 상대좌표 기준입니다. 인게임 방향·중첩 처리 검증과 최종 효과 계산은 별도 단계입니다.',
+    migrate: '이전 미리보기 입력 가져오기', noPreview: '이 브라우저에 이전 미리보기 입력이 없습니다.',
+    migrateAsk: '미리보기에서 {count}명의 보드를 노드 ID 기준으로 옮깁니다. 실제 위치와 효과를 다시 확인하세요. 이전 원본은 유지되며 현재 보드 프로필은 교체됩니다. 이전할 수 없는 항목: {issues}건. 계속할까요?',
+    imported: '보드 프로필을 가져왔습니다.', importAsk: '보드 프로필과 메모리 개수를 이 파일로 교체할까요? 보유카드는 변경하지 않습니다.',
+    BOARD_PROFILE_REVIEW: '저장된 보드가 현재 Master와 일치하지 않습니다. 원본은 보존했습니다. 레이아웃·노드 정보를 검토한 백업을 가져와 주세요.',
+  },
+  en: {
+    preview: 'Master data', notice: 'Boards use the actual Master snapshot. Nodes, Connect placements and memories are stored separately and do not affect deck scores yet.',
+    memoryHint: 'Account-wide · blank means unset · bonuses are looked up from the source table.',
+    summary: '{nodes} nodes · Connect {slots}/{total}',
+    boardUnavailable: 'No board data', unavailableDetail: 'This Master has no board model reference for this member. Another member’s board is not substituted.',
+    memoryBonus: 'Memory stat bonus +{value}% · not applied to scores', memoryUnset: 'Memory count not entered',
+    memoryUnknown: 'The source table covers up to {max} memories. Bonuses beyond it are not extrapolated.',
+    connectLevel: 'Lv.{level}', connectUnavailable: 'No Connect effect data', rangeCells: '{count} source-relative cells · origin is the Connect slot',
+    pointCost: 'Board points', materials: 'Materials', viewCondition: 'Visibility condition', unlockCondition: 'Unlock condition',
+    recordOnly: 'Record already unlocked nodes. Materials, point budgets and prerequisite paths are not enforced.',
+    rangeNote: 'Range previews use raw Master offsets. In-game orientation, stacking and final effect evaluation require separate validation.',
+    migrate: 'Import old UI preview', noPreview: 'No old UI preview exists in this browser.',
+    migrateAsk: 'Convert {count} preview boards by node ID? Recheck actual positions and effects. The old preview is preserved; the current board profile will be replaced. Unmappable entries: {issues}. Continue?',
+    imported: 'Board profile imported.', importAsk: 'Replace this board profile and memory count? Owned cards will not change.',
+    BOARD_PROFILE_REVIEW: 'The saved board does not match this Master. The original is preserved. Review its layout and nodes before importing a compatible backup.',
+  },
+  ja: {
+    preview: 'Masterデータ', notice: '実際のMasterに基づくボードです。ノード・コネクト・メモリーの入力は個別保存され、編成スコアにはまだ反映されません。',
+    memoryHint: 'アカウント共通・空欄は未入力・元データの表を参照します。',
+    summary: '選択 {nodes}マス・コネクト {slots}/{total}',
+    boardUnavailable: 'ボードデータなし', unavailableDetail: '現在のMasterにはこのホロメンのボードモデル参照がありません。他のモデルで代用しません。',
+    memoryBonus: 'メモリーパラメータボーナス +{value}%・スコア未反映', memoryUnset: 'メモリー数は未入力',
+    memoryUnknown: '現在の表は{max}個までです。範囲外のボーナスは推定しません。',
+    connectLevel: 'Lv.{level}', connectUnavailable: 'コネクト効果データなし', rangeCells: '相対範囲{count}マス・中心はコネクト枠',
+    pointCost: 'ボードPt', materials: '消費素材', viewCondition: '表示条件', unlockCondition: '解放条件',
+    recordOnly: '解放済み状態を記録します。素材・Pt・前提経路は検証しません。',
+    rangeNote: '範囲はMasterの相対座標です。ゲーム内の向き・重複処理と最終効果計算は別途検証が必要です。',
+    migrate: '以前のプレビューを取り込む', noPreview: 'このブラウザーに以前のプレビューがありません。',
+    migrateAsk: 'プレビューの{count}人をノードIDで移行します。実際の位置と効果を確認してください。元データは残り、現在のプロファイルを置き換えます。移行不可: {issues}件。続けますか？',
+    imported: 'ボードプロファイルを取り込みました。', importAsk: 'ボードプロファイルとメモリー数を置き換えますか？所持カードは変更しません。',
+    BOARD_PROFILE_REVIEW: '保存ボードと現在のMasterが一致しません。元データは保持しています。配置・ノードを確認したバックアップを取り込んでください。',
+  },
+};

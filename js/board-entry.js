@@ -31,8 +31,10 @@ export function createBoardEntry({ data, store, onGoOwned }) {
     if (editor || pending) return pending;
     container.setAttribute("aria-busy", "true");
     container.textContent = getLocale() === "ko" ? "보드 화면을 불러오는 중…" : getLocale() === "ja" ? "ボードを読み込み中…" : "Loading boards…";
-    pending = import("./ui/boards.js?v=1.3.1").then(({ createBoardsView }) => {
-      editor = createBoardsView({ container, data, store, onGoOwned, locale: getLocale() });
+    pending = Promise.all([import("./ui/boards.js?v=1.3.1"), import("./board-data.js?v=1.3.1")])
+      .then(async ([{ createBoardsView }, { loadBoardCatalog }]) => {
+      const catalog = await loadBoardCatalog(data.manifest, getLocale());
+      editor = createBoardsView({ container, data, store, catalog, onGoOwned, locale: getLocale() });
       editor.render(currentState);
       editor.setVisible(visible);
     }).catch(error => {

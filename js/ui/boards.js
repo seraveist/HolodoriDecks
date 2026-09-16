@@ -1,12 +1,12 @@
-import { BOARD_NODES, CONNECTOR_IDS } from "../board-preview-layout.js?v=1.3.1";
+import { connectInfo, connectRange, boardDescription, memoryBonus } from "../board-data.js?v=1.3.1";
 import {
-  BOARD_STORAGE_KEY, createBoardStore, toggleBoardNode, assignConnector,
+  BOARD_STORAGE_KEY, PREVIEW_STORAGE_KEY, migrateBoardPreview, createBoardStore, toggleBoardNode, assignConnector,
   findCardPlacement, samePlacement, decodeBoardImport, validateMemoryCount,
 } from "../board-state.js?v=1.3.1";
 import { boardText } from "../board-copy.js?v=1.3.1";
 import { escapeHtml, renderLandscapeCardArt, wirePortraitFallback } from "./cards.js?v=1.3.1";
 
-export function createBoardsView({ container, data, store, onGoOwned, locale = "ko" }) {
+export function createBoardsView({ container, data, store, catalog, onGoOwned, locale = "ko" }) {
   const t = (key, args) => boardText(locale, key, args);
   const e = escapeHtml;
   if (!document.querySelector("link[data-board-style]")) {
@@ -45,11 +45,12 @@ export function createBoardsView({ container, data, store, onGoOwned, locale = "
     <p id="board-status" class="board-status" role="status" aria-live="polite"></p>
     <div id="board-overview">
       <section class="board-account"><label for="board-memory-count">${e(t("memory"))}</label><input id="board-memory-count" type="number" min="0" step="1" inputmode="numeric" placeholder="${e(t("memoryPlaceholder"))}" aria-describedby="board-memory-hint"><small id="board-memory-hint">${e(t("memoryHint"))}</small><div class="board-actions"><button type="button" data-board-action="export">${e(t("export"))}</button><button type="button" data-board-action="import">${e(t("import"))}</button><input id="board-import" type="file" accept=".json,application/json" hidden></div></section>
+      <p id="board-memory-bonus" class="board-data-note" role="status"></p><button type="button" data-board-action="migrate">${e(t("migrate"))}</button>
       <div class="board-filters"><label>${e(t("search"))}<input id="board-search" type="search" placeholder="${e(t("search"))}"></label><label>${e(t("production"))}<select id="board-production"><option value="">${e(t("all"))}</option></select></label><label>${e(t("filter"))}<select id="board-filter"><option value="">${e(t("all"))}</option><option value="configured">${e(t("configured"))}</option><option value="unconfigured">${e(t("unconfigured"))}</option></select></label><output id="board-member-count"></output></div>
       <div id="board-roster" class="board-roster"></div>
     </div>
     <div id="board-detail" hidden>
-      <div class="board-detail-header"><button type="button" data-board-action="back">← ${e(t("back"))}</button><div><h3 id="board-character-title" tabindex="-1"></h3><small>${e(t("reference"))}</small></div><button type="button" data-board-action="reset">${e(t("reset"))}</button></div>
+      <div class="board-detail-header"><button type="button" data-board-action="back">← ${e(t("back"))}</button><div><h3 id="board-character-title" tabindex="-1"></h3><small id="board-model-reference"></small></div><button type="button" data-board-action="reset">${e(t("reset"))}</button></div>
       <div class="board-editor"><section class="board-map-panel"><div class="board-tools"><button type="button" data-board-action="grid">${e(t("grid"))}</button><button type="button" data-board-action="list">${e(t("list"))}</button><span class="board-tool-spacer"></span><button type="button" data-board-action="zoomOut" aria-label="${e(t("zoomOut"))}">−</button><output id="board-zoom">100%</output><button type="button" data-board-action="zoomIn" aria-label="${e(t("zoomIn"))}">+</button><button type="button" data-board-action="fit">${e(t("fit"))}</button></div>
       <div class="board-legend">${["R", "B", "G", "Y", "S"].map(type => `<span class="board-kind-${type}"><i aria-hidden="true"></i>${e(t(type))}</span>`).join("")}</div>
       <div id="board-viewport" class="board-viewport" tabindex="0" aria-label="${e(t("grid"))}"><div id="board-canvas" class="board-canvas"></div></div></section>
@@ -74,7 +75,7 @@ export function createBoardsView({ container, data, store, onGoOwned, locale = "
   }
   function report(error) {
     const code = error?.message ?? error;
-    const known = ["INVALID_MEMORY_COUNT", "INVALID_BOARD_FILE", "INVALID_NODE", "INVALID_SLOT", "INVALID_CARD", "DUPLICATE_CARD", "CARD_NOT_OWNED", "SLOT_LOCKED", "CARD_IN_USE", "PLACEMENT_CHANGED", "STORAGE_READ_FAILED", "STORAGE_WRITE_FAILED"];
+    const known = ["INVALID_MEMORY_COUNT", "INVALID_BOARD_FILE", "INVALID_NODE", "INVALID_SLOT", "INVALID_CARD", "DUPLICATE_CARD", "CARD_NOT_OWNED", "SLOT_LOCKED", "CARD_IN_USE", "PLACEMENT_CHANGED", "STORAGE_READ_FAILED", "STORAGE_WRITE_FAILED", "BOARD_PROFILE_REVIEW"];
     const message = t(known.includes(code) ? code : "STORAGE_WRITE_FAILED");
     announce(message, true);
     if (dialog.open) {
@@ -84,7 +85,7 @@ export function createBoardsView({ container, data, store, onGoOwned, locale = "
   }
   let storage = null;
   try { storage = globalThis.localStorage; } catch { /* Permission errors are surfaced below. */ }
-  boardStore = createBoardStore({ storage, characterIds, getOwnedCardIds: ownedIds, onError: report });
+  boardStore = createBoardStore({ storage, catalog, getOwnedCardIds: ownedIds, onError: report });
   memoryInput.value = boardStore.getState().memoryCount ?? "";
 
   function mutate(update, options) {
@@ -94,11 +95,63 @@ export function createBoardsView({ container, data, store, onGoOwned, locale = "
       return true;
     } catch (error) { report(error); return false; }
   }
+
+  function paintMemory() {
+    const value = memoryBonus(catalog, boardStore.getState().memoryCount);
+    $("#board-memory-bonus").textContent = value.status === "known"
+      ? t("memoryBonus", { value: value.percent }) : t(value.status === "unset" ? "memoryUnset" : "memoryUnknown", { max: value.knownThrough });
+  }
+  function importProfile(text, previewOnly = false) {
+    const isPreview = previewOnly || JSON.parse(text)?.format === "holodori-board-ui-preview";
+    const converted = isPreview ? migrateBoardPreview(text, catalog, ownedIds()) : null;
+    const imported = converted?.state ?? decodeBoardImport(text, catalog, ownedIds());
+    const warning = isPreview ? t("migrateAsk", { count: Object.keys(imported.boards).length, issues: converted.issues.length })
+      + (converted.issues.length ? "\n" + converted.issues.join("\n") : "") : t("importAsk");
+    if (!window.confirm(warning)) return;
+    if (mutate(() => imported, { replace: true })) {
+      memoryInput.value = imported.memoryCount ?? "";
+      paintMemory(); announce(t("imported"));
+    }
+  }
+  function connectMarkup(card) {
+    const info = connectInfo(catalog, card.id, appState.ownedCardSettings?.[card.id]?.potential ?? 0);
+    if (!info) return `<small>${e(t("connectUnavailable"))}</small>`;
+    const xs = [0, ...info.cells.map(cell => cell.x)], ys = [0, ...info.cells.map(cell => cell.y)];
+    const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+    const points = new Set(info.cells.map(cell => `${cell.x},${cell.y}`));
+    let cells = "";
+    for (let y = maxY; y >= minY; y--) for (let x = minX; x <= maxX; x++) {
+      cells += `<i class="${x === 0 && y === 0 ? "is-origin" : points.has(`${x},${y}`) ? "is-covered" : ""}"></i>`;
+    }
+    const description = catalog.text(info.descriptionLangId).replace(/\[\/?highlight\]/g, "");
+    return `<span class="board-connect-effect"><small>${e(t("connectLevel", { level: info.level }))} · ${e(description)}</small><span class="board-range-preview" style="grid-template-columns:repeat(${maxX-minX+1},8px)" role="img" aria-label="${e(t("rangeCells", { count: info.cells.length }))}">${cells}</span></span>`;
+  }
+  function nodeDetails(node) {
+    const definition = node.definition;
+    const condition = key => Object.values(catalog.raw.conditions[definition[key]] ?? {})
+      .map(row => catalog.text(row.descriptionLangId, row.type)).join(" / ");
+    const costs = (definition.consumptions ?? []).map(cost => {
+      const item = catalog.raw.items[cost.resourceId];
+      return `${catalog.text(item?.nameLangId, cost.resourceId)} × ${cost.quantity}`;
+    }).join(" · ");
+    const skill = node.effect?.liveActiveSkillId;
+    const skillDescriptions = Object.values(catalog.raw.relatedSkills[skill] ?? {})
+      .map(level => `${t("connectLevel", {level: level.level})}: ${catalog.text(level.descriptionLangId, skill)}`);
+    return `${node.effect ? `<p class="board-effect-description">${e(boardDescription(catalog,node.effect,displayName(currentCharacter)))}</p>` : ""}
+      <dl class="board-node-facts"><div><dt>${e(t("pointCost"))}</dt><dd>${Number(definition.consumptionSkillTreePointQuantity ?? 0)}</dd></div>
+      ${costs ? `<div><dt>${e(t("materials"))}</dt><dd>${e(costs)}</dd></div>` : ""}
+      ${definition.viewConditionGroupId ? `<div><dt>${e(t("viewCondition"))}</dt><dd>${e(condition("viewConditionGroupId"))}</dd></div>` : ""}
+      ${definition.unlockConditionGroupId ? `<div><dt>${e(t("unlockCondition"))}</dt><dd>${e(condition("unlockConditionGroupId"))}</dd></div>` : ""}</dl>
+      ${skillDescriptions.map(description => `<small class="board-skill-detail">${e(description)}</small>`).join("")}
+      <p class="board-muted">${e(t("recordOnly"))}</p>${node.type === "S" ? `<p class="board-muted">${e(t("rangeNote"))}</p>` : ""}`;
+  }
+
   function renderRoster() {
     const state = boardStore.getState();
     const query = $("#board-search").value.trim().toLocaleLowerCase();
     const production = $("#board-production").value;
     const filter = $("#board-filter").value;
+    paintMemory();
     const shown = characters.filter(character => {
       const configured = Object.hasOwn(state.boards, character.id);
       return (!query || `${character.name} ${character.short_name} ${character.name_en}`.toLocaleLowerCase().includes(query))
@@ -109,7 +162,7 @@ export function createBoardsView({ container, data, store, onGoOwned, locale = "
     $("#board-roster").innerHTML = shown.map(character => {
       const board = state.boards[character.id];
       const card = representativeCards.get(character.id);
-      return `<button type="button" class="board-member" data-board-character="${e(character.id)}">${card ? renderLandscapeCardArt(card, { showMeta: false }) : '<span class="board-member-placeholder" aria-hidden="true">H</span>'}<span class="board-member-copy"><strong>${e(character.name)}</strong><small class="board-member-status">${e(t(board ? "configured" : "unconfigured"))}</small><small>${e(t("summary", { nodes: board?.unlockedNodes.length ?? 0, slots: Object.keys(board?.connectors ?? {}).length }))}</small></span></button>`;
+      return `<button type="button" class="board-member" data-board-character="${e(character.id)}" ${catalog.has(character.id) ? "" : "disabled"}>${card ? renderLandscapeCardArt(card, { showMeta: false }) : '<span class="board-member-placeholder" aria-hidden="true">H</span>'}<span class="board-member-copy"><strong>${e(character.name)}</strong><small class="board-member-status">${e(t(!catalog.has(character.id) ? "boardUnavailable" : board ? "configured" : "unconfigured"))}</small><small>${e(t("summary", { nodes: board?.unlockedNodes.length ?? 0, slots: Object.keys(board?.connectors ?? {}).length, total: catalog.board(character.id)?.connectors.length ?? 0 }))}</small></span></button>`;
     }).join("") || `<p class="board-empty">${e(t("noMembers"))}</p>`;
     wirePortraitFallback($("#board-roster"));
   }
@@ -117,7 +170,7 @@ export function createBoardsView({ container, data, store, onGoOwned, locale = "
   function nodeStateMarkup(node, board) {
     const selected = board?.unlockedNodes.includes(node.id);
     const card = cardsById.get(board?.connectors[node.id]);
-    return `<span class="board-node-id">${e(node.id)}</span><span class="board-node-symbol" aria-hidden="true">${card ? "▣" : selected ? "✓" : node.type === "S" ? "+" : "·"}</span><span class="board-node-list-copy">${e(t(node.type))} · ${e(card ? cardName(card) : t(selected ? "selected" : "locked"))}</span>`;
+    return `<span class="board-node-id">${e(node.id)}</span><span class="board-node-symbol" aria-hidden="true">${card ? "▣" : selected ? "✓" : node.type === "S" ? "+" : "·"}</span><span class="board-node-list-copy">${e(node.effect ? boardDescription(catalog, node.effect, displayName(currentCharacter)) : t(node.type))} · ${e(card ? cardName(card) : t(selected ? "selected" : "locked"))}</span>`;
   }
   function paintBoard() {
     if (!currentCharacter) return;
@@ -126,40 +179,57 @@ export function createBoardsView({ container, data, store, onGoOwned, locale = "
     canvas.classList.toggle("is-list", mode === "list");
     canvas.classList.toggle("is-compact", mode === "grid" && zoom < 0.7);
     viewport.classList.toggle("is-list", mode === "list");
+    const model = catalog.board(currentCharacter);
+    $("#board-model-reference").textContent = model ? `${model.id} · Master ${catalog.sourceCommit.slice(0, 8)}` : t("boardUnavailable");
+    if (!model) {
+      canvas.innerHTML = `<p class="board-empty">${e(t("unavailableDetail"))}</p>`;
+      canvas.style.width = "100%"; canvas.style.height = "auto";
+      $("#board-connectors").innerHTML = ""; $("#board-node-detail").innerHTML = "";
+      $("#board-detail-summary").textContent = t("unavailableDetail");
+      return;
+    }
+    const bounds = model.bounds;
+    const columns = bounds.maxX - bounds.minX + 3, rows = bounds.maxY - bounds.minY + 3;
     const pitch = 58 * zoom;
-    canvas.style.width = mode === "list" ? "100%" : `${23 * pitch}px`;
-    canvas.style.height = mode === "list" ? "auto" : `${27 * pitch}px`;
+    canvas.style.width = mode === "list" ? "100%" : `${columns * pitch}px`;
+    canvas.style.height = mode === "list" ? "auto" : `${rows * pitch}px`;
     const focused = document.activeElement?.dataset?.boardNode;
-    canvas.innerHTML = BOARD_NODES.map(node => {
+    const selectedSlot = model.byId.get(selectedNode);
+    const rangeCard = selectedSlot?.type === "S" ? board?.connectors[selectedNode] : null;
+    const range = rangeCard ? connectRange(catalog, currentCharacter, selectedNode, rangeCard, appState.ownedCardSettings?.[rangeCard]?.potential ?? 0) : [];
+    const rangeKeys = new Set(range.map(cell => `${cell.x},${cell.y}`));
+    canvas.innerHTML = model.nodes.map(node => {
       const selected = Boolean(board?.unlockedNodes.includes(node.id));
       const card = cardsById.get(board?.connectors[node.id]);
-      const label = `${t(node.type)} ${node.id} · ${t(selected ? "selected" : "locked")}${card ? ` · ${cardName(card)}` : ""}`;
-      const position = mode === "list" ? "" : `left:${(node.x + 11) * pitch}px;top:${(15 - node.y) * pitch}px;width:${pitch - 6}px;height:${pitch - 6}px;`;
-      return `<button type="button" class="board-node board-kind-${node.type}${selected ? " is-unlocked" : ""}${selectedNode === node.id ? " is-selected" : ""}${card ? " has-card" : ""}" data-board-node="${e(node.id)}" style="${position}" aria-label="${e(label)}" aria-pressed="${selectedNode === node.id}" title="${e(label)}">${nodeStateMarkup(node, board)}</button>`;
+      const label = `${t(node.type)} ${node.id} · ${node.effect ? boardDescription(catalog, node.effect, displayName(currentCharacter)) : ""} · ${t(selected ? "selected" : "locked")}${card ? ` · ${cardName(card)}` : ""}`;
+      const position = mode === "list" ? "" : `left:${(node.x - bounds.minX + 1) * pitch}px;top:${(bounds.maxY - node.y + 1) * pitch}px;width:${pitch - 6}px;height:${pitch - 6}px;`;
+      return `<button type="button" class="board-node board-kind-${node.type}${selected ? " is-unlocked" : ""}${selectedNode === node.id ? " is-selected" : ""}${card ? " has-card" : ""}${rangeKeys.has(`${node.x},${node.y}`) ? " is-in-connect-range" : ""}" data-board-node="${e(node.id)}" style="${position}" aria-label="${e(label)}" aria-pressed="${selectedNode === node.id}" title="${e(label)}">${nodeStateMarkup(node, board)}</button>`;
     }).join("");
     $("#board-zoom").textContent = `${Math.round(zoom * 100)}%`;
     for (const action of ["grid", "list"]) $( `[data-board-action="${action}"]`).setAttribute("aria-pressed", String(mode === action));
     if (focused) canvas.querySelector(`[data-board-node="${focused}"]`)?.focus({ preventScroll: true });
     paintNodeDetail();
-    $("#board-connectors").innerHTML = CONNECTOR_IDS.map(slotId => {
+    $("#board-connectors").innerHTML = model.connectors.map(slotId => {
       const card = cardsById.get(board?.connectors[slotId]);
       const unlocked = Boolean(board?.unlockedNodes.includes(slotId));
       return `<button type="button" class="board-connector${unlocked ? " is-unlocked" : ""}" data-board-node="${e(slotId)}"><strong>${e(slotId)}</strong><span>${e(card ? cardName(card) : t(unlocked ? "noCard" : "locked"))}</span></button>`;
     }).join("");
-    $("#board-detail-summary").textContent = t("summary", { nodes: board?.unlockedNodes.length ?? 0, slots: Object.keys(board?.connectors ?? {}).length });
+    $("#board-detail-summary").textContent = t("summary", { nodes: board?.unlockedNodes.length ?? 0, slots: Object.keys(board?.connectors ?? {}).length, total: model.connectors.length });
   }
   function paintNodeDetail() {
-    const node = BOARD_NODES.find(item => item.id === selectedNode);
+    const node = catalog.node(currentCharacter, selectedNode);
     if (!node) { $("#board-node-detail").innerHTML = `<p class="board-muted">${e(t("selectNode"))}</p>`; return; }
     const board = boardStore.getState().boards[currentCharacter];
     const unlocked = Boolean(board?.unlockedNodes.includes(node.id));
     const card = cardsById.get(board?.connectors[node.id]);
-    $("#board-node-detail").innerHTML = `<p class="board-eyebrow">${e(t(node.type))}</p><h4>${e(node.id)}</h4><p class="board-node-state">${e(t(unlocked ? "selected" : "locked"))}</p><p class="board-muted">${e(t("effectPending"))}</p><button type="button" class="board-node-toggle" data-board-action="toggle">${e(t(unlocked ? "toggleOff" : "toggleOn"))}</button>${node.type === "S" ? `<div class="board-slot-detail">${card ? renderLandscapeCardArt(card) + `<p>${e(cardName(card))}</p>` : `<p>${e(t("noCard"))}</p>`}<button type="button" data-board-action="picker" ${unlocked ? "" : "disabled"}>${e(t(card ? "changeCard" : "chooseCard"))}</button>${unlocked ? "" : `<small>${e(t("unlockFirst"))}</small>`}</div>` : ""}`;
+    $("#board-node-detail").innerHTML = `<p class="board-eyebrow">${e(t(node.type))}</p><h4>${e(node.id)}</h4><p class="board-node-state">${e(t(unlocked ? "selected" : "locked"))}</p>${nodeDetails(node)}<button type="button" class="board-node-toggle" data-board-action="toggle">${e(t(unlocked ? "toggleOff" : "toggleOn"))}</button>${node.type === "S" ? `<div class="board-slot-detail">${card ? renderLandscapeCardArt(card) + `<p>${e(cardName(card))}</p>${connectMarkup(card)}` : `<p>${e(t("noCard"))}</p>`}<button type="button" data-board-action="picker" ${unlocked ? "" : "disabled"}>${e(t(card ? "changeCard" : "chooseCard"))}</button>${unlocked ? "" : `<small>${e(t("unlockFirst"))}</small>`}</div>` : ""}`;
     wirePortraitFallback($("#board-node-detail"));
   }
   function fitBoard() {
-    if (mode !== "grid") return;
-    zoom = Math.max(0.2, Math.min(1, (viewport.clientWidth - 16) / (23 * 58), (viewport.clientHeight - 16) / (27 * 58)));
+    const model = catalog.board(currentCharacter);
+    if (mode !== "grid" || !model) return;
+    const bounds = model.bounds;
+    zoom = Math.max(0.2, Math.min(1, (viewport.clientWidth - 16) / ((bounds.maxX - bounds.minX + 3) * 58), (viewport.clientHeight - 16) / ((bounds.maxY - bounds.minY + 3) * 58)));
     paintBoard();
     viewport.scrollTo(0, 0);
   }
@@ -176,6 +246,7 @@ export function createBoardsView({ container, data, store, onGoOwned, locale = "
     if (next) {
       if (changed) selectedNode = null;
       $("#board-character-title").textContent = displayName(next);
+      $("#board-detail").dataset.characterId = next;
       paintBoard();
       if (changed && visible) {
         requestAnimationFrame(fitBoard);
@@ -193,7 +264,7 @@ export function createBoardsView({ container, data, store, onGoOwned, locale = "
       const placement = findCardPlacement(state, card.id);
       return (!query || cardName(card).toLocaleLowerCase().includes(query))
         && (!rarity || Number(card.rarity) === Number(rarity))
-        && (!onlyAvailable || !placement || samePlacement(placement, target));
+        && (!onlyAvailable || (catalog.canConnect(card.id) && (!placement || samePlacement(placement, target))));
     }).sort((a, b) => Number(b.rarity) - Number(a.rarity) || (a.order ?? 9999) - (b.order ?? 9999));
   }
   function paintPicker() {
@@ -207,7 +278,7 @@ export function createBoardsView({ container, data, store, onGoOwned, locale = "
       const usedElsewhere = placement && !isCurrent;
       const setting = appState.ownedCardSettings?.[card.id] ?? {};
       const label = usedElsewhere ? t("used", { where: where(placement) }) : t(isCurrent ? "current" : "available");
-      return `<button type="button" class="board-picker-card${usedElsewhere ? " is-used" : ""}${isCurrent ? " is-current" : ""}" data-board-card="${e(card.id)}" aria-label="${e(`${cardName(card)} · ${label}`)}">${renderLandscapeCardArt(card)}<span class="board-picker-copy"><strong>${e(card.character_name ?? displayName(card.character_id))}</strong><span>${e(card.name)}</span><small>${e(t("cardSetting", { level: setting.level ?? "—", potential: setting.potential ?? 0 }))}</small><span class="board-card-state">${e(label)}</span></span></button>`;
+      return `<button type="button" class="board-picker-card${usedElsewhere ? " is-used" : ""}${isCurrent ? " is-current" : ""}" data-board-card="${e(card.id)}" ${catalog.canConnect(card.id) ? "" : "disabled"} aria-label="${e(`${cardName(card)} · ${label}`)}">${renderLandscapeCardArt(card)}<span class="board-picker-copy"><strong>${e(card.character_name ?? displayName(card.character_id))}</strong><span>${e(card.name)}</span><small>${e(t("cardSetting", { level: setting.level ?? "—", potential: setting.potential ?? 0 }))}</small><span class="board-card-state">${e(label)}</span>${connectMarkup(card)}</span></button>`;
     }).join("") || `<p class="board-empty">${e(t(ownedIds().size ? "noCards" : "noOwned"))}</p>`;
     $( '[data-board-action="remove"]').disabled = !state.boards[target.characterId]?.connectors[target.slotId];
     wirePortraitFallback($("#board-card-list"));
@@ -233,7 +304,7 @@ export function createBoardsView({ container, data, store, onGoOwned, locale = "
   }
   function applyPlacement(cardId, options) {
     const destination = { ...target };
-    if (mutate(state => assignConnector(state, destination, cardId, ownedIds(), characterIds, options))) dialog.close();
+    if (mutate(state => assignConnector(state, destination, cardId, ownedIds(), catalog, options))) dialog.close();
     else { pendingPlacement = null; $("#board-transfer").hidden = true; paintPicker(); }
   }
   function requestPlacement(cardId) {
@@ -283,12 +354,7 @@ export function createBoardsView({ container, data, store, onGoOwned, locale = "
     if (!file) return;
     try {
       if (file.size > 1_000_000) throw new Error("INVALID_BOARD_FILE");
-      const imported = decodeBoardImport(await file.text(), characterIds, ownedIds());
-      if (!window.confirm(t("importAsk"))) return;
-      if (mutate(() => imported, { replace: true })) {
-        memoryInput.value = imported.memoryCount ?? "";
-        announce(t("imported"));
-      }
+      importProfile(await file.text());
     } catch (error) { report(error); }
   });
   container.addEventListener("click", event => {
@@ -309,7 +375,7 @@ export function createBoardsView({ container, data, store, onGoOwned, locale = "
       case "toggle": {
         const assigned = boardStore.getState().boards[currentCharacter]?.connectors[selectedNode];
         if (assigned && !window.confirm(t("unlockAsk"))) break;
-        if (mutate(state => toggleBoardNode(state, currentCharacter, selectedNode, characterIds))) $( '[data-board-action="toggle"]').focus({ preventScroll: true });
+        if (mutate(state => toggleBoardNode(state, currentCharacter, selectedNode, catalog))) $( '[data-board-action="toggle"]').focus({ preventScroll: true });
         break;
       }
       case "picker": openPicker(); break;
@@ -331,10 +397,15 @@ export function createBoardsView({ container, data, store, onGoOwned, locale = "
       }
       case "fit": mode = "grid"; paintBoard(); fitBoard(); break;
       case "import": $("#board-import").click(); break;
+      case "migrate": {
+        try { const text = storage?.getItem(PREVIEW_STORAGE_KEY); if (text) importProfile(text, true); else announce(t("noPreview")); }
+        catch(error) { report(error); }
+        break;
+      }
       case "export": {
         const blob = new Blob([JSON.stringify(boardStore.getState(), null, 2)], { type: "application/json" });
         const url = URL.createObjectURL(blob);
-        const link = document.createElement("a"); link.href = url; link.download = "holodori-board-ui-preview.json"; link.click();
+        const link = document.createElement("a"); link.href = url; link.download = "holodori-boards.json"; link.click();
         setTimeout(() => URL.revokeObjectURL(url), 1000); break;
       }
     }
@@ -348,6 +419,7 @@ export function createBoardsView({ container, data, store, onGoOwned, locale = "
   boardStore.subscribe(() => {
     if (!visible) return;
     currentCharacter ? paintBoard() : renderRoster();
+    paintMemory();
     if (dialog.open) paintPicker();
   });
   window.addEventListener("hashchange", () => { if (visible) syncRoute(); });
@@ -379,6 +451,7 @@ export function createBoardsView({ container, data, store, onGoOwned, locale = "
         // commit() reconciles against the current ownership before this update.
         if (removed && mutate(current => current)) announce(t("ownershipChanged"));
       }
+      if (visible && currentCharacter) paintBoard();
       if (visible && dialog.open) paintPicker();
     },
   };

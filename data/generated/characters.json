@@ -9,7 +9,10 @@
       "grp-gen_0"
     ],
     "asset_id": "00001",
-    "order": 101
+    "order": 101,
+    "board_layout_id": "tree-model-001",
+    "board_point_id": "skill_tree_point-chr-00001",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00002",
@@ -21,7 +24,10 @@
       "grp-gen_0"
     ],
     "asset_id": "00002",
-    "order": 102
+    "order": 102,
+    "board_layout_id": "tree-model-002",
+    "board_point_id": "skill_tree_point-chr-00002",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00013",
@@ -33,7 +39,10 @@
       "grp-gen_0"
     ],
     "asset_id": "00013",
-    "order": 103
+    "order": 103,
+    "board_layout_id": "tree-model-003",
+    "board_point_id": "skill_tree_point-chr-00013",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00015",
@@ -45,7 +54,10 @@
       "grp-gen_0"
     ],
     "asset_id": "00015",
-    "order": 104
+    "order": 104,
+    "board_layout_id": "tree-model-004",
+    "board_point_id": "skill_tree_point-chr-00015",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00018",
@@ -57,7 +69,10 @@
       "grp-gen_0"
     ],
     "asset_id": "00018",
-    "order": 105
+    "order": 105,
+    "board_layout_id": "tree-model-001",
+    "board_point_id": "skill_tree_point-chr-00018",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00004",
@@ -69,7 +84,10 @@
       "grp-gen_1"
     ],
     "asset_id": "00004",
-    "order": 106
+    "order": 106,
+    "board_layout_id": "tree-model-002",
+    "board_point_id": "skill_tree_point-chr-00004",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00005",
@@ -81,7 +99,10 @@
       "grp-gen_1"
     ],
     "asset_id": "00005",
-    "order": 107
+    "order": 107,
+    "board_layout_id": "tree-model-003",
+    "board_point_id": "skill_tree_point-chr-00005",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00006",
@@ -94,7 +115,10 @@
       "grp-gen_1"
     ],
     "asset_id": "00006",
-    "order": 108
+    "order": 108,
+    "board_layout_id": "tree-model-004",
+    "board_point_id": "skill_tree_point-chr-00006",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00007",
@@ -106,7 +130,10 @@
       "grp-gen_1"
     ],
     "asset_id": "00007",
-    "order": 109
+    "order": 109,
+    "board_layout_id": "tree-model-001",
+    "board_point_id": "skill_tree_point-chr-00007",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00009",
@@ -118,7 +145,10 @@
       "grp-gen_2"
     ],
     "asset_id": "00009",
-    "order": 110
+    "order": 110,
+    "board_layout_id": null,
+    "board_point_id": null,
+    "character_level_group_id": null
   },
   {
     "id": "chr-00010",
@@ -130,7 +160,10 @@
       "grp-gen_2"
     ],
     "asset_id": "00010",
-    "order": 111
+    "order": 111,
+    "board_layout_id": "tree-model-002",
+    "board_point_id": "skill_tree_point-chr-00010",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00011",
@@ -142,7 +175,10 @@
       "grp-gen_2"
     ],
     "asset_id": "00011",
-    "order": 112
+    "order": 112,
+    "board_layout_id": "tree-model-003",
+    "board_point_id": "skill_tree_point-chr-00011",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00012",
@@ -154,7 +190,10 @@
       "grp-gen_2"
     ],
     "asset_id": "00012",
-    "order": 113
+    "order": 113,
+    "board_layout_id": "tree-model-004",
+    "board_point_id": "skill_tree_point-chr-00012",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00014",
@@ -166,7 +205,10 @@
       "grp-gamers"
     ],
     "asset_id": "00014",
-    "order": 114
+    "order": 114,
+    "board_layout_id": "tree-model-001",
+    "board_point_id": "skill_tree_point-chr-00014",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00016",
@@ -178,7 +220,10 @@
       "grp-gamers"
     ],
     "asset_id": "00016",
-    "order": 115
+    "order": 115,
+    "board_layout_id": "tree-model-002",
+    "board_point_id": "skill_tree_point-chr-00016",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00017",
@@ -190,7 +235,10 @@
       "grp-gamers"
     ],
     "asset_id": "00017",
-    "order": 116
+    "order": 116,
+    "board_layout_id": "tree-model-003",
+    "board_point_id": "skill_tree_point-chr-00017",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00019",
@@ -202,7 +250,10 @@
       "grp-gen_3"
     ],
     "asset_id": "00019",
-    "order": 117
+    "order": 117,
+    "board_layout_id": "tree-model-004",
+    "board_point_id": "skill_tree_point-chr-00019",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00021",
@@ -214,7 +265,10 @@
       "grp-gen_3"
     ],
     "asset_id": "00021",
-    "order": 118
+    "order": 118,
+    "board_layout_id": "tree-model-001",
+    "board_point_id": "skill_tree_point-chr-00021",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00022",
@@ -226,7 +280,10 @@
       "grp-gen_3"
     ],
     "asset_id": "00022",
-    "order": 119
+    "order": 119,
+    "board_layout_id": "tree-model-002",
+    "board_point_id": "skill_tree_point-chr-00022",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00023",
@@ -238,7 +295,10 @@
       "grp-gen_3"
     ],
     "asset_id": "00023",
-    "order": 120
+    "order": 120,
+    "board_layout_id": "tree-model-003",
+    "board_point_id": "skill_tree_point-chr-00023",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00024",
@@ -250,7 +310,10 @@
       "grp-gen_4"
     ],
     "asset_id": "00024",
-    "order": 121
+    "order": 121,
+    "board_layout_id": null,
+    "board_point_id": null,
+    "character_level_group_id": null
   },
   {
     "id": "chr-00026",
@@ -262,7 +325,10 @@
       "grp-gen_4"
     ],
     "asset_id": "00026",
-    "order": 122
+    "order": 122,
+    "board_layout_id": "tree-model-001",
+    "board_point_id": "skill_tree_point-chr-00026",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00027",
@@ -274,7 +340,10 @@
       "grp-gen_4"
     ],
     "asset_id": "00027",
-    "order": 123
+    "order": 123,
+    "board_layout_id": "tree-model-002",
+    "board_point_id": "skill_tree_point-chr-00027",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00028",
@@ -286,7 +355,10 @@
       "grp-gen_4"
     ],
     "asset_id": "00028",
-    "order": 124
+    "order": 124,
+    "board_layout_id": "tree-model-003",
+    "board_point_id": "skill_tree_point-chr-00028",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00030",
@@ -298,7 +370,10 @@
       "grp-gen_5"
     ],
     "asset_id": "00030",
-    "order": 125
+    "order": 125,
+    "board_layout_id": "tree-model-004",
+    "board_point_id": "skill_tree_point-chr-00030",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00031",
@@ -310,7 +385,10 @@
       "grp-gen_5"
     ],
     "asset_id": "00031",
-    "order": 126
+    "order": 126,
+    "board_layout_id": "tree-model-001",
+    "board_point_id": "skill_tree_point-chr-00031",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00032",
@@ -322,7 +400,10 @@
       "grp-gen_5"
     ],
     "asset_id": "00032",
-    "order": 127
+    "order": 127,
+    "board_layout_id": "tree-model-002",
+    "board_point_id": "skill_tree_point-chr-00032",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00034",
@@ -334,7 +415,10 @@
       "grp-gen_5"
     ],
     "asset_id": "00034",
-    "order": 128
+    "order": 128,
+    "board_layout_id": "tree-model-003",
+    "board_point_id": "skill_tree_point-chr-00034",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00035",
@@ -346,7 +430,10 @@
       "grp-holox"
     ],
     "asset_id": "00035",
-    "order": 129
+    "order": 129,
+    "board_layout_id": "tree-model-004",
+    "board_point_id": "skill_tree_point-chr-00035",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00036",
@@ -358,7 +445,10 @@
       "grp-holox"
     ],
     "asset_id": "00036",
-    "order": 130
+    "order": 130,
+    "board_layout_id": "tree-model-001",
+    "board_point_id": "skill_tree_point-chr-00036",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00037",
@@ -370,7 +460,10 @@
       "grp-holox"
     ],
     "asset_id": "00037",
-    "order": 131
+    "order": 131,
+    "board_layout_id": "tree-model-002",
+    "board_point_id": "skill_tree_point-chr-00037",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-00038",
@@ -382,7 +475,10 @@
       "grp-holox"
     ],
     "asset_id": "00038",
-    "order": 132
+    "order": 132,
+    "board_layout_id": null,
+    "board_point_id": null,
+    "character_level_group_id": null
   },
   {
     "id": "chr-00039",
@@ -394,7 +490,10 @@
       "grp-holox"
     ],
     "asset_id": "00039",
-    "order": 133
+    "order": 133,
+    "board_layout_id": "tree-model-003",
+    "board_point_id": "skill_tree_point-chr-00039",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-03001",
@@ -406,7 +505,10 @@
       "grp-indonesia-gen_1"
     ],
     "asset_id": "03001",
-    "order": 134
+    "order": 134,
+    "board_layout_id": "tree-model-004",
+    "board_point_id": "skill_tree_point-chr-03001",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-03002",
@@ -418,7 +520,10 @@
       "grp-indonesia-gen_1"
     ],
     "asset_id": "03002",
-    "order": 135
+    "order": 135,
+    "board_layout_id": "tree-model-001",
+    "board_point_id": "skill_tree_point-chr-03002",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-03003",
@@ -430,7 +535,10 @@
       "grp-indonesia-gen_1"
     ],
     "asset_id": "03003",
-    "order": 136
+    "order": 136,
+    "board_layout_id": "tree-model-002",
+    "board_point_id": "skill_tree_point-chr-03003",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-03004",
@@ -442,7 +550,10 @@
       "grp-indonesia-gen_2"
     ],
     "asset_id": "03004",
-    "order": 137
+    "order": 137,
+    "board_layout_id": "tree-model-003",
+    "board_point_id": "skill_tree_point-chr-03004",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-03005",
@@ -454,7 +565,10 @@
       "grp-indonesia-gen_2"
     ],
     "asset_id": "03005",
-    "order": 138
+    "order": 138,
+    "board_layout_id": "tree-model-004",
+    "board_point_id": "skill_tree_point-chr-03005",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-03006",
@@ -466,7 +580,10 @@
       "grp-indonesia-gen_2"
     ],
     "asset_id": "03006",
-    "order": 139
+    "order": 139,
+    "board_layout_id": "tree-model-001",
+    "board_point_id": "skill_tree_point-chr-03006",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-03007",
@@ -478,7 +595,10 @@
       "grp-indonesia-gen_3"
     ],
     "asset_id": "03007",
-    "order": 140
+    "order": 140,
+    "board_layout_id": "tree-model-002",
+    "board_point_id": "skill_tree_point-chr-03007",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-03008",
@@ -490,7 +610,10 @@
       "grp-indonesia-gen_3"
     ],
     "asset_id": "03008",
-    "order": 141
+    "order": 141,
+    "board_layout_id": "tree-model-003",
+    "board_point_id": "skill_tree_point-chr-03008",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-03009",
@@ -502,7 +625,10 @@
       "grp-indonesia-gen_3"
     ],
     "asset_id": "03009",
-    "order": 142
+    "order": 142,
+    "board_layout_id": "tree-model-004",
+    "board_point_id": "skill_tree_point-chr-03009",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-04001",
@@ -514,7 +640,10 @@
       "grp-myth"
     ],
     "asset_id": "04001",
-    "order": 143
+    "order": 143,
+    "board_layout_id": "tree-model-001",
+    "board_point_id": "skill_tree_point-chr-04001",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-04002",
@@ -526,7 +655,10 @@
       "grp-myth"
     ],
     "asset_id": "04002",
-    "order": 144
+    "order": 144,
+    "board_layout_id": "tree-model-001",
+    "board_point_id": "skill_tree_point-chr-04002",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-04003",
@@ -538,7 +670,10 @@
       "grp-myth"
     ],
     "asset_id": "04003",
-    "order": 145
+    "order": 145,
+    "board_layout_id": "tree-model-002",
+    "board_point_id": "skill_tree_point-chr-04003",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-04004",
@@ -550,7 +685,10 @@
       "grp-myth"
     ],
     "asset_id": "04004",
-    "order": 146
+    "order": 146,
+    "board_layout_id": null,
+    "board_point_id": null,
+    "character_level_group_id": null
   },
   {
     "id": "chr-04005",
@@ -562,7 +700,10 @@
       "grp-myth"
     ],
     "asset_id": "04005",
-    "order": 147
+    "order": 147,
+    "board_layout_id": null,
+    "board_point_id": null,
+    "character_level_group_id": null
   },
   {
     "id": "chr-04007",
@@ -574,7 +715,10 @@
       "grp-promise"
     ],
     "asset_id": "04007",
-    "order": 148
+    "order": 148,
+    "board_layout_id": "tree-model-004",
+    "board_point_id": "skill_tree_point-chr-04007",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-04009",
@@ -586,7 +730,10 @@
       "grp-promise"
     ],
     "asset_id": "04009",
-    "order": 149
+    "order": 149,
+    "board_layout_id": null,
+    "board_point_id": null,
+    "character_level_group_id": null
   },
   {
     "id": "chr-04010",
@@ -598,7 +745,10 @@
       "grp-promise"
     ],
     "asset_id": "04010",
-    "order": 150
+    "order": 150,
+    "board_layout_id": "tree-model-001",
+    "board_point_id": "skill_tree_point-chr-04010",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-04011",
@@ -610,7 +760,10 @@
       "grp-promise"
     ],
     "asset_id": "04011",
-    "order": 151
+    "order": 151,
+    "board_layout_id": null,
+    "board_point_id": null,
+    "character_level_group_id": null
   },
   {
     "id": "chr-04012",
@@ -622,7 +775,10 @@
       "grp-promise"
     ],
     "asset_id": "04012",
-    "order": 152
+    "order": 152,
+    "board_layout_id": "tree-model-002",
+    "board_point_id": "skill_tree_point-chr-04012",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-04013",
@@ -634,7 +790,10 @@
       "grp-advent"
     ],
     "asset_id": "04013",
-    "order": 153
+    "order": 153,
+    "board_layout_id": "tree-model-003",
+    "board_point_id": "skill_tree_point-chr-04013",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-04014",
@@ -646,7 +805,10 @@
       "grp-advent"
     ],
     "asset_id": "04014",
-    "order": 154
+    "order": 154,
+    "board_layout_id": "tree-model-004",
+    "board_point_id": "skill_tree_point-chr-04014",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-04015",
@@ -658,7 +820,10 @@
       "grp-advent"
     ],
     "asset_id": "04015",
-    "order": 155
+    "order": 155,
+    "board_layout_id": "tree-model-001",
+    "board_point_id": "skill_tree_point-chr-04015",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-04016",
@@ -670,7 +835,10 @@
       "grp-advent"
     ],
     "asset_id": "04016",
-    "order": 156
+    "order": 156,
+    "board_layout_id": "tree-model-002",
+    "board_point_id": "skill_tree_point-chr-04016",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-04017",
@@ -682,7 +850,10 @@
       "grp-advent"
     ],
     "asset_id": "04017",
-    "order": 157
+    "order": 157,
+    "board_layout_id": "tree-model-003",
+    "board_point_id": "skill_tree_point-chr-04017",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-06001",
@@ -694,7 +865,10 @@
       "grp-regloss"
     ],
     "asset_id": "06001",
-    "order": 158
+    "order": 158,
+    "board_layout_id": null,
+    "board_point_id": null,
+    "character_level_group_id": null
   },
   {
     "id": "chr-06002",
@@ -706,7 +880,10 @@
       "grp-regloss"
     ],
     "asset_id": "06002",
-    "order": 159
+    "order": 159,
+    "board_layout_id": "tree-model-001",
+    "board_point_id": "skill_tree_point-chr-06002",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-06003",
@@ -718,7 +895,10 @@
       "grp-regloss"
     ],
     "asset_id": "06003",
-    "order": 160
+    "order": 160,
+    "board_layout_id": "tree-model-002",
+    "board_point_id": "skill_tree_point-chr-06003",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-06004",
@@ -730,7 +910,10 @@
       "grp-regloss"
     ],
     "asset_id": "06004",
-    "order": 161
+    "order": 161,
+    "board_layout_id": "tree-model-003",
+    "board_point_id": "skill_tree_point-chr-06004",
+    "character_level_group_id": "level-group-1"
   },
   {
     "id": "chr-06005",
@@ -742,6 +925,9 @@
       "grp-regloss"
     ],
     "asset_id": "06005",
-    "order": 162
+    "order": 162,
+    "board_layout_id": "tree-model-004",
+    "board_point_id": "skill_tree_point-chr-06005",
+    "character_level_group_id": "level-group-1"
   }
 ]

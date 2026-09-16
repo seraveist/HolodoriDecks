@@ -79,6 +79,12 @@ jobs:
           python -m pytest -q
           python -m py_compile scripts/validate-generated-data.py scripts/ingest-chart-metadata.py
 
+      - name: Validate Master-backed boards and isolated profile state
+        run: |
+          node scripts/test-board-state.mjs
+          node scripts/test-board-data.mjs
+          node scripts/test-board-browser.mjs
+
       - name: Check JavaScript syntax and module exports
         run: |
           find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check

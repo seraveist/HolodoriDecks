@@ -153,3 +153,17 @@ body.board-modal-open { overflow: hidden; }
   .board-preview-badge { font-size: 10px; }
 }
 @media (prefers-reduced-motion: reduce) { #board-view * { scroll-behavior: auto !important; transition: none !important; } }
+/* Master-backed details: no layout redesign in the data-foundation phase. */
+.board-data-note { margin: 12px 0; color: var(--board-accent); font-weight: 650; }
+.board-effect-description { margin: 10px 0; line-height: 1.7; overflow-wrap: anywhere; }
+.board-node-facts { display: grid; gap: 9px; margin: 14px 0; font-size: 12px; }
+.board-node-facts > div { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 8px; }
+.board-node-facts dt { color: var(--board-muted); }
+.board-node-facts dd { margin: 0; overflow-wrap: anywhere; }
+.board-connect-effect { display: grid; gap: 8px; margin-top: 7px; font-weight: 500; line-height: 1.6; }
+.board-range-preview { display: inline-grid; gap: 2px; width: max-content; max-width: 100%; padding: 6px; border: 1px solid var(--board-line); border-radius: 5px; }
+.board-range-preview i { width: 8px; height: 8px; background: var(--board-soft); border: 1px solid var(--board-line); }
+.board-range-preview .is-covered { background: var(--board-accent); border-color: var(--board-accent); }
+.board-range-preview .is-origin { background: var(--board-ink); border-color: var(--board-ink); border-radius: 50%; }
+#board-view .board-node.is-in-connect-range { outline: 2px dashed var(--board-accent); outline-offset: 2px; opacity: 1; }
+.board-skill-detail { display: block; margin: 8px 0; line-height: 1.6; overflow-wrap: anywhere; }
