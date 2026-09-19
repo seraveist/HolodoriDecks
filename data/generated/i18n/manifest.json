@@ -1,26 +1,26 @@
 {
-  "master_version": "251ae0da8534222b8e4d002d8e9825e5d175e98c71dfe8240bf7a3395bacfa03",
-  "generated_at": "2026-09-14T19:50:45.106Z",
-  "required_entry_count": 1709,
-  "card_name_alias_count": 19,
+  "master_version": "927a8489062cfb8aaee197689930a4c4e9c622e9ebbf8b80577bdbe5f065dcf9",
+  "generated_at": "2026-09-19T18:00:56.137Z",
+  "required_entry_count": 1745,
+  "card_name_alias_count": 23,
   "locales": {
     "ko": {
       "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "9234a7d99c5cfba9b71803c24a6de4c005c4842f",
-      "source_version": "251ae0da8534222b8e4d002d8e9825e5d175e98c71dfe8240bf7a3395bacfa03",
-      "entry_count": 4328
+      "commit": "5517e40b931fec10253f5b850989346518e233c2",
+      "source_version": "927a8489062cfb8aaee197689930a4c4e9c622e9ebbf8b80577bdbe5f065dcf9",
+      "entry_count": 4406
     },
     "en": {
       "repository": "HolodoriDB/holodori-db-eng-diff",
-      "commit": "562efed1611caeb15379b46de7344dc832e29561",
-      "source_version": "251ae0da8534222b8e4d002d8e9825e5d175e98c71dfe8240bf7a3395bacfa03",
-      "entry_count": 4328
+      "commit": "f7428d4092d57b34311f030e00ff46e7dbbc29e8",
+      "source_version": "927a8489062cfb8aaee197689930a4c4e9c622e9ebbf8b80577bdbe5f065dcf9",
+      "entry_count": 4406
     },
     "ja": {
       "repository": "HolodoriDB/holodori-db-jpn-diff",
-      "commit": "f086e9093b07eaa47a102da307e7bfa58c3a9df6",
-      "source_version": "251ae0da8534222b8e4d002d8e9825e5d175e98c71dfe8240bf7a3395bacfa03",
-      "entry_count": 4320
+      "commit": "a22c8e29a981a8987bf2074c245e2fc40ad4dbea",
+      "source_version": "927a8489062cfb8aaee197689930a4c4e9c622e9ebbf8b80577bdbe5f065dcf9",
+      "entry_count": 4399
     }
   }
 }
