@@ -18,6 +18,16 @@ const [allCards,boards]=await Promise.all([read('cards.json'),read('boards.json'
 const seen=new Set();
 const cards=allCards.filter(c=>c.rarity===5 && boards.cards[c.id]?.connectEffectId && !seen.has(c.character_id) && seen.add(c.character_id)).slice(0,8);
 const card=cards[0];
+// Master data is published independently of portraits. Allow only the exact
+// known card images absent from this checkout, never arbitrary asset failures.
+const pendingPortraits=new Set((await Promise.all(allCards.filter(c=>[4,5].includes(c.rarity)).map(async c=>{
+  const pathname=`/assets/cards/${encodeURIComponent(c.id)}.webp`;
+  try{await fs.access(path.join(root,pathname.slice(1)));return null;}
+  catch(error){if(error.code==='ENOENT')return pathname;throw error;}
+}))).filter(Boolean));
+// Exercise the pending-image path even when every portrait is already synced.
+const forcedMissingPortrait=`/assets/cards/${encodeURIComponent(card.id)}.webp`;
+pendingPortraits.add(forcedMissingPortrait);
 const profile={ownedCardIds:cards.map(c=>c.id),ownedCardSettings:Object.fromEntries(cards.map(c=>[c.id,{level:60,potential:0}]))};
 const boardKey='holodori-decksim:boards:v1',deckKey='holodori-decksim:v2',oldKey='holodori-decksim:board-ui-preview:v1';
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -38,17 +48,22 @@ try{
   const target=await(await fetch(`http://${debug.hostname}:${debug.port}/json/new?about:blank`,{method:'PUT'})).json();
   socket=new WebSocket(target.webSocketDebuggerUrl);
   await new Promise((resolve,reject)=>{socket.addEventListener('open',resolve,{once:true});socket.addEventListener('error',reject,{once:true});});
-  let sequence=0;const pending=new Map(),errors=[],requests=[],failed=[];
+  let sequence=0,forcedPortraitRequests=0;const pending=new Map(),errors=[],requests=[],failed=[];
   socket.addEventListener('message',event=>{
     const message=JSON.parse(event.data);
     if(message.method==='Runtime.exceptionThrown') errors.push(message.params.exceptionDetails.exception?.description || message.params.exceptionDetails.text);
     if(message.method==='Network.requestWillBeSent')requests.push(message.params.request.url);
+    if(message.method==='Fetch.requestPaused'){
+      forcedPortraitRequests++;
+      command('Fetch.fulfillRequest',{requestId:message.params.requestId,responseCode:404,body:''})
+        .catch(error=>errors.push(error.message));
+    }
     if(message.method==='Network.responseReceived') {
       const response=message.params.response, url=new URL(response.url);
       // data.js intentionally accepts a missing optional music-search index.
-      // Only its 404 (and the browser favicon) is allowed; other failures remain fatal.
+      // Missing known portraits must fall back; existing assets and all 5xx remain fatal.
       const optionalMissing=response.status===404 &&
-        ['/favicon.ico','/data/generated/music-search.json'].includes(url.pathname);
+        (['/favicon.ico','/data/generated/music-search.json'].includes(url.pathname) || pendingPortraits.has(url.pathname));
       if(url.origin===origin && response.status>=400 && !optionalMissing) failed.push(response.url);
     }
     if(message.method==='Page.javascriptDialogOpening') command('Page.handleJavaScriptDialog',{accept:true}).catch(()=>{});
@@ -66,6 +81,7 @@ try{
   const loaded=()=>until(()=>evaluate(`Boolean(document.querySelector('#board-tab') && document.querySelector('#music-select')?.options.length>2)`),'app failed to load').catch(async error=>{console.error({errors,failed,body:await evaluate('document.body?.innerText')});throw error;});
   const navigateBoard=async id=>{await evaluate(`location.hash=${JSON.stringify('board/'+id)}`);await until(()=>evaluate(`document.querySelector('#board-detail')?.dataset.characterId===${JSON.stringify(id)} && !document.querySelector('#board-detail')?.hidden && document.querySelectorAll('#board-canvas [data-board-node]').length>0`),'board detail unavailable');await sleep(100);};
   await command('Page.enable');await command('Runtime.enable');await command('Network.enable');
+  await command('Fetch.enable',{patterns:[{urlPattern:origin+forcedMissingPortrait+'*',requestStage:'Request'}]});
   await command('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
   await command('Page.navigate',{url:origin+'/ko/'});await loaded();
   assert.ok(!requests.some(url=>/\/(?:boards|memory-bonuses)\b|i18n-boards/.test(url)),'boards loaded eagerly');
@@ -107,6 +123,8 @@ try{
   assert.equal((await boardState()).boards['chr-00001'].unlockedNodes.includes('B-001'),true);
   await click('#board-canvas [data-board-node="S-001"]');
   assert.equal(await evaluate(`document.querySelectorAll('[data-board-card]').length`),cards.length);
+  await evaluate(`document.querySelector('[data-board-card="${card.id}"]').scrollIntoView()`);
+  await until(()=>evaluate(`(()=>{const image=document.querySelector('[data-board-card="${card.id}"] img.is-fallback');return image?.src.includes('/assets/ui/card-placeholder.svg') && image.complete && image.naturalWidth>0;})()`),'pending portrait did not render the fallback');
   await click(`[data-board-card="${card.id}"]`);
   assert.equal((await boardState()).boards['chr-00001'].connectors['S-001'],card.id);
   await click('#board-canvas [data-board-node="S-001"]');
@@ -172,8 +190,9 @@ try{
   assert.equal((await boardState()).memoryCount,10);
   assert.equal(await evaluate(`localStorage.getItem(${JSON.stringify(oldKey)})`),preview);
   assert.equal((await evaluate(`JSON.parse(localStorage.getItem(${JSON.stringify(deckKey)}))`)).ownedCardIds.length,cards.length);
+  assert.ok(forcedPortraitRequests>0,'pending portrait scenario was not exercised');
   assert.deepEqual(errors,[],'uncaught browser errors');assert.deepEqual(failed,[],'failed local asset requests');
-  console.log('board browser: real assets/storage; lazy data, models, nodes, memory, Connect move/cancel, awakening, persistence, migration, KO/EN/JA, mobile dark and score recalculation OK');
+  console.log('board browser: real assets/storage; missing portrait fallback, lazy data, models, nodes, memory, Connect move/cancel, awakening, persistence, migration, KO/EN/JA, mobile dark and score recalculation OK');
 } finally {
   try{socket?.close();}catch{}
   try{await chrome?.close();}finally{server.kill('SIGTERM');}
