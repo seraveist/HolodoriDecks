@@ -1,5 +1,26 @@
 {
   "cards": {
+    "card-00004-5-uniq-0081-00": {
+      "asset_class": "card-illustration",
+      "asset_id": "00004-5-uniq-0081-00",
+      "height": 426,
+      "replaced_existing": false,
+      "retrieved_at": "2026-09-19",
+      "sha256": "aff43cc08cac91496d1f7d2e0458ccfed6900661eeb6c3a6f2804c9d3abf6d76",
+      "source_commit": "a43a0615fa193cf46c79fc9d149b58def9316cfe",
+      "source_height": 1165,
+      "source_manifest": "data/generated/card-art-manifest.json",
+      "source_page": "https://game8.jp/hololive-dreams/816914",
+      "source_path": "apps/web/public/game/illustrations/card-00004-5-uniq-0081-00.webp",
+      "source_repository": "asciisyaez/yagoo-dori",
+      "source_sha256": "be082f580efe28aef09ef0ab7441c8a02e40d32d6a0697e5785830740869f2a5",
+      "source_type": "public-card-art-snapshot",
+      "source_url": "https://img.game8.jp/13017618/6f0ccda3d293825f1f4524fc5e8f15c2.webp/original",
+      "source_width": 2101,
+      "unity_object": "apps/web/public/game/illustrations/card-00004-5-uniq-0081-00.webp",
+      "unity_object_type": "WebP illustration",
+      "width": 768
+    },
     "card-00006-5-uniq-0074-00": {
       "asset_class": "card-illustration",
       "asset_id": "00006-5-uniq-0074-00",
@@ -126,6 +147,27 @@
       "unity_object_type": "WebP illustration",
       "width": 768
     },
+    "card-00035-5-uniq-0082-00": {
+      "asset_class": "card-illustration",
+      "asset_id": "00035-5-uniq-0082-00",
+      "height": 426,
+      "replaced_existing": false,
+      "retrieved_at": "2026-09-19",
+      "sha256": "e8da175878c4f13fb447e381db595bbfb6ee57ede59d389e8c0e7a5db9ca254c",
+      "source_commit": "a43a0615fa193cf46c79fc9d149b58def9316cfe",
+      "source_height": 1165,
+      "source_manifest": "data/generated/card-art-manifest.json",
+      "source_page": "https://game8.jp/hololive-dreams/816912",
+      "source_path": "apps/web/public/game/illustrations/card-00035-5-uniq-0082-00.webp",
+      "source_repository": "asciisyaez/yagoo-dori",
+      "source_sha256": "5af5c7ea1a693954ef4d666450f0832d3229f49d363a191b0e6b39aa4ef13f5c",
+      "source_type": "public-card-art-snapshot",
+      "source_url": "https://img.game8.jp/13017620/79d620ca20e408bc9762c6dbbd39f1a0.webp/original",
+      "source_width": 2101,
+      "unity_object": "apps/web/public/game/illustrations/card-00035-5-uniq-0082-00.webp",
+      "unity_object_type": "WebP illustration",
+      "width": 768
+    },
     "card-00036-5-uniq-0078-00": {
       "asset_class": "card-illustration",
       "asset_id": "00036-5-uniq-0078-00",
@@ -168,6 +210,27 @@
       "unity_object_type": "WebP illustration",
       "width": 768
     },
+    "card-03005-5-uniq-0084-00": {
+      "asset_class": "card-illustration",
+      "asset_id": "03005-5-uniq-0084-00",
+      "height": 426,
+      "replaced_existing": false,
+      "retrieved_at": "2026-09-19",
+      "sha256": "ec682b502bf98605e00f4aeb3eec0dcad85c70d53ca8f1391730512981566820",
+      "source_commit": "a43a0615fa193cf46c79fc9d149b58def9316cfe",
+      "source_height": 1165,
+      "source_manifest": "data/generated/card-art-manifest.json",
+      "source_page": "https://game8.jp/hololive-dreams/816911",
+      "source_path": "apps/web/public/game/illustrations/card-03005-5-uniq-0084-00.webp",
+      "source_repository": "asciisyaez/yagoo-dori",
+      "source_sha256": "cdca6d1cd63690aa99948d574415e963ed5b1ed232ab944ddba29b47e3552df8",
+      "source_type": "public-card-art-snapshot",
+      "source_url": "https://img.game8.jp/13017619/51f6b0a98c1a3ac543820f1df2b745ff.webp/original",
+      "source_width": 2101,
+      "unity_object": "apps/web/public/game/illustrations/card-03005-5-uniq-0084-00.webp",
+      "unity_object_type": "WebP illustration",
+      "width": 768
+    },
     "card-04001-5-uniq-0071-00": {
       "asset_class": "card-illustration",
       "asset_id": "04001-5-uniq-0071-00",
@@ -207,6 +270,27 @@
       "source_url": "https://img.game8.jp/12889918/ca975d5a23735214d3e4afa3630d1bcb.webp/original",
       "source_width": 2101,
       "unity_object": "apps/web/public/game/illustrations/card-04003-5-uniq-0072-00.webp",
+      "unity_object_type": "WebP illustration",
+      "width": 768
+    },
+    "card-04013-5-uniq-0083-00": {
+      "asset_class": "card-illustration",
+      "asset_id": "04013-5-uniq-0083-00",
+      "height": 426,
+      "replaced_existing": false,
+      "retrieved_at": "2026-09-19",
+      "sha256": "11cd45534ba486a50b1207d02ad91c0430396bf5a0760d20c451678d027a1fbf",
+      "source_commit": "a43a0615fa193cf46c79fc9d149b58def9316cfe",
+      "source_height": 1165,
+      "source_manifest": "data/generated/card-art-manifest.json",
+      "source_page": "https://game8.jp/hololive-dreams/816913",
+      "source_path": "apps/web/public/game/illustrations/card-04013-5-uniq-0083-00.webp",
+      "source_repository": "asciisyaez/yagoo-dori",
+      "source_sha256": "f7674db8669ef83671afe057be3f250208a70c4685b24a049734403c3f0236e2",
+      "source_type": "public-card-art-snapshot",
+      "source_url": "https://img.game8.jp/13017621/e3ee1632ed4229e897bc989075f1c6f8.webp/original",
+      "source_width": 2101,
+      "unity_object": "apps/web/public/game/illustrations/card-04013-5-uniq-0083-00.webp",
       "unity_object_type": "WebP illustration",
       "width": 768
     },
@@ -255,10 +339,10 @@
   },
   "public_card_art": {
     "asset_class": "card-illustration",
-    "commit": "a271849eb98260d81a40635037ddbb6e932d3c17",
+    "commit": "a43a0615fa193cf46c79fc9d149b58def9316cfe",
     "manifest_path": "data/generated/card-art-manifest.json",
     "repository": "asciisyaez/yagoo-dori",
-    "retrieved_at": "2026-09-08"
+    "retrieved_at": "2026-09-19"
   },
   "version": 3
 }
