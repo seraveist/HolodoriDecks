@@ -2453,6 +2453,16 @@
     ]
   },
   "active_effects": {
+    "live_special_skill_effect-live_active_skill_activation_probability_up_permil_up-250": [
+      {
+        "groupId": "live_special_skill_effect-live_active_skill_activation_probability_up_permil_up-250",
+        "number": 1,
+        "type": "LiveActiveSkillEffectType_LIVE_ACTIVE_SKILL_EFFECT_TYPE_LIVE_ACTIVE_SKILL_ACTIVATION_PROBABILITY_UP_PERMIL_UP",
+        "value": "250",
+        "descriptionLangId": "la-generated-live_special_skill_effect-live_active_skill_activation_probability_up_permil_up-250.1-description",
+        "description": "스킬 발동률이 25% UP"
+      }
+    ],
     "live_active_skill_effect-score_up_permil_up-1000": [
       {
         "groupId": "live_active_skill_effect-score_up_permil_up-1000",
@@ -3257,6 +3267,28 @@
         "liveSkillEffectTargetId": "live_skill_effect_target-character_grouping-grp-holox-2",
         "descriptionLangId": "la-generated-live_passive_skill_effect-live_active_skill_effect_up_permil_up-90-live_skill_effect_target-character_grouping-grp-holox-2.1-description",
         "description": "holoX2명의 스코어 서포트 효과 9%"
+      }
+    ],
+    "live_passive_skill_effect-technique_up_permil_up-320-live_skill_effect_target-character_grouping-grp-gen_1-2": [
+      {
+        "groupId": "live_passive_skill_effect-technique_up_permil_up-320-live_skill_effect_target-character_grouping-grp-gen_1-2",
+        "number": 1,
+        "type": "LivePassiveSkillEffectType_LIVE_PASSIVE_SKILL_EFFECT_TYPE_TECHNIQUE_UP_PERMIL_UP",
+        "value": "320",
+        "liveSkillEffectTargetId": "live_skill_effect_target-character_grouping-grp-gen_1-2",
+        "descriptionLangId": "la-generated-live_passive_skill_effect-technique_up_permil_up-320-live_skill_effect_target-character_grouping-grp-gen_1-2.1-description",
+        "description": "1기생2명의 테크닉이 32% UP"
+      }
+    ],
+    "live_passive_skill_effect-technique_up_permil_up-430-live_skill_effect_target-character_grouping-grp-gen_1-2": [
+      {
+        "groupId": "live_passive_skill_effect-technique_up_permil_up-430-live_skill_effect_target-character_grouping-grp-gen_1-2",
+        "number": 1,
+        "type": "LivePassiveSkillEffectType_LIVE_PASSIVE_SKILL_EFFECT_TYPE_TECHNIQUE_UP_PERMIL_UP",
+        "value": "430",
+        "liveSkillEffectTargetId": "live_skill_effect_target-character_grouping-grp-gen_1-2",
+        "descriptionLangId": "la-generated-live_passive_skill_effect-technique_up_permil_up-430-live_skill_effect_target-character_grouping-grp-gen_1-2.1-description",
+        "description": "1기생2명의 테크닉이 43% UP"
       }
     ],
     "live_leader_skill_effect-all_parameter_up_permil_up-300-live_skill_effect_target-all": [
