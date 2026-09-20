@@ -23818,7 +23818,7 @@
     "CONNECTION": "S"
   },
   "capabilities": {
-    "scoreIntegration": false,
+    "scoreIntegration": true,
     "rangeCoordinates": "source-relative",
     "placementRules": "owned-card-id-unique",
     "pathPrerequisitesVerified": false

@@ -46,7 +46,7 @@ jobs:
           cp index.html styles.css .nojekyll LOCAL_TEST.md _site/
           cp -R css js _site/
           cp -R data/generated _site/data/
-          cp -R assets/cards assets/ui _site/assets/
+          cp -R assets/cards assets/characters assets/ui _site/assets/
           python scripts/rewrite-pages-revisions.py --root _site --revision "$CARD_ASSET_REVISION"
           node scripts/build-public-assets.mjs --root _site | tee .local/public-assets.json
           python scripts/build-localized-pages.py --root _site

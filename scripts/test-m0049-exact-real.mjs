@@ -115,6 +115,8 @@ for (const simulationTarget of ["score", "potential"]) {
 
   const exhaustive = [];
   for (const combo of combinations(memberRows, 5)) {
+    // Alternative cards of one member cannot occupy two formation slots.
+    if (new Set(combo.map((card) => card.characterId)).size !== combo.length) continue;
     let best = null;
     for (const order of permutations(combo)) {
       const score = evaluateDeck({
@@ -137,6 +139,11 @@ for (const simulationTarget of ["score", "potential"]) {
     if (best) exhaustive.push(best);
   }
   exhaustive.sort(compareResults);
+
+  for (const row of staged.results) {
+    const characterIds = row.members.map((id) => prepared.get(id).characterId);
+    assert.equal(new Set(characterIds).size, characterIds.length, "separate leader and members must be distinct");
+  }
 
   const stagedTop = staged.results.slice(0, 5).map((row) => [recommendationValue(row.score, simulationTarget), compositionKey(row)]);
   const exactTop = exhaustive.slice(0, 5).map((row) => [recommendationValue(row.score, simulationTarget), compositionKey(row)]);

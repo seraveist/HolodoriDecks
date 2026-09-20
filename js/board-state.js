@@ -1,4 +1,4 @@
-// Real Master-backed board profiles are isolated from scoring and the old UI preview.
+// Master-backed saved node selections, separate from the old UI preview profile.
 export const BOARD_STORAGE_KEY = 'holodori-decksim:boards:v1';
 export const PREVIEW_STORAGE_KEY = 'holodori-decksim:board-ui-preview:v1';
 export const BOARD_FORMAT = 'holodori-board-profile';

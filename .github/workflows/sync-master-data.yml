@@ -121,6 +121,7 @@ jobs:
           python -m pytest -q
           node scripts/test-board-state.mjs
           node scripts/test-board-data.mjs
+          node scripts/test-board-scoring.mjs
           python -m py_compile scripts/check-automation-gate.py
           node scripts/test-chart-scoring.mjs
           node scripts/test-song-score-invariants.mjs

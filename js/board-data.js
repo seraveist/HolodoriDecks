@@ -83,7 +83,7 @@ export async function loadBoardCatalog(manifest, locale = 'ko', fetcher = fetch)
   return createBoardCatalog(board, memory, pack, manifest);
 }
 
-/** Pure board-level information, deliberately never called by score/optimizer. */
+/** Pure Master Connect lookup, shared by the editor and score-profile compiler. */
 export function connectInfo(catalog, cardId, potential = 0) {
   const card = catalog.raw.cards[cardId];
   if (!catalog.canConnect(cardId)) return null;
@@ -106,10 +106,13 @@ export function memoryBonus(catalog, count) {
   return { status: 'known', percent: (matched?.parameterPermil ?? 0) / 10 };
 }
 
+const descriptionFormatters = new Map();
 export function boardDescription(catalog, effect, characterName = '') {
   if (!effect) return '';
   const value = Number(effect.value ?? 0);
-  const number = n => new Intl.NumberFormat(catalog.pack.locale, { maximumFractionDigits: 6 }).format(n);
+  const locale = catalog.pack.locale;
+  if (!descriptionFormatters.has(locale)) descriptionFormatters.set(locale, new Intl.NumberFormat(locale, { maximumFractionDigits: 6 }));
+  const number = n => descriptionFormatters.get(locale).format(n);
   return catalog.text(effect.descriptionLangId, effect.effectType ?? '')
     .replaceAll('[character]', characterName)
     .replaceAll('[value/10]', number(value / 10)).replaceAll('[value]', number(value))

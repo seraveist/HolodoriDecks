@@ -192,5 +192,22 @@ core and locale SHAs from `data/upstream.json` and checks their Master revisions
 Normal scheduled synchronization continues to resolve upstream as before.
 The auto-merge safety gate now compares board semantics and memory rows, not only
 record counts. First introduction, existing semantic changes/deletions and unknown
-effect types need manual review. The feature branch remains pre-scoring; stored
-board edits do not change a deck recommendation or actual song simulation.
+effect types need manual review. Saved boards and memory now feed unit scores,
+song expectation/maximum scores, candidate search and order optimization through
+the compiled profile described in `BOARD_UI.md`.
+
+## Member face icons
+
+The portrait workflow also runs `scripts/sync-character-assets.py` twice daily
+(11:00 and 23:00 KST). It maps each board-enabled character's Master `asset_id`
+to the exact `img_chr_icon_normal_{asset_id}` Octo bundle. Source byte size and
+MD5, texture identity and 256×256 dimensions are checked before an atomic,
+lossless WebP write to `assets/characters/{character_id}.webp`. Source/output
+hashes are recorded in `assets/character-portrait-sync.json`.
+
+Valid existing icons are preserved, missing or corrupt icons are retried, and
+an unavailable icon does not prevent another verified icon from being published.
+Card and member imports each undergo report/path/deletion checks before automatic
+merge. Master-data publication remains independent of the portrait workflow.
+The Pages artifact includes the member icons; the board roster falls back to the
+member's initial if an icon cannot be loaded.

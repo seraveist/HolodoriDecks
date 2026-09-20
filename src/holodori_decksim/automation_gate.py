@@ -218,6 +218,24 @@ def evaluate_card_asset_gate(
     return GateResult(safe=not reasons, reasons=tuple(reasons), metrics=metrics)
 
 
+def evaluate_portrait_asset_gate(*, report: dict, character_report: dict, diff_lines: Iterable[str]) -> GateResult:
+    """Apply the same strict import/path/deletion limits to each portrait class."""
+    card_diff, character_diff = [], []
+    for line in diff_lines:
+        paths = line.strip().split("\t")[1:]
+        if paths and all(path == "assets/character-portrait-sync.json" or path.startswith("assets/characters/") for path in paths):
+            character_diff.append(line.replace("assets/characters/", "assets/cards/")
+                                  .replace("assets/character-portrait-sync.json", "assets/card-portrait-sync.json"))
+        else:
+            card_diff.append(line)
+    cards = evaluate_card_asset_gate(report=report, diff_lines=card_diff)
+    characters = evaluate_card_asset_gate(report=character_report, diff_lines=character_diff)
+    reasons = cards.reasons + tuple(f"member icons: {reason}" for reason in characters.reasons)
+    metrics = {f"cards_{key}": value for key, value in cards.metrics.items()}
+    metrics.update({f"characters_{key}": value for key, value in characters.metrics.items()})
+    return GateResult(safe=not reasons, reasons=reasons, metrics=metrics)
+
+
 def read_diff_lines(path: Path) -> list[str]:
     if not path.exists():
         return []

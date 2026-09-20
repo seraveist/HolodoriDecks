@@ -86,5 +86,5 @@ test('board edits cannot mutate the production card objects or score definitions
   let state=toggleBoardNode(emptyBoardState(catalog),'chr-00001','S-001',catalog);
   state=assignConnector(state,{characterId:'chr-00001',slotId:'S-001'},card.id,owned,catalog);
   connectInfo(catalog,card.id,5);assert.equal(JSON.stringify(cards),before);
-  assert.equal(raw.capabilities.scoreIntegration,false);
+  assert.equal(raw.capabilities.scoreIntegration,true);
 });

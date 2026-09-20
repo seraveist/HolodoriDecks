@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - "data/generated/cards.json"
+      - "data/generated/characters.json"
+      - "src/holodori_decksim/character_assets.py"
+      - "scripts/sync-character-assets.py"
       - "src/holodori_decksim/card_assets.py"
       - "src/holodori_decksim/public_card_art.py"
       - "src/holodori_decksim/automation_gate.py"
@@ -94,7 +97,7 @@ jobs:
 
       - name: Validate card asset sync helpers
         run: |
-          python -m pytest -q tests/test_card_assets.py tests/test_public_card_art.py tests/test_card_asset_sync.py tests/test_automation_gate.py tests/test_pages_deployment.py
+          python -m pytest -q tests/test_card_assets.py tests/test_public_card_art.py tests/test_card_asset_sync.py tests/test_character_assets.py tests/test_automation_gate.py tests/test_pages_deployment.py
           python -m py_compile \
             src/holodori_decksim/card_assets.py \
             src/holodori_decksim/public_card_art.py \
@@ -162,6 +165,33 @@ jobs:
             echo "::notice::Some portraits are still unavailable; publishing verified images and retrying the remaining cards on the next scheduled run."
           fi
 
+      - name: Synchronize member face icons independently
+        id: sync_characters
+        run: |
+          set +e
+          python scripts/sync-character-assets.py --sync \
+            --catalog-cache /tmp/holodori-octo-list.json \
+            --report /tmp/character-asset-sync.json
+          sync_status=$?
+          set -e
+          SYNC_STATUS="$sync_status" python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os
+          from pathlib import Path
+          from holodori_decksim.character_assets import valid_icon
+          report = json.loads(Path('/tmp/character-asset-sync.json').read_text())
+          status = int(os.environ['SYNC_STATUS'])
+          errors = sum(row['status'] == 'error' for row in report['unresolved'])
+          pending = sum(row['status'] == 'pending' for row in report['unresolved'])
+          if errors + pending != len(report['unresolved']) or status != (1 if errors else 2 if pending else 0):
+              raise SystemExit('Invalid member icon sync report/status')
+          for row in report['imported']:
+              if not valid_icon(Path('assets/characters') / f"{row['id']}.webp"):
+                  raise SystemExit('Invalid member icon output')
+          print(f"imported_count={len(report['imported'])}")
+          print(f"error_count={errors}")
+          print(f"pending_count={pending}")
+          PY
+
       - name: Validate resolved portrait outputs
         run: |
           python scripts/validate-generated-data.py
@@ -192,10 +222,10 @@ jobs:
       - name: Detect asset diff
         id: diff
         run: |
-          git add -- assets/cards assets/card-portrait-sync.json
+          git add -- assets/cards assets/card-portrait-sync.json assets/characters assets/character-portrait-sync.json
           git diff --cached --name-status > /tmp/card-asset-diff.txt
-          git status --porcelain -- assets/cards assets/card-portrait-sync.json
-          if [ -n "$(git status --porcelain -- assets/cards assets/card-portrait-sync.json)" ]; then
+          git status --porcelain -- assets/cards assets/card-portrait-sync.json assets/characters assets/character-portrait-sync.json
+          if [ -n "$(git status --porcelain -- assets/cards assets/card-portrait-sync.json assets/characters assets/character-portrait-sync.json)" ]; then
             echo "has_diff=true" >> "$GITHUB_OUTPUT"
           else
             echo "has_diff=false" >> "$GITHUB_OUTPUT"
@@ -206,6 +236,7 @@ jobs:
         run: |
           python scripts/check-automation-gate.py card-assets \
             --report /tmp/card-asset-sync.json \
+            --character-report /tmp/character-asset-sync.json \
             --diff /tmp/card-asset-diff.txt \
             --output /tmp/card-asset-automerge-gate.json
           python - <<'PY' >> "$GITHUB_OUTPUT"
@@ -218,12 +249,13 @@ jobs:
       - name: Show dry-run summary
         if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run == true
         run: |
-          git status --short -- assets/cards assets/card-portrait-sync.json
-          git diff --cached --stat -- assets/cards assets/card-portrait-sync.json
+          git status --short -- assets/cards assets/card-portrait-sync.json assets/characters assets/character-portrait-sync.json
+          git diff --cached --stat -- assets/cards assets/card-portrait-sync.json assets/characters assets/character-portrait-sync.json
           if [ -f /tmp/card-asset-automerge-gate.json ]; then
             cat /tmp/card-asset-automerge-gate.json
           fi
           cat /tmp/card-asset-sync.json
+          cat /tmp/character-asset-sync.json
 
       - name: Commit asset sync branch
         id: asset_commit
@@ -236,8 +268,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -B "$SYNC_BRANCH"
-          git add assets/cards assets/card-portrait-sync.json
-          git commit -m "Sync Holodori card portraits"
+          git add assets/cards assets/card-portrait-sync.json assets/characters assets/character-portrait-sync.json
+          git commit -m "Sync Holodori card and member portraits"
           git push --force origin "$SYNC_BRANCH"
           echo "head_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
@@ -255,18 +287,20 @@ jobs:
           from pathlib import Path
 
           report = json.loads(Path('/tmp/card-asset-sync.json').read_text(encoding='utf-8'))
+          characters = json.loads(Path('/tmp/character-asset-sync.json').read_text(encoding='utf-8'))
           gate = json.loads(Path('/tmp/card-asset-automerge-gate.json').read_text(encoding='utf-8'))
           imported = report.get('imported', [])
           rows = '\n'.join(
               f"- `{row['id']}` ← `{row['asset_id']}` ({row['unity_object_type']} `{row['unity_object']}`)"
               for row in imported
           ) or '- none'
+          member_rows = '\n'.join(f"- `{row['id']}` ← `{row['catalog_entry']}`" for row in characters['imported']) or '- none'
           if gate['safe']:
               gate_text = '- Status: **eligible for automatic merge**\n- All portrait safety checks passed.'
           else:
               reasons = '\n'.join(f"- {reason}" for reason in gate['reasons'])
               gate_text = f'- Status: **manual review required**\n{reasons}'
-          body = f"""## Automated Holodori card portrait sync
+          body = f"""## Automated Holodori portrait sync
 
           This PR contains verified portraits for the current `main` card Master. Safe partial batches are automatically merged; remaining cards are retried independently. Anomalous output changes remain open for administrator review.
 
@@ -279,12 +313,17 @@ jobs:
           - Missing after sync: {report['after']['missing_count']}
           - Pending retry: {report['pending_count']}
           - Failed cards: {report['error_count']}
+          - Member icons imported: {characters['imported_count']}
+          - Member icons pending / failed: {characters['pending_count']} / {characters['error_count']}
 
           ### Automatic merge gate
           {gate_text}
 
           ### Imported / repaired portraits
           {rows}
+
+          ### Imported member face icons
+          {member_rows}
 
           ### Validation
           - only ★4/★5 cards are portrait targets
@@ -295,6 +334,8 @@ jobs:
           - staged WebP paths must exactly match successful imports
           - unresolved cards do not block verified images or Master-data deployment
           - source/output dimensions and SHA-256 provenance are recorded
+          - member icons use exact Master asset IDs and 256×256 normal face textures
+          - member bundle size and MD5 are verified before extraction
           """
           Path('/tmp/card-asset-pr-body.md').write_text(
               '\n'.join(line.strip() for line in body.splitlines()) + '\n',
@@ -302,7 +343,7 @@ jobs:
           )
           PY
 
-          title="Sync Holodori card portraits (${{ steps.sync_assets.outputs.imported_count }} images)"
+          title="Sync Holodori portraits (${{ steps.sync_assets.outputs.imported_count }} cards, ${{ steps.sync_characters.outputs.imported_count }} members)"
           number="$(gh pr list --base main --head "$SYNC_BRANCH" --state open --json number --jq '.[0].number // empty')"
           if [ -n "$number" ]; then
             gh pr edit "$number" --title "$title" --body-file /tmp/card-asset-pr-body.md
@@ -359,10 +400,11 @@ jobs:
           cat /tmp/card-asset-automerge-gate.json
 
       - name: Report source failures after publishing verified portraits
-        if: steps.sync_assets.outputs.error_count != '0'
+        if: steps.sync_assets.outputs.error_count != '0' || steps.sync_characters.outputs.error_count != '0'
         run: |
           echo "::error::Some portraits failed to synchronize. Verified images have been processed; failed cards will be retried and do not block Master data."
           cat /tmp/card-asset-sync.json
+          cat /tmp/character-asset-sync.json
           exit 1
 
       - name: Job summary
@@ -376,6 +418,8 @@ jobs:
             echo "- pending publication: ${{ steps.sync_assets.outputs.pending_count || '0' }}"
             echo "- actual errors: ${{ steps.sync_assets.outputs.error_count || '0' }}"
             echo "- unresolved total: ${{ steps.sync_assets.outputs.unresolved_count || '0' }}"
+            echo "- member icons imported: ${{ steps.sync_characters.outputs.imported_count || '0' }}"
+            echo "- member icons pending / failed: ${{ steps.sync_characters.outputs.pending_count || '0' }} / ${{ steps.sync_characters.outputs.error_count || '0' }}"
             echo "- pending ids: ${{ steps.sync_assets.outputs.pending_ids || 'none' }}"
             echo "- error ids: ${{ steps.sync_assets.outputs.error_ids || 'none' }}"
             echo "- generated diff: ${{ steps.diff.outputs.has_diff || 'false' }}"

@@ -224,6 +224,8 @@ for (const simulationTarget of ["score", "potential"]) {
 
   const exhaustive = [];
   for (const combo of combinations(smallMembers, 5)) {
+    // Keep this independent oracle within the same member-uniqueness rules.
+    if (new Set(combo.map((card) => card.characterId)).size !== combo.length) continue;
     let best = null;
     for (const order of permutations(combo)) {
       const score = evaluateDeck({

@@ -151,7 +151,7 @@ async function start() {
       const setting = state.ownedCardSettings[cardId];
       return `${cardId}:${setting?.level ?? ""}:${setting?.potential ?? ""}`;
     }).join("|");
-    return `${state.members.join("|")}::${state.lockedSlots.join("|")}::${settings.calculationMode}::${settings.musicId}::${settings.difficulty}::${settings.playMode}::${state.levelMode}::${state.separateRole}::${profiles}`;
+    return `${state.members.join("|")}::${state.lockedSlots.join("|")}::${settings.calculationMode}::${settings.musicId}::${settings.difficulty}::${settings.playMode}::${state.levelMode}::${state.separateRole}::${profiles}::${boardView.signature()}`;
   }
 
   function canCalculate(state) {
@@ -206,6 +206,22 @@ async function start() {
     await new Promise((resolve) => window.requestAnimationFrame(() => window.setTimeout(resolve, 0)));
     if (!optimizationSession.isCurrent(request)) return false;
 
+    let accountBonuses;
+    try {
+      accountBonuses = await boardView.accountBonuses(state);
+    } catch (error) {
+      if (optimizationSession.finish(request)) {
+        lastRecommendation = null;
+        optimizeButton.textContent = t("calculate.button");
+        render(store.getState());
+        setRecommendationStatus(getLocale() === 'ko' ? '보드 설정을 계산에 적용하지 못했습니다. 멤버별 보드에서 입력을 확인해 주세요.'
+          : getLocale() === 'ja' ? 'ボード設定を計算に適用できませんでした。ホロメンボードの入力を確認してください。'
+            : 'Could not apply your board settings. Check the inputs in Member Boards.');
+      }
+      console.warn('[board-score]', error);
+      return false;
+    }
+    if (!optimizationSession.isCurrent(request)) return false;
     const preparedCards = prepareScoreCards(data.cards, data.charactersById, state.ownedCardSettings, {
       levelMode: state.levelMode,
       masterRefs: data.masterRefs,
@@ -240,6 +256,7 @@ async function start() {
     const workerCards = new Map([...preparedCards].filter(([cardId]) => ownedSet.has(cardId)));
     const result = await runOptimizationAsync({
       preparedCards: workerCards,
+      accountBonuses,
       ownedCardIds: state.ownedCardIds,
       currentMembers: state.members,
       lockedSlots: state.lockedSlots,
@@ -332,7 +349,7 @@ async function start() {
     onCardDetail: cardDetail.open,
     initiallyVisible: false,
   });
-  const boardView = createBoardEntry({ data, store, onGoOwned: () => showView("owned") });
+  const boardView = createBoardEntry({ data, store, onGoOwned: () => showView("owned"), onGoDeck: () => showView("deck"), onChange: () => render(store.getState()) });
   const syncMemberOptions = mountMemberOptions(store);
   const syncMusicControls = mountMusicControls(data.music, store);
   requiredElement("#clear-members").addEventListener("click", () => {

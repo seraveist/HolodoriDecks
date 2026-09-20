@@ -68,6 +68,7 @@ function orderableMemberIds(result) {
 
 export function optimizeRecommendationOrders({
   recommendation,
+  accountBonuses = null,
   preparedCards,
   currentMembers,
   lockedSlots,
@@ -117,11 +118,12 @@ export function optimizeRecommendationOrders({
       // Passive target selection can be order-sensitive when target stats tie.
       // Rebuild the composition for every permutation; reusing the composition
       // prepared for the first order leaks its passive target map into later orders.
-      const preparedComposition = prepareDeckComposition({ leader, members, separateRole });
+      const preparedComposition = prepareDeckComposition({ leader, members, separateRole, accountBonuses });
       if (!preparedComposition) continue;
 
       const score = evaluateDeck({
         leader,
+        accountBonuses,
         members,
         music: orderMusic,
         difficulty: generic ? "EXPERT" : difficulty,
@@ -163,6 +165,7 @@ export function optimizeRecommendationOrders({
     const members = result.members.slice(1).map((id) => preparedCards.get(id));
     const score = evaluateDeck({
       leader,
+      accountBonuses,
       members,
       music,
       difficulty,

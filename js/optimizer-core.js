@@ -3,6 +3,7 @@ import { optimizeRecommendationOrders } from "./order.js?v=1.3.1";
 
 export function runOptimization({
   preparedCards,
+  accountBonuses = null,
   ownedCardIds,
   currentMembers,
   lockedSlots,
@@ -31,6 +32,7 @@ export function runOptimization({
 
   let result = optimizeOwnedDeck({
     preparedCards,
+    accountBonuses,
     ownedCardIds,
     currentMembers,
     lockedSlots,
@@ -47,6 +49,7 @@ export function runOptimization({
   if (result.ok) {
     result = optimizeRecommendationOrders({
       recommendation: result,
+      accountBonuses,
       preparedCards,
       currentMembers,
       lockedSlots,

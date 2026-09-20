@@ -171,7 +171,7 @@ function buildActiveChecks(members, context, windows, maximize = false) {
     for (let time = interval; time <= context.duration + 1e-9; time += interval) {
       const combo = comboAt(context, time);
       const rateUp = activationRateUpAt(windows, time, members, combo);
-      const effectiveProbability = clamp(finite(active?.probability) * (1 + rateUp / 100), 0, 1);
+      const effectiveProbability = clamp(finite(active?.probability) * (1 + (rateUp + finite(active?.boardActivationRatePct)) / 100), 0, 1);
       const probability = maximize && effectiveProbability > 0 ? 1 : effectiveProbability;
       const row = {
         cardId: member.id,
@@ -369,8 +369,8 @@ export function timelineSongProjection({
   // would cancel manual PERFECT note weights and combo bonuses.
   const genericKernel = songKernel(genericContext, "auto", scoreRules);
   const baseRatio = genericKernel > 0 ? selectedKernel / genericKernel : 1;
-  const skillRatio = expected?.skillMultiplier ?? 1;
-  const maxSkillRatio = maximum?.skillMultiplier ?? 1;
+  const skillRatio = (expected?.skillMultiplier ?? 1) + finite(resolvedSupportProfile.directScoreBonusPct) / 100;
+  const maxSkillRatio = (maximum?.skillMultiplier ?? 1) + finite(resolvedSupportProfile.directScoreBonusPct) / 100;
   const averageScore = expected ? Math.max(0, Math.round(baseScore * baseRatio * skillRatio)) : null;
   const maxScore = maximum ? Math.max(0, Math.round(baseScore * baseRatio * maxSkillRatio)) : null;
   return {

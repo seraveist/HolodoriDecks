@@ -6,6 +6,21 @@ Holodori DeckSim의 공개 릴리스 변경 이력을 기록합니다.
 
 ## [Unreleased]
 
+- Add select-all/deselect-all controls for the four board categories, with route-aware confirmation and Connect placement cleanup.
+- Add shortest-route board selection, confirmed disconnection cascades, node hover details, and Connect picker/transfer dialogs.
+
+### Added
+
+- 보드 목록에 멤버 전용 얼굴 아이콘 54개 적용 및 하루 두 번 이미지 자동 동기화 연결
+- 멤버별 보드의 노드·커넥트·메모리 입력을 유닛 점수, 악곡 기대/최대 점수, 후보 탐색과 배치 최적화에 연결
+- 커넥트 범위와 현재 개화 단계에 따른 강화 수치를 노드 설명에 표시
+
+### Fixed
+
+- 신규 데이터 동기화 검증에서 동일 멤버의 서로 다른 카드를 함께 편성하던 전수 비교 테스트 수정
+- 보드 수정 및 다른 탭의 저장값 변경 시 이전 추천 결과를 지우고 재계산에 최신 값을 적용
+- 보드 메뉴의 패널·글꼴·입력창·버튼·카드 목록을 기존 메뉴와 통일하고 보드가 없는 멤버를 목록에서 제외
+
 ## [1.3.1] - 2026-09-15
 
 ### Added

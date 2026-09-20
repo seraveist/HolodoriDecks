@@ -204,7 +204,7 @@ def build_board_data(snapshot: dict[str, Any], character_ids: set[str], card_ids
               'characterLevels': {k: v for k, v in groups(get('CharacterLevel'), 'groupId', 'level').items() if k in level_ids},
               'relatedSkills': related_skills, 'activeEffects': active_effects, 'liveTriggers': triggers,
               'nodeTypes': NODE_TYPES,
-              'capabilities': {'scoreIntegration': False, 'rangeCoordinates': 'source-relative',
+              'capabilities': {'scoreIntegration': True, 'rangeCoordinates': 'source-relative',
                                'placementRules': 'owned-card-id-unique', 'pathPrerequisitesVerified': False}}
     result['unknownEffectTypes'] = sorted({r['effectType'] for r in effects.values()
         if r['effectType'].split('_SKILL_TREE_EFFECT_TYPE_')[-1] not in KNOWN_EFFECTS})

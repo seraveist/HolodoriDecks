@@ -82,7 +82,9 @@ jobs:
       - name: Validate Master-backed boards and isolated profile state
         run: |
           node scripts/test-board-state.mjs
+          node scripts/test-board-paths.mjs
           node scripts/test-board-data.mjs
+          node scripts/test-board-scoring.mjs
           node scripts/test-board-browser.mjs
 
       - name: Check JavaScript syntax and module exports
@@ -217,7 +219,7 @@ jobs:
         run: |
           node --input-type=module <<'NODE'
           import { readFile } from 'node:fs/promises';
-          const neutralFiles = ['css/base.css', 'css/components.css', 'css/owned.css', 'css/modal.css', 'css/tweaks.css'];
+          const neutralFiles = ['css/base.css', 'css/components.css', 'css/owned.css', 'css/modal.css', 'css/tweaks.css', 'css/boards.css'];
           const neutral = await Promise.all(neutralFiles.map(async (path) => [path, await readFile(path, 'utf8')]));
           for (const [path, text] of neutral) {
             if (text.includes('data-theme="dark"')) throw new Error(`dark selector leaked into ${path}`);

@@ -7,6 +7,7 @@ from pathlib import Path
 
 from holodori_decksim.automation_gate import (
     evaluate_card_asset_gate,
+    evaluate_portrait_asset_gate,
     evaluate_master_gate,
     read_diff_lines,
 )
@@ -45,9 +46,12 @@ def master(args: argparse.Namespace) -> None:
 
 
 def card_assets(args: argparse.Namespace) -> None:
-    result = evaluate_card_asset_gate(
+    evaluate = evaluate_portrait_asset_gate if args.character_report else evaluate_card_asset_gate
+    extra = {"character_report": load_json(args.character_report)} if args.character_report else {}
+    result = evaluate(
         report=load_json(args.report),
         diff_lines=read_diff_lines(args.diff),
+        **extra,
     )
     emit(result, args.output)
 
@@ -74,6 +78,7 @@ def main() -> int:
 
     card_parser = subparsers.add_parser("card-assets")
     card_parser.add_argument("--report", type=Path, required=True)
+    card_parser.add_argument("--character-report", type=Path)
     card_parser.add_argument("--diff", type=Path, required=True)
     card_parser.add_argument("--output", type=Path)
     card_parser.set_defaults(func=card_assets)

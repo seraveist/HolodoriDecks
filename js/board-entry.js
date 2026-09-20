@@ -1,7 +1,8 @@
 import { getLocale } from "./i18n.js?v=1.3.1";
+import { BOARD_STORAGE_KEY } from "./board-state.js?v=1.3.1";
 
 /** Tiny shell; editor code, layout and styles are loaded only on the Board tab. */
-export function createBoardEntry({ data, store, onGoOwned }) {
+export function createBoardEntry({ data, store, onGoOwned, onGoDeck, onChange = () => {} }) {
   const labels = { ko: "멤버별 보드", en: "Member Boards", ja: "ホロメンボード" };
   const tab = document.createElement("button");
   tab.id = "board-tab";
@@ -12,13 +13,15 @@ export function createBoardEntry({ data, store, onGoOwned }) {
   tab.setAttribute("aria-controls", "board-view");
   tab.setAttribute("aria-selected", "false");
   tab.tabIndex = -1;
-  tab.textContent = labels[getLocale()] ?? labels.ko;
+  const label = document.createElement("span");
+  label.textContent = labels[getLocale()] ?? labels.ko;
+  tab.append(label);
   const tabs = document.querySelector(".view-tabs");
-  tabs.style.gridTemplateColumns = "repeat(3, minmax(0, 1fr))";
+  tabs.classList.add("has-board-tab");
   tabs.append(tab);
   const container = document.createElement("section");
   container.id = "board-view";
-  container.className = "app-view";
+  container.className = "app-view panel board-panel";
   container.setAttribute("role", "tabpanel");
   container.setAttribute("aria-labelledby", "board-tab");
   container.hidden = true;
@@ -27,14 +30,21 @@ export function createBoardEntry({ data, store, onGoOwned }) {
   let pending = null;
   let visible = false;
   let currentState = store.getState();
+  let catalogPromise = null;
+  const catalog = () => catalogPromise ??= import('./board-data.js?v=1.3.1')
+    .then(module => module.loadBoardCatalog(data.manifest, getLocale()))
+    .catch(error => { catalogPromise = null; throw error; });
+  const saved = () => globalThis.localStorage.getItem(BOARD_STORAGE_KEY);
+  window.addEventListener('storage', event => {
+    if (event.key === BOARD_STORAGE_KEY || event.key === null) onChange();
+  });
   async function load() {
     if (editor || pending) return pending;
     container.setAttribute("aria-busy", "true");
     container.textContent = getLocale() === "ko" ? "보드 화면을 불러오는 중…" : getLocale() === "ja" ? "ボードを読み込み中…" : "Loading boards…";
-    pending = Promise.all([import("./ui/boards.js?v=1.3.1"), import("./board-data.js?v=1.3.1")])
-      .then(async ([{ createBoardsView }, { loadBoardCatalog }]) => {
-      const catalog = await loadBoardCatalog(data.manifest, getLocale());
-      editor = createBoardsView({ container, data, store, catalog, onGoOwned, locale: getLocale() });
+    pending = Promise.all([import("./ui/boards.js?v=1.3.1"), catalog()])
+      .then(([{ createBoardsView }, loadedCatalog]) => {
+      editor = createBoardsView({ container, data, store, catalog: loadedCatalog, onGoOwned, onGoDeck, onChange, locale: getLocale() });
       editor.render(currentState);
       editor.setVisible(visible);
     }).catch(error => {
@@ -52,6 +62,16 @@ export function createBoardEntry({ data, store, onGoOwned }) {
     return pending;
   }
   return {
+    signature() { try { return saved() ?? ''; } catch { return 'board-storage-unavailable'; } },
+    async accountBonuses(appState) {
+      const text = saved();
+      // Preserve the lazy path for users who have not configured any boards.
+      if (!text) return null;
+      const [{ compileBoardProfile }, loadedCatalog] = await Promise.all([import('./board-score.js?v=1.3.1'), catalog()]);
+      return { boardProfile: compileBoardProfile(loadedCatalog, JSON.parse(text), {
+        characters: data.characters, ownedCardIds: appState.ownedCardIds, ownedCardSettings: appState.ownedCardSettings,
+      }) };
+    },
     setVisible(nextVisible) {
       visible = nextVisible;
       container.hidden = !visible;
