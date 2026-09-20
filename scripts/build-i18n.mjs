@@ -1,3 +1,4 @@
+import { buildBoardI18n } from "./build-board-i18n.mjs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -197,6 +198,8 @@ async function main() {
     }])),
   };
   await writeFile(path.join(OUTPUT_DIR, "manifest.json"), `${JSON.stringify(report, null, 2)}\n`, "utf8");
+
+  await buildBoardI18n();
 
   console.log(`[i18n] normalized ${cardNameAliases.size} non-standard card name LangIds`);
   for (const result of results) {

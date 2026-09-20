@@ -7,6 +7,7 @@ from pathlib import Path
 
 from holodori_decksim.automation_gate import (
     evaluate_card_asset_gate,
+    evaluate_portrait_asset_gate,
     evaluate_master_gate,
     read_diff_lines,
 )
@@ -36,14 +37,21 @@ def master(args: argparse.Namespace) -> None:
         current_chart_index=load_json(args.current_chart_index),
         previous_runtime_index=load_json(args.previous_runtime_index),
         current_runtime_index=load_json(args.current_runtime_index),
+        previous_boards=load_json(args.previous_boards) if args.previous_boards else None,
+        current_boards=load_json(args.current_boards) if args.current_boards else None,
+        previous_memory=load_json(args.previous_memory) if args.previous_memory else None,
+        current_memory=load_json(args.current_memory) if args.current_memory else None,
     )
     emit(result, args.output)
 
 
 def card_assets(args: argparse.Namespace) -> None:
-    result = evaluate_card_asset_gate(
+    evaluate = evaluate_portrait_asset_gate if args.character_report else evaluate_card_asset_gate
+    extra = {"character_report": load_json(args.character_report)} if args.character_report else {}
+    result = evaluate(
         report=load_json(args.report),
         diff_lines=read_diff_lines(args.diff),
+        **extra,
     )
     emit(result, args.output)
 
@@ -63,11 +71,14 @@ def main() -> int:
     master_parser.add_argument("--current-chart-index", type=Path, required=True)
     master_parser.add_argument("--previous-runtime-index", type=Path, required=True)
     master_parser.add_argument("--current-runtime-index", type=Path, required=True)
+    for flag in ("previous-boards", "current-boards", "previous-memory", "current-memory"):
+        master_parser.add_argument("--" + flag, type=Path)
     master_parser.add_argument("--output", type=Path)
     master_parser.set_defaults(func=master)
 
     card_parser = subparsers.add_parser("card-assets")
     card_parser.add_argument("--report", type=Path, required=True)
+    card_parser.add_argument("--character-report", type=Path)
     card_parser.add_argument("--diff", type=Path, required=True)
     card_parser.add_argument("--output", type=Path)
     card_parser.set_defaults(func=card_assets)

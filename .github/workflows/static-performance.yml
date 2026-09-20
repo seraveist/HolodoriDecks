@@ -35,7 +35,9 @@ jobs:
       - name: Test unbundled source application
         env:
           BROWSER_SMOKE_ARTIFACT_DIR: .local/source-smoke
-        run: node scripts/test-browser-smoke.mjs | tee .local/source-browser.log
+        run: |
+          node scripts/test-browser-smoke.mjs | tee .local/source-browser.log
+          node scripts/test-board-browser.mjs
       - name: Build optimized Pages artifact
         env:
           CARD_ASSET_REVISION: ${{ github.sha }}
@@ -44,7 +46,7 @@ jobs:
           cp index.html styles.css .nojekyll LOCAL_TEST.md _site/
           cp -R css js _site/
           cp -R data/generated _site/data/
-          cp -R assets/cards assets/ui _site/assets/
+          cp -R assets/cards assets/characters assets/ui _site/assets/
           python scripts/rewrite-pages-revisions.py --root _site --revision "$CARD_ASSET_REVISION"
           node scripts/build-public-assets.mjs --root _site | tee .local/public-assets.json
           python scripts/build-localized-pages.py --root _site
@@ -53,12 +55,15 @@ jobs:
           BROWSER_SMOKE_ROOT="$PWD/_site" BROWSER_SMOKE_PORT=4174 \
             BROWSER_SMOKE_ARTIFACT_DIR="$PWD/.local/public-smoke" \
             node scripts/test-browser-smoke-core.mjs | tee .local/public-browser.log
+          BROWSER_SMOKE_ROOT="$PWD/_site" BROWSER_SMOKE_PORT=4175 BOARD_SMOKE_ARTIFACT_DIR="$PWD/.local/public-board-smoke" node scripts/test-board-browser.mjs
       - name: Upload validation reports and screenshots
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: static-optimization-validation
           path: |
+            .local/board-smoke/
+            .local/public-board-smoke/
             .local/source-smoke/
             .local/public-smoke/
             .local/public-unit.log

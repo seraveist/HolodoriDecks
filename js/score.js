@@ -1,5 +1,6 @@
 import { buildSongContext, songKernel, timelineSongProjection } from "./chart-score.js?v=1.3.1";
 import { unitDisplayBonuses, UNIT_DISPLAY_MODEL, UNIT_DISPLAY_CONTEXT } from "./unit-score.js?v=1.3.1";
+import { resolveBoardProfile, boardStatBonuses } from "./board-score.js?v=1.3.1";
 
 export const SCORE_ENGINE_VERSION = "unit-score-v1.0-verified-display + song-score-v0.5-independent-song-base";
 export const UNIT_SCORE_K = 2.037342;
@@ -380,7 +381,7 @@ function activeDetails(members, context, activationRateAveragePct, maximize = fa
   return members.map((member) => {
     const active = member.active;
     const checks = Math.floor(context.duration / Math.max(0.001, active.interval));
-    const probability = clamp(active.probability * (1 + activationRateAveragePct / 100), 0, 1);
+    const probability = clamp(active.probability * (1 + (activationRateAveragePct + finite(active.boardActivationRatePct)) / 100), 0, 1);
     const effectiveProbability = maximize && probability > 0 ? 1 : probability;
     const expectedActivations = checks * effectiveProbability;
     const coverage = clamp(expectedActivations * Math.min(active.duration, active.interval) / context.duration, 0, 1);
@@ -485,7 +486,11 @@ function unitScoreBonusBreakdown(members, passive, leaderSupportPct, maximize, a
     // Active/SP invariance is observed for score-support costumes too. Their
     // Outfit/Passive allocation was excluded; retain those legacy estimates.
     const legacy = legacyUnitScoreBonusBreakdown(members, passive, leaderSupportPct, maximize);
-    return { ...legacy, active: displayed.active, special: displayed.special };
+    const withoutBoard = unitDisplayBonuses(inputs.map(input => ({ ...input, rate: 0, frequency: 0 })), { maximize });
+    // Preserve the existing costume estimate and apply the measured board delta.
+    // Costume × board attribution still needs a separate in-game observation.
+    return { ...legacy, active: displayed.active, special: displayed.special,
+      passive: round1(Math.max(0, legacy.passive + displayed.passive - withoutBoard.passive)), board: displayed.board };
   }
   return displayed;
 }
@@ -723,8 +728,8 @@ function projectSong(baseScore, members, music, difficulty, supportProfile = {},
   const selectedKernel = cachedSongKernel(selected, playMode, scoreRules);
   const genericKernel = cachedSongKernel(generic, "auto", scoreRules);
   const baseRatio = genericKernel > 0 ? selectedKernel / genericKernel : 1;
-  const skillRatio = selectedExpected?.skillMultiplier ?? 1;
-  const maxSkillRatio = selectedMaximum?.skillMultiplier ?? 1;
+  const skillRatio = (selectedExpected?.skillMultiplier ?? 1) + finite(supportProfile.directScoreBonusPct) / 100;
+  const maxSkillRatio = (selectedMaximum?.skillMultiplier ?? 1) + finite(supportProfile.directScoreBonusPct) / 100;
   const averageScore = selectedExpected
     ? Math.max(0, Math.round(baseScore * baseRatio * skillRatio))
     : null;
@@ -792,24 +797,31 @@ function diagnostics(members, context, passiveStates, leader, additionalLeaderCo
   });
 }
 
-function normalizeAccountBonuses(accountBonuses = null) {
+function normalizeAccountBonuses(accountBonuses = null, leader = null, music = null) {
   const source = accountBonuses ?? DEFAULT_ACCOUNT_BONUSES;
+  const board = resolveBoardProfile(source.boardProfile, leader?.characterId, music);
   const explicitPermyriad = source?.memberEnhancementPermyriad;
   const fromPct = finite(source?.memberEnhancementPct) * 100;
   return {
     memberEnhancementPermyriad: Math.max(0, finite(explicitPermyriad, fromPct)),
     boardScoreBonusPct: Math.max(0, finite(source?.boardScoreBonusPct)),
-    leaderBoardSupportPct: Math.max(0, finite(source?.leaderBoardSupportPct)),
-    memberBoards: Object.fromEntries(Object.entries(source?.memberBoards ?? {}).sort(([a], [b]) => a.localeCompare(b))
-      .map(([id, value]) => [id, {
-        activationRatePct: Math.max(0, finite(value?.activationRatePct)),
-        activationFrequencyPct: Math.max(0, finite(value?.activationFrequencyPct)),
-      }])),
+    leaderBoardSupportPct: Math.max(0, finite(source?.leaderBoardSupportPct) + finite(board?.leaderBoardSupportPct)),
+    memoryPct: Math.max(0, finite(source?.memoryPct) + finite(board?.memoryPct)),
+    directScorePct: Math.max(0, finite(source?.directScorePct) + finite(board?.directScorePct)),
+    memberBoards: Object.fromEntries([...new Set([...Object.keys(source.memberBoards ?? {}), ...Object.keys(board?.memberBoards ?? {})])].sort()
+      .map(id => {
+        const original = source.memberBoards?.[id], resolved = board?.memberBoards?.[id];
+        const combined = key => Math.max(0, finite(original?.[key]) + finite(resolved?.[key]));
+        const stats = key => Object.fromEntries(['p', 't', 's'].map(stat => [stat,
+          Math.max(0, finite(original?.[key]?.[stat]) + finite(resolved?.[key]?.[stat]))]));
+        return [id, { activationRatePct: combined('activationRatePct'), activationFrequencyPct: combined('activationFrequencyPct'),
+          flat: stats('flat'), percent: stats('percent') }];
+      })),
   };
 }
 
-function accountBonusKey(accountBonuses) {
-  const normalized = normalizeAccountBonuses(accountBonuses);
+function accountBonusKey(accountBonuses, leader = null) {
+  const normalized = normalizeAccountBonuses(accountBonuses, leader);
   return JSON.stringify(normalized);
 }
 
@@ -817,7 +829,7 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   if (!leader || members.length !== 5 || members.some((member) => !member)) return null;
   if (separateRole && members.some((member) => member.characterId === leader.characterId)) return null;
 
-  const normalizedAccountBonuses = normalizeAccountBonuses(accountBonuses);
+  const normalizedAccountBonuses = normalizeAccountBonuses(accountBonuses, leader);
   const primaryMet = allConditionsMet(leader.leader.primaryCondition, members);
   const baseStats = members.reduce((total, member) => ({
     p: total.p + member.stats.p,
@@ -835,10 +847,11 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
       leaderBonusStats[stat] += Math.ceil(member.stats[stat] * finite(leaderEffects[stat]) / 100);
     }
   }
+  const boardStats = boardStatBonuses(members, normalizedAccountBonuses);
   const preEnhancementStats = {
-    p: baseStats.p + leaderBonusStats.p + passive.bonusStats.p,
-    t: baseStats.t + leaderBonusStats.t + passive.bonusStats.t,
-    s: baseStats.s + leaderBonusStats.s + passive.bonusStats.s,
+    p: baseStats.p + leaderBonusStats.p + passive.bonusStats.p + boardStats.board.p + boardStats.memory.p,
+    t: baseStats.t + leaderBonusStats.t + passive.bonusStats.t + boardStats.board.t + boardStats.memory.t,
+    s: baseStats.s + leaderBonusStats.s + passive.bonusStats.s + boardStats.board.s + boardStats.memory.s,
   };
   const enhancementRate = normalizedAccountBonuses.memberEnhancementPermyriad / 10000;
   const deckStats = {
@@ -849,6 +862,8 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   const baseParameter = baseStats.p + baseStats.t + baseStats.s;
   const leaderPower = leaderBonusStats.p + leaderBonusStats.t + leaderBonusStats.s;
   const passivePower = passive.bonusStats.p + passive.bonusStats.t + passive.bonusStats.s;
+  const boardPower = boardStats.board.p + boardStats.board.t + boardStats.board.s;
+  const memoryPower = boardStats.memory.p + boardStats.memory.t + boardStats.memory.s;
   const preEnhancementPower = preEnhancementStats.p + preEnhancementStats.t + preEnhancementStats.s;
   const overallPower = deckStats.p + deckStats.t + deckStats.s;
   const enhancementPower = Math.max(0, overallPower - preEnhancementPower);
@@ -899,9 +914,13 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
     leaderEffects,
     additionalMet,
     deckStats,
+    preEnhancementStats,
+    boardStats,
     baseParameter,
     leaderPower,
     passivePower,
+    boardPower,
+    memoryPower,
     overallPower,
     enhancementPower,
     unitSkill,
@@ -940,7 +959,7 @@ export function evaluateDeck({
   preparedComposition = null,
 }) {
   const needPotential = evaluationTarget !== "score";
-  const requestedAccountBonusKey = accountBonusKey(accountBonuses);
+  const requestedAccountBonusKey = accountBonusKey(accountBonuses, leader);
   let composition = preparedComposition;
   if (!composition
     || (needPotential && !composition.potentialComputed)
@@ -955,15 +974,30 @@ export function evaluateDeck({
   }
   if (!composition) return null;
 
+  const songBonuses = music ? normalizeAccountBonuses(accountBonuses, leader, music) : composition.accountBonuses;
+  const songMembers = music ? members.map(member => {
+    const board = songBonuses.memberBoards[member.characterId];
+    if (!board?.activationRatePct && !board?.activationFrequencyPct) return member;
+    return { ...member, active: { ...member.active,
+      boardActivationRatePct: board.activationRatePct,
+      interval: member.active.interval / (1 + board.activationFrequencyPct / 100) } };
+  }) : members;
+  const songStats = music ? boardStatBonuses(members, songBonuses) : null;
+  const songPower = songStats ? ['p', 't', 's'].reduce((sum, stat) => sum + Math.round((composition.preEnhancementStats[stat]
+    - composition.boardStats.board[stat] - composition.boardStats.memory[stat] + songStats.board[stat] + songStats.memory[stat])
+    * (1 + songBonuses.memberEnhancementPermyriad / 10000)), 0) : composition.overallPower;
+  const songSupport = { ...composition.supportProfile,
+    leaderSupportPct: composition.supportProfile.leaderSupportPct + songBonuses.leaderBoardSupportPct,
+    directScoreBonusPct: songBonuses.directScorePct + songBonuses.boardScoreBonusPct };
   const songProjection = projectSong(
     // Keep the calibrated power scale, but apply only this song's skills.
     // Displayed Unit bonuses use a different model and cannot be removed by
     // dividing by an aggregate generic skill multiplier.
-    composition.overallPower * UNIT_SCORE_K,
-    members,
+    songPower * UNIT_SCORE_K,
+    songMembers,
     music,
     difficulty,
-    composition.supportProfile,
+    songSupport,
     playMode,
     evaluationTarget,
   );
@@ -1003,9 +1037,9 @@ export function evaluateDeck({
       power: {
         memberParameter: composition.baseParameter,
         outfit: composition.leaderPower,
-        board: 0,
+        board: composition.boardPower,
         passive: composition.passivePower,
-        memory: 0,
+        memory: composition.memoryPower,
         enhancement: composition.enhancementPower,
       },
       scoreBonus: composition.scoreBonusDetail,
@@ -1027,6 +1061,25 @@ export function memberIntrinsicValue(member) {
   const active = member.active.conditionalScoreUp || member.active.baseScoreUp;
   const uptime = member.active.probability * Math.min(member.active.duration / member.active.interval, 1);
   return parameter * (1 + active * uptime / 100);
+}
+
+// Candidate pruning uses board-aware estimates; final evaluation still reads
+// the original card stats/skills and applies the board exactly once.
+export function withBoardHeuristic(member, leader, accountBonuses, music = null) {
+  if (!accountBonuses) return member;
+  const bonuses = normalizeAccountBonuses(accountBonuses, leader, music);
+  const extra = boardStatBonuses([member], bonuses);
+  const stats = Object.fromEntries(['p', 't', 's'].map(stat => [stat,
+    member.stats[stat] + extra.board[stat] + extra.memory[stat]]));
+  const board = bonuses.memberBoards[member.characterId];
+  const active = { ...member.active,
+    probability: Math.min(1, member.active.probability * (1 + finite(board?.activationRatePct) / 100)),
+    interval: member.active.interval / (1 + finite(board?.activationFrequencyPct) / 100),
+    baseScoreUp: member.active.baseScoreUp * (1 + bonuses.leaderBoardSupportPct / 100),
+    conditionalScoreUp: member.active.conditionalScoreUp * (1 + bonuses.leaderBoardSupportPct / 100) };
+  const adjusted = { ...member, stats, active };
+  return { ...member, _boardHeuristic: { score: memberIntrinsicValue(adjusted), potential: memberPotentialValue(adjusted),
+    performance: stats.p, technique: stats.t, sense: stats.s } };
 }
 
 export function memberPotentialValue(member) {

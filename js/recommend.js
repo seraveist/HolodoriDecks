@@ -3,6 +3,7 @@ import {
   leaderPotential,
   memberIntrinsicValue,
   memberPotentialValue,
+  withBoardHeuristic,
 } from "./score.js?v=1.3.1";
 import { unitScoreOrders } from "./search-order-bounds.js";
 
@@ -132,6 +133,7 @@ function memberConditionProgress(condition, selected) {
 }
 
 function conceptMemberValue(member, concept) {
+  if (member._boardHeuristic?.[concept] != null) return member._boardHeuristic[concept];
   if (concept === "potential") return memberPotentialValue(member);
   const stat = CONCEPT_STAT[concept];
   return stat ? member.stats[stat] : memberIntrinsicValue(member);
@@ -377,6 +379,7 @@ function keepTopResults(results, candidate, limit) {
 
 export function optimizeOwnedDeck({
   preparedCards,
+  accountBonuses = null,
   ownedCardIds,
   currentMembers,
   lockedSlots,
@@ -467,6 +470,7 @@ export function optimizeOwnedDeck({
     seenByLeader.set(leader.id, seen);
     const evaluate = (orderedMembers) => evaluateDeck({
       leader,
+      accountBonuses,
       members: orderedMembers,
       music,
       difficulty,
@@ -540,7 +544,8 @@ export function optimizeOwnedDeck({
     const rawMemberPool = owned.filter((card) => card.id !== leader.id
       && !fixedMemberIds.has(card.id)
       && !fixedMemberCharacters.has(memberCharacterKey(card))
-      && (!separateRole || card.characterId !== leader.characterId));
+      && (!separateRole || card.characterId !== leader.characterId))
+      .map(card => withBoardHeuristic(card, leader, accountBonuses, music));
     if (rawMemberPool.length < need) continue;
 
     const rawLeaderCases = combinationCountByCharacter(rawMemberPool, need, normalizedExactCaseLimit + 1);
@@ -686,6 +691,7 @@ export function optimizeOwnedDeck({
   const results = finalists.map((result) => {
     const score = evaluateDeck({
       leader: result.leader,
+      accountBonuses,
       members: result.members,
       music,
       difficulty,

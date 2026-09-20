@@ -3,6 +3,7 @@
     "id": "m0001",
     "title": "Shiny Smily Story (2022 ver.)",
     "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_ALL",
     "character_ids": [],
     "jacket_asset_id": "m0001",
     "asset_id": "m0001",
@@ -25,6 +26,7 @@
     "id": "m0002",
     "title": "Seishun Archive",
     "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_ALL",
     "character_ids": [],
     "jacket_asset_id": "m0002",
     "asset_id": "m0002",
@@ -47,6 +49,7 @@
     "id": "m0003",
     "title": "Yumemiru Sora He",
     "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_ALL",
     "character_ids": [],
     "jacket_asset_id": "m0003",
     "asset_id": "m0003",
@@ -69,6 +72,7 @@
     "id": "m0004",
     "title": "Kirameki Rider",
     "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_ALL",
     "character_ids": [],
     "jacket_asset_id": "m0004",
     "asset_id": "m0004",
@@ -91,6 +95,7 @@
     "id": "m0005",
     "title": "Dreaming Days",
     "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_ALL",
     "character_ids": [],
     "jacket_asset_id": "m0005",
     "asset_id": "m0005",
@@ -113,6 +118,7 @@
     "id": "m0006",
     "title": "AsuiroClearSky",
     "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_ALL",
     "character_ids": [],
     "jacket_asset_id": "m0006",
     "asset_id": "m0006",
@@ -135,6 +141,7 @@
     "id": "m0007",
     "title": "Prism Melody",
     "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_ALL",
     "character_ids": [],
     "jacket_asset_id": "m0007",
     "asset_id": "m0007",
@@ -157,6 +164,7 @@
     "id": "m0008",
     "title": "Our Bright Parade",
     "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_ALL",
     "character_ids": [],
     "jacket_asset_id": "m0008",
     "asset_id": "m0008",
@@ -179,6 +187,7 @@
     "id": "m0135",
     "title": "Capture the Moment",
     "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_ALL",
     "character_ids": [],
     "jacket_asset_id": "m0135",
     "asset_id": "m0135",
@@ -201,6 +210,7 @@
     "id": "m0136",
     "title": "Color Rise Harmony",
     "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_ALL",
     "character_ids": [],
     "jacket_asset_id": "m0136",
     "asset_id": "m0136",
@@ -223,6 +233,7 @@
     "id": "m0137",
     "title": "Ridin' on Dreams",
     "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_ALL",
     "character_ids": [],
     "jacket_asset_id": "m0137",
     "asset_id": "m0137",
@@ -245,6 +256,7 @@
     "id": "m0300",
     "title": "yumeiro wonder",
     "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_ALL",
     "character_ids": [],
     "jacket_asset_id": "m0300",
     "asset_id": "m0300",
@@ -267,6 +279,7 @@
     "id": "m0301",
     "title": "Gimmick Gimmick Entertainment",
     "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_ALL",
     "character_ids": [],
     "jacket_asset_id": "m0301",
     "asset_id": "m0301",
@@ -289,6 +302,7 @@
     "id": "m9999",
     "title": "Shiny Smily Story (2022 ver.)",
     "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_ALL",
     "character_ids": [],
     "jacket_asset_id": "m9999",
     "asset_id": "m9999",
@@ -311,6 +325,7 @@
     "id": "m0022",
     "title": "Dream☆Story",
     "singer_name": "Tokino Sora",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00001"
     ],
@@ -335,6 +350,7 @@
     "id": "m0072",
     "title": "Star,star,start",
     "singer_name": "Tokino Sora",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00001"
     ],
@@ -359,6 +375,7 @@
     "id": "m0023",
     "title": "rirubi",
     "singer_name": "Robocosan",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00002"
     ],
@@ -383,6 +400,7 @@
     "id": "m0073",
     "title": "ONINO UTAGE",
     "singer_name": "Robocosan",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00002"
     ],
@@ -407,6 +425,7 @@
     "id": "m0074",
     "title": "ω cat",
     "singer_name": "AZKi",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00013"
     ],
@@ -431,6 +450,7 @@
     "id": "m0189",
     "title": "Inochi(2024 ver.)",
     "singer_name": "AZKi",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00013"
     ],
@@ -455,6 +475,7 @@
     "id": "m0076",
     "title": "flower rhapsody",
     "singer_name": "Sakura Miko",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00015"
     ],
@@ -479,6 +500,7 @@
     "id": "m0138",
     "title": "DAI DAI DAI Fantasista",
     "singer_name": "Sakura Miko",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00015"
     ],
@@ -503,6 +525,7 @@
     "id": "m0323",
     "title": "Kyun Kyun MIKO Kyun kyun♡",
     "singer_name": "Sakura Miko",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00015"
     ],
@@ -527,6 +550,7 @@
     "id": "m0009",
     "title": "Stellar Stellar",
     "singer_name": "Hoshimachi Suisei",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00018"
     ],
@@ -551,6 +575,7 @@
     "id": "m0075",
     "title": "BIBBIDIBA",
     "singer_name": "Hoshimachi Suisei",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00018"
     ],
@@ -575,6 +600,7 @@
     "id": "m0324",
     "title": "GHOST",
     "singer_name": "Hoshimachi Suisei",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00018"
     ],
@@ -599,6 +625,7 @@
     "id": "m0026",
     "title": "SHALLYS",
     "singer_name": "Aki Rosenthal",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00004"
     ],
@@ -623,6 +650,7 @@
     "id": "m0078",
     "title": "Kimagure Mercy",
     "singer_name": "Aki Rosenthal",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00004"
     ],
@@ -647,6 +675,7 @@
     "id": "m0079",
     "title": "BUTASANDER",
     "singer_name": "Akai Haato",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00005"
     ],
@@ -671,6 +700,7 @@
     "id": "m0190",
     "title": "sensation -KANSHOKU-",
     "singer_name": "Akai Haato",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00005"
     ],
@@ -695,6 +725,7 @@
     "id": "m0347",
     "title": "Infinity (Remastered)",
     "singer_name": "Akai Haato",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00005"
     ],
@@ -719,6 +750,7 @@
     "id": "m0077",
     "title": "Sʼil vous President",
     "singer_name": "Shirakami Fubuki",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00006"
     ],
@@ -743,6 +775,7 @@
     "id": "m0184",
     "title": "SUPERNOVA",
     "singer_name": "Shirakami Fubuki",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00006"
     ],
@@ -767,6 +800,7 @@
     "id": "m0321",
     "title": "KINGWORLD",
     "singer_name": "Shirakami Fubuki",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00006"
     ],
@@ -791,6 +825,7 @@
     "id": "m0338",
     "title": "Say!Fanfare!",
     "singer_name": "Shirakami Fubuki",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00006"
     ],
@@ -815,6 +850,7 @@
     "id": "m0028",
     "title": "Virtualove",
     "singer_name": "Natsuiro Matsuri",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00007"
     ],
@@ -839,6 +875,7 @@
     "id": "m0080",
     "title": "DOUTAN KYOHI",
     "singer_name": "Natsuiro Matsuri",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00007"
     ],
@@ -863,6 +900,7 @@
     "id": "m0337",
     "title": "Pretty Guardian Matsulimit Zero",
     "singer_name": "Natsuiro Matsuri",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00007"
     ],
@@ -887,6 +925,7 @@
     "id": "m0083",
     "title": "Yoi no Yo, Yoi!",
     "singer_name": "Nakiri Ayame",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00010"
     ],
@@ -911,6 +950,7 @@
     "id": "m0180",
     "title": "Goodbye Declaration",
     "singer_name": "Nakiri Ayame",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00010"
     ],
@@ -935,6 +975,7 @@
     "id": "m0332",
     "title": "BANZAI☆MANKAI",
     "singer_name": "Nakiri Ayame",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00010"
     ],
@@ -959,6 +1000,7 @@
     "id": "m0031",
     "title": "NoDistance",
     "singer_name": "Yuzuki Choco",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00011"
     ],
@@ -983,6 +1025,7 @@
     "id": "m0084",
     "title": "Delusion Tax",
     "singer_name": "Yuzuki Choco",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00011"
     ],
@@ -1007,6 +1050,7 @@
     "id": "m0032",
     "title": "Pleiades!",
     "singer_name": "Oozora Subaru",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00012"
     ],
@@ -1031,6 +1075,7 @@
     "id": "m0085",
     "title": "Do my best!",
     "singer_name": "Oozora Subaru",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00012"
     ],
@@ -1055,6 +1100,7 @@
     "id": "m0310",
     "title": "HOT DUCK!",
     "singer_name": "OOZORA SUBARU",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00012"
     ],
@@ -1079,6 +1125,7 @@
     "id": "m0018",
     "title": "Howling",
     "singer_name": "Ookami Mio",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00014"
     ],
@@ -1103,6 +1150,7 @@
     "id": "m0188",
     "title": "Colorful Universe",
     "singer_name": "Ookami Mio",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00014"
     ],
@@ -1127,6 +1175,7 @@
     "id": "m0318",
     "title": "Natsuyadori",
     "singer_name": "Ookami Mio",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00014"
     ],
@@ -1151,6 +1200,7 @@
     "id": "m0339",
     "title": "Yakou Tsuushinn",
     "singer_name": "Ookami Mio",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00014"
     ],
@@ -1175,6 +1225,7 @@
     "id": "m0353",
     "title": "Night Loop",
     "singer_name": "Ookami Mio",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00014"
     ],
@@ -1199,6 +1250,7 @@
     "id": "m0017",
     "title": "Mogu Mogu YUMMY！",
     "singer_name": "Nekomata Okayu",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00016"
     ],
@@ -1223,6 +1275,7 @@
     "id": "m0087",
     "title": "Neko Kaburi-Na",
     "singer_name": "Nekomata Okayu",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00016"
     ],
@@ -1247,6 +1300,7 @@
     "id": "m0329",
     "title": "Doku no Oujisama",
     "singer_name": "Nekomata Okayu",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00016"
     ],
@@ -1271,6 +1325,7 @@
     "id": "m0340",
     "title": "KAMISAMA・NEKOSAMA",
     "singer_name": "Nekomata Okayu",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00016"
     ],
@@ -1295,6 +1350,7 @@
     "id": "m0033",
     "title": "Doggy god's street",
     "singer_name": "Inugami Korone",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00017"
     ],
@@ -1319,6 +1375,7 @@
     "id": "m0086",
     "title": "Show",
     "singer_name": "Inugami Korone",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00017"
     ],
@@ -1343,6 +1400,7 @@
     "id": "m0341",
     "title": "SAIKYO TENSAI WANDERFUL WORLD of KORONE",
     "singer_name": "Inugami Korone",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00017"
     ],
@@ -1367,6 +1425,7 @@
     "id": "m0034",
     "title": "PEKORANDOMBRAIN",
     "singer_name": "Usada Pekora",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00019"
     ],
@@ -1391,6 +1450,7 @@
     "id": "m0089",
     "title": "ZenjinruiUsagikakeikaku!",
     "singer_name": "Usada Pekora",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00019"
     ],
@@ -1415,6 +1475,7 @@
     "id": "m0035",
     "title": "Zenryoku-Jumping!",
     "singer_name": "Shiranui Flare",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00021"
     ],
@@ -1439,6 +1500,7 @@
     "id": "m0091",
     "title": "Kaibutsu",
     "singer_name": "Shiranui Flare",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00021"
     ],
@@ -1463,6 +1525,7 @@
     "id": "m0312",
     "title": "UNDEAD",
     "singer_name": "Shiranui Flare",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00021"
     ],
@@ -1487,6 +1550,7 @@
     "id": "m0092",
     "title": "Gyu-Don Carnival!",
     "singer_name": "Shirogane Noel",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00022"
     ],
@@ -1511,6 +1575,7 @@
     "id": "m0186",
     "title": "Waking Yashinoki",
     "singer_name": "Shirogane Noel",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00022"
     ],
@@ -1535,6 +1600,7 @@
     "id": "m0311",
     "title": "Homenobi",
     "singer_name": "Shirogane Noel",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00022"
     ],
@@ -1559,6 +1625,7 @@
     "id": "m0010",
     "title": "Ahoy!! We are Houshou Pirates",
     "singer_name": "Houshou Marine",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00023"
     ],
@@ -1583,6 +1650,7 @@
     "id": "m0090",
     "title": "Bishoujyo Muzai♡Pirates",
     "singer_name": "Houshou Marine",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00023"
     ],
@@ -1607,6 +1675,7 @@
     "id": "m0302",
     "title": "Dead Ma’am’s Chest",
     "singer_name": "Houshou Marine",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00023"
     ],
@@ -1631,6 +1700,7 @@
     "id": "m0037",
     "title": "My song",
     "singer_name": "Tsunomaki Watame",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00026"
     ],
@@ -1655,6 +1725,7 @@
     "id": "m0094",
     "title": "What an amazing swing",
     "singer_name": "Tsunomaki Watame",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00026"
     ],
@@ -1679,6 +1750,7 @@
     "id": "m0206",
     "title": "Renai Circulation",
     "singer_name": "Tsunomaki Watame",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00026"
     ],
@@ -1703,6 +1775,7 @@
     "id": "m0038",
     "title": "Palette",
     "singer_name": "Tokoyami Towa",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00027"
     ],
@@ -1727,6 +1800,7 @@
     "id": "m0095",
     "title": "-ERROR",
     "singer_name": "Tokoyami Towa",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00027"
     ],
@@ -1751,6 +1825,7 @@
     "id": "m0346",
     "title": "FACT",
     "singer_name": "Tokoyami Towa",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00027"
     ],
@@ -1775,6 +1850,7 @@
     "id": "m0140",
     "title": "Escort me! Luknight",
     "singer_name": "Himemori Luna",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00028"
     ],
@@ -1799,6 +1875,7 @@
     "id": "m0181",
     "title": "FUWAFUWA TIME",
     "singer_name": "Himemori Luna",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00028"
     ],
@@ -1823,6 +1900,7 @@
     "id": "m0333",
     "title": "Takoyaki Gazing",
     "singer_name": "Himemori Luna",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00028"
     ],
@@ -1847,6 +1925,7 @@
     "id": "m0040",
     "title": "Asuenokyokaisen",
     "singer_name": "Yukihana Lamy",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00030"
     ],
@@ -1871,6 +1950,7 @@
     "id": "m0097",
     "title": "The Brave",
     "singer_name": "Yukihana Lamy",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00030"
     ],
@@ -1895,6 +1975,7 @@
     "id": "m0020",
     "title": "NENENENENENENENE!DAIBAKUSOU",
     "singer_name": "Momosuzu Nene",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00031"
     ],
@@ -1919,6 +2000,7 @@
     "id": "m0099",
     "title": "Chu,Tayousei.",
     "singer_name": "Momosuzu Nene",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00031"
     ],
@@ -1943,6 +2025,7 @@
     "id": "m0041",
     "title": "Lioness’ Pride",
     "singer_name": "Shishiro Botan",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00032"
     ],
@@ -1967,6 +2050,7 @@
     "id": "m0098",
     "title": "Non-breath oblige",
     "singer_name": "Shishiro Botan",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00032"
     ],
@@ -1991,6 +2075,7 @@
     "id": "m0363",
     "title": "Simulacre",
     "singer_name": "Shishiro Botan",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00032"
     ],
@@ -2015,6 +2100,7 @@
     "id": "m0042",
     "title": "Po",
     "singer_name": "Omaru Polka",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00034"
     ],
@@ -2039,6 +2125,7 @@
     "id": "m0100",
     "title": "ENVY BABY",
     "singer_name": "Omaru Polka",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00034"
     ],
@@ -2063,6 +2150,7 @@
     "id": "m0101",
     "title": "God-ish",
     "singer_name": "La+ Darknesss",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00035"
     ],
@@ -2087,6 +2175,7 @@
     "id": "m0185",
     "title": "Not Interested",
     "singer_name": "La+ Darknesss",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00035"
     ],
@@ -2111,6 +2200,7 @@
     "id": "m0327",
     "title": "QUEEN",
     "singer_name": "La+ Darknesss",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00035"
     ],
@@ -2135,6 +2225,7 @@
     "id": "m0021",
     "title": "Overd",
     "singer_name": "Takane Lui",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00036"
     ],
@@ -2159,6 +2250,7 @@
     "id": "m0104",
     "title": "Owl",
     "singer_name": "Takane Lui",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00036"
     ],
@@ -2183,6 +2275,7 @@
     "id": "m0344",
     "title": "HoloHawk",
     "singer_name": "Takane Lui",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00036"
     ],
@@ -2207,6 +2300,7 @@
     "id": "m0044",
     "title": "WAO!!(2025 ver.)",
     "singer_name": "Hakui Koyori",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00037"
     ],
@@ -2231,6 +2325,7 @@
     "id": "m0102",
     "title": "God knows...",
     "singer_name": "Hakui Koyori",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00037"
     ],
@@ -2255,6 +2350,7 @@
     "id": "m0046",
     "title": "IrohaStep!",
     "singer_name": "Kazama Iroha",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00039"
     ],
@@ -2279,6 +2375,7 @@
     "id": "m0105",
     "title": "Kyu-kurarin",
     "singer_name": "Kazama Iroha",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-00039"
     ],
@@ -2303,6 +2400,7 @@
     "id": "m0047",
     "title": "ALiCE&u",
     "singer_name": "Ayunda Risu",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03001"
     ],
@@ -2327,6 +2425,7 @@
     "id": "m0107",
     "title": "Snow halation",
     "singer_name": "Ayunda Risu",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03001"
     ],
@@ -2351,6 +2450,7 @@
     "id": "m0306",
     "title": "1:15 AM",
     "singer_name": "Ayunda Risu",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03001"
     ],
@@ -2375,6 +2475,7 @@
     "id": "m0014",
     "title": "High Tide",
     "singer_name": "Moona Hoshinova",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03002"
     ],
@@ -2399,6 +2500,7 @@
     "id": "m0106",
     "title": "FIRE BIRD",
     "singer_name": "Moona Hoshinova",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03002"
     ],
@@ -2423,6 +2525,7 @@
     "id": "m0048",
     "title": "Q&A=E",
     "singer_name": "Airani Iofifteen",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03003"
     ],
@@ -2447,6 +2550,7 @@
     "id": "m0108",
     "title": "Alien Alien",
     "singer_name": "Airani Iofifteen",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03003"
     ],
@@ -2471,6 +2575,7 @@
     "id": "m0331",
     "title": "Here I am",
     "singer_name": "Airani Iofifteen",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03003"
     ],
@@ -2495,6 +2600,7 @@
     "id": "m0052",
     "title": "JOLLIE JOLLIE",
     "singer_name": "Kureiji Ollie",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03004"
     ],
@@ -2519,6 +2625,7 @@
     "id": "m0114",
     "title": "Kyouran Hey Kids!!",
     "singer_name": "Kureiji Ollie",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03004"
     ],
@@ -2543,6 +2650,7 @@
     "id": "m0335",
     "title": "Oshi Mode ON",
     "singer_name": "Kureiji Ollie",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03004"
     ],
@@ -2567,6 +2675,7 @@
     "id": "m0053",
     "title": "Unreal Veil",
     "singer_name": "Anya Melfissa",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03005"
     ],
@@ -2591,6 +2700,7 @@
     "id": "m0115",
     "title": "Marshall Maximizer",
     "singer_name": "Anya Melfissa",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03005"
     ],
@@ -2615,6 +2725,7 @@
     "id": "m0054",
     "title": "Gate Open: START!",
     "singer_name": "Pavolia Reine",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03006"
     ],
@@ -2639,6 +2750,7 @@
     "id": "m0116",
     "title": "Usseewa",
     "singer_name": "Pavolia Reine",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03006"
     ],
@@ -2663,6 +2775,7 @@
     "id": "m0459",
     "title": "Illusion Night",
     "singer_name": "Pavolia Reine",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03006"
     ],
@@ -2687,6 +2800,7 @@
     "id": "m0060",
     "title": "You're Mine",
     "singer_name": "Vestia Zeta",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03007"
     ],
@@ -2711,6 +2825,7 @@
     "id": "m0122",
     "title": "KAWAIKUTE GOMEN",
     "singer_name": "Vestia Zeta",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03007"
     ],
@@ -2735,6 +2850,7 @@
     "id": "m0123",
     "title": "Brave Heart",
     "singer_name": "Kaela Kovalskia",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03008"
     ],
@@ -2759,6 +2875,7 @@
     "id": "m0179",
     "title": "dahlah.",
     "singer_name": "Kaela Kovalskia",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03008"
     ],
@@ -2783,6 +2900,7 @@
     "id": "m0359",
     "title": "Backseat",
     "singer_name": "Kaela Kovalskia",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03008"
     ],
@@ -2807,6 +2925,7 @@
     "id": "m0062",
     "title": "Mantra Hujan",
     "singer_name": "Kobo Kanaeru",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03009"
     ],
@@ -2831,6 +2950,7 @@
     "id": "m0124",
     "title": "Overdose",
     "singer_name": "Kobo Kanaeru",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03009"
     ],
@@ -2855,6 +2975,7 @@
     "id": "m0330",
     "title": "HELP!!",
     "singer_name": "Kobo Kanaeru",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-03009"
     ],
@@ -2879,6 +3000,7 @@
     "id": "m0012",
     "title": "Excuse My Rudeness, But Could You Please RIP?",
     "singer_name": "Mori Calliope",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04001"
     ],
@@ -2903,6 +3025,7 @@
     "id": "m0109",
     "title": "DEAD BEATS",
     "singer_name": "Mori Calliope",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04001"
     ],
@@ -2927,6 +3050,7 @@
     "id": "m0304",
     "title": "LET'S JUST CRASH",
     "singer_name": "Mori Calliope",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04001"
     ],
@@ -2951,6 +3075,7 @@
     "id": "m0334",
     "title": "NIGHTBREAK",
     "singer_name": "Mori Calliope",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04001"
     ],
@@ -2975,6 +3100,7 @@
     "id": "m0049",
     "title": "SPARKS",
     "singer_name": "Takanashi Kiara",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04002"
     ],
@@ -2999,6 +3125,7 @@
     "id": "m0111",
     "title": "The Vampire",
     "singer_name": "Takanashi Kiara",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04002"
     ],
@@ -3023,6 +3150,7 @@
     "id": "m0050",
     "title": "VIOLET",
     "singer_name": "Ninomae Ina'nis",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04003"
     ],
@@ -3047,6 +3175,7 @@
     "id": "m0112",
     "title": "NAI NAI",
     "singer_name": "Ninomae Ina'nis",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04003"
     ],
@@ -3071,6 +3200,7 @@
     "id": "m0336",
     "title": "Stardust Capsule",
     "singer_name": "Ninomae Ina'nis",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04003"
     ],
@@ -3095,6 +3225,7 @@
     "id": "m0117",
     "title": "IDOL",
     "singer_name": "IRyS",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04007"
     ],
@@ -3119,6 +3250,7 @@
     "id": "m0183",
     "title": "Carbonated Love",
     "singer_name": "IRyS",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04007"
     ],
@@ -3143,6 +3275,7 @@
     "id": "m0326",
     "title": "TwiLight",
     "singer_name": "IRyS",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04007"
     ],
@@ -3167,6 +3300,7 @@
     "id": "m0058",
     "title": "Daydream",
     "singer_name": "Ouro Kronii",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04010"
     ],
@@ -3191,6 +3325,7 @@
     "id": "m0120",
     "title": "Mafia",
     "singer_name": "Ouro Kronii",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04010"
     ],
@@ -3215,6 +3350,7 @@
     "id": "m0121",
     "title": "PSYCHO",
     "singer_name": "Hakos Baelz",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04012"
     ],
@@ -3239,6 +3375,7 @@
     "id": "m0182",
     "title": "Los! Los! Los!",
     "singer_name": "Hakos Baelz",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04012"
     ],
@@ -3263,6 +3400,7 @@
     "id": "m0064",
     "title": "Monsters and Men",
     "singer_name": "Shiori Novella",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04013"
     ],
@@ -3287,6 +3425,7 @@
     "id": "m0127",
     "title": "Kyoufuu All Back",
     "singer_name": "Shiori Novella",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04013"
     ],
@@ -3311,6 +3450,7 @@
     "id": "m0065",
     "title": "Prism no Mahou",
     "singer_name": "Koseki Bijou",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04014"
     ],
@@ -3335,6 +3475,7 @@
     "id": "m0128",
     "title": "The Mirror’s Ripples",
     "singer_name": "Koseki Bijou",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04014"
     ],
@@ -3359,6 +3500,7 @@
     "id": "m0066",
     "title": "Say My Name",
     "singer_name": "Nerissa Ravencroft",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04015"
     ],
@@ -3383,6 +3525,7 @@
     "id": "m0129",
     "title": "YUKINO HANA",
     "singer_name": "Nerissa Ravencroft",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04015"
     ],
@@ -3407,6 +3550,7 @@
     "id": "m0063",
     "title": "Lifetime Showtime",
     "singer_name": "FUWAMOCO",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04016",
       "chr-04017"
@@ -3432,6 +3576,7 @@
     "id": "m0191",
     "title": "Cute Na Kanojo",
     "singer_name": "FUWAMOCO",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04016",
       "chr-04017"
@@ -3457,6 +3602,7 @@
     "id": "m0192",
     "title": "Born to be \"BAU\"DOL☆★",
     "singer_name": "FUWAMOCO",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04016",
       "chr-04017"
@@ -3482,6 +3628,7 @@
     "id": "m0193",
     "title": "Let Me Be With You",
     "singer_name": "FUWAMOCO",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04016",
       "chr-04017"
@@ -3507,6 +3654,7 @@
     "id": "m0527",
     "title": "Mekurumeku Rendezvous",
     "singer_name": "FUWAMOCO",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-04016",
       "chr-04017"
@@ -3532,6 +3680,7 @@
     "id": "m0068",
     "title": "GREATEST",
     "singer_name": "Otonose Kanade",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-06002"
     ],
@@ -3556,6 +3705,7 @@
     "id": "m0131",
     "title": "KANADE",
     "singer_name": "Otonose Kanade",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-06002"
     ],
@@ -3580,6 +3730,7 @@
     "id": "m0524",
     "title": "You & aIzu",
     "singer_name": "Otonose Kanade",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-06002"
     ],
@@ -3604,6 +3755,7 @@
     "id": "m0069",
     "title": "Kyoumodaitensai!",
     "singer_name": "Ichijou Ririka",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-06003"
     ],
@@ -3628,6 +3780,7 @@
     "id": "m0187",
     "title": "Cherry Pop",
     "singer_name": "Ichijou Ririka",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-06003"
     ],
@@ -3652,6 +3805,7 @@
     "id": "m0070",
     "title": "Japan no bijutsushi oboemasho",
     "singer_name": "Juufuutei Raden",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-06004"
     ],
@@ -3676,6 +3830,7 @@
     "id": "m0133",
     "title": "PI PIKASO",
     "singer_name": "Juufuutei Raden",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-06004"
     ],
@@ -3700,6 +3855,7 @@
     "id": "m0071",
     "title": "Countach",
     "singer_name": "Todoroki Hajime",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-06005"
     ],
@@ -3724,6 +3880,7 @@
     "id": "m0134",
     "title": "Tsuppari High School Rock'n Roll (Toukou-hen)",
     "singer_name": "Todoroki Hajime",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
     "character_ids": [
       "chr-06005"
     ],
@@ -3748,6 +3905,7 @@
     "id": "m0139",
     "title": "Myth or Treat",
     "singer_name": "hololive English -Myth-",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-04001",
       "chr-04002",
@@ -3774,6 +3932,7 @@
     "id": "m0153",
     "title": "Secret Garden",
     "singer_name": "hololive 1st Generation",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00004",
       "chr-00005",
@@ -3801,6 +3960,7 @@
     "id": "m0154",
     "title": "BLUE CLAPPER",
     "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00030",
       "chr-00031",
@@ -3828,6 +3988,7 @@
     "id": "m0155",
     "title": "Jouya Repaint",
     "singer_name": "Secret Society holoX",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00035",
       "chr-00036",
@@ -3855,6 +4016,7 @@
     "id": "m0156",
     "title": "Bridal Dream",
     "singer_name": "Usada Pekora, Houshou Marine",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00019",
       "chr-00023"
@@ -3880,6 +4042,7 @@
     "id": "m0157",
     "title": "Our Promise",
     "singer_name": "hololive English -Promise-",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-04007",
       "chr-04010",
@@ -3906,6 +4069,7 @@
     "id": "m0158",
     "title": "Rebellion",
     "singer_name": "hololive English -Advent-",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-04013",
       "chr-04014",
@@ -3934,6 +4098,7 @@
     "id": "m0159",
     "title": "HI-15",
     "singer_name": "hololive Indonesia 1st Generation",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-03001",
       "chr-03002",
@@ -3960,6 +4125,7 @@
     "id": "m0160",
     "title": "Slap by Step",
     "singer_name": "hololive Indonesia 2nd Generation",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-03004",
       "chr-03005",
@@ -3986,6 +4152,7 @@
     "id": "m0161",
     "title": "save our hearts",
     "singer_name": "hololive Indonesia 3rd Generation",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-03007",
       "chr-03008",
@@ -4012,6 +4179,7 @@
     "id": "m0162",
     "title": "Shunkan Heartbeat",
     "singer_name": "ReGLOSS",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-06002",
       "chr-06003",
@@ -4039,6 +4207,7 @@
     "id": "m0317",
     "title": "Kibun Joujou↑↑",
     "singer_name": "Kureiji Ollie,Anya Melfissa,Pavolia Reine",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-03004",
       "chr-03005",
@@ -4065,6 +4234,7 @@
     "id": "m0342",
     "title": "We are GAMERS !!!!",
     "singer_name": "hololive GAMERS",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00006",
       "chr-00014",
@@ -4092,6 +4262,7 @@
     "id": "m0141",
     "title": "Setsunatick Code",
     "singer_name": "SorAZ",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00001",
       "chr-00013"
@@ -4117,6 +4288,7 @@
     "id": "m0142",
     "title": "Suspect",
     "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00002",
       "chr-00004",
@@ -4143,6 +4315,7 @@
     "id": "m0144",
     "title": "NAKAMAKA",
     "singer_name": "Shiranui Construction",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00015",
       "chr-00018",
@@ -4171,6 +4344,7 @@
     "id": "m0145",
     "title": "Wicked feat. Mori Calliope",
     "singer_name": "Hoshimachi Suisei, Mori Calliope",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00018",
       "chr-04001"
@@ -4196,6 +4370,7 @@
     "id": "m0146",
     "title": "ONIKEMODANCE",
     "singer_name": "AyaFubuMi",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00006",
       "chr-00010",
@@ -4222,6 +4397,7 @@
     "id": "m0147",
     "title": "zigokudeaouze!subachocolunatan",
     "singer_name": "subachocolunatan",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00011",
       "chr-00012",
@@ -4249,6 +4425,7 @@
     "id": "m0148",
     "title": "ORANGE PARADE feat. Inugami Korone",
     "singer_name": "Nekomata Okayu,Inugami Korone",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00016",
       "chr-00017"
@@ -4274,6 +4451,7 @@
     "id": "m0149",
     "title": "I I I",
     "singer_name": "Houshou Marine & Kobo Kanaeru",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00023",
       "chr-03009"
@@ -4299,6 +4477,7 @@
     "id": "m0150",
     "title": "Shishi Wata Cooking feat. Shishiro Botan",
     "singer_name": "Tsunomaki Watame,Shishiro Botan",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00026",
       "chr-00032"
@@ -4324,6 +4503,7 @@
     "id": "m0163",
     "title": "Maware! Setsugetsuka",
     "singer_name": "AZKi,Shirakami Fubuki,Houshou Marine",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00006",
       "chr-00013",
@@ -4350,6 +4530,7 @@
     "id": "m0164",
     "title": "(Not) A Devil",
     "singer_name": "AZKi,Kazama Iroha",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00013",
       "chr-00039"
@@ -4375,6 +4556,7 @@
     "id": "m0165",
     "title": "HAO",
     "singer_name": "Tsunomaki Watame,Pavolia Reine",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00026",
       "chr-03006"
@@ -4400,6 +4582,7 @@
     "id": "m0166",
     "title": "Watashi no Ichiban Kawaiitokoro",
     "singer_name": "Sakura Miko,Himemori Luna,Airani Iofifteen,Fuwawa Abyssgard,Mococo Abyssgard",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00015",
       "chr-00028",
@@ -4428,6 +4611,7 @@
     "id": "m0167",
     "title": "Megitsune",
     "singer_name": "hololive English -Advent-",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-04013",
       "chr-04014",
@@ -4456,6 +4640,7 @@
     "id": "m0168",
     "title": "Hyadain no Jojo Yujo",
     "singer_name": "Nekomata Okayu,Inugami Korone",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00016",
       "chr-00017"
@@ -4481,6 +4666,7 @@
     "id": "m0171",
     "title": "Touch the hurt again",
     "singer_name": "Blue Journey",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00021",
       "chr-00027",
@@ -4507,6 +4693,7 @@
     "id": "m0176",
     "title": "Stay Blue",
     "singer_name": "Shiranui Flare & IRyS",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00021",
       "chr-04007"
@@ -4532,6 +4719,7 @@
     "id": "m0177",
     "title": "Mikkorone×Showtime!!",
     "singer_name": "Sakura Miko, Inugami Korone",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00015",
       "chr-00017"
@@ -4557,6 +4745,7 @@
     "id": "m0196",
     "title": "SAIKAI",
     "singer_name": "Hoshimachi Suisei,Moona Hoshinova",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00018",
       "chr-03002"
@@ -4582,6 +4771,7 @@
     "id": "m0197",
     "title": "KAMINO MANIMANI",
     "singer_name": "Yuzuki Choco,Oozora Subaru,Himemori Luna",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00011",
       "chr-00012",
@@ -4608,6 +4798,7 @@
     "id": "m0198",
     "title": "I~ya I~ya I~ya",
     "singer_name": "Takanashi Kiara,Ninomae Ina'nis",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-04002",
       "chr-04003"
@@ -4633,6 +4824,7 @@
     "id": "m0201",
     "title": "Erandekurete Arigatou",
     "singer_name": "IRyS,Hakos Baelz",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-04007",
       "chr-04012"
@@ -4658,6 +4850,7 @@
     "id": "m0303",
     "title": "A Tale of Six Trillion Years and a Night",
     "singer_name": "SorAZ",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00001",
       "chr-00013"
@@ -4683,6 +4876,7 @@
     "id": "m0307",
     "title": "Orange",
     "singer_name": "Momosuzu Nene,Takanashi Kiara",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00031",
       "chr-04002"
@@ -4708,6 +4902,7 @@
     "id": "m0308",
     "title": "UFO",
     "singer_name": "Juufuutei Raden,Todoroki Hajime",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-06004",
       "chr-06005"
@@ -4733,6 +4928,7 @@
     "id": "m0309",
     "title": "Boom! Boom! Tropica Vacation",
     "singer_name": "Oozora Subaru,Shiranui Flare,Shirogane Noel,Tsunomaki Watame,Otonose Kanade",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00012",
       "chr-00021",
@@ -4761,6 +4957,7 @@
     "id": "m0319",
     "title": "Bling-Bang-Bang-Born",
     "singer_name": "Ninomae Ina'nis,Hakos Baelz",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-04003",
       "chr-04012"
@@ -4786,6 +4983,7 @@
     "id": "m0325",
     "title": "Sugar Rush",
     "singer_name": "miComet",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00015",
       "chr-00018"
@@ -4811,6 +5009,7 @@
     "id": "m0348",
     "title": "Tri-Unity♡LoveSystem",
     "singer_name": "Takane Lui, Fuwawa Abyssgard, Mococo Abyssgard",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_GROUP",
     "character_ids": [
       "chr-00036",
       "chr-04016",

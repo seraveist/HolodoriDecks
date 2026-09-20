@@ -6,6 +6,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 311,
       "technique": 390,
@@ -642,6 +643,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 253,
       "technique": 297,
@@ -1274,6 +1276,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 292,
       "technique": 460,
@@ -1908,6 +1911,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 400,
       "technique": 306,
@@ -2544,6 +2548,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 470,
       "technique": 292,
@@ -3176,6 +3181,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 450,
       "technique": 297,
@@ -3810,6 +3816,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 283,
       "technique": 307,
@@ -4446,6 +4453,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 299,
       "technique": 311,
@@ -5082,6 +5090,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 278,
       "technique": 420,
@@ -5718,6 +5727,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 268,
       "technique": 302,
@@ -6350,6 +6360,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 460,
       "technique": 248,
@@ -6984,6 +6995,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 306,
       "technique": 400,
@@ -7620,6 +7632,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 283,
       "technique": 410,
@@ -8256,6 +8269,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 299,
       "technique": 311,
@@ -8890,6 +8904,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 294,
       "technique": 400,
@@ -9526,6 +9541,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 420,
       "technique": 302,
@@ -10162,6 +10178,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 292,
       "technique": 470,
@@ -10794,6 +10811,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 390,
       "technique": 299,
@@ -11430,6 +11448,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 450,
       "technique": 253,
@@ -12064,6 +12083,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 307,
       "technique": 283,
@@ -12700,6 +12720,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 278,
       "technique": 420,
@@ -13336,6 +13357,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 248,
       "technique": 292,
@@ -13968,6 +13990,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 440,
       "technique": 263,
@@ -14602,6 +14625,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 311,
       "technique": 390,
@@ -15236,6 +15260,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 306,
       "technique": 294,
@@ -15872,6 +15897,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 302,
       "technique": 430,
@@ -16504,6 +16530,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 297,
       "technique": 263,
@@ -17138,6 +17165,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 238,
       "technique": 292,
@@ -17772,6 +17800,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 299,
       "technique": 390,
@@ -18408,6 +18437,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 450,
       "technique": 297,
@@ -19042,6 +19072,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 400,
       "technique": 306,
@@ -19678,6 +19709,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 302,
       "technique": 430,
@@ -20312,6 +20344,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 299,
       "technique": 311,
@@ -20948,6 +20981,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 248,
       "technique": 292,
@@ -21582,6 +21616,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 440,
       "technique": 263,
@@ -22214,6 +22249,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 410,
       "technique": 307,
@@ -22850,6 +22886,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 238,
       "technique": 470,
@@ -23484,6 +23521,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 420,
       "technique": 278,
@@ -24120,6 +24158,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 253,
       "technique": 297,
@@ -24754,6 +24793,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 307,
       "technique": 410,
@@ -25390,6 +25430,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 302,
       "technique": 420,
@@ -26026,6 +26067,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 400,
       "technique": 306,
@@ -26662,6 +26704,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 292,
       "technique": 248,
@@ -27296,6 +27339,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 390,
       "technique": 299,
@@ -27930,6 +27974,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 283,
       "technique": 410,
@@ -28566,6 +28611,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 278,
       "technique": 302,
@@ -29202,6 +29248,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 307,
       "technique": 410,
@@ -29838,6 +29885,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 430,
       "technique": 268,
@@ -30472,6 +30520,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 278,
       "technique": 302,
@@ -31108,6 +31157,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 440,
       "technique": 297,
@@ -31742,6 +31792,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 470,
       "technique": 292,
@@ -32376,6 +32427,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 2,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 302,
       "technique": 268,
@@ -33010,6 +33062,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 1,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 283,
       "technique": 410,
@@ -33644,6 +33697,7 @@
     "name": "We are hololive!",
     "rarity": 3,
     "attribute": 3,
+    "connect_effect_id": null,
     "parameter_ratio_permil": {
       "performance": 278,
       "technique": 302,
@@ -34278,6 +34332,7 @@
     "name": "하늘까지 닿기를! 올곧은 노랫소리",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 253,
       "technique": 297,
@@ -34994,6 +35049,7 @@
     "name": "귀요미 윙크 LIVE",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 283,
       "technique": 410,
@@ -35716,6 +35772,7 @@
     "name": "부드러운 선율에 실어",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-002-rare_4",
     "parameter_ratio_permil": {
       "performance": 410,
       "technique": 283,
@@ -36440,6 +36497,7 @@
     "name": "두 팔 벌리는 Cheerful show",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 253,
       "technique": 450,
@@ -37160,6 +37218,7 @@
     "name": "플로어를 달구는 눈부신 존재",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-002-rare_4",
     "parameter_ratio_permil": {
       "performance": 307,
       "technique": 283,
@@ -37882,6 +37941,7 @@
     "name": "노래하는 curious 하프 엘프",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-002-rare_4",
     "parameter_ratio_permil": {
       "performance": 307,
       "technique": 410,
@@ -38600,6 +38660,7 @@
     "name": "마음을 간질이는 자유분방 라이브",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 410,
       "technique": 283,
@@ -39324,6 +39385,7 @@
     "name": "박차를 가하는 FOX 퍼포먼스",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 292,
       "technique": 460,
@@ -40046,6 +40108,7 @@
     "name": "잔망미 대폭발 심쿵 라이브",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 307,
       "technique": 283,
@@ -40764,6 +40827,7 @@
     "name": "오니 아가씨의 부드러운 앵콜",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 307,
       "technique": 410,
@@ -41488,6 +41552,7 @@
     "name": "보건교사의 매혹적인 라이브",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 292,
       "technique": 460,
@@ -42204,6 +42269,7 @@
     "name": "마음을 비추는 Active Live",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 253,
       "technique": 297,
@@ -42920,6 +42986,7 @@
     "name": "빛이 비치는 늑대의 노랫소리",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 450,
       "technique": 297,
@@ -43640,6 +43707,7 @@
     "name": "마음을 사로잡는 장난꾸러기 CAT 라이브",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 410,
       "technique": 283,
@@ -44362,6 +44430,7 @@
     "name": "farout dog 펀치 라인",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 410,
       "technique": 307,
@@ -45086,6 +45155,7 @@
     "name": "cheeky 호핑 버니",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 292,
       "technique": 248,
@@ -45808,6 +45878,7 @@
     "name": "춤으로 전해지는 마음",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-002-rare_4",
     "parameter_ratio_permil": {
       "performance": 278,
       "technique": 302,
@@ -46552,6 +46623,7 @@
     "name": "노래하는 무지성 막무가내 나이트",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-002-rare_4",
     "parameter_ratio_permil": {
       "performance": 307,
       "technique": 410,
@@ -47276,6 +47348,7 @@
     "name": "♡ 포착하는 해적의 영역",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 253,
       "technique": 297,
@@ -47992,6 +48065,7 @@
     "name": "퍼지는 healing sound",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 248,
       "technique": 460,
@@ -48712,6 +48786,7 @@
     "name": "여유만만 나이트 라이브",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 460,
       "technique": 292,
@@ -49430,6 +49505,7 @@
     "name": "폭신폭신 프린세스 스테이지",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 410,
       "technique": 283,
@@ -50154,6 +50230,7 @@
     "name": "비추는 snow mood!",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 297,
       "technique": 450,
@@ -50870,6 +50947,7 @@
     "name": "get excited 점프!",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 283,
       "technique": 307,
@@ -51594,6 +51672,7 @@
     "name": "매료하는 Laughing Lion",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 253,
       "technique": 450,
@@ -52312,6 +52391,7 @@
     "name": "파티 하드 대폭발 LIVE",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 450,
       "technique": 253,
@@ -53030,6 +53110,7 @@
     "name": "오늘 밤 라이브, 이 몸이 주인공",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 460,
       "technique": 292,
@@ -53746,6 +53827,7 @@
     "name": "어디에서든 신뢰! 실력자 LIVE",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 400,
       "technique": 294,
@@ -54464,6 +54546,7 @@
     "name": "무대에 울려 펴지는 cute howl",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-002-rare_4",
     "parameter_ratio_permil": {
       "performance": 450,
       "technique": 297,
@@ -55184,6 +55267,7 @@
     "name": "스테이지에서 방출! 수행의 성과",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 307,
       "technique": 283,
@@ -55908,6 +55992,7 @@
     "name": "동그란 꼬리의 큐트 라이브",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-002-rare_4",
     "parameter_ratio_permil": {
       "performance": 292,
       "technique": 248,
@@ -56630,6 +56715,7 @@
     "name": "달빛에 녹아드는 노래",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-002-rare_4",
     "parameter_ratio_permil": {
       "performance": 450,
       "technique": 253,
@@ -57346,6 +57432,7 @@
     "name": "화창한 Stage View",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 410,
       "technique": 283,
@@ -58070,6 +58157,7 @@
     "name": "Deadly Encore",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 460,
       "technique": 248,
@@ -58786,6 +58874,7 @@
     "name": "Little Back 제멋대로 스테이지",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 297,
       "technique": 450,
@@ -59508,6 +59597,7 @@
     "name": "축복의 럭셔리 나이트",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 307,
       "technique": 283,
@@ -60232,6 +60322,7 @@
     "name": "childlike 즐거운 라이브",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 297,
       "technique": 253,
@@ -60948,6 +61039,7 @@
     "name": "대장간에 필적! 열광적인 라이브",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 283,
       "technique": 307,
@@ -61672,6 +61764,7 @@
     "name": "우당탕탕 풀 스로틀 스테이지",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 292,
       "technique": 460,
@@ -62388,6 +62481,7 @@
     "name": "저승 대표! here we go",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 253,
       "technique": 297,
@@ -63104,6 +63198,7 @@
     "name": "행복한 스테이지에 온 걸 환영해",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 283,
       "technique": 307,
@@ -63828,6 +63923,7 @@
     "name": "무대를 장식하는 평온한 미소",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 292,
       "technique": 248,
@@ -64550,6 +64646,7 @@
     "name": "울려 퍼지는 희망찬 목소리",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 460,
       "technique": 292,
@@ -65270,6 +65367,7 @@
     "name": "시간을 잊는 퍼포먼스",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 307,
       "technique": 410,
@@ -65992,6 +66090,7 @@
     "name": "Let's dance more!",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 292,
       "technique": 248,
@@ -66708,6 +66807,7 @@
     "name": "스테이지에서도 Keep it real",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 307,
       "technique": 410,
@@ -67432,6 +67532,7 @@
     "name": "반짝 보여주는 순수한 민낯",
     "rarity": 4,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 420,
       "technique": 278,
@@ -68176,6 +68277,7 @@
     "name": "미성을 전하는 저녁 무렵 스테이지",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 248,
       "technique": 292,
@@ -68898,6 +69000,7 @@
     "name": "마음이 편안해지는 포근포근 라이브",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 400,
       "technique": 294,
@@ -69614,6 +69717,7 @@
     "name": "활짝 웃는 복슬복슬 라이브",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 283,
       "technique": 410,
@@ -70336,6 +70440,7 @@
     "name": "닿아라! 뛰어난 하모니",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 283,
       "technique": 410,
@@ -71060,6 +71165,7 @@
     "name": "콩닥콩닥 LIVE♡",
     "rarity": 4,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-004-rare_4",
     "parameter_ratio_permil": {
       "performance": 294,
       "technique": 400,
@@ -71776,6 +71882,7 @@
     "name": "cultural performer",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-003-rare_4",
     "parameter_ratio_permil": {
       "performance": 420,
       "technique": 302,
@@ -72520,6 +72627,7 @@
     "name": "반쵸가 반쵸인 이유",
     "rarity": 4,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-002-rare_4",
     "parameter_ratio_permil": {
       "performance": 292,
       "technique": 460,
@@ -73238,6 +73346,7 @@
     "name": "한결같이 그리는 무지개 노래",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 420,
       "technique": 278,
@@ -74027,6 +74136,7 @@
     "name": "고성능 V사인",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 430,
       "technique": 302,
@@ -74818,6 +74928,7 @@
     "name": "흐드러지게 핀 일편단심 꽃",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 263,
       "technique": 297,
@@ -75601,6 +75712,7 @@
     "name": "벚꽃 Bloom",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 297,
       "technique": 263,
@@ -76384,6 +76496,7 @@
     "name": "마음을 빼앗는 Comet Tune",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 263,
       "technique": 440,
@@ -77167,6 +77280,7 @@
     "name": "요염한 하프 엘프",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 263,
       "technique": 297,
@@ -77950,6 +78064,7 @@
     "name": "let's freestyle 간식 시간",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 297,
       "technique": 440,
@@ -78731,6 +78846,7 @@
     "name": "여우 사당에서 콘콘콘",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 420,
       "technique": 278,
@@ -79520,6 +79636,7 @@
     "name": "통통 튀는 생기발랄 치어리더",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 440,
       "technique": 297,
@@ -80301,6 +80418,7 @@
     "name": "저승에서 유유자적, 자유로운 등불",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 400,
       "technique": 294,
@@ -81082,6 +81200,7 @@
     "name": "악마 같은 매력에 현혹되어서",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 283,
       "technique": 307,
@@ -81889,6 +82008,7 @@
     "name": "꽥꽥거리며 노는 오리의 오후",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 420,
       "technique": 278,
@@ -82680,6 +82800,7 @@
     "name": "사르르 녹는 nightscape",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 302,
       "technique": 278,
@@ -83469,6 +83590,7 @@
     "name": "파티의 끝에 비밀스런 유희",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 297,
       "technique": 440,
@@ -84250,6 +84372,7 @@
     "name": "Go! Go! Laughing Skater",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 302,
       "technique": 268,
@@ -85041,6 +85164,7 @@
     "name": "애교 가득 래빗 필드",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 283,
       "technique": 410,
@@ -85850,6 +85974,7 @@
     "name": "하프 엘프의 바람이 스치는 곤돌라",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 440,
       "technique": 263,
@@ -86633,6 +86758,7 @@
     "name": "향긋한 바람의 온화한 기사",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 294,
       "technique": 306,
@@ -87416,6 +87542,7 @@
     "name": "요염함이 넘치는 마린블루",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 278,
       "technique": 420,
@@ -88207,6 +88334,7 @@
     "name": "Woolly Smile Festival",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 410,
       "technique": 307,
@@ -88988,6 +89116,7 @@
     "name": "끝날 기미가 안 보이는 편안한 밤놀이",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 302,
       "technique": 278,
@@ -89779,6 +89908,7 @@
     "name": "공주에게 충성 애프터눈",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 297,
       "technique": 440,
@@ -90560,6 +90690,7 @@
     "name": "눈 내리는 밤 외로운 영애",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 278,
       "technique": 302,
@@ -91351,6 +91482,7 @@
     "name": "같이 노래하자! 이노센트 리듬",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 440,
       "technique": 263,
@@ -92132,6 +92264,7 @@
     "name": "시선을 강탈하는 갓 에임! lion’s hunt",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 410,
       "technique": 307,
@@ -92915,6 +93048,7 @@
     "name": "변환 자재! 폴카 서커스 시작!",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 283,
       "technique": 307,
@@ -93698,6 +93832,7 @@
     "name": "작전 개시! 총수의 수완을 보여줘라",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 278,
       "technique": 420,
@@ -94487,6 +94622,7 @@
     "name": "조직을 지탱하는 초 엘리트 간부",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 307,
       "technique": 410,
@@ -95270,6 +95406,7 @@
     "name": "조수군의 마음을 사로잡는 라이브!",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 307,
       "technique": 283,
@@ -96083,6 +96220,7 @@
     "name": "치쿠린 쟈킹! 과 일도양단",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 268,
       "technique": 430,
@@ -96874,6 +97012,7 @@
     "name": "장난을 꾸미는 햇살 가득한 숲",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-004-rare_5",
     "parameter_ratio_permil": {
       "performance": 268,
       "technique": 430,
@@ -97665,6 +97804,7 @@
     "name": "Lunar Songstress",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 278,
       "technique": 302,
@@ -98456,6 +98596,7 @@
     "name": "햇빛이 쏟아지는 Cosmos Palette",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-004-rare_5",
     "parameter_ratio_permil": {
       "performance": 302,
       "technique": 430,
@@ -99247,6 +99388,7 @@
     "name": "Z nonstop talker",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 307,
       "technique": 410,
@@ -100028,6 +100170,7 @@
     "name": "소파에 파묻혀 느긋하게 게임",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 278,
       "technique": 302,
@@ -100817,6 +100960,7 @@
     "name": "새침데기 공작과 즐기는 한잔",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 294,
       "technique": 400,
@@ -101598,6 +101742,7 @@
     "name": "양지와 고양이와 구성원",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 420,
       "technique": 302,
@@ -102387,6 +102532,7 @@
     "name": "마음의 힘은 대장간에서 연마",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 306,
       "technique": 400,
@@ -103168,6 +103314,7 @@
     "name": "비 갠 뒤 싱글벙글 샤먼",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 410,
       "technique": 283,
@@ -103951,6 +104098,7 @@
     "name": "Reaper’s death flow",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 420,
       "technique": 278,
@@ -104742,6 +104890,7 @@
     "name": "Lovely Phoenix 다이너",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 430,
       "technique": 268,
@@ -105533,6 +105682,7 @@
     "name": "따끈따끈 충전 시간",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 294,
       "technique": 400,
@@ -106316,6 +106466,7 @@
     "name": "nephilim sonority",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 278,
       "technique": 420,
@@ -107107,6 +107258,7 @@
     "name": "감시자가 속삭이는 Clock Tower",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-004-rare_5",
     "parameter_ratio_permil": {
       "performance": 294,
       "technique": 306,
@@ -107888,6 +108040,7 @@
     "name": "Chaotic Powerful Rat",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 430,
       "technique": 302,
@@ -108675,6 +108828,7 @@
     "name": "서고에서 키우는 탐구심",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 440,
       "technique": 263,
@@ -109458,6 +109612,7 @@
     "name": "반짝반짝 Crystal place",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 263,
       "technique": 297,
@@ -110241,6 +110396,7 @@
     "name": "노래에 흔들리는 녹턴",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 302,
       "technique": 420,
@@ -111030,6 +111186,7 @@
     "name": "화기애애 도넛 파티♪",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 297,
       "technique": 440,
@@ -111813,6 +111970,7 @@
     "name": "유유자적 도넛 파티♪",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 302,
       "technique": 268,
@@ -112604,6 +112762,7 @@
     "name": "퍼레이드로 미소를 전달",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 302,
       "technique": 268,
@@ -113395,6 +113554,7 @@
     "name": "심야의 휴식, CEO의 한계밥",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 420,
       "technique": 302,
@@ -114184,6 +114344,7 @@
     "name": "지혜의 불을 밝혀 예술로 인도",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 297,
       "technique": 263,
@@ -114967,6 +115128,7 @@
     "name": "걸리 반쵸의 소소한 선물",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 440,
       "technique": 263,
@@ -115750,6 +115912,7 @@
     "name": "Energetic 스플래시!",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 306,
       "technique": 294,
@@ -116531,6 +116694,7 @@
     "name": "sparks sunset",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 302,
       "technique": 430,
@@ -117344,6 +117508,7 @@
     "name": "파도를 두른 귀요미 Knight",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 430,
       "technique": 268,
@@ -118137,6 +118302,7 @@
     "name": "한여름의 복슬복슬 플로트 타임",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-005-rare_5",
     "parameter_ratio_permil": {
       "performance": 268,
       "technique": 302,
@@ -118950,6 +119116,7 @@
     "name": "바닷바람에 실어 보내는 미소의 하모니",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 440,
       "technique": 297,
@@ -119739,6 +119906,7 @@
     "name": "해변에서 폭발하는 광채 샷!",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 430,
       "technique": 302,
@@ -120548,6 +120716,7 @@
     "name": "여름의 일격! 물총 아르페지오",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 302,
       "technique": 268,
@@ -121341,6 +121510,7 @@
     "name": "귀신류 둥실둥실 리조트",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 302,
       "technique": 430,
@@ -122134,6 +122304,7 @@
     "name": "느긋한 공주의 응석 해변",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-005-rare_5",
     "parameter_ratio_permil": {
       "performance": 430,
       "technique": 268,
@@ -122925,6 +123096,7 @@
     "name": "여름의 Crazy Dive",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-004-rare_5",
     "parameter_ratio_permil": {
       "performance": 268,
       "technique": 302,
@@ -123734,6 +123906,7 @@
     "name": "해변에 꽂히는 Reaper's Spike",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 268,
       "technique": 302,
@@ -124543,6 +124716,7 @@
     "name": "파도 소리의 기억을 더듬으며",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 302,
       "technique": 268,
@@ -125334,6 +125508,7 @@
     "name": "물가에서 매료하는 twinkle",
     "rarity": 5,
     "attribute": 1,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 263,
       "technique": 297,
@@ -126121,6 +126296,7 @@
     "name": "나른한 여름날의 Wolf Heart",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 263,
       "technique": 440,
@@ -126910,6 +127086,7 @@
     "name": "파라솔 아래 리버티 캣",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 430,
       "technique": 302,
@@ -127701,6 +127878,7 @@
     "name": "밀림을 누비는 와일드 서머!",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-001-rare_5",
     "parameter_ratio_permil": {
       "performance": 268,
       "technique": 430,
@@ -128514,6 +128692,7 @@
     "name": "파도 소리에 편안해지는 유능한 간부",
     "rarity": 5,
     "attribute": 3,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-005-rare_5",
     "parameter_ratio_permil": {
       "performance": 268,
       "technique": 302,
@@ -129307,6 +129486,7 @@
     "name": "후와와의 Flowing Summer",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-002-rare_5",
     "parameter_ratio_permil": {
       "performance": 410,
       "technique": 283,
@@ -130122,6 +130302,7 @@
     "name": "모코코의 Breezy Summer",
     "rarity": 5,
     "attribute": 2,
+    "connect_effect_id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_5",
     "parameter_ratio_permil": {
       "performance": 430,
       "technique": 268,

@@ -1,0 +1,980 @@
+{
+  "characters": {
+    "chr-00001": {
+      "asset_id": "00001",
+      "catalog_entry": "img_chr_icon_normal_00001",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "14d4721b6fd13962a95b3c7615493041980c0e06e5123b4f0ff264a3d17e34d0",
+      "sources": [
+        {
+          "md5": "9644d97b23c3ce9a818e44cedc62e798",
+          "name": "img_chr_icon_normal_00001",
+          "sha256": "de370bc4410bfd93ad282355a0ce80dd32297433866ba95759709f4771a8189e",
+          "size": 32154
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00001",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00002": {
+      "asset_id": "00002",
+      "catalog_entry": "img_chr_icon_normal_00002",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "3fd46d3885b1ff655d45b7940d67ed291f9ba79de35ae660813a12549d902c1b",
+      "sources": [
+        {
+          "md5": "6d37513b62800d46c25c52e50fce159c",
+          "name": "img_chr_icon_normal_00002",
+          "sha256": "de12a90d58403209a512922290b12a3c84a0dca51b952b5b6513bb239acd5eb3",
+          "size": 33336
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00002",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00004": {
+      "asset_id": "00004",
+      "catalog_entry": "img_chr_icon_normal_00004",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "f104dce7599ee7aff32e1ffdc97cb844e6aab5198fedbca041793c30ac0e77b7",
+      "sources": [
+        {
+          "md5": "858b7b040f9777da861f72087ef72c9c",
+          "name": "img_chr_icon_normal_00004",
+          "sha256": "92fcf9b1c7d6f101fde5aab00e0435f258f4c42d451c41db1cd7181568b94999",
+          "size": 32310
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00004",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00005": {
+      "asset_id": "00005",
+      "catalog_entry": "img_chr_icon_normal_00005",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "688c86d7097f9277619b92a4f9a11455b3e2d2df21065f873b3c35abcc4cc6bd",
+      "sources": [
+        {
+          "md5": "ef87879beaef9af5df72165ecbad1c23",
+          "name": "img_chr_icon_normal_00005",
+          "sha256": "adf9c2c221c9bb69fa5a402e86ffc0a6fb27b34e57d446b2bcd1d60a58f277d9",
+          "size": 31093
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00005",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00006": {
+      "asset_id": "00006",
+      "catalog_entry": "img_chr_icon_normal_00006",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "a5237b51657e19d11676294b108b310c422b8a52e642e85f6de1b952d45afd1d",
+      "sources": [
+        {
+          "md5": "f3713f3d90c0a3461de94415c783f816",
+          "name": "img_chr_icon_normal_00006",
+          "sha256": "47ed1afa7e7c53027bb8757508d633fd360d243ed6564fed0a6b2451cf6da4e2",
+          "size": 32504
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00006",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00007": {
+      "asset_id": "00007",
+      "catalog_entry": "img_chr_icon_normal_00007",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "97f2c7b52ebe157f22bee266b928689d03cfe284023c07047b020f4828b5f0b9",
+      "sources": [
+        {
+          "md5": "dde30427e2b84712704417e0e583b385",
+          "name": "img_chr_icon_normal_00007",
+          "sha256": "dab8e2130954b90d3d3e3453d60fcf78ca7a0bfe5e72ae0f9c82a92ce55b0fcb",
+          "size": 32257
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00007",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00010": {
+      "asset_id": "00010",
+      "catalog_entry": "img_chr_icon_normal_00010",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "2f6f959fa1990bc376ee93decd007072a3ae37a2f0fdc7ede57a18ddbed7c0a6",
+      "sources": [
+        {
+          "md5": "09fec00eb15b80bd03128cc2f753e76b",
+          "name": "img_chr_icon_normal_00010",
+          "sha256": "03df261b383fa4494ac2b21b379c53ca3b0682da9d0eb8bf903f936f79bbc346",
+          "size": 33181
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00010",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00011": {
+      "asset_id": "00011",
+      "catalog_entry": "img_chr_icon_normal_00011",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "93bfdc3f9e2ee02c1efdd9f450e37b0d0bcbe05d319f50905729966c5aee2321",
+      "sources": [
+        {
+          "md5": "f22d80ec990cd66011129200bdbb2ae5",
+          "name": "img_chr_icon_normal_00011",
+          "sha256": "33beb8676dc62baf17f92dc89d46a73964460e472ced98c5bd70be602dccc1a9",
+          "size": 31588
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00011",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00012": {
+      "asset_id": "00012",
+      "catalog_entry": "img_chr_icon_normal_00012",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "41c69f0ba4592179a46358a2f31063d6ef6b6cf12f14af31dcdeff6ef2fc8c99",
+      "sources": [
+        {
+          "md5": "e93445df3386883bf463d54c47568c68",
+          "name": "img_chr_icon_normal_00012",
+          "sha256": "ba3ab9388d63c98fd422552506f7ec6ab0ff5f24ba12294331dca6043c5feecd",
+          "size": 31493
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00012",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00013": {
+      "asset_id": "00013",
+      "catalog_entry": "img_chr_icon_normal_00013",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "2c5c78f9321ecfc34426c6e107fa2e9a55e98abf0abcc59ce7f0f7fff4337c34",
+      "sources": [
+        {
+          "md5": "1feddafa8018fd3af857bd6e8811b643",
+          "name": "img_chr_icon_normal_00013",
+          "sha256": "e9e7124285fa8c10db03d613ba63ccd4a811151fac1a16bb3e4ef1f4761fc74c",
+          "size": 31216
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00013",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00014": {
+      "asset_id": "00014",
+      "catalog_entry": "img_chr_icon_normal_00014",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "5bc0991a063e7b83f16ce3551a6b9eeaf382b2d57379fb9ac293a0d9a33d737e",
+      "sources": [
+        {
+          "md5": "a2080e58a6b46f11c1a8966d30881326",
+          "name": "img_chr_icon_normal_00014",
+          "sha256": "9a6ee50da0ada0bc731d9bc2f231403cc87d97bdd9af97160ef81e31c12e4872",
+          "size": 32798
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00014",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00015": {
+      "asset_id": "00015",
+      "catalog_entry": "img_chr_icon_normal_00015",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "c9da3f46dc5988be2648a2d04a63940ee08f6812026ece59755fc61ea837c49e",
+      "sources": [
+        {
+          "md5": "a26ca37a0f21fb26ff567f2d742ee039",
+          "name": "img_chr_icon_normal_00015",
+          "sha256": "392bb58a6e81dd292bc190b904fef5f9503d7344e6d54a768de789f88cff6e22",
+          "size": 33074
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00015",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00016": {
+      "asset_id": "00016",
+      "catalog_entry": "img_chr_icon_normal_00016",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "9ba0f4a53355f18a7fb06e3b97e4902234c29a3e3f2c8188fddaf6481d1772db",
+      "sources": [
+        {
+          "md5": "80f9c13c58af2dac2a61f1763201953f",
+          "name": "img_chr_icon_normal_00016",
+          "sha256": "ace036cdf4844704b48b8004c6248f2292a35451adce44d0e8bfe889fc8b5b73",
+          "size": 32098
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00016",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00017": {
+      "asset_id": "00017",
+      "catalog_entry": "img_chr_icon_normal_00017",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "b3375d4b2bf925d18fd54abcec533bdf1c2bac3bf8854c89b032187fc3e75031",
+      "sources": [
+        {
+          "md5": "23cd74566e6920da3dfb3ae6f371dfd9",
+          "name": "img_chr_icon_normal_00017",
+          "sha256": "30aa660dfcfbf00b86fc905b12b6728d626f7e5b2e816af7e84708285d05f333",
+          "size": 32303
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00017",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00018": {
+      "asset_id": "00018",
+      "catalog_entry": "img_chr_icon_normal_00018",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "e8f64336b4480789e25255fb90f0b1af4ab22393e5ea0b1429f1aa7f3d043e4d",
+      "sources": [
+        {
+          "md5": "f7c9d1a9a173df88ab50b7e50d7d557a",
+          "name": "img_chr_icon_normal_00018",
+          "sha256": "72dae85bbe5e1986d052a7e1fea676321a8ba9f6c10b6238ba5217f16c6bc2f2",
+          "size": 31759
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00018",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00019": {
+      "asset_id": "00019",
+      "catalog_entry": "img_chr_icon_normal_00019",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "fbbd5be23feb89b2f3a864f73bb578e843837a5169f09c43478280c3ddd52511",
+      "sources": [
+        {
+          "md5": "b3cb6a647a9630ead5845835c1b5d0fd",
+          "name": "img_chr_icon_normal_00019",
+          "sha256": "38447b9a0163c48106dd75fe9d730ba8af230b23f7e8d87630339dc4828e5f5f",
+          "size": 32914
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00019",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00021": {
+      "asset_id": "00021",
+      "catalog_entry": "img_chr_icon_normal_00021",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "3e955261bef616c2da98f8005301b06b10578f5689ee8a6af304af2356fd6c18",
+      "sources": [
+        {
+          "md5": "9340b5405364f3edf209aeb5236af426",
+          "name": "img_chr_icon_normal_00021",
+          "sha256": "2d42457808131f6797d520ede798ffa00bde7d87decb9a397367a301b0ba41ce",
+          "size": 33349
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00021",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00022": {
+      "asset_id": "00022",
+      "catalog_entry": "img_chr_icon_normal_00022",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "e0ccdc8483cdbb49afa1b24e2c93352470e90e804fac08a98459c0b7032f3981",
+      "sources": [
+        {
+          "md5": "f78f696dd07885d02fc4a06ff70182a3",
+          "name": "img_chr_icon_normal_00022",
+          "sha256": "908acefc50eed51e61255691207c7972191200eb55be508eaf6ca7f9bfbf3de1",
+          "size": 33254
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00022",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00023": {
+      "asset_id": "00023",
+      "catalog_entry": "img_chr_icon_normal_00023",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "30995a2bec522c006dd83347085e189fb8b1ed078a536eb922ff854ffe46c8f8",
+      "sources": [
+        {
+          "md5": "dbfe32a79f19b145a0c98d82e0aaf323",
+          "name": "img_chr_icon_normal_00023",
+          "sha256": "df8c341954dbc833e4406b46b4ca07ea8a1b73c76c004634f9f2e7ed393e8a87",
+          "size": 34391
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00023",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00026": {
+      "asset_id": "00026",
+      "catalog_entry": "img_chr_icon_normal_00026",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "4c9d124858adeb1b2652dc36d44bb0ddac9e232d140858991072dffebf11d6e0",
+      "sources": [
+        {
+          "md5": "dc53e6b2580e5094d8568e27605d4dc0",
+          "name": "img_chr_icon_normal_00026",
+          "sha256": "903bf8f486af8a8a1d75321a5099f91bc3b6d35d4bcd0046e6060483040594ef",
+          "size": 33072
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00026",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00027": {
+      "asset_id": "00027",
+      "catalog_entry": "img_chr_icon_normal_00027",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "4cd181b53424cf8c031672386e62fd6870f8ba584cb4a204c13b1ce9aaa68ae8",
+      "sources": [
+        {
+          "md5": "89fa26534306fd7b717eb6a87e432464",
+          "name": "img_chr_icon_normal_00027",
+          "sha256": "f5762bffd9d8af96e6939066217e439e4231f34caeae10a7c580443f6bca5e4a",
+          "size": 32950
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00027",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00028": {
+      "asset_id": "00028",
+      "catalog_entry": "img_chr_icon_normal_00028",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "2ee2e1b7eb671a003b406966f1f49ba8663fc77b02f71ec850675e025c3e0eb1",
+      "sources": [
+        {
+          "md5": "7720f37b456165a1772a4d8aff1b88f9",
+          "name": "img_chr_icon_normal_00028",
+          "sha256": "9aa108554d028a05c3d14e07dd802cd42d72e40c5a42e3f4bbf903b6dc6cec05",
+          "size": 33589
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00028",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00030": {
+      "asset_id": "00030",
+      "catalog_entry": "img_chr_icon_normal_00030",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "07f1a107f9d5b22a8fa8a215c51048a6ed600920823566ff3b51d152bf7609d0",
+      "sources": [
+        {
+          "md5": "4a54c1a93b5b0f333d3fd153337ebd13",
+          "name": "img_chr_icon_normal_00030",
+          "sha256": "ec39128b418a6b5b5450b52198c285b9eaf70cd35cea9bf6162660e5754e6f06",
+          "size": 33831
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00030",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00031": {
+      "asset_id": "00031",
+      "catalog_entry": "img_chr_icon_normal_00031",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "1f6710a29d63e0f5d8626868ab6ff4b1ac0b4266977ab3cc6aee77c3fdef9c4c",
+      "sources": [
+        {
+          "md5": "f6d3d575e60a59be478640fcbe058455",
+          "name": "img_chr_icon_normal_00031",
+          "sha256": "d177d9b6bed856c4547f2bf955d0f69679ff045d835519cb57536b39d5858454",
+          "size": 34108
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00031",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00032": {
+      "asset_id": "00032",
+      "catalog_entry": "img_chr_icon_normal_00032",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "b6d795cd3bcbdc89249e78a8e7f86422dedd5e8c70b6311fc2c4cb4d99809cf7",
+      "sources": [
+        {
+          "md5": "0b7452dd870cca22b460d95b932b60c6",
+          "name": "img_chr_icon_normal_00032",
+          "sha256": "e2b202f1f09092d6a488a921a3e16545589338d7611811b29c32f8f94c0246a3",
+          "size": 33515
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00032",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00034": {
+      "asset_id": "00034",
+      "catalog_entry": "img_chr_icon_normal_00034",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "11331538dd9d7264700dda0e570ea83b2d22bf3170d9cf5f68a23cf3f19717f2",
+      "sources": [
+        {
+          "md5": "747af4b7a3ca32faff4eb09fa86be27a",
+          "name": "img_chr_icon_normal_00034",
+          "sha256": "6d8429f746c31582a140b7dd209c9bbdbe39ef13c330a1e9571f20ecc89fa0f5",
+          "size": 34351
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00034",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00035": {
+      "asset_id": "00035",
+      "catalog_entry": "img_chr_icon_normal_00035",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "e6fd5ff33508677768c3da7daa9c06f2ce4ed00bf8853fe00587de166999e3a6",
+      "sources": [
+        {
+          "md5": "132ea8c92429087493b54355c9d93d79",
+          "name": "img_chr_icon_normal_00035",
+          "sha256": "eaa0d93cfdd97e4ae4ec5cc835fdcac379dd2d4e1341a990f61b7541141361f3",
+          "size": 33137
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00035",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00036": {
+      "asset_id": "00036",
+      "catalog_entry": "img_chr_icon_normal_00036",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "7e35cd2181bf73564067eceac6931cd7bfcbdaf497230cf8f03e8b86246d16e5",
+      "sources": [
+        {
+          "md5": "ffe5311bb9172d6ae2f7dcf46abec52d",
+          "name": "img_chr_icon_normal_00036",
+          "sha256": "1b7a3f32bf7afec0de8c9bbb9f1751232c7bb2d90dfbc8822ec033a7d8c1e3cb",
+          "size": 32525
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00036",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00037": {
+      "asset_id": "00037",
+      "catalog_entry": "img_chr_icon_normal_00037",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "cc776ba8981fd64ffb624678c86411861be4ca7e5fe612cd6cded9b7df5398a5",
+      "sources": [
+        {
+          "md5": "932972341f5497e65ec460503332b128",
+          "name": "img_chr_icon_normal_00037",
+          "sha256": "fd32e70e9b2b9f438ded045df1ce36cd81dae061240958ee685077b22a9bf9fb",
+          "size": 32673
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00037",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-00039": {
+      "asset_id": "00039",
+      "catalog_entry": "img_chr_icon_normal_00039",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "ba872b712d7b6cb769713e93b061232ae06cfe518826795363e33ca50fd0aa67",
+      "sources": [
+        {
+          "md5": "4ce206a10df14230b06ff21eb1e9ec36",
+          "name": "img_chr_icon_normal_00039",
+          "sha256": "3ef5632131507a024c8f459e5249eff91385e731dac6cadc2b5ee530ce32f238",
+          "size": 33628
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_00039",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-03001": {
+      "asset_id": "03001",
+      "catalog_entry": "img_chr_icon_normal_03001",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "2ea770125988f862f064231d4e0ddf415f1d5ab73646f1d2c5c7929a164c1f7e",
+      "sources": [
+        {
+          "md5": "62fb516a19567e72b5ce72e17698b0f9",
+          "name": "img_chr_icon_normal_03001",
+          "sha256": "9dcdc725a4c36f7cfeaef8879ecd2c8d3fc53ae2dcfcb665232df6a5a6934dde",
+          "size": 33080
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_03001",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-03002": {
+      "asset_id": "03002",
+      "catalog_entry": "img_chr_icon_normal_03002",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "030223ba19d555dd34ba110daee133f9894e14ed7d433cb527fe9f5365b994a2",
+      "sources": [
+        {
+          "md5": "f61285fa4fd0328f5ff6a8978303bf97",
+          "name": "img_chr_icon_normal_03002",
+          "sha256": "dadaa9537a1009a6f0d222cd6a4c7c8110696b4a00f073d204fcf9fc0dca9cd8",
+          "size": 33825
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_03002",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-03003": {
+      "asset_id": "03003",
+      "catalog_entry": "img_chr_icon_normal_03003",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "c57e918b740f358db5ea7a4560a68d3461b3eca3f831913522377d87dbbe43bf",
+      "sources": [
+        {
+          "md5": "3d47a42d2bd25a65b1a11cd944cbae50",
+          "name": "img_chr_icon_normal_03003",
+          "sha256": "8ff80e5e7a8a717b67fd69db2fb0bff74fd9ac77d90fa361d98ac612b5364933",
+          "size": 31527
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_03003",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-03004": {
+      "asset_id": "03004",
+      "catalog_entry": "img_chr_icon_normal_03004",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "0fddcefa9bafbab6e0d5414c91ef7561eee4f38c74799b3bbc6d4b154672c037",
+      "sources": [
+        {
+          "md5": "28a2736333606b759b412c879a0fcbb8",
+          "name": "img_chr_icon_normal_03004",
+          "sha256": "fbacf42aae3cf9340b8b14f237b693dfeef16a17018e85ba55c38a1378cd340c",
+          "size": 34054
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_03004",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-03005": {
+      "asset_id": "03005",
+      "catalog_entry": "img_chr_icon_normal_03005",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "2904048c5a710f08a7e4c25b592f903efb17b319941385e030a5250275e0f38c",
+      "sources": [
+        {
+          "md5": "89f7ae53c0ab5fbcd4bfc0a919756744",
+          "name": "img_chr_icon_normal_03005",
+          "sha256": "03d5585f1d17f0336a025c6e17de3e06969d58a08e7b381cc99484d0bb77ae06",
+          "size": 32539
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_03005",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-03006": {
+      "asset_id": "03006",
+      "catalog_entry": "img_chr_icon_normal_03006",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "8b9512b43b5e93e631afdfe8e919c45a4f3f825bfd1b86b40fd2240e51e91146",
+      "sources": [
+        {
+          "md5": "b27b312025b2c1b75bd3ec9ebe7f600e",
+          "name": "img_chr_icon_normal_03006",
+          "sha256": "0f44e677fd84c586d537831f3fdc995010f31a188f3d701831c00564aff757f4",
+          "size": 32657
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_03006",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-03007": {
+      "asset_id": "03007",
+      "catalog_entry": "img_chr_icon_normal_03007",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "e830f9fc374b0e94deedb1380d728c3063086d05b112d37c202ec78a16f4281d",
+      "sources": [
+        {
+          "md5": "2466ad11197eafa191276269fdfb43eb",
+          "name": "img_chr_icon_normal_03007",
+          "sha256": "237be63d871351761399d6370ff68e917b38c9f06fac969eb1a2786e15593818",
+          "size": 33810
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_03007",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-03008": {
+      "asset_id": "03008",
+      "catalog_entry": "img_chr_icon_normal_03008",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "1f21e42fd97282420992da26251d06615732dde8c607457aa28dbe9c05e9eb87",
+      "sources": [
+        {
+          "md5": "183e825047e98177bf1b01f2bec18c62",
+          "name": "img_chr_icon_normal_03008",
+          "sha256": "9f57838b9306f74b092031d52d61876cc288b17805a04b29ba957dec3e0e66f0",
+          "size": 31988
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_03008",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-03009": {
+      "asset_id": "03009",
+      "catalog_entry": "img_chr_icon_normal_03009",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "f23dfc2c63a91d8a50c31b0bba60e6270bf2900f4f70bf4c70bd0b22afea41b4",
+      "sources": [
+        {
+          "md5": "825ae5da8773fcb5ef43ec7d902a2492",
+          "name": "img_chr_icon_normal_03009",
+          "sha256": "f5b4e799a2438ac3c9f4125eed61c0c67a82ef7d8949bba93f0a3b2f78b540f8",
+          "size": 34846
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_03009",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-04001": {
+      "asset_id": "04001",
+      "catalog_entry": "img_chr_icon_normal_04001",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "503642daba34861aab07747385848ad021882a50729f260c49b46b342083940d",
+      "sources": [
+        {
+          "md5": "bf7a9bbf823ecef8b96a1ba828b25f6d",
+          "name": "img_chr_icon_normal_04001",
+          "sha256": "eeae8f57902babd4b5b4aaaefbc843660b86d1336b26976b7d7ea4004a829d70",
+          "size": 33974
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_04001",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-04002": {
+      "asset_id": "04002",
+      "catalog_entry": "img_chr_icon_normal_04002",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "574d0f8816c7c9a14811e9e642c9c9b4ff0f795852690f3f1ec22cf2cfba3647",
+      "sources": [
+        {
+          "md5": "76df63215af8ad8109fb72596bc38f66",
+          "name": "img_chr_icon_normal_04002",
+          "sha256": "24dd2e03443d88c5c57b183f7ff196720b36932f4ccbb524f530fd6bccdbe800",
+          "size": 33520
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_04002",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-04003": {
+      "asset_id": "04003",
+      "catalog_entry": "img_chr_icon_normal_04003",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "4ae05247d3b712fdc491d3eccb65a4e5e94792f77eff7df8f0e408108005db03",
+      "sources": [
+        {
+          "md5": "4a4b7ac001fccf4abc0fd2c9369e7be3",
+          "name": "img_chr_icon_normal_04003",
+          "sha256": "01fa9d5cb5cde6a40d5e2b7de5a63054080d1c2c497045b68fd3bad2daefd7b6",
+          "size": 32253
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_04003",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-04007": {
+      "asset_id": "04007",
+      "catalog_entry": "img_chr_icon_normal_04007",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "d680540e5b2c40e8cfa3ec0f1af1d318fd3f3ae4393e3dda5836ee9fb689ad0b",
+      "sources": [
+        {
+          "md5": "b00c47f58adcec86f9a8b9d5bf30d953",
+          "name": "img_chr_icon_normal_04007",
+          "sha256": "2fb54c9a7e214279f3ef4acd57d009ced868723e0041f20354542ec66a8cc7c6",
+          "size": 33182
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_04007",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-04010": {
+      "asset_id": "04010",
+      "catalog_entry": "img_chr_icon_normal_04010",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "9cb50a203743fd083ab1eb0478cd40a5bcc3200cb861b4c0dc1a5a9f307b04d5",
+      "sources": [
+        {
+          "md5": "4340056407152e9b1bfa1ea317f65d4b",
+          "name": "img_chr_icon_normal_04010",
+          "sha256": "c29c9492698ee9e08c854e5154e8ebbf00a6608024f0779d0b51dbb9d2699975",
+          "size": 34197
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_04010",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-04012": {
+      "asset_id": "04012",
+      "catalog_entry": "img_chr_icon_normal_04012",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "d2d82aa3316870cf63b50f62489f89405c1102bb4ed168cdb234f632c37b8c48",
+      "sources": [
+        {
+          "md5": "249be5f0ce2e99439aea113c70fbf959",
+          "name": "img_chr_icon_normal_04012",
+          "sha256": "871df406816689bbb669d6b5aaf35d30cba7b375bf0381cf098abbdc75ac7fef",
+          "size": 35507
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_04012",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-04013": {
+      "asset_id": "04013",
+      "catalog_entry": "img_chr_icon_normal_04013",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "c2a5ae83ea7d39bf1ac8fe43df7a514c378962aba3f5f6f1d60a6a039e1651ef",
+      "sources": [
+        {
+          "md5": "220631d2212c9d0cff41ee8c6cf8d007",
+          "name": "img_chr_icon_normal_04013",
+          "sha256": "103a693217dbdbe288ada790f5c933ef6f4916beb9d04a6e5d7c934404fe0c1f",
+          "size": 33398
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_04013",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-04014": {
+      "asset_id": "04014",
+      "catalog_entry": "img_chr_icon_normal_04014",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "73086007814459ff484725f19b5b4ffa8b72a12b8fc235c0a83f2ae3fccbfc38",
+      "sources": [
+        {
+          "md5": "56d69a769d5beecdebe4e31898c8019d",
+          "name": "img_chr_icon_normal_04014",
+          "sha256": "d3153ea0b85c5ab49d1dd0cd08c0452085d880acc6446ebbb0c5d48b17851ca6",
+          "size": 32563
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_04014",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-04015": {
+      "asset_id": "04015",
+      "catalog_entry": "img_chr_icon_normal_04015",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "8ba5b2a7dfea1f5f503f2225e021ace92b5773eadeeb595ed8a2993589582a4b",
+      "sources": [
+        {
+          "md5": "871cfb7945b6f50530a030a4b51927cb",
+          "name": "img_chr_icon_normal_04015",
+          "sha256": "02c1a026ba9c47ecf356d2b0052bf2fd488060a3bd8d9da8e8400d84d49ced83",
+          "size": 34330
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_04015",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-04016": {
+      "asset_id": "04016",
+      "catalog_entry": "img_chr_icon_normal_04016",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "7470cb59627d5c49d104e47ce4601b28a0569341cd5feb7076eeb0f663bc3571",
+      "sources": [
+        {
+          "md5": "6a7d5f369f08af72b1c337c9e09e275e",
+          "name": "img_chr_icon_normal_04016",
+          "sha256": "855dd4e4537ab69954b22efe9c8e3f035c6e9e2f27658d0f3a51704ad0efd063",
+          "size": 34312
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_04016",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-04017": {
+      "asset_id": "04017",
+      "catalog_entry": "img_chr_icon_normal_04017",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "661183464d6c0eeb6c69b7401dc83de8326a4e473762f1e918a7e01fb923dbb6",
+      "sources": [
+        {
+          "md5": "47b324ce6ced454696144844ab310f56",
+          "name": "img_chr_icon_normal_04017",
+          "sha256": "2e439854849073fd163ff9403d29c42b50c206ede41831a403ed714597432411",
+          "size": 34230
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_04017",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-06002": {
+      "asset_id": "06002",
+      "catalog_entry": "img_chr_icon_normal_06002",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "4f25d985c4030cae19678e78167cda026af359fe744b962e3794e86c59bfe194",
+      "sources": [
+        {
+          "md5": "e4ff7a471b2bbbf09fdd73f09a28a9bc",
+          "name": "img_chr_icon_normal_06002",
+          "sha256": "8d3dc62f635c5c3eac71b536fd6d3326370ebf873a42a89247bc217bbc80bc29",
+          "size": 32384
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_06002",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-06003": {
+      "asset_id": "06003",
+      "catalog_entry": "img_chr_icon_normal_06003",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "47c183b6706d0118d41d34cea1fc2fa135d513d90d4a5bfe5189d509341312f6",
+      "sources": [
+        {
+          "md5": "9c2b971538f0e0a02c4087960d80c798",
+          "name": "img_chr_icon_normal_06003",
+          "sha256": "7fcd7bb9429cfa0394c6588bbd5c8cf98101968d863280227bf8e878be1a5d5c",
+          "size": 33278
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_06003",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-06004": {
+      "asset_id": "06004",
+      "catalog_entry": "img_chr_icon_normal_06004",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "a5a3f8f950a0395414785b7140aa455697c4767d9fe6d0bda3e97197e8a34cf1",
+      "sources": [
+        {
+          "md5": "c6ff9d58d485c3a1a17364fcbd2fabc7",
+          "name": "img_chr_icon_normal_06004",
+          "sha256": "2ffbdbff1dfd98a776bc7c590189129c50264b2d3317f30d4050ab093c022998",
+          "size": 33817
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_06004",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    },
+    "chr-06005": {
+      "asset_id": "06005",
+      "catalog_entry": "img_chr_icon_normal_06005",
+      "catalog_revision": 80,
+      "height": 256,
+      "sha256": "f5a80320570d9cfcdcd1e52a16cac60bf4bff88678ab6d9d3dd1286c44f4dc03",
+      "sources": [
+        {
+          "md5": "edf744b95d6b7e6cf988439ac2dd9df7",
+          "name": "img_chr_icon_normal_06005",
+          "sha256": "19824019e7d84f480a5106e92b3e7ad27015eb8f1b7059e1fce5c455e02aef7c",
+          "size": 30885
+        }
+      ],
+      "unity_object": "img_chr_icon_normal_06005",
+      "unity_object_type": "Texture2D",
+      "width": 256
+    }
+  },
+  "source": "Holodori game Octo CDN",
+  "tool_commit": "13f150fe9dfbd367be53e5ea1c0a4ceb258b74f2",
+  "tool_repository": "HolodoriDB/holodori-asset-tools",
+  "version": 1
+}

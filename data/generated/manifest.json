@@ -6,6 +6,21 @@
   "card_count": 181,
   "music_count": 199,
   "leader_card_count": 181,
+  "board_schema_version": 1,
+  "board_counts": {
+    "characters": 54,
+    "unavailable_characters": 8,
+    "layouts": 4,
+    "layout_nodes": 612,
+    "node_groups": 153,
+    "node_definitions": 324,
+    "effects": 121,
+    "connect_effects": 20,
+    "connect_levels": 40,
+    "connect_ranges": 17,
+    "related_skills": 2,
+    "memory_thresholds": 50
+  },
   "raden_card_count": 3,
   "raden_leader_card_count": 3,
   "locales": {

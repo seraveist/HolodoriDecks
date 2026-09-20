@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
+from .board_data import board_change_reasons
+
 
 @dataclass(frozen=True)
 class GateResult:
@@ -45,6 +47,10 @@ def evaluate_master_gate(
     current_chart_index: dict[str, object],
     previous_runtime_index: dict[str, object],
     current_runtime_index: dict[str, object],
+    previous_boards: dict | None = None,
+    current_boards: dict | None = None,
+    previous_memory: dict | None = None,
+    current_memory: dict | None = None,
 ) -> GateResult:
     reasons: list[str] = []
 
@@ -121,6 +127,15 @@ def evaluate_master_gate(
             f"Runtime Exact rejected-chart count increased unusually: {previous_rejected} -> {current_rejected}"
         )
 
+    if current_boards is not None:
+        if current_memory is None:
+            reasons.append("board memory baseline/current data missing")
+        else:
+            reasons.extend(board_change_reasons(previous_boards, current_boards, previous_memory, current_memory))
+        metrics["board_characters"] = len(current_boards.get("resolved", {}))
+        metrics["board_unknown_effects"] = len(current_boards.get("unknownEffectTypes", []))
+    elif previous_boards is not None:
+        reasons.append("board catalog was removed")
     return GateResult(safe=not reasons, reasons=tuple(reasons), metrics=metrics)
 
 
@@ -201,6 +216,24 @@ def evaluate_card_asset_gate(
         )
 
     return GateResult(safe=not reasons, reasons=tuple(reasons), metrics=metrics)
+
+
+def evaluate_portrait_asset_gate(*, report: dict, character_report: dict, diff_lines: Iterable[str]) -> GateResult:
+    """Apply the same strict import/path/deletion limits to each portrait class."""
+    card_diff, character_diff = [], []
+    for line in diff_lines:
+        paths = line.strip().split("\t")[1:]
+        if paths and all(path == "assets/character-portrait-sync.json" or path.startswith("assets/characters/") for path in paths):
+            character_diff.append(line.replace("assets/characters/", "assets/cards/")
+                                  .replace("assets/character-portrait-sync.json", "assets/card-portrait-sync.json"))
+        else:
+            card_diff.append(line)
+    cards = evaluate_card_asset_gate(report=report, diff_lines=card_diff)
+    characters = evaluate_card_asset_gate(report=character_report, diff_lines=character_diff)
+    reasons = cards.reasons + tuple(f"member icons: {reason}" for reason in characters.reasons)
+    metrics = {f"cards_{key}": value for key, value in cards.metrics.items()}
+    metrics.update({f"characters_{key}": value for key, value in characters.metrics.items()})
+    return GateResult(safe=not reasons, reasons=reasons, metrics=metrics)
 
 
 def read_diff_lines(path: Path) -> list[str]:

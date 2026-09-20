@@ -1,0 +1,209 @@
+{
+  "format": "holodori-memory-bonuses",
+  "version": 1,
+  "source_repository": "HolodoriDB/holodori-db-kor-diff",
+  "source_commit": "9234a7d99c5cfba9b71803c24a6de4c005c4842f",
+  "master_version": "251ae0da8534222b8e4d002d8e9825e5d175e98c71dfe8240bf7a3395bacfa03",
+  "rows": [
+    {
+      "count": 1,
+      "parameterPermil": 2
+    },
+    {
+      "count": 2,
+      "parameterPermil": 4
+    },
+    {
+      "count": 3,
+      "parameterPermil": 6
+    },
+    {
+      "count": 4,
+      "parameterPermil": 8
+    },
+    {
+      "count": 5,
+      "parameterPermil": 10
+    },
+    {
+      "count": 6,
+      "parameterPermil": 12
+    },
+    {
+      "count": 7,
+      "parameterPermil": 14
+    },
+    {
+      "count": 8,
+      "parameterPermil": 16
+    },
+    {
+      "count": 9,
+      "parameterPermil": 18
+    },
+    {
+      "count": 10,
+      "parameterPermil": 20
+    },
+    {
+      "count": 11,
+      "parameterPermil": 22
+    },
+    {
+      "count": 12,
+      "parameterPermil": 24
+    },
+    {
+      "count": 13,
+      "parameterPermil": 26
+    },
+    {
+      "count": 14,
+      "parameterPermil": 28
+    },
+    {
+      "count": 15,
+      "parameterPermil": 30
+    },
+    {
+      "count": 16,
+      "parameterPermil": 32
+    },
+    {
+      "count": 17,
+      "parameterPermil": 34
+    },
+    {
+      "count": 18,
+      "parameterPermil": 36
+    },
+    {
+      "count": 19,
+      "parameterPermil": 38
+    },
+    {
+      "count": 20,
+      "parameterPermil": 40
+    },
+    {
+      "count": 21,
+      "parameterPermil": 42
+    },
+    {
+      "count": 22,
+      "parameterPermil": 44
+    },
+    {
+      "count": 23,
+      "parameterPermil": 46
+    },
+    {
+      "count": 24,
+      "parameterPermil": 48
+    },
+    {
+      "count": 25,
+      "parameterPermil": 50
+    },
+    {
+      "count": 26,
+      "parameterPermil": 52
+    },
+    {
+      "count": 27,
+      "parameterPermil": 54
+    },
+    {
+      "count": 28,
+      "parameterPermil": 56
+    },
+    {
+      "count": 29,
+      "parameterPermil": 58
+    },
+    {
+      "count": 30,
+      "parameterPermil": 60
+    },
+    {
+      "count": 31,
+      "parameterPermil": 61
+    },
+    {
+      "count": 32,
+      "parameterPermil": 62
+    },
+    {
+      "count": 33,
+      "parameterPermil": 63
+    },
+    {
+      "count": 34,
+      "parameterPermil": 64
+    },
+    {
+      "count": 35,
+      "parameterPermil": 65
+    },
+    {
+      "count": 36,
+      "parameterPermil": 66
+    },
+    {
+      "count": 37,
+      "parameterPermil": 67
+    },
+    {
+      "count": 38,
+      "parameterPermil": 68
+    },
+    {
+      "count": 39,
+      "parameterPermil": 69
+    },
+    {
+      "count": 40,
+      "parameterPermil": 70
+    },
+    {
+      "count": 41,
+      "parameterPermil": 71
+    },
+    {
+      "count": 42,
+      "parameterPermil": 72
+    },
+    {
+      "count": 43,
+      "parameterPermil": 73
+    },
+    {
+      "count": 44,
+      "parameterPermil": 74
+    },
+    {
+      "count": 45,
+      "parameterPermil": 75
+    },
+    {
+      "count": 46,
+      "parameterPermil": 76
+    },
+    {
+      "count": 47,
+      "parameterPermil": 77
+    },
+    {
+      "count": 48,
+      "parameterPermil": 78
+    },
+    {
+      "count": 49,
+      "parameterPermil": 79
+    },
+    {
+      "count": 50,
+      "parameterPermil": 80
+    }
+  ]
+}

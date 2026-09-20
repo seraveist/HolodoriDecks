@@ -172,3 +172,42 @@ A successful synchronization writes deterministic provenance files:
 - `data/sync_state.json`: master revision, locale commits, change triggers, and normalized record counts.
 
 No run timestamp is stored in these files, so forcing an unchanged snapshot does not manufacture a content diff.
+
+## Member board foundation
+
+The Master inputs now include the explicit `BOARD_FILES` list from
+`src/holodori_decksim/board_data.py`. Normalizer 3 emits `boards.json` and
+`memory-bonuses.json`, with member board, card Connect and music singer references
+preserved in the existing core datasets. Missing member board mappings remain
+unavailable rather than being synthesized. Board dependencies, variants,
+coordinates, effects, conditions, Connect levels and ranges are validated before
+core files are replaced. Full board rules and limitations are in `BOARD_UI.md`.
+
+`build-i18n.mjs` also runs `build-board-i18n.mjs`, producing the three separate
+board locale packs with required-LangId checks, source versions and input hashes.
+Public asset compilation includes these lazy data resources in its immutable map.
+
+For controlled reconstruction, `holodori-sync --pinned --force` reads the committed
+core and locale SHAs from `data/upstream.json` and checks their Master revisions.
+Normal scheduled synchronization continues to resolve upstream as before.
+The auto-merge safety gate now compares board semantics and memory rows, not only
+record counts. First introduction, existing semantic changes/deletions and unknown
+effect types need manual review. Saved boards and memory now feed unit scores,
+song expectation/maximum scores, candidate search and order optimization through
+the compiled profile described in `BOARD_UI.md`.
+
+## Member face icons
+
+The portrait workflow also runs `scripts/sync-character-assets.py` twice daily
+(11:00 and 23:00 KST). It maps each board-enabled character's Master `asset_id`
+to the exact `img_chr_icon_normal_{asset_id}` Octo bundle. Source byte size and
+MD5, texture identity and 256×256 dimensions are checked before an atomic,
+lossless WebP write to `assets/characters/{character_id}.webp`. Source/output
+hashes are recorded in `assets/character-portrait-sync.json`.
+
+Valid existing icons are preserved, missing or corrupt icons are retried, and
+an unavailable icon does not prevent another verified icon from being published.
+Card and member imports each undergo report/path/deletion checks before automatic
+merge. Master-data publication remains independent of the portrait workflow.
+The Pages artifact includes the member icons; the board roster falls back to the
+member's initial if an icon cannot be loaded.

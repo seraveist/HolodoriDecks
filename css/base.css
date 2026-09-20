@@ -220,6 +220,10 @@ p {
   box-shadow: var(--shadow-sm);
 }
 
+.view-tabs.has-board-tab {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .view-tab {
   min-height: 64px;
   padding: 10px 18px;
@@ -259,6 +263,26 @@ p {
 
 .view-tab.is-active .view-tab-count {
   color: rgba(255, 255, 255, 0.76);
+}
+
+@media (max-width: 600px) {
+  .view-tabs.has-board-tab .view-tab {
+    min-height: 56px;
+    padding: 10px 8px;
+    justify-content: center;
+    text-align: center;
+  }
+  .view-tabs.has-board-tab .view-tab > span {
+    font-size: var(--type-body-sm);
+    white-space: nowrap;
+  }
+}
+@media (max-width: 420px) {
+  .view-tabs.has-board-tab .view-tab-count {
+    display: block;
+    margin-left: 0;
+    font-size: var(--type-caption);
+  }
 }
 
 .app-footer {
