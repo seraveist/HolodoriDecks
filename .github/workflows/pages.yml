@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 
@@ -36,6 +37,17 @@ jobs:
           node-version: 24
 
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+
+      - name: Check reusable recommendation validation
+        id: recommendation_validation
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/recommendation-validation.py --lookup
+
+      - name: Validate recommendation inventories
+        if: steps.recommendation_validation.outputs.reuse != 'true'
+        run: node scripts/test-recommendation-inventories.mjs
 
       - name: Validate static web
         run: |
@@ -109,7 +121,6 @@ jobs:
           node scripts/test-exact-pruning.mjs
           node scripts/test-beam-search.mjs
           node scripts/test-search-order-bounds.mjs
-          node scripts/test-recommendation-inventories.mjs
           node scripts/test-optimizer-client.mjs
           node scripts/test-exact-runtime-source.mjs
           node scripts/test-optimization-session.mjs
@@ -243,3 +254,15 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+
+      - name: Record successful recommendation validation
+        if: steps.recommendation_validation.outputs.reuse != 'true' && steps.recommendation_validation.outputs.fingerprint != ''
+        continue-on-error: true
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: recommendation-inventories-v1-${{ steps.recommendation_validation.outputs.fingerprint }}
+          path: .local/recommendation-validation.json
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 90
+          overwrite: true

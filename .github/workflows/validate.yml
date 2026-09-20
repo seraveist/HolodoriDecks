@@ -40,6 +40,11 @@ jobs:
         with:
           node-version: 24
 
+      - name: Capture recommendation validation inputs
+        id: recommendation_validation
+        continue-on-error: true
+        run: python scripts/recommendation-validation.py
+
       - name: Validate dependency boundaries
         run: |
           python - <<'PY'
@@ -284,3 +289,15 @@ jobs:
           test -f data/generated/chart-index.json
           test -f data/generated/live-score-rules.json
           test -f data/generated/exact-runtime-index.json
+
+      - name: Record successful recommendation validation
+        if: steps.recommendation_validation.outputs.fingerprint != ''
+        continue-on-error: true
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: recommendation-inventories-v1-${{ steps.recommendation_validation.outputs.fingerprint }}
+          path: .local/recommendation-validation.json
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 90
+          overwrite: true
