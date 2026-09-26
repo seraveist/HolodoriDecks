@@ -2,8 +2,8 @@
   "format": "holodori-memory-bonuses",
   "version": 1,
   "source_repository": "HolodoriDB/holodori-db-kor-diff",
-  "source_commit": "5517e40b931fec10253f5b850989346518e233c2",
-  "master_version": "927a8489062cfb8aaee197689930a4c4e9c622e9ebbf8b80577bdbe5f065dcf9",
+  "source_commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
+  "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd",
   "rows": [
     {
       "count": 1,

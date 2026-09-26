@@ -1,8 +1,8 @@
 {
   "version": 1,
   "source_repository": "HolodoriDB/holodori-db-kor-diff",
-  "source_commit": "5517e40b931fec10253f5b850989346518e233c2",
-  "chart_count": 812,
+  "source_commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
+  "chart_count": 816,
   "exact_metadata_count": 1,
   "stale_metadata_count": 0,
   "stale_metadata": [],
@@ -9221,6 +9221,54 @@
       "normalNoteCount": 186,
       "maxComboCountRewardThreshold": 300,
       "chartHash": "85b4e5c24b95db7e533489bab38fb7bb",
+      "metadataPath": null
+    },
+    "m0525:EASY": {
+      "musicId": "m0525",
+      "difficulty": "EASY",
+      "difficultyType": 1,
+      "difficultyLevel": 6,
+      "chartAssetId": "chart_m0525_easy",
+      "fullComboNoteCount": 280,
+      "normalNoteCount": 82,
+      "maxComboCountRewardThreshold": 200,
+      "chartHash": "d57f91ec1c09e69aaf2018f794924b9f",
+      "metadataPath": null
+    },
+    "m0525:EXPERT": {
+      "musicId": "m0525",
+      "difficulty": "EXPERT",
+      "difficultyType": 4,
+      "difficultyLevel": 27,
+      "chartAssetId": "chart_m0525_expert",
+      "fullComboNoteCount": 1144,
+      "normalNoteCount": 352,
+      "maxComboCountRewardThreshold": 900,
+      "chartHash": "8ad3680f19803518e6a9d50a6bc27d6a",
+      "metadataPath": null
+    },
+    "m0525:HARD": {
+      "musicId": "m0525",
+      "difficulty": "HARD",
+      "difficultyType": 3,
+      "difficultyLevel": 22,
+      "chartAssetId": "chart_m0525_hard",
+      "fullComboNoteCount": 812,
+      "normalNoteCount": 337,
+      "maxComboCountRewardThreshold": 650,
+      "chartHash": "773b12269be49f29b209fe541ac06744",
+      "metadataPath": null
+    },
+    "m0525:NORMAL": {
+      "musicId": "m0525",
+      "difficulty": "NORMAL",
+      "difficultyType": 2,
+      "difficultyLevel": 13,
+      "chartAssetId": "chart_m0525_normal",
+      "fullComboNoteCount": 432,
+      "normalNoteCount": 200,
+      "maxComboCountRewardThreshold": 350,
+      "chartHash": "17aa683df422800347a952dd579ba557",
       "metadataPath": null
     },
     "m0183:NORMAL": {

@@ -1,23 +1,23 @@
 {
   "repository": "HolodoriDB/holodori-db-kor-diff",
   "ref": "main",
-  "commit": "5517e40b931fec10253f5b850989346518e233c2",
-  "master_version": "927a8489062cfb8aaee197689930a4c4e9c622e9ebbf8b80577bdbe5f065dcf9",
+  "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
+  "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd",
   "normalizerVersion": 3,
   "locales": {
     "ko": {
       "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "5517e40b931fec10253f5b850989346518e233c2",
+      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
       "suffix": "Kor"
     },
     "en": {
       "repository": "HolodoriDB/holodori-db-eng-diff",
-      "commit": "f7428d4092d57b34311f030e00ff46e7dbbc29e8",
+      "commit": "7f69b2404abe3001ce411240ed2323a6313a2708",
       "suffix": "Eng"
     },
     "ja": {
       "repository": "HolodoriDB/holodori-db-jpn-diff",
-      "commit": "a22c8e29a981a8987bf2074c245e2fc40ad4dbea",
+      "commit": "e43f062c32ff4e04567235efcd58448cd6b10f35",
       "suffix": "Jpn"
     }
   },
@@ -63,13 +63,13 @@
     "LiveActiveSkill.json"
   ],
   "fileHashes": {
-    "version.txt": "92758ba93dcf894af484a27942fa7ade9ebc3dbc1e12d44a2b7d9382b3365e77",
+    "version.txt": "04de0d56c94b59247edf3a805865c6e2730c6c4f0e634c9129030dc6ed5e5b29",
     "Card.json": "628d2274d4f5dad25f6d72d22fabff2f9696e91f10e9edd3cc3cda7936f4bd8d",
     "Character.json": "0cec0ffa96731e25461f47a2125dd3db2111f730c1a912490b7dac74e72a9aec",
     "LangCard_Kor.json": "725a8674bbe600b35e008961f0fa7f725dcb47d3214663dd200fb89c8bdd6e93",
     "LangCharacter_Kor.json": "204ba36d7bb77dfa9314e1ea39a25674cf3274761109ba26d881bedc7559af11",
-    "Music.json": "af85275bc6261eba734ee7811f9bab4bfc813c9e96f9f6ff93c9b9173b6f8bcf",
-    "LangMusic_Kor.json": "1fcec5a565a3bb95e480440ad4853f4212aca65df251f8a1dd181df17efeff34",
+    "Music.json": "19b1c7bea86b3fc2f2a890972940e96a1b00cc4ce53a70a11e4f8452967ce4ab",
+    "LangMusic_Kor.json": "e7ed6274b1d423c7e23f44844b6b78b66024347c524849dcbf74879583b22ef5",
     "CardLevel.json": "f758ee6688a2f72045be9635b6545a4c82fb15446e388be7447e5ae27672eb2c",
     "CardLevelLimit.json": "f9edf0ad80b67604cf86fc23b5b1782af16ad0866320e83f2132866b6fd9bdaf",
     "CardPotential.json": "b2e54df1a1b58e399c379d98098d800c543d7dca03d31a86092d0c232713343d",
