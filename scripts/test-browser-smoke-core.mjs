@@ -144,7 +144,8 @@ async function terminate(child) {
 const server = spawn(process.env.PYTHON_BIN ?? (process.platform === "win32" ? "py" : "python3"), ["-m", "http.server", String(appPort), "--bind", host], {
   cwd: root,
   windowsHide: true,
-  stdio: ["ignore", "pipe", "pipe"],
+  // Unconsumed HTTP access logs can fill a pipe and stall later navigations.
+  stdio: "ignore",
 });
 let chrome = null;
 let socket = null;
