@@ -34,7 +34,8 @@ concurrency:
 
 jobs:
   sync:
-    runs-on: ubuntu-latest
+    # Use a game-accessible Linux runner when hosted-runner egress is denied.
+    runs-on: ${{ vars.HOLODORI_MASTER_SYNC_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 30
     outputs:
       has_diff: ${{ steps.diff.outputs.has_diff }}
@@ -96,6 +97,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
           args=()
           if [ "${{ inputs.force || false }}" = "true" ]; then
             args+=(--force)

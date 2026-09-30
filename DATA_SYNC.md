@@ -18,6 +18,12 @@ python -m pip install --no-deps 'git+https://github.com/HolodoriDB/holodori-scor
 holodori-sync
 ```
 
+### Runner network requirement
+
+The 2026-09-30 migration dry run confirmed HTTP 403 from all three official catalogue endpoints on GitHub-hosted Ubuntu, while the same requests and all 844 asset validations succeeded from the local network. Therefore the hosted runner alone is currently insufficient for scheduled live sync. This is an external access restriction, not a reason to skip chart freshness validation.
+
+Set the repository Actions variable `HOLODORI_MASTER_SYNC_RUNNER` to the label of an existing, game-accessible **Linux** runner to move only the collection job. Validation, PR publication and deployment retain their existing runners and gates. The default remains `ubuntu-latest`; with blocked access it fails without publishing. Alternatively, run the documented synchronization locally and submit the verified generated data through a reviewed PR. No runner is installed or registered by this change.
+
 ## Generated data flow
 
 ```text
