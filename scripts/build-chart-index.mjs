@@ -1,3 +1,5 @@
+import { masterText } from "./master-source.mjs";
+import { chartMetadataMatchesEntry } from "../js/chart-data.js";
 import fs from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
@@ -21,10 +23,7 @@ async function readJson(file) {
 }
 
 async function fetchJson(repository, commit, filename) {
-  const url = `https://raw.githubusercontent.com/${repository}/${commit}/${filename}`;
-  const response = await fetch(url, { headers: { "user-agent": "HolodoriDecks-chart-index" } });
-  if (!response.ok) throw new Error(`${filename}: HTTP ${response.status}`);
-  return response.json();
+  return JSON.parse(await masterText(repository, commit, filename));
 }
 
 function difficultyFromRow(row) {
@@ -35,7 +34,7 @@ function chartKey(musicId, difficulty) {
   return `${musicId}:${difficulty}`;
 }
 
-async function exactMetadataStatus(musicId, difficulty, chartHash, fullComboNoteCount) {
+async function exactMetadataStatus(musicId, difficulty, chartHash, fullComboNoteCount, chartAssetId) {
   const fileName = `${musicId}-${difficulty}.json`;
   const absolute = path.join(GENERATED, "charts", fileName);
   try {
@@ -55,6 +54,9 @@ async function exactMetadataStatus(musicId, difficulty, chartHash, fullComboNote
     }
     if (fullComboNoteCount && Array.isArray(metadata.notes) && metadata.notes.length !== fullComboNoteCount) {
       return { metadataPath: null, stale: `${fileName}: note count changed` };
+    }
+    if (!chartMetadataMatchesEntry(metadata, { musicId, difficulty, chartHash, fullComboNoteCount, chartAssetId })) {
+      return { metadataPath: null, stale: `${fileName}: invalid or stale timeline` };
     }
     return { metadataPath: `./charts/${fileName}`, stale: null };
   } catch (error) {
@@ -115,6 +117,8 @@ async function main() {
     fetchJson(repository, commit, "LiveCombo.json"),
   ]);
 
+  const assets = await readJson(path.join(GENERATED, "chart-assets.json"));
+  if (assets.source_commit !== commit || assets.master_version !== manifest.master_version) throw new Error("Mixed chart asset/master snapshots");
   const difficultyByKey = new Map(difficultyRows.map((row) => [
     chartKey(row.music_id, difficultyFromRow(row)),
     row,
@@ -128,12 +132,15 @@ async function main() {
     const data = row.data ?? {};
     const detail = difficultyByKey.get(chartKey(row.music_id, difficulty))?.data ?? {};
     const fullComboNoteCount = Number(data.fullComboNoteCount) || 0;
-    const chartHash = data.chartHash ?? null;
+    const asset = assets.charts[chartKey(row.music_id, difficulty)];
+    if (!asset || asset.fullComboNoteCount !== fullComboNoteCount || asset.chartAssetId !== detail.chartAssetId) throw new Error(`Missing/inconsistent chart asset: ${row.music_id}:${difficulty}`);
+    const chartHash = asset.chartHash;
     const metadata = await exactMetadataStatus(
       row.music_id,
       difficulty,
       chartHash,
       fullComboNoteCount,
+      detail.chartAssetId,
     );
     if (metadata.metadataPath) exactCount += 1;
     if (metadata.stale) staleMetadata.push(metadata.stale);
@@ -144,7 +151,7 @@ async function main() {
       difficultyLevel: Number(detail.difficultyLevel) || null,
       chartAssetId: detail.chartAssetId ?? null,
       fullComboNoteCount,
-      normalNoteCount: Number(data.normalNoteCount) || 0,
+      normalNoteCount: asset.normalNoteCount,
       maxComboCountRewardThreshold: Number(data.maxComboCountRewardThreshold) || 0,
       chartHash,
       metadataPath: metadata.metadataPath,

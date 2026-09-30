@@ -1,25 +1,25 @@
 {
   "version": 1,
-  "source_repository": "HolodoriDB/holodori-db-kor-diff",
-  "source_commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
+  "source_repository": "holodori-net/android-database",
+  "source_commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
   "noteWeights": {
     "manual": {
-      "flick": 1.05,
-      "long_flick_end": 1,
-      "long_start": 1,
       "tap": 1,
+      "flick": 1.05,
+      "long_start": 1,
+      "long_relay": 0.1,
       "long_continuation": 0.1,
       "long_end": 1,
-      "long_relay": 0.1
+      "long_flick_end": 1
     },
     "auto": {
-      "flick": 0.8,
-      "long_end": 0.8,
-      "long_flick_end": 0.8,
-      "long_start": 0.8,
       "tap": 0.8,
+      "flick": 0.8,
+      "long_start": 0.8,
+      "long_relay": 0.1,
       "long_continuation": 0.1,
-      "long_relay": 0.1
+      "long_end": 0.8,
+      "long_flick_end": 0.8
     }
   },
   "combo": [

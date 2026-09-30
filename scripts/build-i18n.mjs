@@ -1,3 +1,4 @@
+import { masterText } from "./master-source.mjs";
 import { buildBoardI18n } from "./build-board-i18n.mjs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -23,27 +24,6 @@ const LANGUAGE_FILES = Object.freeze([
 
 async function readJson(filePath) {
   return JSON.parse(await readFile(filePath, "utf8"));
-}
-
-async function fetchText(url, label) {
-  const response = await fetch(url, {
-    headers: {
-      Accept: "application/vnd.github.raw+json, application/json, text/plain, */*",
-      "User-Agent": "HolodoriDecks-i18n-builder",
-    },
-  });
-  if (!response.ok) {
-    throw new Error(`${label} 요청 실패: HTTP ${response.status}`);
-  }
-  return response.text();
-}
-
-async function fetchJson(url, label) {
-  return JSON.parse(await fetchText(url, label));
-}
-
-function rawUrl(repository, commit, fileName) {
-  return `https://raw.githubusercontent.com/${repository}/${commit}/${fileName}`;
 }
 
 function flattenLanguageRows(rows, target, sourceLabel) {
@@ -115,10 +95,7 @@ async function buildLocale(locale, config, masterVersion, requiredIds, cardNameA
     throw new Error(`manifest.locales.${locale} 설정이 불완전합니다.`);
   }
 
-  const sourceVersion = (await fetchText(
-    rawUrl(repository, commit, "version.txt"),
-    `${locale} version.txt`,
-  )).trim();
+  const sourceVersion = (await masterText(repository, commit, "version.txt")).trim();
   if (sourceVersion !== masterVersion) {
     throw new Error(
       `${locale} 언어 데이터 버전 불일치: expected=${masterVersion}, actual=${sourceVersion}`,
@@ -128,7 +105,7 @@ async function buildLocale(locale, config, masterVersion, requiredIds, cardNameA
   const pack = {};
   for (const baseName of LANGUAGE_FILES) {
     const fileName = `${baseName}_${suffix}.json`;
-    const rows = await fetchJson(rawUrl(repository, commit, fileName), `${locale}/${fileName}`);
+    const rows = JSON.parse(await masterText(repository, commit, fileName));
     flattenLanguageRows(rows, pack, `${locale}/${fileName}`);
   }
   applyCardNameAliases(pack, cardNameAliases, locale);
@@ -172,10 +149,7 @@ async function main() {
   if (!sourceRepository || !sourceCommit) {
     throw new Error("manifest의 source_repository/source_commit이 없습니다.");
   }
-  const rawCardRows = await fetchJson(
-    rawUrl(sourceRepository, sourceCommit, "Card.json"),
-    "core/Card.json",
-  );
+  const rawCardRows = JSON.parse(await masterText(sourceRepository, sourceCommit, "Card.json"));
   const cardNameAliases = buildCardNameAliases(cards, rawCardRows);
 
   await mkdir(OUTPUT_DIR, { recursive: true });

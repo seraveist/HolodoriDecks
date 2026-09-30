@@ -1,3 +1,4 @@
+import { masterText } from './master-source.mjs';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -40,11 +41,7 @@ export async function buildBoardI18n({ generated = path.join(root, 'data/generat
   const results = {};
   // Finish all language validation before replacing any language pack.
   for (const [locale, config] of Object.entries(manifest.locales)) {
-    const request = async name => {
-      const response = await fetcher(`https://raw.githubusercontent.com/${config.repository}/${config.commit}/${name}`);
-      if (!response.ok) throw new Error(`${locale}/${name}: HTTP ${response.status}`);
-      return response.text();
-    };
+    const request = name => masterText(config.repository, config.commit, name, fetcher);
     if ((await request('version.txt')).trim() !== board.master_version) throw new Error(`${locale}: Master mismatch`);
     const inputs = {};
     for (const name of BOARD_LANGUAGE_FILES) {

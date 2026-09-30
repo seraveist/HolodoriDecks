@@ -4,24 +4,28 @@
 
 ## Source alignment
 
-Core data comes from:
+Core data, boards, memory bonuses, score rules and KO/EN/JA translations come from one immutable commit of `holodori-net/android-database`. `manifest.json` and the successful `report.json` must agree on the master revision. The report pins the `holodori-net/android-protos` descriptor used to validate fields and preserve existing enum names and 64-bit values. Missing tables, languages, row counts or unknown enums fail synchronization.
 
-- `HolodoriDB/holodori-db-kor-diff`
+Chart hashes and normal-note counts are no longer master fields. Every unpinned sync fetches the current game catalogue with `HolodoriDB/holodori-asset-tools`, checks each encrypted resource's catalogue MD5 and size, decrypts its SUS, and verifies music ID, combo count and per-category counts. `data/generated/chart-assets.json` records the master commit, catalogue revision, asset hash and decrypted SHA-256. This also detects asset-only updates when the master commit is unchanged. Failure to verify an asset prevents publication.
 
-Display translations come from:
+The asset tool, `holodori-scores` parser and Sonolus converter are pinned to Git commits. Unchanged compatible Runtime Exact entries retain their existing fixed corpus. New or changed assets produce local timelines only if every note category, note order, all five SP slots and fever window pass validation. Unsupported timelines are recorded and remain in Master fallback; hash checks are never bypassed.
 
-- `HolodoriDB/holodori-db-kor-diff`
-- `HolodoriDB/holodori-db-eng-diff`
-- `HolodoriDB/holodori-db-jpn-diff`
+A reproducible `holodori-sync --force --pinned` rebuild uses committed asset provenance and the pinned master; it does not query the live catalogue. Use Python 3.12 for live asset synchronization:
 
-The three locale repositories do **not** need the same Git commit SHA. The sync resolver first reads the core `version.txt`, then resolves the newest KO/EN/JA commit whose own `version.txt` contains exactly the same 64-character master revision. If a locale mirror is temporarily behind, recent commits that touched `version.txt` are searched. If no matching snapshot can be found, synchronization fails rather than mixing versions.
+```bash
+python -m pip install -e '.[test,sync]'
+python -m pip install --no-deps 'git+https://github.com/HolodoriDB/holodori-scores@292549eaf4ac7b82bd239fcacb719bae6dfa7ad9'
+holodori-sync
+```
 
 ## Generated data flow
 
 ```text
-HolodoriDB core + locale repositories
+android-database snapshot + current verified game chart assets
         ↓
-holodori-sync
+holodori-sync (descriptor adapter + chart verification)
+        ↓
+chart-assets.json / supported charts/*.json
         ↓
 cards.json / characters.json / music.json
 master_refs.json / manifest.json

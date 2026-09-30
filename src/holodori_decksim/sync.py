@@ -7,17 +7,18 @@ import os
 import re
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlencode
+from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
 from .board_data import build_board_data, validate_board_data
+from .master_source import AndroidMaster
+from concurrent.futures import ThreadPoolExecutor
 
 from .sources import (
     CORE_REPO,
     GITHUB_API_ROOT,
     LOCALES,
     MASTER_FILES,
-    RAW_GITHUB_ROOT,
     UPSTREAM_REF,
 )
 
@@ -35,7 +36,7 @@ GENERATED_FILES = (
     "memory-bonuses.json",
     "i18n/boards/ko.json", "i18n/boards/en.json", "i18n/boards/ja.json",
 )
-NORMALIZER_VERSION = 3
+NORMALIZER_VERSION = 4
 
 
 def _request_text(url: str, *, accept: str = "application/vnd.github+json") -> str:
@@ -44,7 +45,7 @@ def _request_text(url: str, *, accept: str = "application/vnd.github+json") -> s
         "User-Agent": "HolodoriDeckSim-sync/0.2",
         "Accept": accept,
     }
-    if token:
+    if token and urlparse(url).hostname == "api.github.com":
         headers["Authorization"] = f"Bearer {token}"
     request = Request(url, headers=headers)
     with urlopen(request, timeout=60) as response:  # noqa: S310 - trusted fixed hosts
@@ -55,48 +56,12 @@ def _request_json(url: str) -> Any:
     return json.loads(_request_text(url))
 
 
-def _raw_url(repository: str, commit: str, filename: str) -> str:
-    return f"{RAW_GITHUB_ROOT}/{repository}/{commit}/{filename}"
-
-
-def _download_text(repository: str, commit: str, filename: str) -> str:
-    return _request_text(_raw_url(repository, commit, filename), accept="text/plain,*/*")
-
-
 def _resolve_head_commit(repository: str, ref: str = UPSTREAM_REF) -> str:
     payload = _request_json(f"{GITHUB_API_ROOT}/repos/{repository}/commits/{ref}")
     commit = str(payload.get("sha", "")).lower()
     if not re.fullmatch(r"[0-9a-f]{40}", commit):
         raise ValueError(f"Unable to resolve a valid commit for {repository}@{ref}")
     return commit
-
-
-def _resolve_commit_for_version(repository: str, master_version: str) -> str:
-    """Resolve the newest locale commit whose version.txt matches master_version."""
-    head = _resolve_head_commit(repository)
-    if _download_text(repository, head, "version.txt").strip() == master_version:
-        return head
-
-    # Locale mirrors can lag briefly. Walk commits that touched version.txt instead
-    # of pairing translations by timestamp or assuming identical commit SHAs.
-    for page in range(1, 6):
-        query = urlencode({"path": "version.txt", "per_page": 100, "page": page})
-        rows = _request_json(f"{GITHUB_API_ROOT}/repos/{repository}/commits?{query}")
-        if not rows:
-            break
-        for row in rows:
-            commit = str(row.get("sha", "")).lower()
-            if not re.fullmatch(r"[0-9a-f]{40}", commit):
-                continue
-            try:
-                version = _download_text(repository, commit, "version.txt").strip()
-            except Exception:
-                continue
-            if version == master_version:
-                return commit
-    raise ValueError(
-        f"No {repository} commit with version.txt={master_version} was found in recent history"
-    )
 
 
 def _sha256(content: str) -> str:
@@ -118,34 +83,33 @@ def _resolve_snapshot(force: bool = False, *, pinned: bool = False) -> dict[str,
     core_commit = pinned_meta.get("commit") if pinned else _resolve_head_commit(CORE_REPO)
     if not re.fullmatch(r"[0-9a-f]{40}", str(core_commit or "")):
         raise ValueError("Pinned synchronization requires a valid data/upstream.json")
-    master_version = _download_text(CORE_REPO, core_commit, "version.txt").strip()
+    if pinned and pinned_meta.get("repository") != CORE_REPO:
+        raise ValueError("Pinned snapshot belongs to the old source; run an unpinned migration first")
+    master = AndroidMaster(core_commit)
+    master_version = master.version
     if not re.fullmatch(r"[0-9a-f]{64}", master_version):
         raise ValueError(f"Unexpected master version: {master_version!r}")
 
     locale_snapshot: dict[str, dict[str, str]] = {}
     for locale, config in LOCALES.items():
         repository = config["repository"]
-        commit = (pinned_meta.get("locales", {}).get(locale, {}).get("commit") if pinned else
-                  core_commit if repository == CORE_REPO else _resolve_commit_for_version(repository, master_version))
+        commit = core_commit
         if not re.fullmatch(r"[0-9a-f]{40}", str(commit or "")):
             raise ValueError(f"Missing pinned locale commit: {locale}")
-        version = _download_text(repository, commit, "version.txt").strip()
-        if version != master_version:
-            raise ValueError(
-                f"Locale version mismatch for {locale}: {version} != {master_version}"
-            )
         locale_snapshot[locale] = {
             "repository": repository,
             "commit": commit,
             "suffix": config["suffix"],
+            "language": config["language"],
+            "format": "android-database-v1",
         }
 
     contents: dict[str, str] = {}
     file_hashes: dict[str, str] = {}
-    for filename in MASTER_FILES:
-        content = _download_text(CORE_REPO, core_commit, filename)
-        contents[filename] = content
-        file_hashes[filename] = _sha256(content)
+    with ThreadPoolExecutor(max_workers=6) as pool:
+        for filename, (content, digest) in zip(MASTER_FILES, pool.map(master.table, MASTER_FILES)):
+            contents[filename] = content
+            file_hashes[filename] = digest
 
     previous_manifest = _read_json_file(GENERATED_DIR / "manifest.json", {}) or {}
     previous_upstream = _read_json_file(UPSTREAM_META_FILE, {}) or {}
@@ -153,6 +117,8 @@ def _resolve_snapshot(force: bool = False, *, pinned: bool = False) -> dict[str,
 
     if previous_upstream.get("normalizerVersion") != NORMALIZER_VERSION:
         changed_refs.append("normalizer_version")
+    if previous_upstream.get("repository") != CORE_REPO:
+        changed_refs.append("master_source")
     if previous_manifest.get("master_version") != master_version:
         changed_refs.append("master_version")
     previous_hashes = previous_upstream.get("fileHashes", {})
@@ -178,6 +144,10 @@ def _resolve_snapshot(force: bool = False, *, pinned: bool = False) -> dict[str,
         "file_hashes": file_hashes,
         "changed": bool(changed_refs),
         "changed_refs": changed_refs,
+        "source_repository": CORE_REPO,
+        "source_format": "android-database-v1",
+        "contract_commit": master.contract_commit,
+        "contract_sha256": master.contract_sha256,
     }
 
 
@@ -516,6 +486,9 @@ def normalize(snapshot: dict[str, Any]) -> dict[str, int]:
     manifest = {
         "source_repository": CORE_REPO,
         "source_commit": upstream_commit,
+        "source_format": snapshot.get("source_format", "android-database-v1"),
+        "contract_commit": snapshot.get("contract_commit"),
+        "contract_sha256": snapshot.get("contract_sha256"),
         "master_version": master_version,
         "character_count": len(character_rows),
         "card_count": len(normalized_cards),
@@ -545,6 +518,9 @@ def _write_sync_metadata(snapshot: dict[str, Any], counts: dict[str, int]) -> No
         "commit": snapshot["upstream_commit"],
         "master_version": snapshot["master_version"],
         "normalizerVersion": NORMALIZER_VERSION,
+        "format": snapshot.get("source_format", "android-database-v1"),
+        "contract_commit": snapshot.get("contract_commit"),
+        "contract_sha256": snapshot.get("contract_sha256"),
         "locales": snapshot["locales"],
         "files": list(MASTER_FILES),
         "fileHashes": snapshot["file_hashes"],
@@ -575,6 +551,15 @@ def _write_sync_metadata(snapshot: dict[str, Any], counts: dict[str, int]) -> No
 
 def sync(force: bool = False, *, pinned: bool = False) -> dict[str, Any]:
     snapshot = _resolve_snapshot(force=force, pinned=pinned)
+    if pinned:
+        assets = _read_json_file(GENERATED_DIR / "chart-assets.json", {})
+        if assets.get("source_commit") != snapshot["upstream_commit"] or assets.get("master_version") != snapshot["master_version"]:
+            raise ValueError("Pinned rebuild requires matching committed chart assets")
+    else:
+        from .chart_assets import sync_chart_assets
+        if sync_chart_assets(snapshot["upstream_commit"]):
+            snapshot["changed"] = True
+            snapshot["changed_refs"].append("chart_assets")
     if not snapshot["changed"]:
         return {
             "changed": False,

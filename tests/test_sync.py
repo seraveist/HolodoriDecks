@@ -89,7 +89,7 @@ def test_sha256_is_stable() -> None:
 
 def test_sync_sources_are_explicit_and_cover_three_locales() -> None:
     assert set(LOCALES) == {"ko", "en", "ja"}
-    assert all(config["repository"].startswith("HolodoriDB/") for config in LOCALES.values())
+    assert all(config["repository"] == "holodori-net/android-database" for config in LOCALES.values())
     assert "Card.json" in MASTER_FILES
     assert "Music.json" in MASTER_FILES
     assert "LangMusic_Kor.json" in MASTER_FILES

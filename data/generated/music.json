@@ -17,9 +17,9 @@
     "mv_url": "https://www.youtube.com/watch?v=vQOPE6kHeoU",
     "order": 10000001,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -40,9 +40,9 @@
     "mv_url": "https://www.youtube.com/watch?v=YzQCNmk3YYA",
     "order": 10000002,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -63,9 +63,9 @@
     "mv_url": null,
     "order": 10000003,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -86,9 +86,9 @@
     "mv_url": null,
     "order": 10000004,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -109,9 +109,9 @@
     "mv_url": "https://www.youtube.com/watch?v=vyUYybXWtak",
     "order": 10000005,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -132,9 +132,9 @@
     "mv_url": "https://www.youtube.com/watch?v=UYyzAlbcw8w",
     "order": 10000006,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -155,9 +155,9 @@
     "mv_url": null,
     "order": 10000007,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -178,9 +178,9 @@
     "mv_url": null,
     "order": 10000008,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -201,9 +201,9 @@
     "mv_url": null,
     "order": 10000135,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -224,9 +224,9 @@
     "mv_url": null,
     "order": 10000136,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -247,9 +247,9 @@
     "mv_url": null,
     "order": 10000137,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -270,9 +270,9 @@
     "mv_url": "https://www.youtube.com/watch?v=y0yJ6HjBrOA",
     "order": 10000300,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -293,9 +293,32 @@
     "mv_url": "https://www.youtube.com/watch?v=9vv7FBVkY-8",
     "order": 10000301,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
+    }
+  },
+  {
+    "id": "m0354",
+    "title": "PARADISE！",
+    "singer_name": "hololive IDOL PROJECT",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_ALL",
+    "character_ids": [],
+    "jacket_asset_id": "m0354",
+    "asset_id": "m0354",
+    "start_time": "1790647200000",
+    "playing_seconds": 116,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_REWARD",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": null,
+    "order": 10000354,
+    "_source": {
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -316,9 +339,9 @@
     "mv_url": "https://www.youtube.com/watch?v=vQOPE6kHeoU",
     "order": 10009999,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -341,9 +364,9 @@
     "mv_url": "https://www.youtube.com/watch?v=rbd-m8r5Ujs",
     "order": 20010022,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -366,9 +389,9 @@
     "mv_url": "https://www.youtube.com/watch?v=VCsWgOMu4_8",
     "order": 20010072,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -391,9 +414,9 @@
     "mv_url": "https://www.youtube.com/watch?v=K8n-pGOrpzc",
     "order": 20020023,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -416,9 +439,9 @@
     "mv_url": "https://www.youtube.com/watch?v=zZtIOlu0ZQM",
     "order": 20020073,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -441,9 +464,9 @@
     "mv_url": "https://www.youtube.com/watch?v=V4nwy5IUMdg",
     "order": 20030074,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -466,9 +489,9 @@
     "mv_url": "https://www.youtube.com/watch?v=hQ3rYiaUsUY",
     "order": 20030189,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -491,9 +514,9 @@
     "mv_url": "https://www.youtube.com/watch?v=BerwUFzdj4U",
     "order": 20040076,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -516,9 +539,9 @@
     "mv_url": "https://www.youtube.com/watch?v=7wEkDdBa4QQ",
     "order": 20040138,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -541,9 +564,9 @@
     "mv_url": "https://www.youtube.com/watch?v=WIZSYTAeoF4",
     "order": 20040323,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -566,9 +589,9 @@
     "mv_url": "https://www.youtube.com/watch?v=a51VH9BYzZA",
     "order": 20050009,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -591,9 +614,9 @@
     "mv_url": "https://www.youtube.com/watch?v=8ZP5eqm4JqM",
     "order": 20050075,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -616,9 +639,9 @@
     "mv_url": "https://www.youtube.com/watch?v=IKKar5SS29E",
     "order": 20050324,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -641,9 +664,9 @@
     "mv_url": "https://www.youtube.com/watch?v=Ii7rtNaGlls",
     "order": 20060026,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -666,9 +689,9 @@
     "mv_url": "https://www.youtube.com/watch?v=MSX8QbJR0eQ",
     "order": 20060078,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -688,12 +711,12 @@
     "live_score_coefficient_permil": 5,
     "single_live_score_rank_group_id": "live_score_rank-s001",
     "multi_live_score_rank_group_id": "live_score_rank-m001",
-    "mv_url": null,
+    "mv_url": "https://www.youtube.com/watch?v=8ncXOgv_m34",
     "order": 20060349,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -716,9 +739,9 @@
     "mv_url": "https://www.youtube.com/watch?v=GozEv0IruEE",
     "order": 20070079,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -741,9 +764,9 @@
     "mv_url": "https://www.youtube.com/watch?v=sPVnvaBjQI0",
     "order": 20070190,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -766,9 +789,9 @@
     "mv_url": "https://www.youtube.com/watch?v=9mj2QJE-UOI",
     "order": 20070347,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -791,9 +814,9 @@
     "mv_url": "https://www.youtube.com/watch?v=dPX0_IEXVRo",
     "order": 20080077,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -816,9 +839,9 @@
     "mv_url": "https://www.youtube.com/watch?v=0RG7iNERF4s",
     "order": 20080184,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -841,9 +864,9 @@
     "mv_url": "https://www.youtube.com/watch?v=yVaQpUUAzik",
     "order": 20080321,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -866,9 +889,34 @@
     "mv_url": "https://www.youtube.com/watch?v=pFgUluV_00s",
     "order": 20080338,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
+    }
+  },
+  {
+    "id": "m0376",
+    "title": "KONKON Beats",
+    "singer_name": "Shirakami Fubuki",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
+    "character_ids": [
+      "chr-00006"
+    ],
+    "jacket_asset_id": "m0376",
+    "asset_id": "m0376",
+    "start_time": "1791126000000",
+    "playing_seconds": 101,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=c2hbKnXIa_c",
+    "order": 20080376,
+    "_source": {
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -891,9 +939,9 @@
     "mv_url": "https://www.youtube.com/watch?v=a9CWgFuoULU",
     "order": 20090028,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -916,9 +964,9 @@
     "mv_url": "https://www.youtube.com/watch?v=0iYcUlX9p18",
     "order": 20090080,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -941,9 +989,9 @@
     "mv_url": "https://www.youtube.com/watch?v=kgvB7YRGZvA",
     "order": 20090337,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -966,9 +1014,9 @@
     "mv_url": "https://www.youtube.com/watch?v=ECkxzFgbJqQ",
     "order": 20110083,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -991,9 +1039,9 @@
     "mv_url": "https://www.youtube.com/watch?v=z1W4c7ym49Y",
     "order": 20110180,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1016,9 +1064,9 @@
     "mv_url": "https://www.youtube.com/watch?v=-V3iBUpu2qY",
     "order": 20110332,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1041,9 +1089,9 @@
     "mv_url": "https://www.youtube.com/watch?v=X8DuimcnAVA",
     "order": 20120031,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1066,9 +1114,9 @@
     "mv_url": "https://www.youtube.com/watch?v=n9DqvVNBdVI",
     "order": 20120084,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1091,9 +1139,9 @@
     "mv_url": "https://www.youtube.com/watch?v=RRsw5tT8BJI",
     "order": 20130032,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1116,9 +1164,9 @@
     "mv_url": "https://www.youtube.com/watch?v=qrZtEACCwIU",
     "order": 20130085,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1141,9 +1189,9 @@
     "mv_url": "https://www.youtube.com/watch?v=K_IsIE1TS8U",
     "order": 20130310,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1166,9 +1214,9 @@
     "mv_url": "https://www.youtube.com/watch?v=YPm9T622OX0",
     "order": 20140018,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1191,9 +1239,9 @@
     "mv_url": "https://www.youtube.com/watch?v=NXIDznszQhA",
     "order": 20140188,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1216,9 +1264,9 @@
     "mv_url": "https://www.youtube.com/watch?v=pKpWdttxPQk",
     "order": 20140318,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1241,9 +1289,9 @@
     "mv_url": "https://www.youtube.com/watch?v=eZWjYWcQ4Xo",
     "order": 20140339,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1266,9 +1314,9 @@
     "mv_url": "https://www.youtube.com/watch?v=sHA7CXeRKis",
     "order": 20140353,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1291,9 +1339,9 @@
     "mv_url": "https://www.youtube.com/watch?v=j6P_m6adkgc",
     "order": 20150017,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1316,9 +1364,9 @@
     "mv_url": "https://www.youtube.com/watch?v=HOmS6Kn0bn8",
     "order": 20150087,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1341,9 +1389,9 @@
     "mv_url": "https://www.youtube.com/watch?v=M8UmWCeIKyQ",
     "order": 20150329,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1366,9 +1414,9 @@
     "mv_url": "https://www.youtube.com/watch?v=gA6Qf7iu8SE",
     "order": 20150340,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1391,9 +1439,9 @@
     "mv_url": "https://www.youtube.com/watch?v=wLNTAMY1NZA",
     "order": 20160033,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1416,9 +1464,9 @@
     "mv_url": "https://www.youtube.com/watch?v=VN4VqQ5PTDI",
     "order": 20160086,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1441,9 +1489,34 @@
     "mv_url": "https://www.youtube.com/watch?v=nks1I1sY53I",
     "order": 20160341,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
+    }
+  },
+  {
+    "id": "m0375",
+    "title": "Wonky Monkey",
+    "singer_name": "Inugami Korone",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
+    "character_ids": [
+      "chr-00017"
+    ],
+    "jacket_asset_id": "m0375",
+    "asset_id": "m0375",
+    "start_time": "1790780400000",
+    "playing_seconds": 124,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 7,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=UPSSUSLlwjY",
+    "order": 20160375,
+    "_source": {
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1466,9 +1539,9 @@
     "mv_url": "https://www.youtube.com/watch?v=_KTwDH_KQ_g",
     "order": 20170034,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1491,9 +1564,9 @@
     "mv_url": "https://www.youtube.com/watch?v=Yzdie2uH0N4",
     "order": 20170089,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1516,9 +1589,9 @@
     "mv_url": "https://www.youtube.com/watch?v=bPwIwUJKrdU",
     "order": 20180035,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1541,9 +1614,9 @@
     "mv_url": "https://www.youtube.com/watch?v=u5r8B1fDB8g",
     "order": 20180091,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1566,9 +1639,9 @@
     "mv_url": "https://www.youtube.com/watch?v=6Eeb15-SjEU",
     "order": 20180312,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1591,9 +1664,9 @@
     "mv_url": "https://www.youtube.com/watch?v=65HJRp_GAig",
     "order": 20190092,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1616,9 +1689,9 @@
     "mv_url": "https://www.youtube.com/watch?v=K7r8CD8k_Ho",
     "order": 20190186,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1641,9 +1714,9 @@
     "mv_url": "https://www.youtube.com/watch?v=LMYIam2RFkg",
     "order": 20190311,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1666,9 +1739,9 @@
     "mv_url": "https://www.youtube.com/watch?v=e7VK3pne8N4",
     "order": 20200010,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1691,9 +1764,9 @@
     "mv_url": "https://www.youtube.com/watch?v=KfZR9jVP6tw",
     "order": 20200090,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1716,9 +1789,34 @@
     "mv_url": "https://www.youtube.com/watch?v=QfGuQELt1Tk",
     "order": 20200302,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
+    }
+  },
+  {
+    "id": "m0548",
+    "title": "Kyapi",
+    "singer_name": "Houshou Marine",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
+    "character_ids": [
+      "chr-00023"
+    ],
+    "jacket_asset_id": "m0548",
+    "asset_id": "m0548",
+    "start_time": "1790650800000",
+    "playing_seconds": 123,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=-H4bB6hxeEs",
+    "order": 20200548,
+    "_source": {
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1741,9 +1839,9 @@
     "mv_url": "https://www.youtube.com/watch?v=6VGkeUaX-zk",
     "order": 20220037,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1766,9 +1864,9 @@
     "mv_url": "https://www.youtube.com/watch?v=d3UTywBDSW4",
     "order": 20220094,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1791,9 +1889,9 @@
     "mv_url": "https://www.youtube.com/watch?v=L7MvA9i7byQ",
     "order": 20220206,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1816,9 +1914,9 @@
     "mv_url": "https://www.youtube.com/watch?v=Ud73fm4Uoq0",
     "order": 20230038,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1841,9 +1939,9 @@
     "mv_url": "https://www.youtube.com/watch?v=3UV8OZj2olg",
     "order": 20230095,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1866,9 +1964,9 @@
     "mv_url": "https://www.youtube.com/watch?v=Zc05le75CfI",
     "order": 20230346,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1891,9 +1989,9 @@
     "mv_url": "https://www.youtube.com/watch?v=ua9r5T3WZj8",
     "order": 20240140,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1916,9 +2014,9 @@
     "mv_url": "https://www.youtube.com/watch?v=6YrsEak8Ju4",
     "order": 20240181,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1941,9 +2039,9 @@
     "mv_url": "https://www.youtube.com/watch?v=SxVcgZNQ0dU",
     "order": 20240333,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1966,9 +2064,9 @@
     "mv_url": "https://www.youtube.com/watch?v=ULtGHb83pTI",
     "order": 20250040,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -1991,9 +2089,9 @@
     "mv_url": "https://www.youtube.com/watch?v=BjSIDePerx0",
     "order": 20250097,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2016,9 +2114,9 @@
     "mv_url": "https://www.youtube.com/watch?v=7P5oggg7aSE",
     "order": 20260020,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2041,9 +2139,9 @@
     "mv_url": "https://www.youtube.com/watch?v=5kpByr6TiIs",
     "order": 20260099,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2066,9 +2164,9 @@
     "mv_url": "https://www.youtube.com/watch?v=npVP58NvdQ8",
     "order": 20270041,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2091,9 +2189,9 @@
     "mv_url": "https://www.youtube.com/watch?v=vvGvqbAxp6s",
     "order": 20270098,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2116,9 +2214,9 @@
     "mv_url": "https://www.youtube.com/watch?v=SXLHcjhz2Ys",
     "order": 20270363,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2141,9 +2239,9 @@
     "mv_url": "https://www.youtube.com/watch?v=TGJ9-1LWFtE",
     "order": 20280042,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2166,9 +2264,9 @@
     "mv_url": "https://www.youtube.com/watch?v=UpoysjZfWrU",
     "order": 20280100,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2191,9 +2289,9 @@
     "mv_url": "https://www.youtube.com/watch?v=yTb_AvLchgY",
     "order": 20290101,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2216,9 +2314,9 @@
     "mv_url": "https://www.youtube.com/watch?v=JaD7H9kavNE",
     "order": 20290185,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2241,9 +2339,9 @@
     "mv_url": "https://www.youtube.com/watch?v=Y6RkFM3G9V4",
     "order": 20290327,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2263,12 +2361,12 @@
     "live_score_coefficient_permil": 9,
     "single_live_score_rank_group_id": "live_score_rank-s001",
     "multi_live_score_rank_group_id": "live_score_rank-m001",
-    "mv_url": null,
+    "mv_url": "https://www.youtube.com/watch?v=3iTM2nBOc1k",
     "order": 20290350,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2291,9 +2389,9 @@
     "mv_url": "https://www.youtube.com/watch?v=O0aSJdN3mVY",
     "order": 20300021,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2316,9 +2414,9 @@
     "mv_url": "https://www.youtube.com/watch?v=5t60NWXXkQI",
     "order": 20300104,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2341,9 +2439,9 @@
     "mv_url": "https://www.youtube.com/watch?v=Q69V7YYfFHY",
     "order": 20300344,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2366,9 +2464,9 @@
     "mv_url": "https://www.youtube.com/watch?v=Mt5SB2igQUM",
     "order": 20310044,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2391,9 +2489,34 @@
     "mv_url": "https://www.youtube.com/watch?v=3T0wEUW1THE",
     "order": 20310102,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
+    }
+  },
+  {
+    "id": "m0413",
+    "title": "BAKU LOVE CHEMISTRY",
+    "singer_name": "Hakui Koyori",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
+    "character_ids": [
+      "chr-00037"
+    ],
+    "jacket_asset_id": "m0413",
+    "asset_id": "m0413",
+    "start_time": "1790650800000",
+    "playing_seconds": 125,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=65R4ZpEuzvM",
+    "order": 20310413,
+    "_source": {
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2416,9 +2539,9 @@
     "mv_url": "https://www.youtube.com/watch?v=LO8TO2kdftE",
     "order": 20330046,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2441,9 +2564,9 @@
     "mv_url": "https://www.youtube.com/watch?v=lnlyZlIRO1U",
     "order": 20330105,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2466,9 +2589,9 @@
     "mv_url": "https://www.youtube.com/watch?v=IGviVpVE1fA",
     "order": 20340047,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2491,9 +2614,9 @@
     "mv_url": "https://www.youtube.com/watch?v=uw9SUSvWBN0",
     "order": 20340107,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2516,9 +2639,9 @@
     "mv_url": "https://www.youtube.com/watch?v=lvDNdCBcKJE",
     "order": 20340306,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2541,9 +2664,9 @@
     "mv_url": "https://www.youtube.com/watch?v=stmZAThUl64",
     "order": 20350014,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2566,9 +2689,9 @@
     "mv_url": "https://www.youtube.com/watch?v=GQKR0APNFKs",
     "order": 20350106,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2591,9 +2714,9 @@
     "mv_url": "https://www.youtube.com/watch?v=Rd6kufQ7ONc",
     "order": 20360048,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2616,9 +2739,9 @@
     "mv_url": "https://www.youtube.com/watch?v=jaf_SBcDhFU",
     "order": 20360108,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2641,9 +2764,9 @@
     "mv_url": "https://www.youtube.com/watch?v=EVKGLK4NPXU",
     "order": 20360331,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2666,9 +2789,9 @@
     "mv_url": "https://www.youtube.com/watch?v=2ZqtRc3fa_s",
     "order": 20370052,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2691,9 +2814,9 @@
     "mv_url": "https://www.youtube.com/watch?v=oLOSu6ocgUU",
     "order": 20370114,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2716,9 +2839,9 @@
     "mv_url": "https://www.youtube.com/watch?v=spPdjFdOdDM",
     "order": 20370335,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2741,9 +2864,9 @@
     "mv_url": "https://www.youtube.com/watch?v=eMxyel5LP8Y",
     "order": 20380053,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2766,9 +2889,9 @@
     "mv_url": "https://www.youtube.com/watch?v=2UP3DO56dh4",
     "order": 20380115,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2788,12 +2911,12 @@
     "live_score_coefficient_permil": 7,
     "single_live_score_rank_group_id": "live_score_rank-s001",
     "multi_live_score_rank_group_id": "live_score_rank-m001",
-    "mv_url": null,
+    "mv_url": "https://www.youtube.com/watch?v=xdtU2P4jzF0",
     "order": 20380352,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2816,9 +2939,9 @@
     "mv_url": "https://www.youtube.com/watch?v=VFpOBazE3rs",
     "order": 20390054,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2841,9 +2964,9 @@
     "mv_url": "https://www.youtube.com/watch?v=dYvQcVG_dVg",
     "order": 20390116,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2866,9 +2989,9 @@
     "mv_url": "https://www.youtube.com/watch?v=gREPKQUoD4o",
     "order": 20390459,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2891,9 +3014,9 @@
     "mv_url": "https://www.youtube.com/watch?v=KFFtUqQVLrI",
     "order": 20400060,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2916,9 +3039,9 @@
     "mv_url": "https://www.youtube.com/watch?v=WDueRRGIKzw",
     "order": 20400122,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2941,9 +3064,9 @@
     "mv_url": "https://www.youtube.com/watch?v=w2BRM44B8tE",
     "order": 20410123,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2966,9 +3089,9 @@
     "mv_url": "https://www.youtube.com/watch?v=XG0WLXP1qLA",
     "order": 20410179,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -2991,9 +3114,9 @@
     "mv_url": "https://www.youtube.com/watch?v=q0Qr4top0dA",
     "order": 20410359,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3016,9 +3139,9 @@
     "mv_url": "https://www.youtube.com/watch?v=SF-_47-oCtk",
     "order": 20420062,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3041,9 +3164,9 @@
     "mv_url": "https://www.youtube.com/watch?v=iiw9Z1I1AcE",
     "order": 20420124,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3066,9 +3189,34 @@
     "mv_url": "https://www.youtube.com/watch?v=50Ura_ZcSvY",
     "order": 20420330,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
+    }
+  },
+  {
+    "id": "m0358",
+    "title": "PROPOSE",
+    "singer_name": "Kobo Kanaeru",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
+    "character_ids": [
+      "chr-03009"
+    ],
+    "jacket_asset_id": "m0358",
+    "asset_id": "m0358",
+    "start_time": "1790650800000",
+    "playing_seconds": 133,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_COVER",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 5,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=hDALUZZrE5U",
+    "order": 20420358,
+    "_source": {
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3091,9 +3239,9 @@
     "mv_url": "https://www.youtube.com/watch?v=5y3xh8gs24c",
     "order": 20430012,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3116,9 +3264,9 @@
     "mv_url": "https://www.youtube.com/watch?v=6ydgEipkUEU",
     "order": 20430109,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3141,9 +3289,9 @@
     "mv_url": "https://www.youtube.com/watch?v=do8EmK-XoAg",
     "order": 20430304,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3166,9 +3314,9 @@
     "mv_url": "https://www.youtube.com/watch?v=kuas99zAtNM",
     "order": 20430334,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3191,9 +3339,9 @@
     "mv_url": "https://www.youtube.com/watch?v=Lq9eqHDKJPE",
     "order": 20440049,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3216,9 +3364,9 @@
     "mv_url": "https://www.youtube.com/watch?v=2x86wabH-Qs",
     "order": 20440111,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3241,9 +3389,9 @@
     "mv_url": "https://www.youtube.com/watch?v=8ZdLXELdF9Q",
     "order": 20450050,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3266,9 +3414,9 @@
     "mv_url": "https://www.youtube.com/watch?v=injd7gHrIGU",
     "order": 20450112,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3291,9 +3439,9 @@
     "mv_url": "https://www.youtube.com/watch?v=vwzQcLr_fQ8",
     "order": 20450336,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3316,9 +3464,9 @@
     "mv_url": "https://www.youtube.com/watch?v=UpbpwXAEJl4",
     "order": 20480117,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3341,9 +3489,9 @@
     "mv_url": "https://www.youtube.com/watch?v=DjNNpw2x2dU",
     "order": 20480183,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3366,9 +3514,9 @@
     "mv_url": "https://www.youtube.com/watch?v=dFZ1oTSFuIE",
     "order": 20480326,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3391,9 +3539,9 @@
     "mv_url": "https://www.youtube.com/watch?v=6W749jRBg-4",
     "order": 20500058,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3416,9 +3564,9 @@
     "mv_url": "https://www.youtube.com/watch?v=iEr1aBephZ8",
     "order": 20500120,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3441,9 +3589,9 @@
     "mv_url": "https://www.youtube.com/watch?v=xnX8Lk-iSCo",
     "order": 20520121,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3466,9 +3614,34 @@
     "mv_url": "https://www.youtube.com/watch?v=oCOGTtxq24k",
     "order": 20520182,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
+    }
+  },
+  {
+    "id": "m0357",
+    "title": "Play Dice!",
+    "singer_name": "Hakos Baelz",
+    "music_singer_type": "MusicSingerType_MUSIC_SINGER_TYPE_SOLO",
+    "character_ids": [
+      "chr-04012"
+    ],
+    "jacket_asset_id": "m0357",
+    "asset_id": "m0357",
+    "start_time": "1790650800000",
+    "playing_seconds": 155,
+    "category_type": "MusicCategoryType_MUSIC_CATEGORY_TYPE_ORIGINAL",
+    "release_type": "MusicReleaseType_MUSIC_RELEASE_TYPE_PRESET",
+    "live_score_coefficient_permil": 8,
+    "single_live_score_rank_group_id": "live_score_rank-s001",
+    "multi_live_score_rank_group_id": "live_score_rank-m001",
+    "mv_url": "https://www.youtube.com/watch?v=na6bysYNuS0",
+    "order": 20520357,
+    "_source": {
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3491,9 +3664,9 @@
     "mv_url": "https://www.youtube.com/watch?v=NX1ZCKJ67dc",
     "order": 20530064,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3516,9 +3689,9 @@
     "mv_url": "https://www.youtube.com/watch?v=zKWksk3wBqM",
     "order": 20530127,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3538,12 +3711,12 @@
     "live_score_coefficient_permil": 6,
     "single_live_score_rank_group_id": "live_score_rank-s001",
     "multi_live_score_rank_group_id": "live_score_rank-m001",
-    "mv_url": null,
+    "mv_url": "https://www.youtube.com/watch?v=yWIVS0s7i8c",
     "order": 20530351,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3566,9 +3739,9 @@
     "mv_url": "https://www.youtube.com/watch?v=M3pjFfKBonI",
     "order": 20540065,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3591,9 +3764,9 @@
     "mv_url": "https://www.youtube.com/watch?v=Akn_Gdi05Ys",
     "order": 20540128,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3616,9 +3789,9 @@
     "mv_url": "https://www.youtube.com/watch?v=x_fkTc7Hlp0",
     "order": 20550066,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3641,9 +3814,9 @@
     "mv_url": "https://www.youtube.com/watch?v=SPWsptIhKkM",
     "order": 20550129,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3667,9 +3840,9 @@
     "mv_url": "https://www.youtube.com/watch?v=Nj17tbZP4oA",
     "order": 20560063,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3693,9 +3866,9 @@
     "mv_url": "https://www.youtube.com/watch?v=XYmZUh_YAq0",
     "order": 20560191,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3719,9 +3892,9 @@
     "mv_url": "https://www.youtube.com/watch?v=aThUfmKQgaY",
     "order": 20560192,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3745,9 +3918,9 @@
     "mv_url": "https://www.youtube.com/watch?v=93FgkYhAQmI",
     "order": 20560193,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3771,9 +3944,9 @@
     "mv_url": "https://www.youtube.com/watch?v=vSwxof0K8lk",
     "order": 20560527,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3796,9 +3969,9 @@
     "mv_url": null,
     "order": 20590068,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3821,9 +3994,9 @@
     "mv_url": "https://www.youtube.com/watch?v=VT1on_WaMzw",
     "order": 20590131,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3846,9 +4019,9 @@
     "mv_url": "https://www.youtube.com/watch?v=_xwOiIMM2a4",
     "order": 20590524,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3871,9 +4044,9 @@
     "mv_url": "https://www.youtube.com/watch?v=6pY67sEsNWA",
     "order": 20600069,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3896,9 +4069,9 @@
     "mv_url": "https://www.youtube.com/watch?v=GdOjkBz6E2U",
     "order": 20600187,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3921,9 +4094,9 @@
     "mv_url": "https://www.youtube.com/watch?v=VTzlMR5YYEg",
     "order": 20610070,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3946,9 +4119,9 @@
     "mv_url": "https://www.youtube.com/watch?v=2J3lEm2TJWA",
     "order": 20610133,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3971,9 +4144,9 @@
     "mv_url": "https://www.youtube.com/watch?v=eB2kswPDFaI",
     "order": 20620071,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -3996,9 +4169,9 @@
     "mv_url": "https://www.youtube.com/watch?v=YcRCAQ0DHPo",
     "order": 20620134,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4023,9 +4196,9 @@
     "mv_url": "https://www.youtube.com/watch?v=VupT9JCJaOY",
     "order": 30000139,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4051,9 +4224,9 @@
     "mv_url": "https://www.youtube.com/watch?v=SjACQutMV3A",
     "order": 30000153,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4079,9 +4252,9 @@
     "mv_url": "https://www.youtube.com/watch?v=Gf0iunVGj0I",
     "order": 30000154,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4107,9 +4280,9 @@
     "mv_url": "https://www.youtube.com/watch?v=YTXGwiWBc9k",
     "order": 30000155,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4133,9 +4306,9 @@
     "mv_url": "https://www.youtube.com/watch?v=UA5JjEePTwU",
     "order": 30000156,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4160,9 +4333,9 @@
     "mv_url": "https://www.youtube.com/watch?v=lcVyYmVOi1U",
     "order": 30000157,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4189,9 +4362,9 @@
     "mv_url": "https://www.youtube.com/watch?v=pYNYhSsR8EE",
     "order": 30000158,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4216,9 +4389,9 @@
     "mv_url": "https://www.youtube.com/watch?v=XSZNNbbVuho",
     "order": 30000159,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4243,9 +4416,9 @@
     "mv_url": "https://www.youtube.com/watch?v=cZ4Yex_x6ZQ",
     "order": 30000160,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4270,9 +4443,9 @@
     "mv_url": "https://www.youtube.com/watch?v=Wjkc-q4rEGI",
     "order": 30000161,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4298,9 +4471,9 @@
     "mv_url": "https://www.youtube.com/watch?v=Ix_uXN_ybxc",
     "order": 30000162,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4325,9 +4498,9 @@
     "mv_url": "https://www.youtube.com/watch?v=s_HsEltY_O0",
     "order": 30000317,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4353,9 +4526,9 @@
     "mv_url": "https://www.youtube.com/watch?v=UATaOzzxq_0",
     "order": 30000342,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4379,9 +4552,9 @@
     "mv_url": "https://www.youtube.com/watch?v=tiTnyZ5QLao",
     "order": 40000141,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4406,9 +4579,9 @@
     "mv_url": "https://www.youtube.com/watch?v=6sHk3CYD-IA",
     "order": 40000142,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4435,9 +4608,9 @@
     "mv_url": "https://www.youtube.com/watch?v=ESsV1gDBqYI",
     "order": 40000144,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4461,9 +4634,9 @@
     "mv_url": null,
     "order": 40000145,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4488,9 +4661,9 @@
     "mv_url": "https://www.youtube.com/watch?v=4Hg0Nchl3HU",
     "order": 40000146,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4516,9 +4689,9 @@
     "mv_url": "https://www.youtube.com/watch?v=ao3DUIEaO4c",
     "order": 40000147,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4542,9 +4715,9 @@
     "mv_url": null,
     "order": 40000148,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4568,9 +4741,9 @@
     "mv_url": "https://www.youtube.com/watch?v=lUDPjyfmJrs",
     "order": 40000149,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4594,9 +4767,9 @@
     "mv_url": "https://www.youtube.com/watch?v=fsPSaFbonGo",
     "order": 40000150,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4621,9 +4794,9 @@
     "mv_url": "https://www.youtube.com/watch?v=zWskZx7Lp2Q",
     "order": 40000163,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4647,9 +4820,9 @@
     "mv_url": "https://www.youtube.com/watch?v=ox3mOwzEBWo",
     "order": 40000164,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4673,9 +4846,9 @@
     "mv_url": "https://www.youtube.com/watch?v=VAffx0WO9do",
     "order": 40000165,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4702,9 +4875,9 @@
     "mv_url": "https://www.youtube.com/watch?v=A4W8K7g4Ujg",
     "order": 40000166,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4731,9 +4904,9 @@
     "mv_url": "https://www.youtube.com/watch?v=OffTXFgbn7A",
     "order": 40000167,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4757,9 +4930,9 @@
     "mv_url": "https://www.youtube.com/watch?v=MiuFIzr8bR0",
     "order": 40000168,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4784,9 +4957,9 @@
     "mv_url": "https://www.youtube.com/watch?v=UyS1mJ7TD5E",
     "order": 40000171,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4810,9 +4983,9 @@
     "mv_url": "https://www.youtube.com/watch?v=CYsxFfqtFjk",
     "order": 40000176,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4836,9 +5009,9 @@
     "mv_url": "https://www.youtube.com/watch?v=5OtgLEKKC_Y",
     "order": 40000177,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4862,9 +5035,9 @@
     "mv_url": "https://www.youtube.com/watch?v=NKQvH78Jv04",
     "order": 40000196,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4889,9 +5062,9 @@
     "mv_url": "https://www.youtube.com/watch?v=MQ-QnXZR4mc",
     "order": 40000197,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4915,9 +5088,9 @@
     "mv_url": "https://www.youtube.com/watch?v=R5yfM_UlucY",
     "order": 40000198,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4941,9 +5114,9 @@
     "mv_url": "https://www.youtube.com/watch?v=3pzh6AaXi9s",
     "order": 40000201,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4967,9 +5140,9 @@
     "mv_url": "https://www.youtube.com/watch?v=FPBmQaq4IeU",
     "order": 40000303,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -4993,9 +5166,9 @@
     "mv_url": "https://www.youtube.com/watch?v=bg9M4KTNnHY",
     "order": 40000307,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -5019,9 +5192,9 @@
     "mv_url": "https://www.youtube.com/watch?v=ywKsX9cXcUg",
     "order": 40000308,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -5048,9 +5221,9 @@
     "mv_url": "https://www.youtube.com/watch?v=Z3rqP6VmqU4",
     "order": 40000309,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -5074,9 +5247,9 @@
     "mv_url": "https://www.youtube.com/watch?v=B3kE_zxORik",
     "order": 40000319,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -5100,9 +5273,9 @@
     "mv_url": "https://www.youtube.com/watch?v=gtgME6MJpk4",
     "order": 40000325,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -5127,9 +5300,9 @@
     "mv_url": "https://www.youtube.com/watch?v=6iWKB-Tq8aA&t=1s",
     "order": 40000348,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   },
   {
@@ -5159,9 +5332,9 @@
     "mv_url": "https://youtu.be/iSQYbf9XFg8",
     "order": 40000525,
     "_source": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd"
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4"
     }
   }
 ]

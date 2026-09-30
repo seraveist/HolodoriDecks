@@ -18,7 +18,12 @@ MIT License는 아래의 제3자 자료에 대한 권리를 부여하지 않습�
 
 ## Master and localization data
 
-앱의 Master 및 다국어 데이터 생성에는 다음 공개 HolodoriDB 저장소의 version-aligned snapshot을 사용합니다.
+앱의 Master 및 다국어 데이터 생성에는 `holodori-net/android-database`의 단일 커밋과 그 report가 지정한 `holodori-net/android-protos` descriptor를 사용합니다.
+
+- https://github.com/holodori-net/android-database
+- https://github.com/holodori-net/android-protos
+
+이전 스냅샷의 출처는 다음 공개 HolodoriDB 저장소입니다.
 
 - https://github.com/HolodoriDB/holodori-db-kor-diff
 - https://github.com/HolodoriDB/holodori-db-eng-diff
@@ -33,7 +38,7 @@ Master/번역 데이터의 원저작권 또는 별도 이용 조건은 해당 �
 신규 ★4/★5 카드의 정적 portrait를 동기화할 때 다음 공개 도구를 build-time tooling으로 사용합니다.
 
 - repository: https://github.com/HolodoriDB/holodori-asset-tools
-- pinned tool commit: `85b70c9b0024e91ea566dacafe8374e1c4212cf5`
+- pinned tool commit: `13f150fe9dfbd367be53e5ea1c0a4ceb258b74f2`
 - tool license: GNU GPL v3
 
 이 도구는 CI에서 게임의 현재 Octo catalog/CDN 자산을 조회·복호화·추출할 때만 사용하며, Holodori DeckSim 브라우저 런타임이나 정적 Pages artifact에 포함되지 않습니다.
@@ -53,6 +58,8 @@ Master/번역 데이터의 원저작권 또는 별도 이용 조건은 해당 �
 - source path: `packages/core/src/fixtures/chart-m0049-expert.sus`
 
 변환된 metadata의 provenance는 `data/generated/charts/m0049-EXPERT.json`에도 기록되어 있습니다.
+
+새로 생성되는 Local Exact는 현재 게임 CDN의 SUS 원본을 직접 검증·변환합니다. 원본 해시와 복호화된 SHA-256은 `data/generated/chart-assets.json`, 변환 도구 커밋은 각 metadata에 기록합니다. `holodori-asset-tools`, `holodori-scores` 및 `sonolus-level-converters`는 CI 도구로만 사용하며 브라우저에 포함되지 않습니다. 아래 고정 Runtime corpus 전체를 복제해 생성하는 방식은 아닙니다.
 
 ### Runtime Exact
 
