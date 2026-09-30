@@ -1,5 +1,6 @@
 import copy
 import hashlib
+from types import SimpleNamespace
 
 from google.protobuf.descriptor_pb2 import DescriptorProto, FieldDescriptorProto as F
 import pytest
@@ -7,6 +8,25 @@ import pytest
 from holodori_decksim import sync
 from holodori_decksim import chart_assets as assets
 from holodori_decksim.master_source import AndroidMaster, source_path
+
+
+def test_official_region_transport_fallback_never_uses_stale_catalog():
+    calls = []
+    def fetcher(*, url):
+        calls.append(url)
+        if len(calls) == 1:
+            raise OSError("regional service unavailable")
+        return SimpleNamespace(revisionId=93)
+    assert assets.fetch_catalog(fetcher, OSError).revisionId == 93
+    assert calls == list(assets.CATALOG_URLS[:2])
+    def invalid(*, url):
+        raise ValueError("corrupt catalogue")
+    with pytest.raises(ValueError, match="corrupt"):
+        assets.fetch_catalog(invalid, OSError)
+    def unavailable(*, url):
+        raise OSError("all services unavailable")
+    with pytest.raises(OSError, match="all services"):
+        assets.fetch_catalog(unavailable, OSError)
 
 
 def test_language_paths_share_one_master_repository():

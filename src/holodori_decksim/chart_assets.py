@@ -8,6 +8,7 @@ import json
 import math
 from pathlib import Path
 import re
+import sys
 from urllib.parse import urlparse
 
 from .master_source import AndroidMaster, request_bytes
@@ -17,6 +18,8 @@ DIFFICULTIES = {1: "EASY", 2: "NORMAL", 3: "HARD", 4: "EXPERT"}
 TOOL_COMMIT = "13f150fe9dfbd367be53e5ea1c0a4ceb258b74f2"
 PARSER_COMMIT = "292549eaf4ac7b82bd239fcacb719bae6dfa7ad9"
 CONVERTER_COMMIT = "100e0ac4e5d2a895089b565f38800d1cc6a0b28e"
+CATALOG_URLS = tuple(f"https://{region}.game-hololive-dreams.com/asset/v2/pub/a/5/v/200001/list/{{gen}}"
+                    for region in ("us", "jp", "as"))
 COUNTS = {"tap": "NORMAL", "flick": "FLICK", "long_start": "LONG_START",
           "long_end": "LONG_END", "long_flick_end": "LONG_FLICK_END",
           "long_relay": "LONG_RELAY", "long_continuation": "LONG_CONTINUE"}
@@ -33,6 +36,25 @@ def verify_resource(raw: bytes, expected_hash: str, expected_size: int) -> None:
         raise ValueError("Downloaded chart MD5 mismatch")
     if len(raw) != expected_size:
         raise ValueError("Downloaded chart size mismatch")
+
+
+def fetch_catalog(fetcher, request_errors):
+    """The official regional services expose the same Android asset catalogue.
+
+    GitHub-hosted runners can be denied by an individual regional endpoint.
+    Only transport errors try another official service; decode/integrity errors
+    remain fatal, and no cached catalogue is substituted for a current response.
+    """
+    for index, url in enumerate(CATALOG_URLS):
+        try:
+            result = fetcher(url=url)
+        except request_errors as error:
+            if index == len(CATALOG_URLS) - 1:
+                raise
+            print(f"[chart-assets] {urlparse(url).hostname}: {type(error).__name__}; trying next official region", file=sys.stderr)
+        else:
+            print(f"[chart-assets] catalogue r{result.revisionId} from {urlparse(url).hostname}", file=sys.stderr)
+            return result
 
 
 def headers(raw: bytes, music_id: str, full_combo: int) -> dict:
@@ -84,6 +106,7 @@ def sync_chart_assets(commit: str, *, root: Path = ROOT) -> bool:
     from holodori_asset_tools import catalog
     from holodori_asset_tools.crypto.resource import decrypt
     from holodori.scores import chart_metadata, load_sus
+    from httpx import HTTPError
 
     generated = root / "data/generated"
     target = generated / "chart-assets.json"
@@ -93,7 +116,7 @@ def sync_chart_assets(commit: str, *, root: Path = ROOT) -> bool:
     details = json.loads(master.table("MusicDifficulty.json")[0])
     detail_index = {(x["music_id"], x["difficulty_type"]): x["data"] for x in details}
     # Always refresh the catalogue, including runs where the master is unchanged.
-    current = catalog.fetch()
+    current = fetch_catalog(catalog.fetch, HTTPError)
     if current.revisionId < old.get("catalogRevision", 0):
         raise ValueError("Asset catalogue revision regressed")
     entries = {x.name: x for x in current.resources}
