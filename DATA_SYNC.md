@@ -18,11 +18,11 @@ python -m pip install --no-deps 'git+https://github.com/HolodoriDB/holodori-scor
 holodori-sync
 ```
 
-### Runner network requirement
+### GitHub-hosted execution
 
-The 2026-09-30 migration dry run confirmed HTTP 403 from all three official catalogue endpoints on GitHub-hosted Ubuntu, while the same requests and all 844 asset validations succeeded from the local network. Therefore the hosted runner alone is currently insufficient for scheduled live sync. This is an external access restriction, not a reason to skip chart freshness validation.
+The collection job runs on GitHub's standard `macos-15` runner. The [2026-09-30 network comparison](https://github.com/seraveist/HolodoriDecks/actions/runs/36667631871) verified all three official catalogues (revision 94, 845 SUS resources) and a chart download on hosted macOS. Standard Ubuntu, Ubuntu ARM and Windows runners returned HTTP 403 for the same requests. The rejection is environment-dependent; it does not require moving automation outside GitHub Actions.
 
-Set the repository Actions variable `HOLODORI_MASTER_SYNC_RUNNER` to the label of an existing, game-accessible **Linux** runner to move only the collection job. Validation, PR publication and deployment retain their existing runners and gates. The default remains `ubuntu-latest`; with blocked access it fails without publishing. Alternatively, run the documented synchronization locally and submit the verified generated data through a reviewed PR. No runner is installed or registered by this change.
+Full candidate validation, PR publication and deployment continue on standard Ubuntu runners with the existing gates. No personal computer, self-hosted runner, runner variable or additional account secret is required. The daily schedule and manual workflow inputs are unchanged. If access changes, the manually triggered `Check hosted sync network` workflow compares the four standard environments without modifying data or publishing anything. Catalogue or integrity failures still stop live sync before publication.
 
 ## Generated data flow
 

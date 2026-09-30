@@ -34,8 +34,9 @@ concurrency:
 
 jobs:
   sync:
-    # Use a game-accessible Linux runner when hosted-runner egress is denied.
-    runs-on: ${{ vars.HOLODORI_MASTER_SYNC_RUNNER || 'ubuntu-latest' }}
+    # Official catalogues reject hosted Ubuntu/Windows egress. Standard hosted
+    # macOS can fetch and verify them; no self-hosted runner is required.
+    runs-on: macos-15
     timeout-minutes: 30
     outputs:
       has_diff: ${{ steps.diff.outputs.has_diff }}

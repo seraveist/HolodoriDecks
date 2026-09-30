@@ -2,9 +2,6 @@ name: Check hosted sync network
 
 on:
   workflow_dispatch:
-  push:
-    branches: [codex/migrate-master-assets]
-    paths: [.github/workflows/check-sync-network.yml]
 
 permissions:
   contents: read
