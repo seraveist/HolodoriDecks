@@ -1,24 +1,20 @@
 {
-  "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd",
-  "upstream_commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-  "normalizer_version": 3,
+  "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4",
+  "upstream_commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+  "normalizer_version": 4,
   "locales": {
-    "ko": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-    "en": "7f69b2404abe3001ce411240ed2323a6313a2708",
-    "ja": "e43f062c32ff4e04567235efcd58448cd6b10f35"
+    "ko": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+    "en": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+    "ja": "94633a6bbaef4c39a8381e9ab32e82114b36fac3"
   },
   "changed_refs": [
-    "master_version",
-    "core_master_files",
-    "locale:ko",
-    "locale:en",
-    "locale:ja"
+    "forced"
   ],
   "counts": {
     "boards": 54,
     "characters": 62,
-    "cards": 185,
-    "music": 204,
-    "leaders": 185
+    "cards": 189,
+    "music": 211,
+    "leaders": 189
   }
 }

@@ -13,16 +13,22 @@
   },
   "sourceSchemaVersion": 1,
   "sourceTransformVersion": "exact-sus-timeline-v1",
-  "currentMasterSourceCommit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-  "currentMasterChartCount": 816,
-  "runtimeExactCount": 699,
+  "currentMasterSourceCommit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+  "currentMasterChartCount": 844,
+  "runtimeExactCount": 698,
   "unavailableCount": 25,
   "unavailableReasons": {
     "source-api-unreachable-cloudflare-challenge-at-intake": 21,
     "source-chart-does-not-contain-five-special-markers": 4
   },
-  "rejectedAvailableCount": 4,
+  "rejectedAvailableCount": 5,
   "rejectedAvailable": [
+    {
+      "key": "m0066:EXPERT",
+      "reasons": [
+        "chart-hash-mismatch"
+      ]
+    },
     {
       "key": "m0337:EASY",
       "reasons": [
@@ -2220,18 +2226,6 @@
       "chartAssetId": "chart_m0066_easy",
       "fullComboNoteCount": 288,
       "normalNoteCount": 96
-    },
-    "m0066:EXPERT": {
-      "start": 7140529,
-      "end": 7206666,
-      "length": 66138,
-      "objectSha256": "7f6cd2779ecad496f426cea01573787985ebd8ea046d785d57c9386e9de97e33",
-      "musicId": "m0066",
-      "difficulty": "EXPERT",
-      "chartHash": "8096bd7fec1ad3b3a4956339197fdcd7",
-      "chartAssetId": "chart_m0066_expert",
-      "fullComboNoteCount": 966,
-      "normalNoteCount": 312
     },
     "m0066:HARD": {
       "start": 7206673,

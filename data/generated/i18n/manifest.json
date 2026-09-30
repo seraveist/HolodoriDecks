@@ -1,26 +1,26 @@
 {
-  "master_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd",
-  "generated_at": "2026-09-26T18:36:43.164Z",
-  "required_entry_count": 1746,
-  "card_name_alias_count": 23,
+  "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4",
+  "generated_at": "2026-09-30T02:42:27.276Z",
+  "required_entry_count": 1785,
+  "card_name_alias_count": 27,
   "locales": {
     "ko": {
-      "repository": "HolodoriDB/holodori-db-kor-diff",
-      "commit": "98f8b557a095c837b51126d993c34d582fb5c5f2",
-      "source_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd",
-      "entry_count": 4416
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "source_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4",
+      "entry_count": 4526
     },
     "en": {
-      "repository": "HolodoriDB/holodori-db-eng-diff",
-      "commit": "7f69b2404abe3001ce411240ed2323a6313a2708",
-      "source_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd",
-      "entry_count": 4416
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "source_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4",
+      "entry_count": 4526
     },
     "ja": {
-      "repository": "HolodoriDB/holodori-db-jpn-diff",
-      "commit": "e43f062c32ff4e04567235efcd58448cd6b10f35",
-      "source_version": "845cee36af22b657511ca406b5417cac7076a001208518c9601d6389a5046ddd",
-      "entry_count": 4409
+      "repository": "holodori-net/android-database",
+      "commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+      "source_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4",
+      "entry_count": 4519
     }
   }
 }

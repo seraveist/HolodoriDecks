@@ -123,6 +123,7 @@ jobs:
           node scripts/test-search-order-bounds.mjs
           node scripts/test-optimizer-client.mjs
           node scripts/test-exact-runtime-source.mjs
+          node scripts/test-master-source.mjs
           node scripts/test-optimization-session.mjs
           node scripts/test-chart-abort.mjs
           node scripts/test-browser-smoke.mjs

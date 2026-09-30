@@ -34,7 +34,9 @@ concurrency:
 
 jobs:
   sync:
-    runs-on: ubuntu-latest
+    # Official catalogues reject hosted Ubuntu/Windows egress. Standard hosted
+    # macOS can fetch and verify them; no self-hosted runner is required.
+    runs-on: macos-15
     timeout-minutes: 30
     outputs:
       has_diff: ${{ steps.diff.outputs.has_diff }}
@@ -65,7 +67,7 @@ jobs:
       - name: Install core sync tooling
         run: |
           for attempt in 1 2 3; do
-            if python -m pip install --disable-pip-version-check --retries 5 --timeout 30 -e '.[test]'; then
+            if python -m pip install --disable-pip-version-check --retries 5 --timeout 30 -e '.[test,sync]'; then
               exit 0
             fi
             echo "::warning::Core sync tooling install failed (attempt ${attempt}/3)."
@@ -74,6 +76,11 @@ jobs:
             fi
           done
           exit 1
+
+      - name: Install pinned chart parser
+        # Its converter dependency is pinned in the sync extra; do not let the
+        # parser's floating Git dependency replace it.
+        run: python -m pip install --disable-pip-version-check --retries 5 --timeout 30 --no-deps 'git+https://github.com/HolodoriDB/holodori-scores@292549eaf4ac7b82bd239fcacb719bae6dfa7ad9'
 
       - name: Preserve automation baseline
         run: |
@@ -91,6 +98,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
           args=()
           if [ "${{ inputs.force || false }}" = "true" ]; then
             args+=(--force)
@@ -140,6 +148,7 @@ jobs:
           node scripts/test-exact-pruning.mjs
           node scripts/test-beam-search.mjs
           node scripts/test-exact-runtime-source.mjs
+          node scripts/test-master-source.mjs
           node scripts/test-optimization-session.mjs
           node scripts/test-chart-abort.mjs
           find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check

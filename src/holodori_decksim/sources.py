@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from .board_data import BOARD_FILES
 
-CORE_REPO = "HolodoriDB/holodori-db-kor-diff"
+CORE_REPO = "holodori-net/android-database"
 UPSTREAM_REPO = CORE_REPO
 UPSTREAM_REF = "main"
 GITHUB_API_ROOT = "https://api.github.com"
@@ -10,15 +10,18 @@ RAW_GITHUB_ROOT = "https://raw.githubusercontent.com"
 
 LOCALES = {
     "ko": {
-        "repository": "HolodoriDB/holodori-db-kor-diff",
+        "repository": CORE_REPO,
+        "language": "kor",
         "suffix": "Kor",
     },
     "en": {
-        "repository": "HolodoriDB/holodori-db-eng-diff",
+        "repository": CORE_REPO,
+        "language": "eng",
         "suffix": "Eng",
     },
     "ja": {
-        "repository": "HolodoriDB/holodori-db-jpn-diff",
+        "repository": CORE_REPO,
+        "language": "jpn",
         "suffix": "Jpn",
     },
 }
@@ -26,7 +29,6 @@ LOCALES = {
 # Keep this list explicit so upstream schema changes remain reviewable. These are
 # the inputs required to rebuild cards/characters/music/master_refs exactly.
 MASTER_FILES = (
-    "version.txt",
     "Card.json",
     "Character.json",
     "LangCard_Kor.json",

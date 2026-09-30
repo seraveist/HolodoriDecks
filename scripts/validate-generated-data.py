@@ -74,6 +74,10 @@ def main() -> None:
 
     source_commit = str(manifest.get("source_commit", ""))
     master_version = str(manifest.get("master_version", ""))
+    if manifest.get("source_repository") != "holodori-net/android-database" or manifest.get("source_format") != "android-database-v1":
+        raise AssertionError("unexpected master source/format")
+    if not re.fullmatch(r"[0-9a-f]{40}", str(manifest.get("contract_commit", ""))) or not re.fullmatch(r"[0-9a-f]{64}", str(manifest.get("contract_sha256", ""))):
+        raise AssertionError("missing pinned protobuf contract provenance")
     if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
         raise AssertionError("manifest source_commit is not a 40-char SHA")
     if not re.fullmatch(r"[0-9a-f]{64}", master_version):
@@ -83,7 +87,7 @@ def main() -> None:
     if set(locales) != {"ko", "en", "ja"}:
         raise AssertionError(f"unexpected locale set: {sorted(locales)}")
     for locale, config in locales.items():
-        if not str(config.get("repository", "")).startswith("HolodoriDB/"):
+        if config.get("repository") != "holodori-net/android-database" or config.get("commit") != source_commit:
             raise AssertionError(f"{locale}: invalid locale repository")
         if not re.fullmatch(r"[0-9a-f]{40}", str(config.get("commit", ""))):
             raise AssertionError(f"{locale}: invalid locale commit")
@@ -159,6 +163,18 @@ def main() -> None:
         raise AssertionError("live-score-rules source commit does not match core manifest")
 
     charts = chart_index.get("charts", {})
+    assets = load_json(GENERATED / "chart-assets.json")
+    if assets.get("source_commit") != source_commit or assets.get("master_version") != master_version:
+        raise AssertionError("chart assets/master snapshot mismatch")
+    if set(assets.get("charts", {})) != set(charts):
+        raise AssertionError("chart assets/index coverage mismatch")
+    for key, chart in charts.items():
+        asset = assets["charts"][key]
+        for field in ("musicId", "difficulty", "chartHash", "chartAssetId", "fullComboNoteCount", "normalNoteCount"):
+            if asset.get(field) != chart.get(field):
+                raise AssertionError(f"{key}: chart asset {field} mismatch")
+        if not re.fullmatch(r"[0-9a-f]{16,32}", str(asset.get("chartHash", ""))) or not re.fullmatch(r"[0-9a-f]{64}", str(asset.get("susSha256", ""))):
+            raise AssertionError(f"{key}: missing verified chart fingerprints")
     if int(chart_index.get("chart_count", -1)) != len(charts):
         raise AssertionError("chart-index chart_count mismatch")
     if len(charts) < len(music_ids) * 3:

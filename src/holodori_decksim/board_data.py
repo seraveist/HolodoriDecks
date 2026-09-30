@@ -120,7 +120,7 @@ def language_ids(value: Any) -> set[str]:
 def build_board_data(snapshot: dict[str, Any], character_ids: set[str], card_ids: set[str]) -> tuple[dict[str, Any], dict[str, Any]]:
     contents = snapshot['contents']
     get = lambda name: rows(contents, name + '.json')
-    source = {'source_repository': 'HolodoriDB/holodori-db-kor-diff',
+    source = {'source_repository': snapshot.get('source_repository', 'holodori-net/android-database'),
               'source_commit': snapshot['upstream_commit'], 'master_version': snapshot['master_version']}
     raw_characters = index(get('Character'))
     raw_cards = index(get('Card'))

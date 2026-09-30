@@ -39,7 +39,7 @@
 - 보유 카드 JSON 내보내기 / 가져오기
 - 한국어 / English / 日本語
 - 라이트 / 다크 테마, 반응형 PC·태블릿·모바일 UI
-- HolodoriDB Master·★4/★5 카드 이미지 자동 동기화와 검증 PR
+- Android Master·★4/★5 카드 이미지 자동 동기화와 검증 PR
 - GitHub Pages 자동 배포 및 VERSION 기반 GitHub Release
 
 ## 기본 사용 흐름
@@ -228,19 +228,16 @@ Master/Estimated fallback에서는 기존 집계형 진단 모델을 사용합�
 
 ## 데이터 동기화
 
-핵심 Master:
+핵심 Master와 KO/EN/JA 번역은 `holodori-net/android-database`의 같은 커밋에서 가져옵니다. 해당 스냅샷의 `android-protos` descriptor로 기존 앱 형식과 enum 이름을 유지합니다.
 
-- `HolodoriDB/holodori-db-kor-diff`
-- `HolodoriDB/holodori-db-eng-diff`
-- `HolodoriDB/holodori-db-jpn-diff`
-
-KO/EN/JA는 동일 `master_version` snapshot으로 정렬합니다.
+삭제된 `chartHash`·`normalNoteCount`는 고정 버전 `HolodoriDB/holodori-asset-tools`로 현재 게임 에셋을 검증해 복원합니다. 마스터가 같아도 차트 원본의 변경을 확인합니다.
 
 `.github/workflows/sync-master-data.yml`은 매일 00:15 KST에 실행되며 upstream이 변경되면 다음을 수행합니다.
 
 ```text
 upstream 변경 감지
-→ 같은 master_version의 KO/EN/JA snapshot 해석
+→ 같은 커밋의 Master 및 KO/EN/JA snapshot 해석
+→ 현재 차트 에셋의 해시·헤더 검증 및 지원되는 SUS 타임라인 생성
 → cards / characters / music / skills 생성
 → i18n 생성
 → Master chart index / score rules 생성
@@ -252,7 +249,7 @@ upstream 변경 감지
 → 초상화와 독립적으로 Pages 배포
 ```
 
-Runtime Exact source가 새 Master의 일부 채보와 더 이상 맞지 않으면 해당 채보는 새 index에서 제외되고 Master fallback을 사용합니다. 신규 데이터는 생성된 커밋에 대한 전체 검증과 자동 병합 기준을 통과하면 `main`에 반영하고, 초상화 결과와 독립적으로 배포합니다. 변경 없는 정기 실행에서도 미완료 배포를 다시 시도합니다. 자세한 내용은 [DATA_SYNC.md](DATA_SYNC.md)를 참고하세요.
+Runtime Exact source와 현재 에셋 해시가 다르면 예전 타임라인을 제외합니다. 검증된 새 Local Exact 타임라인이 있으면 사용하고, 없으면 Master fallback을 사용합니다. 신규 데이터는 생성된 커밋에 대한 전체 검증과 자동 병합 기준을 통과하면 `main`에 반영하고, 초상화 결과와 독립적으로 배포합니다. 변경 없는 정기 실행에서도 미완료 배포를 다시 시도합니다. 자세한 내용은 [DATA_SYNC.md](DATA_SYNC.md)를 참고하세요.
 
 카드 portrait는 `.github/workflows/sync-card-assets.yml`에서 ★4/★5 대상만 별도로 감사합니다. 매일 한국 시간 11:00·23:00에 누락된 이미지를 재시도하며, 일부만 확보돼도 검증된 항목부터 자동 반영·배포합니다. 실패한 항목은 기록에 남겨 다음 실행에서 재시도하고 데이터 사용에는 영향을 주지 않습니다. 공개 스냅샷을 우선 사용하고 필요한 경우 Octo/UnityPy를 사용합니다. 자세한 내용은 [CARD_ASSET_SYNC.md](CARD_ASSET_SYNC.md)를 참고하세요.
 

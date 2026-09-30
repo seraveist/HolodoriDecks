@@ -29,10 +29,11 @@ function memoryStorage(initial = null) {
   return { getItem: () => value, setItem: (key, next) => { assert.equal(key, BOARD_STORAGE_KEY); value = next; } };
 }
 
-test('Master layout has 153 unique IDs/positions and four connectors', () => {
-  assert.equal(BOARD_NODES.length, 153);
-  assert.equal(new Set(BOARD_NODES.map(n => n.id)).size, 153);
-  assert.equal(new Set(BOARD_NODES.map(n => `${n.x},${n.y}`)).size, 153);
+test('Master layout retains unique IDs/positions, the added G-025 node and four connectors', () => {
+  assert.ok(BOARD_NODES.length >= 154);
+  assert.equal(new Set(BOARD_NODES.map(n => n.id)).size, BOARD_NODES.length);
+  assert.equal(new Set(BOARD_NODES.map(n => `${n.x},${n.y}`)).size, BOARD_NODES.length);
+  assert.deepEqual(BOARD_NODES.find(n => n.id === 'G-025'), { id: 'G-025', type: 'G', x: 1, y: -10 });
   assert.deepEqual(CONNECTOR_IDS, ['S-001', 'S-002', 'S-003', 'S-004']);
   assert.deepEqual(BOARD_NODES.find(n => n.id === 'B-003'), { id: 'B-003', type: 'B', x: -2, y: -1 });
 });

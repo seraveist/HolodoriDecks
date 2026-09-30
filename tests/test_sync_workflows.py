@@ -35,6 +35,17 @@ def test_master_validation_is_called_directly_on_generated_commit():
     assert "--event pull_request" not in str(jobs)
 
 
+def test_sync_uses_only_standard_hosted_runners_and_propagates_failure():
+    jobs = workflow("sync-master-data.yml")["jobs"]
+    assert jobs["sync"]["runs-on"] == "macos-15"
+    assert jobs["merge"]["runs-on"] == "ubuntu-latest"
+    assert jobs["deploy"]["runs-on"] == "ubuntu-latest"
+    assert workflow("validate.yml")["jobs"]["validate"]["runs-on"] == "ubuntu-latest"
+    assert "HOLODORI_MASTER_SYNC_RUNNER" not in str(jobs)
+    sync = next(step for step in jobs["sync"]["steps"] if step.get("id") == "sync")
+    assert sync["run"].index("set -euo pipefail") < sync["run"].index("holodori-sync")
+
+
 def test_master_pr_branch_is_not_updated_until_full_validation_passes():
     jobs = workflow("sync-master-data.yml")["jobs"]
     sync = jobs["sync"]["steps"]
