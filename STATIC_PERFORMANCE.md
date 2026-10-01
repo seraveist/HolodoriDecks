@@ -72,11 +72,16 @@ relevant. Existing score/level/awakening rules and import/export are unchanged.
   state, cancellation, Exact/fallback and languages, plus owned-row/input/focus
   retention, repeated clamped edits, filtered-row reuse, modal events, zero
   hidden-list mutations and deferred song requests.
-* The regular validation workflow also serves the actual optimized Pages
-  artifact and reruns the browser checks with `BROWSER_SMOKE_ROOT`. It verifies
+* `Validate Static App` runs the source-site browser checks once per PR.
+  `Validate public static optimization` serves the actual optimized Pages
+  artifact and runs its browser checks with `BROWSER_SMOKE_ROOT`. It verifies
   use of compact hashed card transport and an actual browser-cache hit after
   reload, while the mutable manifest is not cached. Screenshots and public
   build reports are uploaded as `static-optimization-validation`.
+
+Both workflows retain manual dispatch and avoid duplicate branch-push runs.
+See [CI execution and reuse](LOCAL_TEST.md#13-ci-실행과-무거운-검사-재사용)
+for expensive scoring checks and the full-validation option.
 
 Transfer-size reductions are not end-to-end latency or score-search speedup
 claims. Decoding still reconstructs the full original arrays to preserve
