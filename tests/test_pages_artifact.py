@@ -3,11 +3,20 @@ import json
 from pathlib import Path
 
 import pytest
+import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('pages_artifact', ROOT / 'scripts/build-pages-artifact.py')
 builder = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
+
+
+def test_pages_upload_preserves_nojekyll_marker():
+    workflow = yaml.load((ROOT / '.github/workflows/pages.yml').read_text(), Loader=yaml.BaseLoader)
+    upload = next(step for step in workflow['jobs']['deploy']['steps']
+                  if step.get('uses', '').startswith('actions/upload-pages-artifact@'))
+    # The builder copies .nojekyll; upload-pages-artifact v5 excludes it by default.
+    assert upload['with']['include-hidden-files'] == 'true'
 
 
 @pytest.mark.parametrize('relative', ['', 'data/generated/site', 'js/site', 'assets/site', 'scripts/site', '.git/site'])
