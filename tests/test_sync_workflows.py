@@ -5,6 +5,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import sys
 
 import pytest
 import yaml
@@ -327,6 +328,30 @@ def test_network_diagnostics_aggregate_access_failures_instead_of_failing_each_e
     assert "raise SystemExit" not in probe
     assert jobs['summary']['needs'] == 'catalogue'
     assert any('asset_verified' in step.get('run', '') and 'raise SystemExit' in step.get('run', '') for step in jobs['summary']['steps'])
+
+
+@pytest.mark.parametrize('verified,expected_status', [(False, 1), (True, 0)])
+def test_network_summary_requires_an_actual_verified_download(tmp_path, verified, expected_status):
+    summary = workflow('check-sync-network.yml')['jobs']['summary']
+    script = next(step['run'] for step in summary['steps'] if step.get('shell') == 'python')
+    for runner in ['ubuntu-latest', 'macos-15']:
+        directory = tmp_path / 'reports' / f'catalogue-{runner}'
+        directory.mkdir(parents=True)
+        row = {'runner': runner, 'ok': runner == 'macos-15',
+               'asset_verified': verified and runner == 'macos-15'}
+        (directory / 'catalogue.json').write_text(json.dumps([row]))
+    completed = subprocess.run([sys.executable, '-c', script], cwd=tmp_path,
+        env={**os.environ, 'GITHUB_STEP_SUMMARY': str(tmp_path / 'summary.md')}, capture_output=True)
+    assert completed.returncode == expected_status
+
+
+@pytest.mark.parametrize('result,expected_status', [('success', 0), ('failure', 1), ('cancelled', 1), ('skipped', 1)])
+def test_network_summary_does_not_hide_a_probe_execution_failure(tmp_path, result, expected_status):
+    summary = workflow('check-sync-network.yml')['jobs']['summary']
+    script = next(step['run'] for step in summary['steps'] if step.get('name') == 'Require complete network probes')
+    completed = subprocess.run(['/bin/bash', '-e', '-c', script], cwd=tmp_path,
+        env={**os.environ, 'PROBE_RESULT': result}, capture_output=True)
+    assert completed.returncode == expected_status
 
 
 @pytest.mark.parametrize("reuse,should_run", [("true", False), ("false", True), ("", True)])

@@ -249,7 +249,8 @@ jobs:
           - score / potential / collision / Exact / Beam / cancellation regressions
           - Runtime Exact current-Master coherence
           - Python sync tests and JavaScript syntax checks
-          - Full static-app, browser and portable historical scoring validation on this exact commit
+          - Full current-app and built-public browser validation on this exact commit
+          - Archived scoring reproduction when research or workflow inputs change
           """
           encoded = base64.b64encode(('\n'.join(line.strip() for line in body.splitlines()) + '\n').encode()).decode()
           print(f"body={encoded}")
