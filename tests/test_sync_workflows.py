@@ -1,6 +1,8 @@
-"""Exercise the publication conditions in the actual workflow definitions."""
+"""Exercise sync commands and publication conditions in the actual workflows."""
+import os
 from pathlib import Path
 import re
+import subprocess
 
 import pytest
 import yaml
@@ -44,6 +46,60 @@ def test_sync_uses_only_standard_hosted_runners_and_propagates_failure():
     assert "HOLODORI_MASTER_SYNC_RUNNER" not in str(jobs)
     sync = next(step for step in jobs["sync"]["steps"] if step.get("id") == "sync")
     assert sync["run"].index("set -euo pipefail") < sync["run"].index("holodori-sync")
+
+
+def test_master_sync_avoids_empty_array_expansion_on_macos_bash():
+    steps = workflow("sync-master-data.yml")["jobs"]["sync"]["steps"]
+    script = next(step["run"] for step in steps if step.get("id") == "sync")
+    # Ubuntu's newer Bash accepts empty arrays under nounset; macOS Bash 3.2
+    # does not. Keep the regression detectable on the Ubuntu validation runner.
+    assert not re.search(r"\$\{[^}]*\[@\]", script)
+
+
+@pytest.mark.parametrize("force,expected_args", [("false", ["0"]), ("true", ["1", "--force"])])
+@pytest.mark.parametrize("changed,exit_code", [("false", 0), ("true", 0), ("true", 23)])
+def test_master_sync_command_arguments_outputs_and_failure(tmp_path, force, expected_args, changed, exit_code):
+    steps = workflow("sync-master-data.yml")["jobs"]["sync"]["steps"]
+    script = next(step["run"] for step in steps if step.get("id") == "sync")
+    # Missing schedule inputs resolve to false, as does an explicit non-force dispatch.
+    force_expression = "${{ inputs.force || false }}"
+    assert force_expression in script
+    script = script.replace(force_expression, force).replace("/tmp/sync-result.json", "sync-result.json")
+    args_file = tmp_path / "sync-args.txt"
+    output_file = tmp_path / "github-output.txt"
+    output_file.touch()
+    stub = tmp_path / "holodori-sync"
+    stub.write_text(
+        '#!/bin/bash\n'
+        'printf \'%s\\n\' "$#" "$@" > "$SYNC_ARGS"\n'
+        f'printf \'%s\\n\' \'{{"changed": {changed}, "master_version": "test-version", "upstream_commit": "test-commit"}}\'\n'
+        'exit "$SYNC_EXIT_CODE"\n',
+        encoding="utf-8",
+    )
+    stub.chmod(0o755)
+    result = subprocess.run(
+        ["/bin/bash", "--noprofile", "--norc", "-e", "-c", script],
+        cwd=tmp_path,
+        env={**os.environ, "PATH": f"{tmp_path}{os.pathsep}{os.environ['PATH']}",
+             "GITHUB_OUTPUT": str(output_file), "SYNC_ARGS": str(args_file), "SYNC_EXIT_CODE": str(exit_code)},
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == exit_code, result.stderr
+    assert args_file.read_text(encoding="utf-8").splitlines() == expected_args
+    if exit_code:
+        # The stub emits valid JSON even on failure: tee must not hide its exit
+        # status, and the subsequent Python output publication must not run.
+        assert output_file.read_text(encoding="utf-8") == ""
+    else:
+        assert output_file.read_text(encoding="utf-8").splitlines() == [
+            f"changed={changed}", "master_version=test-version", "upstream_commit=test-commit",
+        ]
+
+
+def test_master_schedule_runs_daily_at_midnight_fifteen_korean_time():
+    assert workflow("sync-master-data.yml")["on"]["schedule"] == [{"cron": "15 15 * * *"}]
 
 
 def test_master_pr_branch_is_not_updated_until_full_validation_passes():

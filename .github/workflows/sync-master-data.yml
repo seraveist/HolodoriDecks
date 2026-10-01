@@ -99,11 +99,11 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          args=()
           if [ "${{ inputs.force || false }}" = "true" ]; then
-            args+=(--force)
+            holodori-sync --force | tee /tmp/sync-result.json
+          else
+            holodori-sync | tee /tmp/sync-result.json
           fi
-          holodori-sync "${args[@]}" | tee /tmp/sync-result.json
           python - <<'PY' >> "$GITHUB_OUTPUT"
           import json
           result = json.load(open('/tmp/sync-result.json', encoding='utf-8'))
