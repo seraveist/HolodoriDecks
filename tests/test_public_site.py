@@ -77,6 +77,8 @@ def test_complete_navigation_exists_before_javascript(site, page, label):
     assert f'data-i18n="tab.board">{label}</span>' in source
     assert any(attrs.get("role") == "status" for _, attrs in elements)
     assert "disabled" in next(attrs for _, attrs in elements if attrs.get("id") == "auto-compose")
+    error = next(attrs for _, attrs in elements if attrs.get("id") == "app-error")
+    assert error['role'] == 'alert' and 'hidden' in error
 
 
 def test_upstream_character_name_cannot_create_event_attributes():

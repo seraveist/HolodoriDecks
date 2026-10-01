@@ -96,7 +96,8 @@ The initial HTML contains all three navigation tabs and their associated
 panels, including the localized Member Boards label. The navigation grid has
 three columns before JavaScript runs. Data initialization enables the existing
 tabs; it never inserts a tab or changes the grid. Static loading copy and a
-disabled calculation button describe the pending state. Theme and language
+disabled calculation button describe the pending state. A static error alert
+shows failed initialization. Theme and language
 controls are connected before waiting for the manifest and locale data.
 
 The board editor, catalog and stylesheet still load on demand. Card detail
@@ -121,7 +122,9 @@ explicit formatter options retain native behavior.
 The public CSS builder also removes declaration/block padding, preserving
 selector combinators, strings, custom-property tokens, `calc()` spacing and
 conditional rule order. Board CSS is compacted into its own content-hashed
-file and remains lazy. Logical source asset URLs remain for compatibility.
+file and remains lazy. Its immutable URL omits the unrelated deployment query;
+source-preview CSS keeps its revision query. Logical source asset URLs remain
+for compatibility.
 
 Browser regressions hold the manifest request while inspecting root/KO/EN/JA
 HTML at desktop/mobile/narrow widths, including normal and cache-bypassing

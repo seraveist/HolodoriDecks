@@ -146,7 +146,7 @@ try{
   assert.ok(!requests.some(url=>/\/(?:boards|memory-bonuses)\b|i18n-boards/.test(url)),'boards loaded eagerly');
   failManifest=true;
   await command('Page.reload',{ignoreCache:true});
-  await until(()=>evaluate(`!document.querySelector('#app-error').hidden`),'failed startup did not show an error');
+  await until(()=>evaluate(`document.querySelector('#app-error')?.hidden===false`),'failed startup did not show an error');
   assert.equal(await evaluate(`document.querySelectorAll('[data-view-tab]').length`),3,'failed data request removed navigation');
   assert.equal(await evaluate(`document.querySelectorAll('[data-view-tab]:disabled').length`),3);
   failManifest=false;
@@ -175,6 +175,11 @@ try{
   await click('#auto-compose');await until(()=>evaluate(`document.querySelectorAll('.recommendation-result-card').length===5`),'unit result unavailable',30000);
   const scoreBefore=await evaluate(`document.querySelector('#recommendation-results').textContent`);
   await click('#board-tab');await until(()=>evaluate(`document.querySelectorAll('.board-member').length===${Object.keys(boards.resolved).length}`),'roster unavailable');
+  if(process.env.BROWSER_SMOKE_ROOT){
+    const stylesheet=requests.map(url=>new URL(url)).find(url=>/\/css\/boards\.[0-9a-f]{64}\.css$/.test(url.pathname));
+    assert.ok(stylesheet,'public board CSS did not use its content hash');
+    assert.equal(stylesheet.search,'','immutable board CSS must not be invalidated by an unrelated deployment revision');
+  }
   assert.deepEqual(await evaluate(`Array.from(document.querySelectorAll('.board-member'),e=>e.dataset.boardCharacter).sort()`),Object.keys(boards.resolved).sort());
   assert.equal(await evaluate(`document.querySelectorAll('.board-member:disabled').length`),0);
   await evaluate(`document.querySelector('#board-memory-count').value='31';document.querySelector('#board-memory-count').dispatchEvent(new Event('change'))`);
