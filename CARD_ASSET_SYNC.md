@@ -106,7 +106,7 @@ If the Octo catalog itself is unavailable, the sync report records the fallback 
 
 Public manifest/API failures are also recorded per card, and missing cards can still use Octo. Public-source repair errors remain unresolved until that card is actually repaired. Each unresolved card is classified as `pending` or `error`; a public-manifest miss combined with the known Octo catalog 403 is pending, while hash/format errors remain errors. A reported pending card is unavailable through the checked sources, not proven unpublished in the game.
 
-The CLI returns 0 for a resolved run, 2 for pending cards, and 1 for actual errors. The workflow processes verified imports before reporting actual source errors as a failed run. Errors therefore remain visible without discarding successful images. Optional Octo tooling installation failures also do not block the Pillow-based public snapshot path.
+The CLI returns 0 for a resolved run, 2 for pending cards, and 1 for actual errors. The workflow processes verified imports before reporting actual source errors as a failed run. Errors therefore remain visible without discarding successful images. Optional Octo tooling installation failures also do not block the Pillow-based public snapshot path. Octo tooling is installed only when a local audit finds missing cards or member icons; repairs of existing public illustrations still run with Pillow. Scheduled retries validate downloaded outputs and the anomaly gate without repeating helper unit tests already covered by CI and implementation push/manual runs.
 
 ## Safety properties
 

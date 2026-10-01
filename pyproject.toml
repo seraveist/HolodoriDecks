@@ -20,7 +20,7 @@ sync = [
     "holodori-asset-tools @ git+https://github.com/HolodoriDB/holodori-asset-tools@13f150fe9dfbd367be53e5ea1c0a4ceb258b74f2",
     "sonolus-converters @ git+https://github.com/UntitledCharts/sonolus-level-converters@100e0ac4e5d2a895089b565f38800d1cc6a0b28e",
 ]
-public-build = ["tinycss2==1.4.0"]
+public-build = ["tinycss2==1.4.0", "Pillow>=10"]
 music-search = [
     "hunmin @ https://files.pythonhosted.org/packages/2c/5e/a30b796eb19d1e932937234b05f74448e951eb4fa77b07a87e229540a063/hunmin-3.44.1-py3-none-any.whl#sha256=4f49787e8c2742cfc7aa67678119ccf112bf9ad690b8feb2d585ac2c8058cd88",
     "pykakasi>=2.2",

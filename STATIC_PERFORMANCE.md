@@ -72,14 +72,17 @@ relevant. Existing score/level/awakening rules and import/export are unchanged.
   state, cancellation, Exact/fallback and languages, plus owned-row/input/focus
   retention, repeated clamped edits, filtered-row reuse, modal events, zero
   hidden-list mutations and deferred song requests.
-* `Validate Static App` runs the source-site browser checks once per PR.
-  `Validate public static optimization` serves the actual optimized Pages
-  artifact and runs its browser checks with `BROWSER_SMOKE_ROOT`. It verifies
+* `Validate Static App` runs source-site checks for code/data changes and has
+  a parallel `public` job serving the optimized Pages artifact with
+  `BROWSER_SMOKE_ROOT`. The required `validate` result includes this job. It verifies
   use of compact hashed card transport and an actual browser-cache hit after
   reload, while the mutable manifest is not cached. Screenshots and public
-  build reports are uploaded as `static-optimization-validation`.
+  browser logs are uploaded as `static-optimization-validation`.
 
-Both workflows retain manual dispatch and avoid duplicate branch-push runs.
+The combined workflow retains manual dispatch and avoids duplicate branch-push runs.
+Image-only changes still exercise the built browser; known documentation-only
+changes run metadata checks. CI and Pages use `scripts/build-pages-artifact.py`
+to build the same layout, while Pages avoids repeating the full test suite.
 See [CI execution and reuse](LOCAL_TEST.md#13-ci-실행과-무거운-검사-재사용)
 for expensive scoring checks and the full-validation option.
 

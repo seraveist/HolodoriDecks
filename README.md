@@ -340,8 +340,8 @@ data/generated/
   pages.yml
   sync-master-data.yml
   sync-card-assets.yml
-  production-smoke.yml
   release.yml
+  check-sync-network.yml
 VERSION
 CHANGELOG.md
 LICENSE

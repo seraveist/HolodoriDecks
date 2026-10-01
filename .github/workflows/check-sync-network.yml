@@ -54,5 +54,38 @@ jobs:
               results.append(row)
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as summary:
               summary.write('```json\n' + json.dumps(results, indent=2) + '\n```\n')
-          if not any(row['ok'] for row in results):
-              raise SystemExit('No official catalogue was accessible on this hosted runner')
+          with open('catalogue.json', 'w', encoding='utf-8') as report:
+              json.dump(results, report)
+      - name: Record hosted environment results
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: catalogue-${{ matrix.runner }}
+          path: catalogue.json
+          if-no-files-found: error
+          retention-days: 1
+
+  summary:
+    needs: catalogue
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require complete network probes
+        env:
+          PROBE_RESULT: ${{ needs.catalogue.result }}
+        run: test "$PROBE_RESULT" = success
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: catalogue-*
+          path: reports
+      - name: Require at least one verified hosted environment
+        shell: python
+        run: |
+          import json, os
+          from pathlib import Path
+          reports = list(Path('reports').glob('*/catalogue.json'))
+          rows = [row for path in reports for row in json.loads(path.read_text())]
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as summary:
+              summary.write('```json\n' + json.dumps(rows, indent=2) + '\n```\n')
+          if not rows or not any(row['ok'] and row.get('asset_verified') for row in rows):
+              raise SystemExit('No hosted environment could verify an official catalogue and chart')
