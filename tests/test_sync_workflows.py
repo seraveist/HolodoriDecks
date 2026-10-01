@@ -189,3 +189,66 @@ def test_generated_commit_status_requires_successful_validation_and_exact_head(n
     assert '-f context=validate' in script
     assert '-f state=success' in script
     assert "safe == 'true'" in merge["if"]
+
+
+@pytest.mark.parametrize("step_name", [
+    "Validate transport, cache and CSS regressions",
+    "Test unbundled source application",
+    "Build optimized Pages artifact",
+    "Test optimized public application and actual browser cache",
+])
+def test_public_static_pipelines_stop_after_failed_node_command(tmp_path, step_name):
+    definition = workflow("static-performance.yml")
+    job = definition["jobs"]["public-static"]
+    step = next(step for step in job["steps"] if step.get("name") == step_name)
+    workflow_shell = definition.get("defaults", {}).get("run", {}).get("shell")
+    job_shell = job.get("defaults", {}).get("run", {}).get("shell", workflow_shell)
+    shell = step.get("shell", job_shell)
+    # Match Actions: implicit Bash uses -e, while explicit Bash adds pipefail.
+    command = ["/bin/bash", "--noprofile", "--norc", "-e"]
+    if shell == "bash":
+        command += ["-o", "pipefail"]
+    else:
+        assert shell is None
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    (tmp_path / ".local").mkdir()
+    calls = tmp_path / "node-calls.txt"
+    for name, script in {
+        "node": 'echo called >> "$NODE_CALLS"\necho simulated-node-failure >&2\nexit 23\n',
+        "python": "exit 0\n",
+        "cp": "exit 0\n",
+    }.items():
+        stub = bin_dir / name
+        stub.write_text("#!/bin/bash\n" + script, encoding="utf-8")
+        stub.chmod(0o755)
+    result = subprocess.run(
+        command + ["-c", step["run"]], cwd=tmp_path,
+        env={**os.environ, "PATH": f"{bin_dir}{os.pathsep}{os.environ['PATH']}",
+             "NODE_CALLS": str(calls)},
+        capture_output=True, text=True, timeout=10,
+    )
+    assert result.returncode == 23, result.stderr
+    assert calls.read_text(encoding="utf-8").splitlines() == ["called"]
+
+
+@pytest.mark.parametrize("result,exit_code", [("success", 0), ("failure", 1), ("cancelled", 1), ("skipped", 1)])
+def test_required_validation_fails_when_macos_workflow_checks_do_not_pass(tmp_path, result, exit_code):
+    jobs = workflow("validate.yml")["jobs"]
+    contracts = jobs["workflow_contracts"]
+    assert contracts["runs-on"] == "macos-15"
+    assert contracts["steps"][0]["with"]["ref"] == "${{ inputs.checkout_ref || github.sha }}"
+    assert any("python -m pytest -q tests/test_sync_workflows.py" in step.get("run", "") for step in contracts["steps"])
+    validate = jobs["validate"]
+    assert validate["needs"] == "workflow_contracts"
+    # A skipped dependent job can satisfy a required check; run an explicit
+    # failing gate instead, even when the macOS prerequisite failed/skipped.
+    assert validate["if"] == "always() && !cancelled()"
+    gate = next(step for step in validate["steps"] if step.get("name") == "Require workflow contract checks")
+    assert gate["env"]["WORKFLOW_CHECK_RESULT"] == "${{ needs.workflow_contracts.result }}"
+    completed = subprocess.run(
+        ["/bin/bash", "-e", "-c", gate["run"]], cwd=tmp_path,
+        env={**os.environ, "WORKFLOW_CHECK_RESULT": result},
+        capture_output=True, text=True, timeout=10,
+    )
+    assert completed.returncode == exit_code, completed.stderr
