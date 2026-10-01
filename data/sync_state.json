@@ -1,14 +1,18 @@
 {
-  "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4",
-  "upstream_commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
+  "master_version": "5267906a638d20ddfc5c68dcb7775b0bda3484dfbb65006cd8e7dc59232112bc",
+  "upstream_commit": "5fffe313ce1eea777c7e1ad23625eb31d0de0564",
   "normalizer_version": 4,
   "locales": {
-    "ko": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
-    "en": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
-    "ja": "94633a6bbaef4c39a8381e9ab32e82114b36fac3"
+    "ko": "5fffe313ce1eea777c7e1ad23625eb31d0de0564",
+    "en": "5fffe313ce1eea777c7e1ad23625eb31d0de0564",
+    "ja": "5fffe313ce1eea777c7e1ad23625eb31d0de0564"
   },
   "changed_refs": [
-    "forced"
+    "master_version",
+    "locale:ko",
+    "locale:en",
+    "locale:ja",
+    "chart_assets"
   ],
   "counts": {
     "boards": 54,
