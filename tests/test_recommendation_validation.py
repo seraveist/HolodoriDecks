@@ -264,6 +264,8 @@ def test_workflows_reuse_only_expensive_suites_and_publish_after_success():
     assert steps[test_index]['if'] == "steps.recommendation_validation.outputs.reuse != 'true'"
     upload = steps[-1]
     assert upload['uses'].startswith('actions/upload-artifact@')
+    # The proof reader downloads the ZIP API and expects this exact member.
+    assert upload['with']['archive'] == 'true'
     assert upload['continue-on-error'] == 'true'
     assert "always()" not in upload['if'] and "reuse != 'true'" in upload['if']
     assert validate['jobs']['historical']['if'] == "needs.changes.outputs.historical == 'true'"
