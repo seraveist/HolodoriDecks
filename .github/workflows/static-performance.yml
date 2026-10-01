@@ -1,15 +1,16 @@
 name: Validate public static optimization
 on:
-  push:
-    branches-ignore: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
+defaults:
+  run:
+    shell: bash
 concurrency:
-  group: public-static-${{ github.ref }}
-  cancel-in-progress: true
+  group: public-static-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   public-static:
     runs-on: ubuntu-latest
@@ -32,12 +33,6 @@ jobs:
           mkdir -p .local
           node scripts/test-public-optimization.mjs | tee .local/public-unit.log
           python -m pytest -q tests/test_public_assets.py tests/test_public_site.py tests/test_pages_revision_rewrite.py
-      - name: Test unbundled source application
-        env:
-          BROWSER_SMOKE_ARTIFACT_DIR: .local/source-smoke
-        run: |
-          node scripts/test-browser-smoke.mjs | tee .local/source-browser.log
-          node scripts/test-board-browser.mjs
       - name: Build optimized Pages artifact
         env:
           CARD_ASSET_REVISION: ${{ github.sha }}
@@ -62,12 +57,9 @@ jobs:
         with:
           name: static-optimization-validation
           path: |
-            .local/board-smoke/
             .local/public-board-smoke/
-            .local/source-smoke/
             .local/public-smoke/
             .local/public-unit.log
-            .local/source-browser.log
             .local/public-assets.json
             .local/public-browser.log
           if-no-files-found: ignore

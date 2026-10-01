@@ -90,7 +90,7 @@ GitHub has a repository-level switch separate from workflow YAML permissions. Fo
 
 **Settings → Actions → General → Workflow permissions → Allow GitHub Actions to create and approve pull requests**
 
-The workflow requests repository-scoped `contents: write`, `pull-requests: write`, and `actions: write` permissions. The reusable validation job is restricted to `contents: read`.
+The workflow requests repository-scoped `contents: write`, `pull-requests: write`, and `actions: write` permissions. The reusable validation job is restricted to `contents: read` and `actions: read`; the latter reads successful validation proofs and cannot publish or merge changes. Missing proof or API access falls back to the actual checks. See [CI execution and reuse](LOCAL_TEST.md#13-ci-실행과-무거운-검사-재사용) for the input rules and full-validation option.
 
 If this repository switch is disabled, PR creation fails. The generated branch remains available, but automatic merge and publication do not proceed. Enable the switch and rerun synchronization to resume the normal path.
 

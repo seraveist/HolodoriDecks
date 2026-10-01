@@ -1,6 +1,10 @@
-"""Exercise the publication conditions in the actual workflow definitions."""
+"""Exercise sync commands and publication conditions in the actual workflows."""
+import os
+import json
 from pathlib import Path
 import re
+import shutil
+import subprocess
 
 import pytest
 import yaml
@@ -44,6 +48,60 @@ def test_sync_uses_only_standard_hosted_runners_and_propagates_failure():
     assert "HOLODORI_MASTER_SYNC_RUNNER" not in str(jobs)
     sync = next(step for step in jobs["sync"]["steps"] if step.get("id") == "sync")
     assert sync["run"].index("set -euo pipefail") < sync["run"].index("holodori-sync")
+
+
+def test_master_sync_avoids_empty_array_expansion_on_macos_bash():
+    steps = workflow("sync-master-data.yml")["jobs"]["sync"]["steps"]
+    script = next(step["run"] for step in steps if step.get("id") == "sync")
+    # Ubuntu's newer Bash accepts empty arrays under nounset; macOS Bash 3.2
+    # does not. Keep the regression detectable on the Ubuntu validation runner.
+    assert not re.search(r"\$\{[^}]*\[@\]", script)
+
+
+@pytest.mark.parametrize("force,expected_args", [("false", ["0"]), ("true", ["1", "--force"])])
+@pytest.mark.parametrize("changed,exit_code", [("false", 0), ("true", 0), ("true", 23)])
+def test_master_sync_command_arguments_outputs_and_failure(tmp_path, force, expected_args, changed, exit_code):
+    steps = workflow("sync-master-data.yml")["jobs"]["sync"]["steps"]
+    script = next(step["run"] for step in steps if step.get("id") == "sync")
+    # Missing schedule inputs resolve to false, as does an explicit non-force dispatch.
+    force_expression = "${{ inputs.force || false }}"
+    assert force_expression in script
+    script = script.replace(force_expression, force).replace("/tmp/sync-result.json", "sync-result.json")
+    args_file = tmp_path / "sync-args.txt"
+    output_file = tmp_path / "github-output.txt"
+    output_file.touch()
+    stub = tmp_path / "holodori-sync"
+    stub.write_text(
+        '#!/bin/bash\n'
+        'printf \'%s\\n\' "$#" "$@" > "$SYNC_ARGS"\n'
+        f'printf \'%s\\n\' \'{{"changed": {changed}, "master_version": "test-version", "upstream_commit": "test-commit"}}\'\n'
+        'exit "$SYNC_EXIT_CODE"\n',
+        encoding="utf-8",
+    )
+    stub.chmod(0o755)
+    result = subprocess.run(
+        ["/bin/bash", "--noprofile", "--norc", "-e", "-c", script],
+        cwd=tmp_path,
+        env={**os.environ, "PATH": f"{tmp_path}{os.pathsep}{os.environ['PATH']}",
+             "GITHUB_OUTPUT": str(output_file), "SYNC_ARGS": str(args_file), "SYNC_EXIT_CODE": str(exit_code)},
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == exit_code, result.stderr
+    assert args_file.read_text(encoding="utf-8").splitlines() == expected_args
+    if exit_code:
+        # The stub emits valid JSON even on failure: tee must not hide its exit
+        # status, and the subsequent Python output publication must not run.
+        assert output_file.read_text(encoding="utf-8") == ""
+    else:
+        assert output_file.read_text(encoding="utf-8").splitlines() == [
+            f"changed={changed}", "master_version=test-version", "upstream_commit=test-commit",
+        ]
+
+
+def test_master_schedule_runs_daily_at_midnight_fifteen_korean_time():
+    assert workflow("sync-master-data.yml")["on"]["schedule"] == [{"cron": "15 15 * * *"}]
 
 
 def test_master_pr_branch_is_not_updated_until_full_validation_passes():
@@ -133,3 +191,132 @@ def test_generated_commit_status_requires_successful_validation_and_exact_head(n
     assert '-f context=validate' in script
     assert '-f state=success' in script
     assert "safe == 'true'" in merge["if"]
+
+
+@pytest.mark.parametrize("step_name", [
+    "Validate transport, cache and CSS regressions",
+    "Build optimized Pages artifact",
+    "Test optimized public application and actual browser cache",
+])
+def test_public_static_pipelines_stop_after_failed_node_command(tmp_path, step_name):
+    definition = workflow("static-performance.yml")
+    job = definition["jobs"]["public-static"]
+    step = next(step for step in job["steps"] if step.get("name") == step_name)
+    workflow_shell = definition.get("defaults", {}).get("run", {}).get("shell")
+    job_shell = job.get("defaults", {}).get("run", {}).get("shell", workflow_shell)
+    shell = step.get("shell", job_shell)
+    # Match Actions: implicit Bash uses -e, while explicit Bash adds pipefail.
+    command = ["/bin/bash", "--noprofile", "--norc", "-e"]
+    if shell == "bash":
+        command += ["-o", "pipefail"]
+    else:
+        assert shell is None
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    (tmp_path / ".local").mkdir()
+    calls = tmp_path / "node-calls.txt"
+    for name, script in {
+        "node": 'echo called >> "$NODE_CALLS"\necho simulated-node-failure >&2\nexit 23\n',
+        "python": "exit 0\n",
+        "cp": "exit 0\n",
+    }.items():
+        stub = bin_dir / name
+        stub.write_text("#!/bin/bash\n" + script, encoding="utf-8")
+        stub.chmod(0o755)
+    result = subprocess.run(
+        command + ["-c", step["run"]], cwd=tmp_path,
+        env={**os.environ, "PATH": f"{bin_dir}{os.pathsep}{os.environ['PATH']}",
+             "NODE_CALLS": str(calls)},
+        capture_output=True, text=True, timeout=10,
+    )
+    assert result.returncode == 23, result.stderr
+    assert calls.read_text(encoding="utf-8").splitlines() == ["called"]
+
+
+@pytest.mark.parametrize("result,exit_code", [("success", 0), ("failure", 1), ("cancelled", 1), ("skipped", 1)])
+def test_required_validation_fails_when_macos_workflow_checks_do_not_pass(tmp_path, result, exit_code):
+    jobs = workflow("validate.yml")["jobs"]
+    contracts = jobs["workflow_contracts"]
+    assert contracts["runs-on"] == "macos-15"
+    assert contracts["steps"][0]["with"]["ref"] == "${{ inputs.checkout_ref || github.sha }}"
+    assert any("python -m pytest -q tests/test_sync_workflows.py" in step.get("run", "") for step in contracts["steps"])
+    validate = jobs["validate"]
+    assert validate["needs"] == "workflow_contracts"
+    # A skipped dependent job can satisfy a required check; run an explicit
+    # failing gate instead, even when the macOS prerequisite failed/skipped.
+    assert validate["if"] == "always() && !cancelled()"
+    gate = next(step for step in validate["steps"] if step.get("name") == "Require workflow contract checks")
+    assert gate["env"]["WORKFLOW_CHECK_RESULT"] == "${{ needs.workflow_contracts.result }}"
+    completed = subprocess.run(
+        ["/bin/bash", "-e", "-c", gate["run"]], cwd=tmp_path,
+        env={**os.environ, "WORKFLOW_CHECK_RESULT": result},
+        capture_output=True, text=True, timeout=10,
+    )
+    assert completed.returncode == exit_code, completed.stderr
+
+
+@pytest.mark.parametrize("name", ["validate.yml", "static-performance.yml"])
+def test_pr_validation_does_not_duplicate_push_runs_or_cancel_sync(name):
+    definition = workflow(name)
+    assert "push" not in definition["on"]
+    assert definition["on"]["pull_request"]["branches"] == ["main"]
+    assert "workflow_dispatch" in definition["on"]
+    group = definition["concurrency"]["group"]
+    assert "github.event_name" in group
+    assert "github.event.pull_request.number || github.run_id" in group
+    cancellation = definition["concurrency"]["cancel-in-progress"].removeprefix("${{").removesuffix("}}")
+    for event in ["pull_request", "schedule", "workflow_dispatch"]:
+        assert condition(cancellation, {"github.event_name": event}) is (event == "pull_request")
+    if name == "validate.yml":
+        assert "workflow_call" in definition["on"]
+        for trigger in ["workflow_dispatch", "workflow_call"]:
+            assert definition["on"][trigger]["inputs"]["full_validation"]["type"] == "boolean"
+
+
+def test_source_and_built_browser_coverage_are_both_retained_without_duplicate_source_run():
+    validate = workflow("validate.yml")["jobs"]["validate"]["steps"]
+    public = workflow("static-performance.yml")["jobs"]["public-static"]["steps"]
+    source_commands = "\n".join(step.get("run", "") for step in validate)
+    public_commands = "\n".join(step.get("run", "") for step in public)
+    assert source_commands.count("node scripts/test-browser-smoke.mjs") == 1
+    assert source_commands.count("node scripts/test-board-browser.mjs") == 1
+    assert "node scripts/test-browser-smoke.mjs" not in public_commands
+    assert 'BROWSER_SMOKE_ROOT="$PWD/_site"' in public_commands
+    assert "node scripts/test-browser-smoke-core.mjs" in public_commands
+    assert "node scripts/test-board-browser.mjs" in public_commands
+
+
+@pytest.mark.parametrize("reuse,should_run", [("true", False), ("false", True), ("", True)])
+def test_only_expensive_suites_can_be_skipped_with_explicit_matching_proof(reuse, should_run):
+    steps = workflow("validate.yml")["jobs"]["validate"]["steps"]
+    for step_name, proof_id in [("Validate recommendation inventories", "recommendation_validation"),
+                                ("Reproduce portable scoring handoff", "historical_validation")]:
+        step = next(step for step in steps if step.get("name") == step_name)
+        assert condition(step["if"], {f"steps.{proof_id}.outputs.reuse": reuse}) is should_run
+        assert "continue-on-error" not in step
+    # The production regression group and source browser checks always run.
+    scoring = next(step for step in steps if step.get("name") == "Validate scoring and search regressions")
+    assert "if" not in scoring and "continue-on-error" not in scoring
+    assert "node scripts/run-core-regressions.mjs" in scoring["run"]
+
+
+@pytest.mark.parametrize("fail_index", [None, 0, 9, 19])
+def test_shared_production_regressions_preserve_process_isolation_and_stop_on_failure(tmp_path, fail_index):
+    script = (ROOT / "scripts/run-core-regressions.mjs").read_text()
+    tests = re.findall(r'"(scripts/test-[\w-]+\.mjs)"', script)
+    assert len(tests) == 20
+    for filename, job in [("sync-master-data.yml", "sync"), ("validate.yml", "validate"), ("pages.yml", "deploy")]:
+        commands = "\n".join(step.get("run", "") for step in workflow(filename)["jobs"][job]["steps"])
+        assert commands.count("node scripts/run-core-regressions.mjs") == 1
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "scripts/run-core-regressions.mjs").write_text(script)
+    for index, name in enumerate(tests):
+        (tmp_path / name).write_text(
+            'import { appendFileSync } from "node:fs";\n'
+            f'appendFileSync("calls.txt", {json.dumps(name + chr(10))});\n'
+            f'process.exit({23 if index == fail_index else 0});\n'
+        )
+    completed = subprocess.run([shutil.which("node"), "scripts/run-core-regressions.mjs"],
+                               cwd=tmp_path, capture_output=True, text=True, timeout=15)
+    assert completed.returncode == (0 if fail_index is None else 23), completed.stderr
+    assert (tmp_path / "calls.txt").read_text().splitlines() == tests[:None if fail_index is None else fail_index + 1]
