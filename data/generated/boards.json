@@ -2,8 +2,8 @@
   "format": "holodori-boards",
   "version": 1,
   "source_repository": "holodori-net/android-database",
-  "source_commit": "94633a6bbaef4c39a8381e9ab32e82114b36fac3",
-  "master_version": "546b8e2e37db368c6731e148b88611cef105bbaa66ff567f5c1584711ef979a4",
+  "source_commit": "5fffe313ce1eea777c7e1ad23625eb31d0de0564",
+  "master_version": "5267906a638d20ddfc5c68dcb7775b0bda3484dfbb65006cd8e7dc59232112bc",
   "characters": {
     "chr-00001": {
       "layoutId": "tree-model-001",
