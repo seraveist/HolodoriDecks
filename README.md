@@ -353,3 +353,4 @@ NOTICE.md
 이 저장소에서 프로젝트 제작자가 직접 작성한 소스 코드와 문서는 `LICENSE`의 MIT License를 따릅니다. 게임 파생 데이터·이미지·상표와 외부 chart/SUS 자료의 권리는 각 원 출처 및 권리자에게 있으며 프로젝트의 MIT License로 재허가되지 않습니다.
 
 자세한 출처와 권리 범위는 [NOTICE.md](NOTICE.md)를 확인하세요.
+
