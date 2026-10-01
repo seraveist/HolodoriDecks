@@ -11,9 +11,35 @@ import { createChartResourcesLoader } from "../js/chart-data.js";
 import { loadAppData } from "../js/data.js";
 import { prepareScoreCards } from "../js/card-prepare.js";
 import { buildPublicAssets } from "./build-public-assets.mjs";
+import { formatNumber } from "../js/i18n.js";
+import { compareByPower, cardPower } from "../js/card-sort.js?v=1.3.1";
+import { compareByPower as legacyCompareByPower } from "../js/recommend.js";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const read = async name => JSON.parse(await readFile(path.join(root, "data/generated", name), "utf8"));
+assert.equal(compareByPower, legacyCompareByPower, 'Recommendation exports must retain the shared comparator');
+const sortRows = [
+  { id:'low',rarity:5,order:1,growth:{levels:[{parameterBaseValue:10}]} },
+  { id:'four',rarity:4,order:1,growth:{levels:[{parameterBaseValue:20}]} },
+  { id:'later',rarity:5,order:2,growth:{levels:[{parameterBaseValue:20}]} },
+  { id:'first',rarity:5,order:1,growth:{levels:[{parameterBaseValue:20},{parameterBaseValue:5}]} },
+];
+assert.deepEqual(sortRows.sort(compareByPower).map(row=>row.id), ['first','later','four','low']);
+assert.equal(cardPower(null),0);
+const NativeNumberFormat = Intl.NumberFormat;
+let formatterConstructions = 0;
+try {
+  Intl.NumberFormat = class extends NativeNumberFormat {
+    constructor(...args) { super(...args); formatterConstructions++; }
+  };
+  for (let i=0;i<100;i++) {
+    assert.equal(formatNumber(1234567.89), new NativeNumberFormat('ko-KR').format(1234567.89));
+  }
+  assert.equal(formatterConstructions, 1, 'Default number formatting must reuse one formatter per locale');
+  const options = { maximumFractionDigits: 1 };
+  assert.equal(formatNumber(1.25, options), new NativeNumberFormat('ko-KR', options).format(1.25));
+  assert.throws(() => formatNumber(1, null), TypeError, 'Explicit invalid options must retain native behavior');
+} finally { Intl.NumberFormat = NativeNumberFormat; }
 const cards = await read("cards.json");
 const original = JSON.stringify(cards);
 const packed = encodeCards(cards);
@@ -135,6 +161,10 @@ try {
   assert.ok(!/<script\b[^>]*type=["']application\/json/.test(html));
   const css = await readFile(path.join(temp, report.css.file), "utf8");
   assert.ok(!/@import\s/.test(css));
+  const boardCss = await readFile(path.join(temp, report.css.lazy.boards.file));
+  assert.ok(boardCss.length < (await readFile(path.join(temp, "css/boards.css"))).length);
+  assert.ok((await readFile(path.join(temp, "js/ui/boards.js"), "utf8")).includes(`../../${report.css.lazy.boards.file}`));
+  assert.ok(!html.includes(report.css.lazy.boards.file), "Board stylesheet must remain lazy");
   const again = await buildPublicAssets(temp);
   assert.deepStrictEqual(again, report, "public build must be deterministic and repeatable");
   const runtimeBytes = await readFile(path.join(temp, "data/generated", nextManifest.public_assets.files["cards.json"]));

@@ -6,7 +6,7 @@ import {
   wirePortraitFallback,
 } from "./cards.js?v=1.3.1";
 import { getSlotLabel } from "./member.js?v=1.3.1";
-import { compareByPower } from "../recommend.js?v=1.3.1";
+import { compareByPower } from "../card-sort.js?v=1.3.1";
 import { localeCompare, t } from "../i18n.js?v=1.3.1";
 import { requiredElement } from "./dom.js?v=1.3.1";
 

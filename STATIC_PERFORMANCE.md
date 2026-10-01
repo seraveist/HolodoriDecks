@@ -89,3 +89,48 @@ for expensive scoring checks and the full-validation option.
 Transfer-size reductions are not end-to-end latency or score-search speedup
 claims. Decoding still reconstructs the full original arrays to preserve
 existing consumers and mutation isolation; no memory reduction is promised.
+
+## Stable startup and frontend cleanup
+
+The initial HTML contains all three navigation tabs and their associated
+panels, including the localized Member Boards label. The navigation grid has
+three columns before JavaScript runs. Data initialization enables the existing
+tabs; it never inserts a tab or changes the grid. Static loading copy and a
+disabled calculation button describe the pending state. A static error alert
+shows failed initialization. Theme and language
+controls are connected before waiting for the manifest and locale data.
+
+The board editor, catalog and stylesheet still load on demand. Card detail
+parameters load when the dialog opens, with a visible loading state; closing
+the dialog prevents late module completion from reopening it. Recommendation
+preparation loads at calculation time. The explicit non-worker optimizer path
+loads its engine only when requested and checks cancellation again afterward.
+The card-list comparator lives in a small shared module so opening/sorting a
+list does not import the recommendation engine. Existing recommendation
+exports, calculations, storage and tie-breaking order are preserved.
+
+CSS tokens have one definition in `tokens.css`. Shared card typography uses
+normal cascade rules rather than competing per-view sizes and `!important`.
+Desktop result columns and mobile scrolling rules live in their owning
+component/responsive files; the former `tweaks.css` override layer is removed.
+Confirmed unused header/footer, recommendation-note and old result-scorebar
+rules are removed. Dark-theme exceptions, hidden-state enforcement and reduced
+motion rules remain. Dynamically generated board-kind and card-skill selectors
+are retained. Default numeric formatting reuses one formatter per locale;
+explicit formatter options retain native behavior.
+
+The public CSS builder also removes declaration/block padding, preserving
+selector combinators, strings, custom-property tokens, `calc()` spacing and
+conditional rule order. Board CSS is compacted into its own content-hashed
+file and remains lazy. Its immutable URL omits the unrelated deployment query;
+source-preview CSS keeps its revision query. Logical source asset URLs remain
+for compatibility.
+
+Browser regressions hold the manifest request while inspecting root/KO/EN/JA
+HTML at desktop/mobile/narrow widths, including normal and cache-bypassing
+reloads. They require three visible tabs with unchanged geometry, working
+theme controls during loading, and intact navigation after a failed startup
+request. They also check that calculation modules are absent from startup,
+closing a loading detail dialog stays closed, and card typography keeps its
+13/11/10px scale across result and owned-card views. Public-build checks cover
+lazy CSS hashing, deterministic rebuilding and safe compaction.

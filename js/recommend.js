@@ -6,6 +6,8 @@ import {
   withBoardHeuristic,
 } from "./score.js?v=1.3.1";
 import { unitScoreOrders } from "./search-order-bounds.js";
+import { compareByPower } from "./card-sort.js?v=1.3.1";
+export { cardPower, compareByPower } from "./card-sort.js?v=1.3.1";
 
 const EXACT_CASE_LIMIT = 60_000;
 const MEMBER_PRUNE_THRESHOLD = 36;
@@ -28,20 +30,6 @@ const CONCEPT_STAT = Object.freeze({
   technique: "t",
   sense: "s",
 });
-
-export function cardPower(card) {
-  const levels = card?.growth?.levels ?? [];
-  return levels.reduce((highest, level) => {
-    const value = Number(level?.parameterBaseValue) || 0;
-    return Math.max(highest, value);
-  }, 0);
-}
-
-export function compareByPower(left, right) {
-  return cardPower(right) - cardPower(left)
-    || Number(right.rarity) - Number(left.rarity)
-    || Number(left.order) - Number(right.order);
-}
 
 export function rankOwnedCards(cards, ownedCardIds) {
   const owned = new Set(ownedCardIds);

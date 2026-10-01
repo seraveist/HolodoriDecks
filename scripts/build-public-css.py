@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
@@ -92,6 +93,45 @@ def collect_rules(source: Path, root: Path, stack=()):
     return result
 
 
+def compact_blocks(rules):
+    """Remove block/declaration padding without changing selectors or value tokens."""
+    for rule in rules:
+        if rule.type == 'qualified-rule':
+            while rule.prelude and rule.prelude[0].type == 'whitespace':
+                rule.prelude.pop(0)
+            while rule.prelude and rule.prelude[-1].type == 'whitespace':
+                rule.prelude.pop()
+            declarations = tinycss2.parse_declaration_list(rule.content, skip_comments=True, skip_whitespace=True)
+            # Preserve unsupported/new nesting syntax verbatim instead of
+            # guessing which whitespace separates its selectors or values.
+            if any(item.type != 'declaration' for item in declarations):
+                continue
+            for declaration in declarations:
+                if declaration.name.startswith('--'):
+                    continue
+                while declaration.value and declaration.value[0].type == 'whitespace':
+                    declaration.value.pop(0)
+                while declaration.value and declaration.value[-1].type == 'whitespace':
+                    declaration.value.pop()
+            rule.content = tinycss2.parse_component_value_list(tinycss2.serialize(declarations))
+        elif rule.type == 'at-rule' and rule.content is not None and rule.lower_at_keyword in {
+            'media', 'supports', 'container', 'layer', 'keyframes', '-webkit-keyframes',
+        }:
+            nested = tinycss2.parse_rule_list(rule.content, skip_comments=True, skip_whitespace=True)
+            compact_blocks(nested)
+            rule.content = tinycss2.parse_component_value_list(tinycss2.serialize(nested))
+
+
+def write_bundle(root: Path, name: str, rules):
+    compact_blocks(rules)
+    content = (tinycss2.serialize(rules) + '\n').encode('utf-8')
+    digest = hashlib.sha256(content).hexdigest()
+    output = root / 'css' / f'{name}.{digest}.css'
+    output.parent.mkdir(exist_ok=True)
+    output.write_bytes(content)
+    return {'file': f'css/{output.name}', 'bytes': len(content), 'rules': len(rules)}
+
+
 def build_css(root: Path):
     root = root.resolve()
     index = root / 'index.html'
@@ -102,16 +142,23 @@ def build_css(root: Path):
     rules = []
     for _, href in links:
         rules.extend(collect_rules(root / urlsplit(href).path, root))
-    content = (tinycss2.serialize(rules) + '\n').encode('utf-8')
-    digest = hashlib.sha256(content).hexdigest()
-    output = root / 'css' / f'site.{digest}.css'
-    output.parent.mkdir(exist_ok=True)
-    output.write_bytes(content)
+    report = write_bundle(root, 'site', rules)
     for number, (tag, _) in enumerate(links):
-        replacement = f'<link rel="stylesheet" href="./css/{output.name}">' if number == 0 else ''
+        replacement = f'<link rel="stylesheet" href="./{report["file"]}">' if number == 0 else ''
         source = source.replace(tag, replacement, 1)
     index.write_text(source, encoding='utf-8')
-    print(json.dumps({'file': f'css/{output.name}', 'bytes': len(content), 'rules': len(rules)}))
+    # Board styles remain a separate request made only when opening that view.
+    board_styles = root / 'css/boards.css'
+    if board_styles.is_file():
+        board = write_bundle(root, 'boards', collect_rules(board_styles, root))
+        module = root / 'js/ui/boards.js'
+        text, count = re.subn(r'(["\x27])\.\./\.\./css/boards(?:\.[0-9a-f]{64})?\.css\1',
+                             json.dumps(f'../../{board["file"]}'), module.read_text(encoding='utf-8'))
+        if count != 1:
+            raise ValueError('Expected exactly one lazy board stylesheet reference')
+        module.write_text(text, encoding='utf-8')
+        report['lazy'] = {'boards': board}
+    print(json.dumps(report))
 
 
 if __name__ == '__main__':

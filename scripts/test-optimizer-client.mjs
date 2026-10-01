@@ -135,6 +135,13 @@ try {
     postMessage() { throw new Error("clone failed"); }
   };
   assert.equal((await runOptimizationAsync({})).ok, false);
+  const explicit = await runOptimizationAsync(payload, { preferWorker: false });
+  assert.equal(explicit.ok, true, "Explicit non-worker calculation must still work after lazy import");
+  assert.equal(explicit.results.length, 1);
+  const beforeImport = new AbortController();
+  const importing = runOptimizationAsync(payload, { preferWorker: false, signal: beforeImport.signal });
+  beforeImport.abort();
+  assert.equal((await importing).cancelled, true, "Cancellation during lazy import must prevent calculation");
 } finally {
   if (originalWorker === undefined) delete globalThis.Worker;
   else globalThis.Worker = originalWorker;

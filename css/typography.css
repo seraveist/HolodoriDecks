@@ -1,28 +1,4 @@
-:root {
-  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-  --type-caption: 10px;
-  --type-label: 11px;
-  --type-body-sm: 12px;
-  --type-body: 13px;
-  --type-card-title: 13px;
-  --type-card-name: 11px;
-  --type-card-meta: 10px;
-  --type-heading-sm: 16px;
-  --type-heading-md: 20px;
-  --type-heading-lg: 21px;
-  --type-score-md: 21px;
-  --type-score-lg: 28px;
-  --type-score-xl: 30px;
-  --weight-medium: 500;
-  --weight-semibold: 600;
-  --weight-bold: 700;
-  --weight-extrabold: 800;
-  --tracking-tight: -0.015em;
-  font-variant-numeric: tabular-nums;
-}
-
 body {
-  font-family: var(--font-sans);
   font-synthesis: none;
   text-rendering: auto;
   -webkit-font-smoothing: auto;
@@ -75,31 +51,31 @@ textarea {
 /* One semantic type scale for preset, picker, owned-list, and result cards. */
 .card-copy-character {
   min-width: 0;
-  font-size: var(--type-card-title) !important;
-  font-weight: var(--weight-bold) !important;
+  font-size: var(--type-card-title);
+  font-weight: var(--weight-bold);
   line-height: 1.25;
   letter-spacing: -0.01em;
 }
 
 .card-copy-name {
-  font-size: var(--type-card-name) !important;
-  font-weight: var(--weight-medium) !important;
+  font-size: var(--type-card-name);
+  font-weight: var(--weight-medium);
   line-height: 1.35;
   letter-spacing: 0;
 }
 
 .card-copy-meta,
 .card-copy-rarity {
-  font-size: var(--type-card-meta) !important;
+  font-size: var(--type-card-meta);
   line-height: 1.35;
 }
 
 .card-copy-meta {
-  font-weight: var(--weight-semibold) !important;
+  font-weight: var(--weight-semibold);
 }
 
 .card-copy-rarity {
-  font-weight: var(--weight-bold) !important;
+  font-weight: var(--weight-bold);
 }
 
 .slot-role,
@@ -111,22 +87,6 @@ textarea {
   font-weight: var(--weight-extrabold);
 }
 
-/* Keep leader and normal member metadata rows at the same 16px visual height. */
-.result-card-meta {
-  min-height: 16px;
-  align-items: center;
-}
-
-.result-card-role.is-leader {
-  height: 16px;
-  min-height: 16px;
-  padding: 0 5px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
-  line-height: 1;
-}
 
 /* Summary/result hierarchy */
 .result-top-number {
@@ -151,12 +111,6 @@ textarea {
   font-size: var(--type-score-lg);
   font-weight: var(--weight-bold);
   letter-spacing: var(--tracking-tight);
-}
-
-.rank-lockup strong {
-  font-size: var(--type-score-xl);
-  font-weight: var(--weight-bold);
-  letter-spacing: -0.02em;
 }
 
 .song-projection > div strong {
@@ -193,11 +147,5 @@ textarea {
 
 @media (max-width: 600px) {
   .result-summary-score strong { font-size: 22px; }
-  .rank-lockup strong { font-size: 25px; }
 
-  /* Card hierarchy intentionally stays identical on mobile. */
-  .card-copy-character { font-size: var(--type-card-title) !important; }
-  .card-copy-name { font-size: var(--type-card-name) !important; }
-  .card-copy-meta,
-  .card-copy-rarity { font-size: var(--type-card-meta) !important; }
 }

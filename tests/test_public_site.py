@@ -63,6 +63,24 @@ def test_sitemap_and_robots_list_canonical_pages(site):
     assert "Sitemap: https://holosims.net/sitemap.xml" in (site / "robots.txt").read_text()
 
 
+@pytest.mark.parametrize("page,label", [("index.html", "멤버별 보드"), ("ko/index.html", "멤버별 보드"),
+                                      ("en/index.html", "Member Boards"), ("ja/index.html", "ホロメンボード")])
+def test_complete_navigation_exists_before_javascript(site, page, label):
+    source = (site / page).read_text(encoding="utf-8")
+    elements = Document(source).elements
+    tabs = [attrs for _, attrs in elements if attrs.get("role") == "tab"]
+    assert [tab["id"] for tab in tabs] == ["deck-tab", "owned-tab", "board-tab"]
+    assert all("disabled" in tab for tab in tabs)
+    panels = {attrs["id"]: attrs for _, attrs in elements if attrs.get("role") == "tabpanel"}
+    assert all(panels[tab["aria-controls"]]["aria-labelledby"] == tab["id"] for tab in tabs)
+    assert "hidden" in panels["board-view"]
+    assert f'data-i18n="tab.board">{label}</span>' in source
+    assert any(attrs.get("role") == "status" for _, attrs in elements)
+    assert "disabled" in next(attrs for _, attrs in elements if attrs.get("id") == "auto-compose")
+    error = next(attrs for _, attrs in elements if attrs.get("id") == "app-error")
+    assert error['role'] == 'alert' and 'hidden' in error
+
+
 def test_upstream_character_name_cannot_create_event_attributes():
     source = f'''
 import {{ renderMemberSlots }} from {json.dumps((ROOT / 'js/ui/member.js').as_uri())};

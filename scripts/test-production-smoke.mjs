@@ -43,11 +43,18 @@ async function waitForDeployment() {
 }
 
 const html = await waitForDeployment();
+function verifyNavigation(page) {
+  for (const id of ['deck-tab', 'owned-tab', 'board-tab', 'board-view']) {
+    assert.equal((page.match(new RegExp(`id="${id}"`, 'g')) || []).length, 1, `static ${id} missing or duplicated`);
+  }
+}
+verifyNavigation(html);
 assert.ok(!html.includes('class="calculation-scope"'), "removed calculation scope disclosure unexpectedly present in production HTML");
 for (const locale of ["ko", "en", "ja"]) {
   const response = await request(withRevision(`/${locale}/`));
   assert.equal(response.ok, true, `${locale} page request failed`);
   const page = await response.text();
+  verifyNavigation(page);
   assert.ok(page.includes(`lang="${locale}"`));
   assert.ok(page.includes(`rel="canonical" href="${base.origin}/${locale}/"`));
   assert.ok(page.includes(`data-card-asset-revision="${deploymentSha}"`));

@@ -15,8 +15,9 @@ export function createBoardsView({ container, data, store, catalog, onGoOwned, o
     const link = document.createElement("link");
     link.rel = "stylesheet";
     const styleUrl = new URL("../../css/boards.css", import.meta.url);
-    // The lazy stylesheet must follow the deployed module's cache revision too.
-    styleUrl.search = new URL(import.meta.url).search;
+    // Content-hashed public styles are already immutable. Source previews use
+    // the module revision so their logical stylesheet cannot become stale.
+    if (!/\.[0-9a-f]{64}\.css$/.test(styleUrl.pathname)) styleUrl.search = new URL(import.meta.url).search;
     link.href = styleUrl.href;
     link.dataset.boardStyle = "";
     link.addEventListener("load", () => { if (visible && currentCharacter) fitBoard(); });
