@@ -1,7 +1,9 @@
 """Exercise sync commands and publication conditions in the actual workflows."""
 import os
+import json
 from pathlib import Path
 import re
+import shutil
 import subprocess
 
 import pytest
@@ -193,7 +195,6 @@ def test_generated_commit_status_requires_successful_validation_and_exact_head(n
 
 @pytest.mark.parametrize("step_name", [
     "Validate transport, cache and CSS regressions",
-    "Test unbundled source application",
     "Build optimized Pages artifact",
     "Test optimized public application and actual browser cache",
 ])
@@ -252,3 +253,70 @@ def test_required_validation_fails_when_macos_workflow_checks_do_not_pass(tmp_pa
         capture_output=True, text=True, timeout=10,
     )
     assert completed.returncode == exit_code, completed.stderr
+
+
+@pytest.mark.parametrize("name", ["validate.yml", "static-performance.yml"])
+def test_pr_validation_does_not_duplicate_push_runs_or_cancel_sync(name):
+    definition = workflow(name)
+    assert "push" not in definition["on"]
+    assert definition["on"]["pull_request"]["branches"] == ["main"]
+    assert "workflow_dispatch" in definition["on"]
+    group = definition["concurrency"]["group"]
+    assert "github.event_name" in group
+    assert "github.event.pull_request.number || github.run_id" in group
+    cancellation = definition["concurrency"]["cancel-in-progress"].removeprefix("${{").removesuffix("}}")
+    for event in ["pull_request", "schedule", "workflow_dispatch"]:
+        assert condition(cancellation, {"github.event_name": event}) is (event == "pull_request")
+    if name == "validate.yml":
+        assert "workflow_call" in definition["on"]
+        for trigger in ["workflow_dispatch", "workflow_call"]:
+            assert definition["on"][trigger]["inputs"]["full_validation"]["type"] == "boolean"
+
+
+def test_source_and_built_browser_coverage_are_both_retained_without_duplicate_source_run():
+    validate = workflow("validate.yml")["jobs"]["validate"]["steps"]
+    public = workflow("static-performance.yml")["jobs"]["public-static"]["steps"]
+    source_commands = "\n".join(step.get("run", "") for step in validate)
+    public_commands = "\n".join(step.get("run", "") for step in public)
+    assert source_commands.count("node scripts/test-browser-smoke.mjs") == 1
+    assert source_commands.count("node scripts/test-board-browser.mjs") == 1
+    assert "node scripts/test-browser-smoke.mjs" not in public_commands
+    assert 'BROWSER_SMOKE_ROOT="$PWD/_site"' in public_commands
+    assert "node scripts/test-browser-smoke-core.mjs" in public_commands
+    assert "node scripts/test-board-browser.mjs" in public_commands
+
+
+@pytest.mark.parametrize("reuse,should_run", [("true", False), ("false", True), ("", True)])
+def test_only_expensive_suites_can_be_skipped_with_explicit_matching_proof(reuse, should_run):
+    steps = workflow("validate.yml")["jobs"]["validate"]["steps"]
+    for step_name, proof_id in [("Validate recommendation inventories", "recommendation_validation"),
+                                ("Reproduce portable scoring handoff", "historical_validation")]:
+        step = next(step for step in steps if step.get("name") == step_name)
+        assert condition(step["if"], {f"steps.{proof_id}.outputs.reuse": reuse}) is should_run
+        assert "continue-on-error" not in step
+    # The production regression group and source browser checks always run.
+    scoring = next(step for step in steps if step.get("name") == "Validate scoring and search regressions")
+    assert "if" not in scoring and "continue-on-error" not in scoring
+    assert "node scripts/run-core-regressions.mjs" in scoring["run"]
+
+
+@pytest.mark.parametrize("fail_index", [None, 0, 9, 19])
+def test_shared_production_regressions_preserve_process_isolation_and_stop_on_failure(tmp_path, fail_index):
+    script = (ROOT / "scripts/run-core-regressions.mjs").read_text()
+    tests = re.findall(r'"(scripts/test-[\w-]+\.mjs)"', script)
+    assert len(tests) == 20
+    for filename, job in [("sync-master-data.yml", "sync"), ("validate.yml", "validate"), ("pages.yml", "deploy")]:
+        commands = "\n".join(step.get("run", "") for step in workflow(filename)["jobs"][job]["steps"])
+        assert commands.count("node scripts/run-core-regressions.mjs") == 1
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "scripts/run-core-regressions.mjs").write_text(script)
+    for index, name in enumerate(tests):
+        (tmp_path / name).write_text(
+            'import { appendFileSync } from "node:fs";\n'
+            f'appendFileSync("calls.txt", {json.dumps(name + chr(10))});\n'
+            f'process.exit({23 if index == fail_index else 0});\n'
+        )
+    completed = subprocess.run([shutil.which("node"), "scripts/run-core-regressions.mjs"],
+                               cwd=tmp_path, capture_output=True, text=True, timeout=15)
+    assert completed.returncode == (0 if fail_index is None else 23), completed.stderr
+    assert (tmp_path / "calls.txt").read_text().splitlines() == tests[:None if fail_index is None else fail_index + 1]

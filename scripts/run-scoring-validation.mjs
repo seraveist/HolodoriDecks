@@ -6,7 +6,9 @@ import { historicalScoringWorkspace } from './historical-scoring-workspace.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 if (Number(process.versions.node.split('.')[0]) < 24) throw new Error('Node.js 24 or later is required');
 const args = process.argv.slice(2);
-if (args.some(a => a !== '--research-grid')) throw new Error('Usage: node scripts/run-scoring-validation.mjs [--research-grid]');
+if (args.some(a => !['--research-grid', '--historical-only'].includes(a))) {
+  throw new Error('Usage: node scripts/run-scoring-validation.mjs [--research-grid] [--historical-only]');
+}
 const tests = [
   'scripts/test-historical-scoring-workspace.mjs',
   'scripts/test-unit-display.mjs',
@@ -43,6 +45,7 @@ if (args.includes('--research-grid')) tests.push(...[
 const historicalRoot = historicalScoringWorkspace(root);
 const historicalStart = tests.indexOf('analysis/unit-score/probe-fixed-constants.mjs');
 for (const [index, script] of tests.entries()) {
+  if (args.includes('--historical-only') && index < historicalStart) continue;
   const cwd = index >= historicalStart ? historicalRoot : root;
   console.log(`[scoring-validation] ${script}`);
   const result = spawnSync(process.execPath, [path.join(cwd, script)], { cwd, encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 });
@@ -57,4 +60,4 @@ const verification = spawnSync(process.execPath, [path.join(historicalRoot, 'scr
   ...(args.includes('--research-grid') ? ['--grid'] : [])], { cwd: historicalRoot, stdio: 'inherit' });
 if (verification.error || verification.status !== 0) throw verification.error ?? new Error('Research reproduction failed');
 fs.cpSync(path.join(historicalRoot, '.local/scoring-validation/research'), path.join(root, '.local/scoring-validation/research'), { recursive: true });
-console.log('[scoring-validation] OK. Current production regressions and archived v0.9 research passed separately; AX remains a 0.1pp mismatch.');
+console.log(`[scoring-validation] OK. ${args.includes('--historical-only') ? 'Archived v0.9 research passed' : 'Current production regressions and archived v0.9 research passed separately'}; AX remains a 0.1pp mismatch.`);
