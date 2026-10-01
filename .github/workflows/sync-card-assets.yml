@@ -47,7 +47,9 @@ env:
 
 jobs:
   sync:
-    runs-on: ubuntu-latest
+    # The official Octo catalogues reject hosted Ubuntu egress. Use the same
+    # standard hosted macOS runner as master sync for game-asset collection.
+    runs-on: macos-15
     timeout-minutes: 35
 
     steps:
