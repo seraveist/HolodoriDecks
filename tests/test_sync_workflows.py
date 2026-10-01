@@ -199,8 +199,8 @@ def test_generated_commit_status_requires_successful_validation_and_exact_head(n
     "Test optimized public application and actual browser cache",
 ])
 def test_public_static_pipelines_stop_after_failed_node_command(tmp_path, step_name):
-    definition = workflow("static-performance.yml")
-    job = definition["jobs"]["public-static"]
+    definition = workflow("validate.yml")
+    job = definition["jobs"]["public"]
     step = next(step for step in job["steps"] if step.get("name") == step_name)
     workflow_shell = definition.get("defaults", {}).get("run", {}).get("shell")
     job_shell = job.get("defaults", {}).get("run", {}).get("shell", workflow_shell)
@@ -217,7 +217,7 @@ def test_public_static_pipelines_stop_after_failed_node_command(tmp_path, step_n
     calls = tmp_path / "node-calls.txt"
     for name, script in {
         "node": 'echo called >> "$NODE_CALLS"\necho simulated-node-failure >&2\nexit 23\n',
-        "python": "exit 0\n",
+        "python": 'echo called >> "$NODE_CALLS"\nexit 23\n',
         "cp": "exit 0\n",
     }.items():
         stub = bin_dir / name
@@ -241,21 +241,24 @@ def test_required_validation_fails_when_macos_workflow_checks_do_not_pass(tmp_pa
     assert contracts["steps"][0]["with"]["ref"] == "${{ inputs.checkout_ref || github.sha }}"
     assert any("python -m pytest -q tests/test_sync_workflows.py" in step.get("run", "") for step in contracts["steps"])
     validate = jobs["validate"]
-    assert validate["needs"] == "workflow_contracts"
+    assert set(validate["needs"]) == {"changes", "metadata", "workflow_contracts", "app", "public", "historical"}
     # A skipped dependent job can satisfy a required check; run an explicit
     # failing gate instead, even when the macOS prerequisite failed/skipped.
     assert validate["if"] == "always() && !cancelled()"
-    gate = next(step for step in validate["steps"] if step.get("name") == "Require workflow contract checks")
-    assert gate["env"]["WORKFLOW_CHECK_RESULT"] == "${{ needs.workflow_contracts.result }}"
+    gate = next(step for step in validate["steps"] if step.get("name") == "Require all selected checks")
+    assert gate["env"]["CI_NEEDS"] == "${{ toJSON(needs) }}"
+    plan = {"app": True, "public": True, "contracts": True, "historical": True}
+    needs = {job: {"result": "success"} for job in validate["needs"]}
+    needs["workflow_contracts"]["result"] = result
     completed = subprocess.run(
-        ["/bin/bash", "-e", "-c", gate["run"]], cwd=tmp_path,
-        env={**os.environ, "WORKFLOW_CHECK_RESULT": result},
+        ["/bin/bash", "-e", "-c", gate["run"]], cwd=ROOT,
+        env={**os.environ, "CI_PLAN": json.dumps(plan), "CI_NEEDS": json.dumps(needs)},
         capture_output=True, text=True, timeout=10,
     )
     assert completed.returncode == exit_code, completed.stderr
 
 
-@pytest.mark.parametrize("name", ["validate.yml", "static-performance.yml"])
+@pytest.mark.parametrize("name", ["validate.yml"])
 def test_pr_validation_does_not_duplicate_push_runs_or_cancel_sync(name):
     definition = workflow(name)
     assert "push" not in definition["on"]
@@ -274,30 +277,69 @@ def test_pr_validation_does_not_duplicate_push_runs_or_cancel_sync(name):
 
 
 def test_source_and_built_browser_coverage_are_both_retained_without_duplicate_source_run():
-    validate = workflow("validate.yml")["jobs"]["validate"]["steps"]
-    public = workflow("static-performance.yml")["jobs"]["public-static"]["steps"]
-    source_commands = "\n".join(step.get("run", "") for step in validate)
+    jobs = workflow("validate.yml")["jobs"]
+    validate = jobs["app"]["steps"]
+    public = jobs["public"]["steps"]
+    app_commands = "\n".join(step.get("run", "") for step in validate)
+    assert "node scripts/run-app-validation.mjs" in app_commands
+    source_commands = (ROOT / "scripts/run-app-validation.mjs").read_text()
     public_commands = "\n".join(step.get("run", "") for step in public)
-    assert source_commands.count("node scripts/test-browser-smoke.mjs") == 1
-    assert source_commands.count("node scripts/test-board-browser.mjs") == 1
+    assert source_commands.count('"test-browser-smoke"') == 1
+    assert source_commands.count('"test-board-browser"') == 1
+    assert '"test-optimizer-client"' not in source_commands  # wrapper owns this test
     assert "node scripts/test-browser-smoke.mjs" not in public_commands
     assert 'BROWSER_SMOKE_ROOT="$PWD/_site"' in public_commands
     assert "node scripts/test-browser-smoke-core.mjs" in public_commands
     assert "node scripts/test-board-browser.mjs" in public_commands
 
 
+def test_pages_uses_same_build_and_only_runs_production_smoke_after_deployment():
+    pages = workflow('pages.yml')['jobs']
+    assert pages['smoke']['needs'] == 'deploy'
+    assert pages['smoke']['steps'][0]['uses'].startswith('actions/checkout@')
+    assert any(step.get('env', {}).get('DEPLOYMENT_SHA') == '${{ github.sha }}' for step in pages['smoke']['steps'])
+    ci = workflow('validate.yml')['jobs']['public']['steps']
+    for steps in [ci, pages['deploy']['steps']]:
+        assert sum('scripts/build-pages-artifact.py' in step.get('run', '') for step in steps) == 1
+    deployment_commands = '\n'.join(step.get('run', '') for step in pages['deploy']['steps'])
+    assert 'pytest' not in deployment_commands and 'run-core-regressions' not in deployment_commands
+    assert not (ROOT / '.github/workflows/static-performance.yml').exists()
+    assert not (ROOT / '.github/workflows/production-smoke.yml').exists()
+
+
+def test_asset_fallback_install_covers_cards_and_member_icons():
+    steps = workflow('sync-card-assets.yml')['jobs']['sync']['steps']
+    install = next(step for step in steps if step.get('name') == 'Install pinned asset tooling when fallback may be needed')
+    for cards, characters, expected in [('0', '0', False), ('1', '0', True), ('0', '1', True)]:
+        assert condition(install['if'], {'steps.audit.outputs.missing_count': cards,
+            'steps.character_audit.outputs.missing_count': characters}) is expected
+    helpers = next(step for step in steps if step.get('name') == 'Validate card asset sync helpers')
+    assert not condition(helpers['if'], {'github.event_name': 'schedule'})
+    assert condition(helpers['if'], {'github.event_name': 'push'})
+
+
+def test_network_diagnostics_aggregate_access_failures_instead_of_failing_each_environment():
+    jobs = workflow('check-sync-network.yml')['jobs']
+    # Inline diagnostics have no checkout or project dependency file to hash.
+    setup = next(step for step in jobs['catalogue']['steps'] if 'setup-python@' in step.get('uses', ''))
+    assert 'cache' not in setup['with']
+    probe = next(step['run'] for step in jobs['catalogue']['steps'] if step.get('shell') == 'python')
+    assert "raise SystemExit" not in probe
+    assert jobs['summary']['needs'] == 'catalogue'
+    assert any('asset_verified' in step.get('run', '') and 'raise SystemExit' in step.get('run', '') for step in jobs['summary']['steps'])
+
+
 @pytest.mark.parametrize("reuse,should_run", [("true", False), ("false", True), ("", True)])
 def test_only_expensive_suites_can_be_skipped_with_explicit_matching_proof(reuse, should_run):
-    steps = workflow("validate.yml")["jobs"]["validate"]["steps"]
-    for step_name, proof_id in [("Validate recommendation inventories", "recommendation_validation"),
-                                ("Reproduce portable scoring handoff", "historical_validation")]:
+    steps = workflow("validate.yml")["jobs"]["app"]["steps"]
+    for step_name, proof_id in [("Validate recommendation inventories", "recommendation_validation")]:
         step = next(step for step in steps if step.get("name") == step_name)
         assert condition(step["if"], {f"steps.{proof_id}.outputs.reuse": reuse}) is should_run
         assert "continue-on-error" not in step
     # The production regression group and source browser checks always run.
-    scoring = next(step for step in steps if step.get("name") == "Validate scoring and search regressions")
+    scoring = next(step for step in steps if step.get("name") == "Validate scoring, search and source browser regressions")
     assert "if" not in scoring and "continue-on-error" not in scoring
-    assert "node scripts/run-core-regressions.mjs" in scoring["run"]
+    assert "node scripts/run-app-validation.mjs" in scoring["run"]
 
 
 @pytest.mark.parametrize("fail_index", [None, 0, 9, 19])
@@ -305,9 +347,7 @@ def test_shared_production_regressions_preserve_process_isolation_and_stop_on_fa
     script = (ROOT / "scripts/run-core-regressions.mjs").read_text()
     tests = re.findall(r'"(scripts/test-[\w-]+\.mjs)"', script)
     assert len(tests) == 20
-    for filename, job in [("sync-master-data.yml", "sync"), ("validate.yml", "validate"), ("pages.yml", "deploy")]:
-        commands = "\n".join(step.get("run", "") for step in workflow(filename)["jobs"][job]["steps"])
-        assert commands.count("node scripts/run-core-regressions.mjs") == 1
+    assert (ROOT / "scripts/run-app-validation.mjs").read_text().count('"run-core-regressions"') == 1
     (tmp_path / "scripts").mkdir()
     (tmp_path / "scripts/run-core-regressions.mjs").write_text(script)
     for index, name in enumerate(tests):

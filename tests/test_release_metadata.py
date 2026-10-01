@@ -5,6 +5,9 @@ import tomllib
 from pathlib import Path
 
 from holodori_decksim import __version__
+import importlib.util
+from types import SimpleNamespace
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -73,3 +76,23 @@ def test_release_workflow_uses_deployed_commit_and_version_file() -> None:
     assert "workflow_run.head_sha" in workflow
     assert "VERSION" in workflow
     assert "gh release create" in workflow
+
+
+@pytest.mark.parametrize('status,stderr,expected', [
+    (0, '', True),
+    (1, 'gh: Not Found (HTTP 404)', False),
+    (1, 'gh: Forbidden (HTTP 403)', None),
+    (1, 'gh: API rate limit exceeded (HTTP 429)', None),
+    (1, 'connection reset by peer', None),
+])
+def test_release_lookup_only_interprets_404_as_missing(status, stderr, expected):
+    spec = importlib.util.spec_from_file_location('release_state', ROOT / 'scripts/check-release-state.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    def run(*args, **kwargs):
+        return SimpleNamespace(returncode=status, stderr=stderr)
+    if expected is None:
+        with pytest.raises(RuntimeError):
+            module.exists('repos/example/project/releases/tags/v1.0.0', run=run)
+    else:
+        assert module.exists('repos/example/project/releases/tags/v1.0.0', run=run) is expected

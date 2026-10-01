@@ -22,7 +22,7 @@ holodori-sync
 
 The collection job runs on GitHub's standard `macos-15` runner. The [2026-09-30 network comparison](https://github.com/seraveist/HolodoriDecks/actions/runs/36667631871) verified all three official catalogues (revision 94, 845 SUS resources) and a chart download on hosted macOS. Standard Ubuntu, Ubuntu ARM and Windows runners returned HTTP 403 for the same requests. The rejection is environment-dependent; it does not require moving automation outside GitHub Actions.
 
-Full candidate validation, PR publication and deployment continue on standard Ubuntu runners with the existing gates. No personal computer, self-hosted runner, runner variable or additional account secret is required. The daily schedule and manual workflow inputs are unchanged. If access changes, the manually triggered `Check hosted sync network` workflow compares the four standard environments without modifying data or publishing anything. Catalogue or integrity failures still stop live sync before publication.
+Full candidate validation, including the optimized public artifact, PR publication and deployment continue on standard Ubuntu runners with the existing gates. No personal computer, self-hosted runner, runner variable or additional account secret is required. The daily schedule and manual workflow inputs are unchanged. If access changes, the manually triggered `Check hosted sync network` workflow compares the four standard environments without modifying data or publishing anything. It reports individual blocked environments and fails only when none can verify a catalogue and chart, or a probe cannot finish. Catalogue or integrity failures still stop live sync before publication.
 
 ## Generated data flow
 

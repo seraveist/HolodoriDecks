@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       full_validation:
-        description: Run expensive suites even when matching successful proof exists
+        description: Run all checks without reusing successful proofs
         type: boolean
         default: false
   workflow_call:
@@ -16,316 +16,127 @@ on:
         required: true
         type: string
       full_validation:
-        description: Bypass successful validation proof reuse
+        description: Run all checks without reusing successful proofs
         type: boolean
         default: false
 
 permissions:
   contents: read
   actions: read
-
+defaults:
+  run:
+    shell: bash
 concurrency:
   group: validate-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      app: ${{ steps.plan.outputs.app }}
+      public: ${{ steps.plan.outputs.public }}
+      contracts: ${{ steps.plan.outputs.contracts }}
+      historical: ${{ steps.plan.outputs.historical }}
+      plan: ${{ steps.plan.outputs.plan }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ inputs.checkout_ref || github.sha }}
+          fetch-depth: 0
+      - name: Verify requested sync commit
+        if: inputs.checkout_ref != ''
+        env:
+          EXPECTED_HEAD: ${{ inputs.checkout_ref }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Select checks for committed changes
+        id: plan
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.sha || 'origin/main' }}
+          CHECKOUT_REF: ${{ inputs.checkout_ref }}
+          FULL_VALIDATION: ${{ inputs.full_validation || false }}
+        run: python scripts/ci-changes.py
+
+  metadata:
+    needs: changes
+    if: needs.changes.outputs.app != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ inputs.checkout_ref || github.sha }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - name: Check documentation, versions and CI policy
+        run: |
+          python -m pip install --disable-pip-version-check --retries 5 --timeout 30 pytest -e .
+          python -m pytest -q tests/test_release_metadata.py tests/test_ci_policy.py
+          node scripts/check-version.mjs
+
   workflow_contracts:
+    needs: changes
+    if: needs.changes.outputs.contracts == 'true'
     runs-on: macos-15
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: ${{ inputs.checkout_ref || github.sha }}
-
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version: "3.12"
-
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: pyproject.toml
       - name: Install workflow test tooling
         run: python -m pip install --disable-pip-version-check --retries 5 --timeout 30 'pytest>=8' 'PyYAML>=6'
-
       - name: Exercise workflow scripts on system Bash
         run: python -m pytest -q tests/test_sync_workflows.py tests/test_pages_deployment.py
 
-  validate:
-    needs: workflow_contracts
-    # Do not let a skipped dependent job satisfy the required validate check.
-    if: always() && !cancelled()
+  app:
+    needs: changes
+    if: needs.changes.outputs.app == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
-
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: ${{ inputs.checkout_ref || github.sha }}
-
-      - name: Require workflow contract checks
-        env:
-          WORKFLOW_CHECK_RESULT: ${{ needs.workflow_contracts.result }}
-        run: test "$WORKFLOW_CHECK_RESULT" = "success"
-
-      - name: Verify requested sync commit
-        if: inputs.checkout_ref != ''
-        env:
-          EXPECTED_HEAD: ${{ inputs.checkout_ref }}
-        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version: "3.12"
-
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: pyproject.toml
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24
-
       - name: Check reusable recommendation validation
         id: recommendation_validation
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
         run: python scripts/recommendation-validation.py --lookup ${{ inputs.full_validation && '--force' || '' }}
-
-      - name: Check reusable historical validation
-        id: historical_validation
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: python scripts/recommendation-validation.py --suite historical --lookup ${{ inputs.full_validation && '--force' || '' }}
-
-      - name: Validate dependency boundaries
-        run: |
-          python - <<'PY'
-          import tomllib
-          from pathlib import Path
-
-          project = tomllib.loads(Path('pyproject.toml').read_text(encoding='utf-8'))['project']
-          core = project.get('dependencies', [])
-          extras = project.get('optional-dependencies', {})
-          if any(str(item).lower().startswith('hunmin') for item in core):
-              raise SystemExit('hunmin must not be a core project dependency')
-          music = extras.get('music-search', [])
-          if not any(str(item).lower().startswith('hunmin') for item in music):
-              raise SystemExit('music-search extra must declare hunmin explicitly')
-          if 'test' not in extras:
-              raise SystemExit('test extra is missing')
-          print('[deps] core sync tooling is isolated from music-search dependencies')
-          PY
-
       - name: Install full validation tooling
+        run: python -m pip install --disable-pip-version-check --retries 5 --timeout 30 --index-url https://pypi.org/simple -e '.[test,music-search]'
+      - name: Validate Python tools and data contracts
         run: |
-          python --version
-          python -m pip --version
-          for attempt in 1 2 3; do
-            if python -m pip install --disable-pip-version-check --retries 5 --timeout 30 \
-              --index-url https://pypi.org/simple \
-              -e '.[test,music-search]'; then
-              break
-            fi
-            echo "::warning::Full validation tooling install failed (attempt ${attempt}/3)."
-            if [ "$attempt" -eq 3 ]; then
-              python -m pip index versions hunmin --index-url https://pypi.org/simple || true
-              exit 1
-            fi
-            sleep $((attempt * 10))
-          done
+          python -m compileall -q src scripts
           python -m pytest -q
-          python -m py_compile scripts/validate-generated-data.py scripts/ingest-chart-metadata.py
-
-      - name: Validate Master-backed boards and isolated profile state
-        run: |
-          node scripts/test-board-state.mjs
-          node scripts/test-board-paths.mjs
-          node scripts/test-board-data.mjs
-          node scripts/test-board-scoring.mjs
-          node scripts/test-board-browser.mjs
-
-      - name: Check JavaScript syntax and module exports
-        run: |
-          find js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
-          node --check scripts/build-i18n.mjs
-          node --check scripts/build-chart-index.mjs
-          node --check scripts/build-exact-runtime-index.mjs
-          node --check scripts/test-chart-scoring.mjs
-          node --check scripts/test-targeted-passive-support.mjs
-          node --check scripts/test-passive-stat-rounding.mjs
-          node --check scripts/test-passive-target-priority.mjs
-          node --check scripts/test-unit-observations.mjs
-          node --check scripts/test-support-stacking.mjs
-          node --check js/order-reference.js
-          node --check scripts/test-generic-order.mjs
-          node --check scripts/test-song-representative-order.mjs
-          node --check scripts/test-card-preparation.mjs
-          node --check scripts/test-simulation-targets.mjs
-          node --check scripts/test-collision-choice.mjs
-          node --check scripts/test-exact-global-search.mjs
-          node --check scripts/test-exact-pruning.mjs
-          node --check scripts/test-beam-search.mjs
-          node --check scripts/test-exact-runtime-source.mjs
-          node --check scripts/test-optimization-session.mjs
-          node --check scripts/test-chart-abort.mjs
-          node --check scripts/test-m0049-exact-real.mjs
-          node --check scripts/test-song-search-real-data.mjs
-          node --check scripts/test-browser-smoke.mjs
-          node --check scripts/test-production-smoke.mjs
-          node --check scripts/import-chart-timeline-corpus.mjs
-          node --input-type=module <<'NODE'
-          await Promise.all([
-            import('./js/i18n.js'),
-            import('./js/theme.js'),
-            import('./js/data.js'),
-            import('./js/chart-data.js'),
-            import('./js/chart-score.js'),
-            import('./js/order.js'),
-            import('./js/state.js'),
-            import('./js/score.js'),
-            import('./js/card-prepare.js'),
-            import('./js/recommend.js'),
-            import('./js/optimizer-core.js'),
-            import('./js/optimizer-client.js'),
-            import('./js/optimization-session.js'),
-            import('./js/ui/cards.js'),
-            import('./js/ui/dom.js'),
-            import('./js/ui/member.js'),
-            import('./js/ui/modal.js'),
-            import('./js/ui/music.js'),
-            import('./js/ui/owned.js'),
-            import('./js/ui/result.js'),
-            import('./js/ui/target.js'),
-            import('./js/ui/card-detail.js'),
-          ]);
-          console.log('[validate] module imports resolved');
-          NODE
-          if grep -R --line-number --fixed-strings 'SLOT_LABELS' js; then
-            echo '[validate] obsolete SLOT_LABELS reference found'
-            exit 1
-          fi
-
-      - name: Validate scoring and search regressions
-        run: |
-          node scripts/run-core-regressions.mjs
-          node scripts/test-unit-display.mjs
-          node scripts/test-calculation-modes.mjs
-          node scripts/test-search-order-bounds.mjs
-          node scripts/test-optimizer-client.mjs
-          node scripts/test-m0049-exact-real.mjs
-          node scripts/test-song-search-real-data.mjs
-          node scripts/test-browser-smoke.mjs
-          node --input-type=module <<'NODE'
-          import { scoreEngineSelfTest } from './js/score.js';
-          import { exactShortlistSize, recommendationValue } from './js/recommend.js';
-          const score = { rankingScore: 100, potentialRankingScore: 140 };
-          if (recommendationValue(score, 'score') !== 100) throw new Error('score target ranking mismatch');
-          if (recommendationValue(score, 'potential') !== 140) throw new Error('potential target ranking mismatch');
-          if (scoreEngineSelfTest().maxAbsError !== 0) throw new Error('unit-score calibration fixture drift');
-          if (exactShortlistSize(700, 50) <= 10) throw new Error('Exact shortlist did not expand beyond legacy top 10');
-          console.log('[validate] scoring/search/cancellation/browser regressions OK');
-          NODE
-
-      - name: Validate simulation targets and compact header
-        run: |
-          grep -q 'name="calculation-mode" value="unit" checked' index.html
-          grep -q 'name="calculation-mode" value="expected"' index.html
-          grep -q 'name="calculation-mode" value="maximum"' index.html
-          if grep -q '<option value="performance"' index.html; then exit 1; fi
-          if grep -q '<option value="technique"' index.html; then exit 1; fi
-          if grep -q '<option value="sense"' index.html; then exit 1; fi
-          if grep -q '<option value="3">★3</option>' index.html; then exit 1; fi
-          if grep -q 'TARGET_STATS' js/ui/result.js; then exit 1; fi
-          test ! -e js/ui/result-target.js
-          grep -q '수동 ALL PERFECT' index.html
-          if grep -q 'calculation-scope' index.html; then exit 1; fi
-          if grep -q 'calculation-scope' css/tweaks.css; then exit 1; fi
-          grep -q 'id="theme-toggle"' index.html
-          if grep -q 'id="theme-select"' index.html; then exit 1; fi
-          if grep -q '<option value="system">' index.html; then exit 1; fi
-          grep -q 'theme-toggle-button' css/tweaks.css
-          grep -q 'app-header-actions' css/tweaks.css
-          grep -q 'flex-direction: row' css/tweaks.css
-          grep -q 'slot-clear-button' js/ui/member.js
-          grep -q 'result-card-width: clamp(145px, 42vw, 168px)' css/tweaks.css
-          grep -q 'data-theme="dark"' css/theme.css
-
-      - name: Validate CSS theme layering
-        run: |
-          node --input-type=module <<'NODE'
-          import { readFile } from 'node:fs/promises';
-          const neutralFiles = ['css/base.css', 'css/components.css', 'css/owned.css', 'css/modal.css', 'css/tweaks.css', 'css/boards.css'];
-          const neutral = await Promise.all(neutralFiles.map(async (path) => [path, await readFile(path, 'utf8')]));
-          for (const [path, text] of neutral) {
-            if (text.includes('data-theme="dark"')) throw new Error(`dark selector leaked into ${path}`);
-            if (text.split('{').length !== text.split('}').length) throw new Error(`brace mismatch in ${path}`);
-          }
-          const forbiddenSurface = /background(?:-color)?\s*:\s*#(?:fff(?:fff)?|f8faff|f7f9fc|fafbfd|fbfcff|f5f8ff|edf3ff|eef1f6|f9fbfe|e8f7f5|fff0f1|fff5f6)/i;
-          for (const [path, text] of neutral) {
-            if (forbiddenSurface.test(text)) throw new Error(`theme-sensitive light surface literal remains in ${path}`);
-          }
-          const light = await readFile('css/tokens.css', 'utf8');
-          const dark = await readFile('css/theme.css', 'utf8');
-          const requiredTokens = ['ink-900','ink-700','surface-inverse','ink-inverse','brand-line','brand-line-strong','accent-ink','accent-line','warning-ink','danger-soft','danger-line'];
-          for (const token of requiredTokens) {
-            if (!light.includes(`--${token}:`)) throw new Error(`missing light token --${token}`);
-            if (!dark.includes(`--${token}:`)) throw new Error(`missing dark token --${token}`);
-          }
-          console.log('[theme] semantic surface hierarchy validated');
-          NODE
-          node scripts/check-version.mjs
-
+      - name: Validate scoring, search and source browser regressions
+        run: node scripts/run-app-validation.mjs
       - name: Validate recommendation inventories
         if: steps.recommendation_validation.outputs.reuse != 'true'
         run: node scripts/test-recommendation-inventories.mjs
-
-      - name: Validate historical archive isolation
-        run: node scripts/test-historical-scoring-workspace.mjs
-
-      - name: Reproduce portable scoring handoff
-        if: steps.historical_validation.outputs.reuse != 'true'
-        run: node scripts/run-scoring-validation.mjs --historical-only
-
-      - name: Build and validate derived master data
-        run: |
-          node scripts/build-i18n.mjs
-          node scripts/build-chart-index.mjs
-          python scripts/validate-generated-data.py
-          node --input-type=module <<'NODE'
-          import { readFile } from 'node:fs/promises';
-          const requiredSamples = ['la-name-chr-00001', 'la-card_name-00001-5-uniq-0000-00'];
-          for (const locale of ['ko', 'en', 'ja']) {
-            const pack = JSON.parse(await readFile(`data/generated/i18n/${locale}.json`, 'utf8'));
-            for (const key of requiredSamples) {
-              if (typeof pack[key] !== 'string' || !pack[key].trim()) throw new Error(`${locale}: missing ${key}`);
-            }
-          }
-          const manifest = JSON.parse(await readFile('data/generated/i18n/manifest.json', 'utf8'));
-          if (!manifest.required_entry_count
-            || !Number.isInteger(manifest.card_name_alias_count)
-            || manifest.card_name_alias_count < 0
-            || Object.keys(manifest.locales ?? {}).length !== 3) {
-            throw new Error('invalid i18n manifest');
-          }
-          const chart = JSON.parse(await readFile('data/generated/chart-index.json', 'utf8'));
-          const runtime = JSON.parse(await readFile('data/generated/exact-runtime-index.json', 'utf8'));
-          if (runtime.runtimeExactCount !== Object.keys(runtime.charts ?? {}).length
-            || runtime.currentMasterSourceCommit !== chart.source_commit
-            || runtime.currentMasterChartCount !== chart.chart_count
-            || !/^[0-9a-f]{64}$/.test(runtime.source?.sha256 ?? '')) {
-            throw new Error('invalid or stale exact runtime range index');
-          }
-          console.log(`[validate] ${manifest.required_entry_count} required LangIds; ${runtime.runtimeExactCount}/${chart.chart_count} Runtime Exact charts coherent`);
-          NODE
-
-      - name: Check app version and required files
-        run: |
-          python scripts/build-localized-pages.py
-          node scripts/check-version.mjs
-          test -f data/generated/cards.json
-          test -f data/generated/characters.json
-          test -f data/generated/music.json
-          test -f data/generated/manifest.json
-          test -f data/generated/master_refs.json
-          test -f data/generated/chart-index.json
-          test -f data/generated/live-score-rules.json
-          test -f data/generated/exact-runtime-index.json
-
       - name: Record successful recommendation validation
         if: steps.recommendation_validation.outputs.reuse != 'true' && steps.recommendation_validation.outputs.fingerprint != ''
         continue-on-error: true
@@ -338,14 +149,87 @@ jobs:
           retention-days: 90
           overwrite: true
 
-      - name: Record successful historical validation
-        if: steps.historical_validation.outputs.reuse != 'true' && steps.historical_validation.outputs.fingerprint != ''
-        continue-on-error: true
+  public:
+    needs: changes
+    if: needs.changes.outputs.public == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ inputs.checkout_ref || github.sha }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - name: Install public build and browser validation tooling
+        run: |
+          python -m pip install --disable-pip-version-check --retries 5 --timeout 30 -e '.[public-build,music-search]'
+          if ! fc-match -f '%{family}' 'Noto Sans CJK KR' | grep -q 'Noto Sans CJK'; then
+            sudo apt-get update -qq
+            sudo apt-get install -y fonts-noto-cjk
+          fi
+      - name: Build optimized Pages artifact
+        env:
+          CARD_ASSET_REVISION: ${{ inputs.checkout_ref || github.sha }}
+        run: python scripts/build-pages-artifact.py --revision "$CARD_ASSET_REVISION"
+      - name: Validate transport, cache and CSS regressions
+        run: |
+          mkdir -p .local
+          node scripts/test-public-optimization.mjs | tee .local/public-unit.log
+      - name: Test optimized public application and actual browser cache
+        run: |
+          BROWSER_SMOKE_ROOT="$PWD/_site" BROWSER_SMOKE_PORT=4174 \
+            BROWSER_SMOKE_ARTIFACT_DIR="$PWD/.local/public-smoke" \
+            node scripts/test-browser-smoke-core.mjs | tee .local/public-browser.log
+          BROWSER_SMOKE_ROOT="$PWD/_site" BROWSER_SMOKE_PORT=4175 \
+            BOARD_SMOKE_ARTIFACT_DIR="$PWD/.local/public-board-smoke" node scripts/test-board-browser.mjs
+      - name: Upload validation reports and screenshots
+        if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: ${{ steps.historical_validation.outputs.artifact_name }}
-          path: .local/historical-validation.json
-          include-hidden-files: true
-          if-no-files-found: error
-          retention-days: 90
-          overwrite: true
+          name: static-optimization-validation
+          path: |
+            .local/public-board-smoke/
+            .local/public-smoke/
+            .local/public-unit.log
+            .local/public-browser.log
+          if-no-files-found: ignore
+          retention-days: 7
+
+  historical:
+    needs: changes
+    if: needs.changes.outputs.historical == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ inputs.checkout_ref || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - name: Reproduce portable scoring handoff
+        run: node scripts/run-scoring-validation.mjs --historical-only
+
+  validate:
+    needs: [changes, metadata, workflow_contracts, app, public, historical]
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ inputs.checkout_ref || github.sha }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Require all selected checks
+        env:
+          CI_NEEDS: ${{ toJSON(needs) }}
+          CI_PLAN: ${{ needs.changes.outputs.plan }}
+        run: python scripts/check-ci-results.py

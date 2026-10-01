@@ -171,33 +171,42 @@ node scripts/test-chart-abort.mjs
 
 현재 버전은 `VERSION`, `pyproject.toml`, package `__version__`, README, CHANGELOG가 동일해야 합니다. `python -m pytest -q`의 release metadata 테스트와 `.github/workflows/release.yml`이 공개 버전 정합성을 검증합니다.
 
-`main` 병합 후 `.github/workflows/pages.yml`이 핵심 검증을 다시 수행하고 Pages를 배포합니다. 성공한 Pages 배포에 대해 VERSION tag/release가 아직 없으면 `.github/workflows/release.yml`이 해당 배포 커밋을 태그하고 GitHub Release를 생성합니다.
+`main` 병합 후 `.github/workflows/pages.yml`이 CI와 같은 스크립트로 산출물을 빌드·검증하고 Pages를 배포합니다. 이어 실제 도메인의 배포 SHA, 다국어 페이지, 데이터와 이미지를 확인합니다. 배포와 운영 smoke가 모두 성공한 경우 VERSION tag/release가 아직 없으면 `.github/workflows/release.yml`이 해당 커밋을 태그하고 GitHub Release를 생성합니다. API 인증·네트워크 오류는 버전 부재로 취급하지 않습니다.
 
 ## 13. CI 실행과 무거운 검사 재사용
 
-`Validate Static App`과 `Validate public static optimization`은 main 대상 PR에서 실행합니다. 같은 변경의 브랜치 push에서는 중복 실행하지 않습니다. PR을 열기 전에는 Actions의 수동 실행을 사용할 수 있습니다. 새 커밋이 올라오면 같은 PR의 이전 검증을 취소하며, 정기 동기화와 수동 실행에는 이 취소 정책을 적용하지 않습니다.
+`Validate Static App`은 main 대상 PR에서 실행하며 원본 앱과 최적화된 배포 산출물 검사를 함께 관리합니다. 같은 변경의 브랜치 push에서는 중복 실행하지 않습니다. PR을 열기 전에는 Actions의 수동 실행을 사용할 수 있습니다. 새 커밋이 올라오면 같은 PR의 이전 검증을 취소하며, 정기 동기화와 수동 실행에는 이 취소 정책을 적용하지 않습니다.
 
 검사 역할은 다음과 같습니다.
 
-| 경로 | 항상 수행하는 검증 | 성공 기록을 재사용할 수 있는 검사 |
+| 변경·실행 경로 | 수행하는 검증 | 성공 기록을 재사용할 수 있는 검사 |
 | --- | --- | --- |
-| PR 앱 검증 | macOS Bash 회귀, Ubuntu Python·점수·검색·원본 브라우저·데이터 검증 | 추천 인벤토리 전수 검사, 보관된 v0.9 연구 재현 |
-| PR 정적 사이트 검증 | 번들 생성, 배포 결과물의 브라우저·캐시·보드 검사 | 없음 |
-| Pages | 현재 배포 커밋의 앱·데이터·빌드 검증 | 추천 인벤토리 전수 검사 |
-| Master 동기화 | macos-15 수집, 데이터 기준선·안전 게이트, 생성한 정확한 커밋의 Ubuntu 검증 후 병합 | 재사용 워크플로의 동일 입력 검사 |
+| 명시된 안내 문서만 변경 | 문서·버전 정합성, CI 분류·필수 결과 집계 검사 | 없음 |
+| 이미지·provenance만 변경 | 문서·버전 정합성, 실제 WebP·빌드 산출물·브라우저·캐시·보드 검사 | 없음 |
+| 앱 코드·데이터·기타 변경 | Ubuntu 전체 Python·계산·검색·원본 브라우저, 배포 산출물 검사 | 추천 인벤토리 전수 검사 |
+| workflow·실행 정책 변경 | 앱 검증에 macOS 시스템 Bash 회귀 추가 | 추천 인벤토리 전수 검사 |
+| 연구 자료·검사 스크립트·CI 정책 변경 | 격리된 v0.9 연구 재현 추가 | 없음 |
+| Pages | 파생 데이터·WebP·빌드 산출물 검증, 배포 후 운영 smoke | 없음 |
+| Master 동기화 | macos-15 수집·기준선·안전 게이트, 생성 커밋의 Ubuntu 앱·배포 산출물 검증 후 병합 | 추천 인벤토리 전수 검사 |
+
+분류는 커밋의 Git diff와 파일 모드를 사용합니다. 알 수 없는 경로는 전체 검사로 처리하고, 안내 문서 이름을 가진 심볼릭 링크·실행 파일·submodule도 가벼운 경로로 제외하지 않습니다. 필수 `validate` job은 분류 결과와 각 job의 실제 결과를 대조합니다. 필요한 job이 실패·취소·skip되거나 분류에 실패하면 통과할 수 없습니다. workflow 자체에 경로 필터를 걸지 않으므로 문서 PR에서도 필수 결과가 보고됩니다.
+
+`scripts/build-pages-artifact.py`가 CI와 Pages의 복사·revision 주입·검색 인덱스·압축 데이터·CSS·다국어 HTML 생성을 담당합니다. 소스 디렉터리나 이전 산출물을 덮어쓰지 않으며, 배포 시점의 Master와 Runtime Exact 정합성도 확인합니다. 특정 UI 문구나 CSS 폭 문자열 대신 계산 회귀와 실제 브라우저 동작을 검사합니다.
 
 `scripts/recommendation-validation.py`는 Git 파일 내용·경로·모드와 실제 Node 버전·OS·아키텍처를 입력 지문으로 사용합니다. 같은 저장소의 허용된 워크플로가 성공한 경우에만 해당 실행·시도의 결과를 재사용합니다. 이미지, CSS, HTML, 명시된 안내 문서의 일반 파일 변경은 추천 계산 입력에서 제외하지만, 점수 코드·데이터·검사·워크플로·알 수 없는 새 파일은 지문을 바꿉니다. 심볼릭 링크와 실행 파일은 제외하지 않습니다.
 
-과거 연구는 해시를 확인한 보관 엔진과 원본 데이터에서 실행하므로 현재 `js/`·`data/generated/` 변경으로 다시 실행하지 않아도 됩니다. 연구 자료·검사 스크립트·CI 정책이 바뀌면 전체 연구 재현을 다시 수행합니다. 현재 서비스의 점수 회귀 검사와 보관 자료 격리 검사는 계속 실행합니다.
+과거 연구는 해시를 확인한 보관 엔진과 원본 데이터에서 실행하므로 현재 앱 JS·Master 데이터만 바뀌면 다시 실행하지 않습니다. 연구 자료·검사 스크립트·CI 정책이 바뀌면 별도 job에서 전체 연구 재현을 수행합니다. 현재 서비스의 점수 회귀와 보관 자료 격리 검사는 앱 검증에서 계속 실행합니다.
 
 성공 기록이 없거나 만료됐거나 API·권한·입력 확인에 문제가 있으면 실제 검사를 실행합니다. 실패·취소·진행 중인 실행의 기록은 사용할 수 없습니다. 기록의 보관 기간은 90일이며, 검사를 생략한 실행에서는 기록을 갱신하지 않습니다. 실제 검사 실패는 필수 검증 실패로 전파됩니다.
 
 강제로 전체 검증하려면 Actions에서 `Validate Static App`을 수동 실행하며 `full_validation`을 선택합니다. 로컬에서 실제 검사만 실행하려면 다음 명령을 사용합니다. 증명 조회 스크립트 자체는 검사를 실행하지 않습니다.
 
 ```bash
-node scripts/run-core-regressions.mjs
+node scripts/run-app-validation.mjs
 node scripts/test-recommendation-inventories.mjs
 node scripts/run-scoring-validation.mjs
 ```
 
 공통 운영 회귀 20개는 `run-core-regressions.mjs`에서 각자 별도 프로세스로 실행하며 첫 실패에서 중단합니다. `run-scoring-validation.mjs --historical-only`는 과거 연구만 실행하는 CI용 옵션입니다. 일반 로컬 재현은 옵션 없이 실행해 현재 서비스 회귀도 함께 확인합니다.
+
+워크플로는 CI, Pages+운영 smoke, 버전 릴리스, Master 수집, portrait 수집, 수동 네트워크 진단의 6개입니다. 네트워크 진단은 환경별 403을 결과로 남기고, 수집·무결성을 검증할 수 있는 환경이 하나도 없을 때 실패합니다. 수집 workflow의 실제 다운로드 오류와 자동 병합 안전 게이트는 이 진단 정책과 별개로 유지합니다.

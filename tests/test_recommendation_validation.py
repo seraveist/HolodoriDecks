@@ -252,38 +252,22 @@ def workflow(name):
 
 def test_workflows_reuse_only_expensive_suites_and_publish_after_success():
     pages = workflow("pages.yml")
-    assert pages["permissions"]["actions"] == "read"
-    for filename, job in [("pages.yml", "deploy"), ("validate.yml", "validate")]:
-        steps = workflow(filename)["jobs"][job]["steps"]
-        capture_index = next(i for i, step in enumerate(steps) if step.get("id") == "recommendation_validation")
-        test_index = next(i for i, step in enumerate(steps) if "node scripts/test-recommendation-inventories.mjs" in step.get("run", ""))
-        build_index = next(i for i, step in enumerate(steps) if "node scripts/build-i18n.mjs" in step.get("run", ""))
-        assert capture_index < test_index < build_index
-        uploads = [i for i, step in enumerate(steps) if step.get("uses", "").startswith("actions/upload-artifact@")]
-        assert uploads == ([len(steps) - 1] if filename == "pages.yml" else [len(steps) - 2, len(steps) - 1])
-        for index in uploads:
-            assert steps[index]["continue-on-error"] == "true"  # Optional proof cannot fail a deployment.
-            assert "always()" not in steps[index]["if"]  # Failed tests must never publish proof.
-            assert "reuse != 'true'" in steps[index]["if"]  # Never renew proof without running the suite.
-        assert steps[test_index]["if"] == "steps.recommendation_validation.outputs.reuse != 'true'"
-        assert "--lookup" in steps[capture_index]["run"]
-        if filename == "pages.yml":
-            # All existing quick/asset/data/browser checks still run on every deploy.
-            for step in steps:
-                if step.get("if"):
-                    assert step is steps[test_index] or step is steps[-1]
-            assert any("python -m pytest -q" in step.get("run", "") for step in steps)
-            assert any("node scripts/test-browser-smoke.mjs" in step.get("run", "") for step in steps)
-        else:
-            assert workflow(filename)["permissions"]["actions"] == "read"
-            quick_tests = next(i for i, step in enumerate(steps) if "python -m pytest -q" in step.get("run", ""))
-            assert capture_index < quick_tests < test_index
-            history = next(step for step in steps if step.get("name") == "Reproduce portable scoring handoff")
-            assert history["if"] == "steps.historical_validation.outputs.reuse != 'true'"
-            assert history["run"].endswith("--historical-only")
-            for step in steps:
-                if "run-core-regressions.mjs" in step.get("run", "") or "test-historical-scoring-workspace.mjs" in step.get("run", ""):
-                    assert "if" not in step
+    assert "actions" not in pages["permissions"]  # Deployment no longer looks up test proofs.
+    assert all('recommendation-validation.py' not in step.get('run', '') for step in pages['jobs']['deploy']['steps'])
+    validate = workflow('validate.yml')
+    assert validate['permissions']['actions'] == 'read'
+    steps = validate['jobs']['app']['steps']
+    capture_index = next(i for i, step in enumerate(steps) if step.get('id') == 'recommendation_validation')
+    test_index = next(i for i, step in enumerate(steps) if 'node scripts/test-recommendation-inventories.mjs' in step.get('run', ''))
+    quick_tests = next(i for i, step in enumerate(steps) if 'python -m pytest -q' in step.get('run', ''))
+    assert capture_index < quick_tests < test_index
+    assert steps[test_index]['if'] == "steps.recommendation_validation.outputs.reuse != 'true'"
+    upload = steps[-1]
+    assert upload['uses'].startswith('actions/upload-artifact@')
+    assert upload['continue-on-error'] == 'true'
+    assert "always()" not in upload['if'] and "reuse != 'true'" in upload['if']
+    assert validate['jobs']['historical']['if'] == "needs.changes.outputs.historical == 'true'"
+    assert validate['jobs']['historical']['steps'][-1]['run'].endswith('--historical-only')
     assert workflow("sync-master-data.yml")["jobs"]["validate_sync"]["permissions"]["actions"] == "read"
 
 
