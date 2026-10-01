@@ -182,6 +182,18 @@ def test_portrait_schedule_runs_twice_daily_in_korean_time():
     assert workflow("sync-card-assets.yml")["on"]["schedule"] == [{"cron": "0 2,14 * * *"}]
 
 
+def test_portrait_collection_uses_the_verified_octo_hosted_runner():
+    # Ubuntu can pass the public snapshot sync while its Octo fallback returns
+    # 403. Keep both game-asset collectors on the verified hosted environment.
+    master_jobs = workflow("sync-master-data.yml")["jobs"]
+    portrait_job = workflow("sync-card-assets.yml")["jobs"]["sync"]
+    assert portrait_job["runs-on"] == master_jobs["sync"]["runs-on"] == "macos-15"
+    assert master_jobs["merge"]["runs-on"] == "ubuntu-latest"
+    steps = {step["id"]: step for step in portrait_job["steps"] if "id" in step}
+    assert "--catalog-cache /tmp/holodori-octo-list.json" in steps["sync_assets"]["run"]
+    assert "--catalog-cache /tmp/holodori-octo-list.json" in steps["sync_characters"]["run"]
+
+
 @pytest.mark.parametrize("name,job", [("sync-master-data.yml", "merge"), ("sync-card-assets.yml", "sync")])
 def test_generated_commit_status_requires_successful_validation_and_exact_head(name, job):
     definition = workflow(name)
