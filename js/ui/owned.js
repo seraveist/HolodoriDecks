@@ -1,4 +1,4 @@
-import { compareByPower } from "../recommend.js?v=1.3.1";
+import { compareByPower } from "../card-sort.js?v=1.3.1";
 import { getLocale, localeCompare, t } from "../i18n.js?v=1.3.1";
 import {
   attributeStyle,

@@ -2,7 +2,6 @@ import { loadAppData, loadManifest } from "./data.js?v=1.3.1";
 import { createChartResourcesLoader, loadSelectedChart } from "./chart-data.js?v=1.3.1";
 import { createStore } from "./state.js?v=1.3.1";
 import { calculationSettings } from "./calculation-mode.js?v=1.3.1";
-import { prepareScoreCards } from "./card-prepare.js?v=1.3.1";
 import { runOptimizationAsync } from "./optimizer-client.js?v=1.3.1";
 import { createOptimizationSession } from "./optimization-session.js?v=1.3.1";
 import {
@@ -91,22 +90,14 @@ function syncThemeToggle(button, theme = getThemePreference()) {
   button.setAttribute("title", label);
 }
 
-function syncExtraStaticCopy() {
-  const themeToggle = document.querySelector("#theme-toggle");
-  if (themeToggle) syncThemeToggle(themeToggle);
-}
-
 async function start() {
   if (document.documentElement.dataset.appVersion !== APP_VERSION) {
     throw new Error(t("app.versionMismatch"));
   }
 
   initTheme();
-  const manifest = await loadManifest();
-  const [rawData] = await Promise.all([loadAppData(manifest), initI18n(manifest)]);
-  syncExtraStaticCopy();
-
   const themeToggle = requiredElement("#theme-toggle");
+  syncThemeToggle(themeToggle);
   themeToggle.addEventListener("click", () => {
     syncThemeToggle(themeToggle, toggleTheme());
   });
@@ -118,8 +109,11 @@ async function start() {
     window.location.assign(`/${locale}/${window.location.hash}`);
   });
 
+  const manifest = await loadManifest();
+  const [rawData] = await Promise.all([loadAppData(manifest), initI18n(manifest)]);
+  languageSelect.value = getLocale();
+  syncThemeToggle(themeToggle);
   const memberSlots = requiredElement("#member-slots");
-  memberSlots.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><span aria-hidden="true">◌</span><p>${t("app.loadingCards")}</p></div>`;
 
   const data = localizeAppData(rawData);
   const ensureChartResources = createChartResourcesLoader(manifest);
@@ -222,10 +216,24 @@ async function start() {
       return false;
     }
     if (!optimizationSession.isCurrent(request)) return false;
-    const preparedCards = prepareScoreCards(data.cards, data.charactersById, state.ownedCardSettings, {
-      levelMode: state.levelMode,
-      masterRefs: data.masterRefs,
-    });
+    let preparedCards;
+    try {
+      const { prepareScoreCards } = await import("./card-prepare.js?v=1.3.1");
+      if (!optimizationSession.isCurrent(request)) return false;
+      preparedCards = prepareScoreCards(data.cards, data.charactersById, state.ownedCardSettings, {
+        levelMode: state.levelMode,
+        masterRefs: data.masterRefs,
+      });
+    } catch (error) {
+      if (optimizationSession.finish(request)) {
+        lastRecommendation = null;
+        optimizeButton.textContent = t("calculate.button");
+        render(store.getState());
+        setRecommendationStatus(localizeOptimizerReason("계산을 완료하지 못했습니다. 다시 시도해 주세요."));
+      }
+      console.warn("[card-prepare] Could not prepare scoring cards", error);
+      return false;
+    }
     const song = settings.musicId ? data.musicById.get(settings.musicId) : null;
     let chartResources = null;
     if (song) {
@@ -401,6 +409,8 @@ async function start() {
   store.subscribe(render);
   render(store.getState());
   showView(viewFromHash(), { updateHash: false });
+  document.querySelectorAll("[data-view-tab]").forEach((tab) => { tab.disabled = false; });
+  document.querySelector(".view-tabs").removeAttribute("aria-busy");
 }
 
 start().catch((error) => {

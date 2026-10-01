@@ -48,12 +48,25 @@ try{
   const target=await(await fetch(`http://${debug.hostname}:${debug.port}/json/new?about:blank`,{method:'PUT'})).json();
   socket=new WebSocket(target.webSocketDebuggerUrl);
   await new Promise((resolve,reject)=>{socket.addEventListener('open',resolve,{once:true});socket.addEventListener('error',reject,{once:true});});
-  let sequence=0,forcedPortraitRequests=0;const pending=new Map(),errors=[],requests=[],failed=[];
+  let sequence=0,forcedPortraitRequests=0,holdManifest=false,failManifest=false,holdScoring=false;
+  const pending=new Map(),errors=[],requests=[],failed=[],heldManifests=[],heldScores=[];
   socket.addEventListener('message',event=>{
     const message=JSON.parse(event.data);
     if(message.method==='Runtime.exceptionThrown') errors.push(message.params.exceptionDetails.exception?.description || message.params.exceptionDetails.text);
     if(message.method==='Network.requestWillBeSent')requests.push(message.params.request.url);
     if(message.method==='Fetch.requestPaused'){
+      if(new URL(message.params.request.url).pathname==='/js/score.js'){
+        if(holdScoring)heldScores.push(message.params);
+        else command('Fetch.continueRequest',{requestId:message.params.requestId}).catch(error=>errors.push(error.message));
+        return;
+      }
+      if(new URL(message.params.request.url).pathname==='/data/generated/manifest.json'){
+        if(holdManifest) heldManifests.push(message.params.requestId);
+        else command(failManifest?'Fetch.fulfillRequest':'Fetch.continueRequest',{
+          requestId:message.params.requestId,...(failManifest?{responseCode:503,body:''}:{})
+        }).catch(error=>errors.push(error.message));
+        return;
+      }
       forcedPortraitRequests++;
       command('Fetch.fulfillRequest',{requestId:message.params.requestId,responseCode:404,body:''})
         .catch(error=>errors.push(error.message));
@@ -64,7 +77,8 @@ try{
       // Missing known portraits must fall back; existing assets and all 5xx remain fatal.
       const optionalMissing=response.status===404 &&
         (['/favicon.ico','/data/generated/music-search.json'].includes(url.pathname) || pendingPortraits.has(url.pathname));
-      if(url.origin===origin && response.status>=400 && !optionalMissing) failed.push(response.url);
+      const intentionalFailure=failManifest && response.status===503 && url.pathname==='/data/generated/manifest.json';
+      if(url.origin===origin && response.status>=400 && !optionalMissing && !intentionalFailure) failed.push(response.url);
     }
     if(message.method==='Page.javascriptDialogOpening') command('Page.handleJavaScriptDialog',{accept:true}).catch(()=>{});
     if(!message.id)return;const promise=pending.get(message.id);if(!promise)return;
@@ -78,13 +92,84 @@ try{
     if(result.exceptionDetails)throw new Error(result.exceptionDetails.exception?.description || result.exceptionDetails.text);return result.result?.value;}
   const click=selector=>evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`);
   const boardState=()=>evaluate(`JSON.parse(localStorage.getItem(${JSON.stringify(boardKey)}))`);
-  const loaded=()=>until(()=>evaluate(`Boolean(document.querySelector('#board-tab') && document.querySelector('#music-select')?.options.length>2)`),'app failed to load').catch(async error=>{console.error({errors,failed,body:await evaluate('document.body?.innerText')});throw error;});
+  const loaded=()=>until(()=>evaluate(`Boolean(document.querySelector('#board-tab') && !document.querySelector('.view-tabs')?.hasAttribute('aria-busy') && document.querySelector('#music-select')?.options.length>2)`),'app failed to load').catch(async error=>{console.error({errors,failed,body:await evaluate('document.body?.innerText')});throw error;});
   const navigateBoard=async id=>{await evaluate(`location.hash=${JSON.stringify('board/'+id)}`);await until(()=>evaluate(`document.querySelector('#board-detail')?.dataset.characterId===${JSON.stringify(id)} && !document.querySelector('#board-detail')?.hidden && document.querySelectorAll('#board-canvas [data-board-node]').length>0`),'board detail unavailable');await sleep(100);};
   await command('Page.enable');await command('Runtime.enable');await command('Network.enable');
-  await command('Fetch.enable',{patterns:[{urlPattern:origin+forcedMissingPortrait+'*',requestStage:'Request'}]});
+  await command('Fetch.enable',{patterns:[
+    {urlPattern:origin+forcedMissingPortrait+'*',requestStage:'Request'},
+    {urlPattern:origin+'/data/generated/manifest.json*',requestStage:'Request'},
+    {urlPattern:origin+'/js/score.js*',requestStage:'Request'},
+  ]});
   await command('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
-  await command('Page.navigate',{url:origin+'/ko/'});await loaded();
+  // Hold the startup request so the test observes the first screen, not just
+  // the completed app. Both reload types and every static language route must
+  // expose the same three tabs without inserting or resizing navigation later.
+  const tabGeometry=()=>evaluate(`Array.from(document.querySelectorAll('[data-view-tab]'),tab=>{
+    const r=tab.getBoundingClientRect();return {id:tab.id,x:r.x,width:r.width,height:r.height};
+  })`);
+  for(const [pathname,label,width,reload] of [
+    ['/','멤버별 보드',1440,null],['/ko/','멤버별 보드',390,null],
+    ['/en/','Member Boards',320,null],['/ja/','ホロメンボード',390,null],
+    ['/ko/','멤버별 보드',1440,null],['/ko/','멤버별 보드',1440,false],
+    ['/ko/','멤버별 보드',1440,true],
+  ]){
+    await command('Emulation.setDeviceMetricsOverride',{width,height:1000,deviceScaleFactor:1,mobile:width<600});
+    holdManifest=true;
+    if(reload===null)await command('Page.navigate',{url:origin+pathname});
+    else await command('Page.reload',{ignoreCache:reload});
+    await until(()=>heldManifests.length>0,'startup manifest was not held');
+    assert.deepEqual(await evaluate(`Array.from(document.querySelectorAll('[data-view-tab]'),t=>t.id)`),['deck-tab','owned-tab','board-tab']);
+    assert.equal(await evaluate(`document.querySelector('#board-tab').textContent.trim()`),label);
+    assert.equal(await evaluate(`document.querySelectorAll('[data-view-tab]:disabled').length`),3);
+    assert.equal(await evaluate(`document.querySelector('#auto-compose').disabled`),true);
+    assert.equal(await evaluate(`document.querySelector('#board-view').hidden`),true);
+    assert.equal(await evaluate(`getComputedStyle(document.querySelector('.view-tabs')).gridTemplateColumns.split(' ').length`),3);
+    assert.equal(await evaluate(`document.documentElement.scrollWidth>document.documentElement.clientWidth+1`),false,'startup overflow');
+    const before=await tabGeometry();
+    if(pathname==='/' && reload===null){
+      await fs.mkdir(artifacts,{recursive:true});
+      const screenshot=await command('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+      await fs.writeFile(path.join(artifacts,'initial-navigation.png'),Buffer.from(screenshot.data,'base64'));
+    }
+    const theme=await evaluate(`document.documentElement.dataset.theme`);
+    await click('#theme-toggle');
+    assert.notEqual(await evaluate(`document.documentElement.dataset.theme`),theme,'theme must work while data is loading');
+    await click('#theme-toggle');
+    holdManifest=false;
+    await command('Fetch.continueRequest',{requestId:heldManifests.shift()});
+    await loaded();
+    assert.equal(await evaluate(`document.querySelectorAll('[data-view-tab]:disabled').length`),0);
+    const after=await tabGeometry();
+    for(let i=0;i<3;i++)for(const key of ['x','width','height'])assert.ok(Math.abs(before[i][key]-after[i][key])<1,`tab ${i} ${key} shifted during startup`);
+  }
+  assert.ok(!requests.some(url=>/\/(?:optimizer-core|recommend|order|card-prepare|skill-support|score|chart-score|board-score)\.js/.test(url)),'calculation modules loaded before calculation or card details');
   assert.ok(!requests.some(url=>/\/(?:boards|memory-bonuses)\b|i18n-boards/.test(url)),'boards loaded eagerly');
+  failManifest=true;
+  await command('Page.reload',{ignoreCache:true});
+  await until(()=>evaluate(`!document.querySelector('#app-error').hidden`),'failed startup did not show an error');
+  assert.equal(await evaluate(`document.querySelectorAll('[data-view-tab]').length`),3,'failed data request removed navigation');
+  assert.equal(await evaluate(`document.querySelectorAll('[data-view-tab]:disabled').length`),3);
+  failManifest=false;
+  await command('Page.reload',{ignoreCache:true});await loaded();
+  // Opening details should be responsive while its scoring module loads, and
+  // closing the dialog must not let the late result reopen it.
+  await click('#owned-tab');
+  holdScoring=true;
+  await click(`[data-card-detail="${card.id}"]`);
+  await until(()=>heldScores.length>0,'card detail scoring was not deferred');
+  assert.equal(await evaluate(`document.querySelector('#card-detail-modal').getAttribute('aria-hidden')`),'false');
+  assert.equal(await evaluate(`document.querySelector('#card-detail-content').getAttribute('aria-busy')`),'true');
+  await click('#card-detail-modal button[data-close-card-detail]');
+  const held=heldScores.shift();holdScoring=false;
+  await command('Fetch.continueRequest',{requestId:held.requestId});
+  await evaluate(`import(${JSON.stringify(held.request.url)}).then(()=>true)`);
+  assert.equal(await evaluate(`document.querySelector('#card-detail-modal').getAttribute('aria-hidden')`),'true','late card details reopened a closed dialog');
+  await click(`[data-card-detail="${cards[1].id}"]`);
+  await until(()=>evaluate(`Boolean(document.querySelector('.card-detail-stat'))`),'lazy card detail parameters missing');
+  assert.equal(await evaluate(`document.querySelector('.card-detail-identity h3').textContent`),
+    await evaluate(`document.querySelector('[data-owned-card-id="${cards[1].id}"] .card-copy-character').textContent`));
+  await click('#card-detail-modal button[data-close-card-detail]');
+  await click('#deck-tab');
   await evaluate(`localStorage.setItem(${JSON.stringify(deckKey)},${JSON.stringify(JSON.stringify(profile))})`);
   await command('Page.reload',{ignoreCache:true});await loaded();
   await click('#auto-compose');await until(()=>evaluate(`document.querySelectorAll('.recommendation-result-card').length===5`),'unit result unavailable',30000);
@@ -192,7 +277,7 @@ try{
   assert.equal((await evaluate(`JSON.parse(localStorage.getItem(${JSON.stringify(deckKey)}))`)).ownedCardIds.length,cards.length);
   assert.ok(forcedPortraitRequests>0,'pending portrait scenario was not exercised');
   assert.deepEqual(errors,[],'uncaught browser errors');assert.deepEqual(failed,[],'failed local asset requests');
-  console.log('board browser: real assets/storage; missing portrait fallback, lazy data, models, nodes, memory, Connect move/cancel, awakening, persistence, migration, KO/EN/JA, mobile dark and score recalculation OK');
+  console.log('board browser: stable initial navigation, delayed/failed startup, normal/hard reload, lazy calculation modules; real assets/storage, missing portrait fallback, boards, memory, Connect, persistence, KO/EN/JA, mobile dark and score recalculation OK');
 } finally {
   try{socket?.close();}catch{}
   try{await chrome?.close();}finally{server.kill('SIGTERM');}

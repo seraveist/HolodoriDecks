@@ -1,5 +1,3 @@
-import { runOptimization } from "./optimizer-core.js?v=1.3.1";
-
 let requestId = 0;
 
 export async function runOptimizationAsync(payload, {
@@ -8,7 +6,11 @@ export async function runOptimizationAsync(payload, {
   signal = null,
 } = {}) {
   if (signal?.aborted) return { ok: false, cancelled: true };
-  if (!preferWorker) return runOptimization(payload);
+  if (!preferWorker) {
+    const { runOptimization } = await import("./optimizer-core.js?v=1.3.1");
+    if (signal?.aborted) return { ok: false, cancelled: true };
+    return runOptimization(payload);
+  }
   const failed = () => ({ ok: false, reason: "계산을 완료하지 못했습니다. 다시 시도해 주세요." });
   if (typeof Worker === "undefined") return failed();
   let worker;

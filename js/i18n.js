@@ -5,6 +5,7 @@ const DEFAULT_LOCALE = "ko";
 const SUPPORTED = new Set(["ko", "en", "ja"]);
 const HTML_LANG = Object.freeze({ ko: "ko", en: "en", ja: "ja" });
 const NUMBER_LOCALE = Object.freeze({ ko: "ko-KR", en: "en-US", ja: "ja-JP" });
+const numberFormatters = new Map();
 const SUFFIX = Object.freeze({ ko: "Kor", en: "Eng", ja: "Jpn" });
 const LANGUAGE_FILES = Object.freeze([
   "LangCard",
@@ -32,6 +33,10 @@ const UI = Object.freeze({
     "nav.main": "주요 화면",
     "tab.deck": "편성하기",
     "tab.owned": "내 보유 카드",
+    "tab.board": "멤버별 보드",
+    "card.loadingDetails": "카드 상세 정보를 불러오는 중입니다.",
+    "card.detailsFailed": "카드 상세 정보를 불러오지 못했습니다.",
+    "card.retryDetails": "페이지 새로고침",
     "preset.title": "프리셋",
     "calculation.goal": "계산 목표",
     "calculation.unit": "유닛",
@@ -238,6 +243,10 @@ const UI = Object.freeze({
     "nav.main": "Main views",
     "tab.deck": "Build Deck",
     "tab.owned": "My Cards",
+    "tab.board": "Member Boards",
+    "card.loadingDetails": "Loading card details.",
+    "card.detailsFailed": "Could not load card details.",
+    "card.retryDetails": "Reload page",
     "preset.title": "Preset",
     "calculation.goal": "Calculation Goal",
     "calculation.unit": "Unit",
@@ -444,6 +453,10 @@ const UI = Object.freeze({
     "nav.main": "メイン画面",
     "tab.deck": "編成する",
     "tab.owned": "所持カード",
+    "tab.board": "ホロメンボード",
+    "card.loadingDetails": "カード詳細を読み込み中です。",
+    "card.detailsFailed": "カード詳細を読み込めませんでした。",
+    "card.retryDetails": "ページを再読み込み",
     "preset.title": "プリセット",
     "calculation.goal": "計算目標",
     "calculation.unit": "ユニット",
@@ -641,7 +654,7 @@ const UI = Object.freeze({
   },
 });
 
-let currentLocale = DEFAULT_LOCALE;
+let currentLocale = localeFromPath(globalThis.location?.pathname) ?? DEFAULT_LOCALE;
 let languagePack = Object.freeze({});
 
 function normalizeLocale(value) {
@@ -691,7 +704,13 @@ export function langText(id, fallback = "") {
 }
 
 export function formatNumber(value, options) {
-  return new Intl.NumberFormat(NUMBER_LOCALE[currentLocale] ?? "ko-KR", options).format(Number(value) || 0);
+  if (options !== undefined) return new Intl.NumberFormat(NUMBER_LOCALE[currentLocale] ?? "ko-KR", options).format(Number(value) || 0);
+  let formatter = numberFormatters.get(currentLocale);
+  if (!formatter) {
+    formatter = new Intl.NumberFormat(NUMBER_LOCALE[currentLocale] ?? "ko-KR");
+    numberFormatters.set(currentLocale, formatter);
+  }
+  return formatter.format(Number(value) || 0);
 }
 
 export function localeCompare(left, right) {

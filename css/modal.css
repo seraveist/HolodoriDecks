@@ -174,19 +174,6 @@ body.card-detail-open {
   padding: 9px 10px 10px;
 }
 
-.picker-card .landscape-card-title strong {
-  font-size: var(--type-label);
-}
-
-.picker-card .landscape-card-title small,
-.picker-card .landscape-card-copy > small {
-  font-size: var(--type-caption);
-}
-
-.picker-card .landscape-card-copy > span:not(.landscape-card-title) {
-  font-size: var(--type-caption);
-}
-
 .picker-card .landscape-card-art .attribute-icon {
   width: 28px;
   height: 28px;

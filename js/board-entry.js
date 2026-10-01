@@ -1,31 +1,10 @@
 import { getLocale } from "./i18n.js?v=1.3.1";
 import { BOARD_STORAGE_KEY } from "./board-state.js?v=1.3.1";
+import { requiredElement } from "./ui/dom.js?v=1.3.1";
 
 /** Tiny shell; editor code, layout and styles are loaded only on the Board tab. */
 export function createBoardEntry({ data, store, onGoOwned, onGoDeck, onChange = () => {} }) {
-  const labels = { ko: "멤버별 보드", en: "Member Boards", ja: "ホロメンボード" };
-  const tab = document.createElement("button");
-  tab.id = "board-tab";
-  tab.className = "view-tab";
-  tab.type = "button";
-  tab.dataset.viewTab = "board";
-  tab.setAttribute("role", "tab");
-  tab.setAttribute("aria-controls", "board-view");
-  tab.setAttribute("aria-selected", "false");
-  tab.tabIndex = -1;
-  const label = document.createElement("span");
-  label.textContent = labels[getLocale()] ?? labels.ko;
-  tab.append(label);
-  const tabs = document.querySelector(".view-tabs");
-  tabs.classList.add("has-board-tab");
-  tabs.append(tab);
-  const container = document.createElement("section");
-  container.id = "board-view";
-  container.className = "app-view panel board-panel";
-  container.setAttribute("role", "tabpanel");
-  container.setAttribute("aria-labelledby", "board-tab");
-  container.hidden = true;
-  document.querySelector(".app-shell").append(container);
+  const container = requiredElement("#board-view");
   let editor = null;
   let pending = null;
   let visible = false;

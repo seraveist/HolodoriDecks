@@ -1,5 +1,6 @@
 :root {
   color-scheme: light;
+  font-variant-numeric: tabular-nums;
   --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   --type-caption: 10px;
   --type-label: 11px;
@@ -13,7 +14,6 @@
   --type-heading-lg: 21px;
   --type-score-md: 21px;
   --type-score-lg: 28px;
-  --type-score-xl: 30px;
   --weight-medium: 500;
   --weight-semibold: 600;
   --weight-bold: 700;

@@ -51,3 +51,49 @@ def test_inline_custom_property_comments_do_not_join_tokens(tmp_path):
     rules = tinycss2.parse_stylesheet(result)
     values = tinycss2.parse_declaration_list(rules[0].content)
     assert [token.value for token in values[0].value if token.type == 'ident'] == ['red', 'blue']
+
+
+def test_lazy_board_styles_are_compacted_hashed_and_repeatable(tmp_path, capsys):
+    import hashlib
+    import json
+
+    (tmp_path / 'css').mkdir()
+    (tmp_path / 'js/ui').mkdir(parents=True)
+    (tmp_path / 'index.html').write_text('<link rel="stylesheet" href="./styles.css">')
+    (tmp_path / 'styles.css').write_text('.app { color: red; }')
+    board_source = '/* lazy */ .board { background: url(../assets/grid.svg); color: blue; }'
+    (tmp_path / 'css/boards.css').write_text(board_source)
+    module = tmp_path / 'js/ui/boards.js'
+    module.write_text('const u = new URL("../../css/boards.css", import.meta.url); u.searchParams.set("v", "pinned");')
+    css.build_css(tmp_path)
+    report = json.loads(capsys.readouterr().out)
+    board = report['lazy']['boards']
+    content = (tmp_path / board['file']).read_bytes()
+    assert hashlib.sha256(content).hexdigest() in board['file']
+    assert b'../assets/grid.svg' in content
+    assert b'/* lazy */' not in content
+    assert f'../../{board["file"]}' in module.read_text()
+    assert 'u.searchParams.set("v", "pinned")' in module.read_text()
+    assert board['file'] not in (tmp_path / 'index.html').read_text()
+    assert (tmp_path / 'css/boards.css').read_text() == board_source
+    css.build_css(tmp_path)
+    assert json.loads(capsys.readouterr().out) == report
+
+
+def test_block_compaction_preserves_value_tokens_selectors_and_conditional_order(tmp_path):
+    path = tmp_path / 'style.css'
+    path.write_text('''
+      .parent .child { content: "A  B"; width: calc(100% - 2px); color: red !important; --x: red/**/blue; }
+      @media (max-width: 600px) { .parent .child { color: blue; } }
+      @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+    ''')
+    rules = css.collect_rules(path, tmp_path)
+    css.compact_blocks(rules)
+    result = tinycss2.serialize(rules)
+    assert '.parent .child{content:"A  B";width:calc(100% - 2px);color:red!important;' in result
+    assert result.index('color:red') < result.index('@media') < result.index('color:blue')
+    assert '@keyframes fade' in result
+    assert 'from{opacity:0;}to{opacity:1;}' in result
+    values = tinycss2.parse_declaration_list(tinycss2.parse_stylesheet(result)[0].content)
+    custom = next(value for value in values if value.type == 'declaration' and value.name == '--x')
+    assert [token.value for token in custom.value if token.type == 'ident'] == ['red', 'blue']

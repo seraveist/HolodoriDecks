@@ -209,6 +209,16 @@ try {
     }
     return result.result?.value;
   }
+  async function assertCardTypography() {
+    assert.deepEqual(await evaluate(`(() => {
+      const expected = { 'card-copy-character': ['13px','700'], 'card-copy-name': ['11px','500'],
+        'card-copy-meta': ['10px','600'], 'card-copy-rarity': ['10px','700'] };
+      return Object.entries(expected).flatMap(([name, pair]) =>
+        [...document.querySelectorAll('.'+name)].filter(el => {
+          const css=getComputedStyle(el);return css.fontSize!==pair[0] || css.fontWeight!==pair[1];
+        }).map(el=>({class:el.className,size:getComputedStyle(el).fontSize,weight:getComputedStyle(el).fontWeight})));
+    })()`), [], 'Card typography must retain the shared scale without !important overrides');
+  }
 
   await command("Page.enable");
   await command("Runtime.enable");
@@ -259,6 +269,7 @@ try {
   assert.equal(genericDisplay.count, 5);
   assert.equal(genericDisplay.projectionPanels, 0, 'Generic results must not show reference-chart panels');
   assert.equal(genericDisplay.estimateNotes, 0, 'Do not prepend estimate disclaimers');
+  await assertCardTypography();
 
   assert.equal(await evaluate(`document.querySelector('#owned-card-list').children.length`), 0,
     "Unit calculation must not render the hidden owned list");
@@ -268,6 +279,7 @@ try {
   await waitFor(() => evaluate(`document.querySelectorAll('#owned-card-list .owned-card').length === ${cards.filter(c => [4, 5].includes(Number(c.rarity))).length}`),
     10_000, "owned rows did not render on tab opening");
   const firstCardId = selectable[0].id;
+  await assertCardTypography();
   await evaluate(`(() => {
     const control = document.querySelector('[data-owned-level="${firstCardId}"]');
     window.__ownedControls = { control, row: control.closest('.owned-card'),
@@ -298,6 +310,8 @@ try {
     && window.__ownedControls.potential === document.querySelector('[data-owned-potential="${firstCardId}"]')`), true);
   await evaluate(`document.querySelector('[data-card-detail="${firstCardId}"]').click()`);
   assert.equal(await evaluate(`document.querySelector('#card-detail-modal').getAttribute('aria-hidden')`), 'false');
+  await waitFor(() => evaluate(`document.querySelector('.card-detail-stat') && !document.querySelector('#card-detail-content').hasAttribute('aria-busy')`),
+    10_000, 'lazy card detail parameters did not load');
   await evaluate(`document.querySelector('#card-detail-modal button[data-close-card-detail]').click()`);
   assert.equal(await evaluate(`document.querySelector('#card-detail-modal').getAttribute('aria-hidden')`), 'true');
   await evaluate(`(() => {

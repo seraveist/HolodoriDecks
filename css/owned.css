@@ -77,8 +77,8 @@
   font-size: var(--type-label);
 }
 
-.owned-bulk-actions {
-  gap: 18px !important;
+.owned-summary > .owned-bulk-actions {
+  gap: 18px;
 }
 
 .owned-card-list {
@@ -242,10 +242,6 @@
   padding: 9px 10px 10px;
 }
 
-.owned-card .landscape-card-title strong {
-  font-size: var(--type-label);
-}
-
 .landscape-card-title-meta {
   display: inline-flex;
   flex: 0 0 auto;
@@ -268,15 +264,6 @@
 .owned-card .landscape-card-title strong,
 .picker-card .landscape-card-title strong {
   flex: 1 1 auto;
-}
-
-.owned-card .landscape-card-title small,
-.owned-card .landscape-card-copy > small {
-  font-size: var(--type-caption);
-}
-
-.owned-card .landscape-card-copy > span:not(.landscape-card-title) {
-  font-size: var(--type-caption);
 }
 
 .landscape-card-art {
@@ -337,7 +324,6 @@
 .landscape-card-title strong {
   min-width: 0;
   overflow: hidden;
-  font-size: var(--type-body);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -346,14 +332,11 @@
 .landscape-card-copy > small {
   flex: 0 0 auto;
   color: var(--ink-500);
-  font-size: var(--type-caption);
-  font-weight: 800;
 }
 
 .landscape-card-copy > span:not(.landscape-card-title) {
   margin-top: 4px;
   color: var(--ink-650);
-  font-size: var(--type-label);
 }
 
 .landscape-card-copy > small {

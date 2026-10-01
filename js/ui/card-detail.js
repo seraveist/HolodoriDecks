@@ -1,5 +1,4 @@
 import { formatNumber, getLocale, t } from "../i18n.js?v=1.3.1";
-import { prepareScoreCards } from "../score.js?v=1.3.1";
 import {
   ATTRIBUTE_META,
   attributeStyle,
@@ -48,7 +47,7 @@ function skillBlock(kind, skill, rate = "") {
   </article>`;
 }
 
-function renderDetail(card, charactersById, state) {
+function renderDetail(card, charactersById, state, prepareScoreCards) {
   const isOwned = state.ownedCardIds.includes(card.id);
   const maxLevel = Math.max(1, ...(card.growth?.levels ?? []).map((row) => Number(row.level) || 1));
   const setting = isOwned
@@ -95,12 +94,30 @@ export function createCardDetail({ cardsById, charactersById, store }) {
   const content = requiredElement("#card-detail-content");
   let activeCardId = null;
   let returnFocus = null;
+  let prepareScoreCards = null;
+  let pending = null;
 
   function render() {
     if (!activeCardId) return;
     const card = cardsById.get(activeCardId);
     if (!card) return;
-    content.innerHTML = renderDetail(card, charactersById, store.getState());
+    if (!prepareScoreCards) {
+      content.setAttribute("aria-busy", "true");
+      content.innerHTML = `<div class="empty-state" role="status"><p>${escapeHtml(t("card.loadingDetails"))}</p></div>`;
+      pending ??= import("../score.js?v=1.3.1").then((module) => {
+        prepareScoreCards = module.prepareScoreCards;
+        render();
+      }).catch((error) => {
+        console.warn("[card-detail] Could not load card parameters", error);
+        if (!activeCardId) return;
+        content.removeAttribute("aria-busy");
+        content.innerHTML = `<div class="empty-state" role="alert"><p>${escapeHtml(t("card.detailsFailed"))}</p><button type="button" class="text-button">${escapeHtml(t("card.retryDetails"))}</button></div>`;
+        content.querySelector("button").addEventListener("click", () => window.location.reload());
+      }).finally(() => { pending = null; });
+      return;
+    }
+    content.removeAttribute("aria-busy");
+    content.innerHTML = renderDetail(card, charactersById, store.getState(), prepareScoreCards);
     wirePortraitFallback(content);
   }
 
@@ -112,7 +129,9 @@ export function createCardDetail({ cardsById, charactersById, store }) {
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden", "false");
     document.body.classList.add("card-detail-open");
-    window.setTimeout(() => requiredElement("[data-close-card-detail]", dialog).focus(), 0);
+    window.setTimeout(() => {
+      if (modal.classList.contains("is-open")) requiredElement("[data-close-card-detail]", dialog).focus();
+    }, 0);
   }
 
   function close() {
