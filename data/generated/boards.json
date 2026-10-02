@@ -2,7 +2,7 @@
   "format": "holodori-boards",
   "version": 1,
   "source_repository": "holodori-net/android-database",
-  "source_commit": "5fffe313ce1eea777c7e1ad23625eb31d0de0564",
+  "source_commit": "031e20bcb10708e47893618a1387b13364d810dd",
   "master_version": "5267906a638d20ddfc5c68dcb7775b0bda3484dfbb65006cd8e7dc59232112bc",
   "characters": {
     "chr-00001": {
