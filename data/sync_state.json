@@ -1,14 +1,13 @@
 {
   "master_version": "5267906a638d20ddfc5c68dcb7775b0bda3484dfbb65006cd8e7dc59232112bc",
-  "upstream_commit": "5fffe313ce1eea777c7e1ad23625eb31d0de0564",
+  "upstream_commit": "031e20bcb10708e47893618a1387b13364d810dd",
   "normalizer_version": 4,
   "locales": {
-    "ko": "5fffe313ce1eea777c7e1ad23625eb31d0de0564",
-    "en": "5fffe313ce1eea777c7e1ad23625eb31d0de0564",
-    "ja": "5fffe313ce1eea777c7e1ad23625eb31d0de0564"
+    "ko": "031e20bcb10708e47893618a1387b13364d810dd",
+    "en": "031e20bcb10708e47893618a1387b13364d810dd",
+    "ja": "031e20bcb10708e47893618a1387b13364d810dd"
   },
   "changed_refs": [
-    "master_version",
     "locale:ko",
     "locale:en",
     "locale:ja",
