@@ -3278,6 +3278,17 @@
         "description": "전원의 테크닉이 80% UP"
       }
     ],
+    "live_passive_skill_effect-all_parameter_up_permil_up-110-live_skill_effect_target-attribute-attribute_1-2": [
+      {
+        "groupId": "live_passive_skill_effect-all_parameter_up_permil_up-110-live_skill_effect_target-attribute-attribute_1-2",
+        "number": 1,
+        "type": "LivePassiveSkillEffectType_LIVE_PASSIVE_SKILL_EFFECT_TYPE_ALL_PARAMETER_UP_PERMIL_UP",
+        "value": "110",
+        "liveSkillEffectTargetId": "live_skill_effect_target-attribute-attribute_1-2",
+        "descriptionLangId": "la-generated-live_passive_skill_effect-all_parameter_up_permil_up-110-live_skill_effect_target-attribute-attribute_1-2.1-description",
+        "description": "[attribute=cute]큐트 타입[/attribute] 2명의 전체 파라미터가 11% UP"
+      }
+    ],
     "live_passive_skill_effect-all_parameter_up_permil_up-110-live_skill_effect_target-attribute-attribute_2-2": [
       {
         "groupId": "live_passive_skill_effect-all_parameter_up_permil_up-110-live_skill_effect_target-attribute-attribute_2-2",
@@ -3287,6 +3298,17 @@
         "liveSkillEffectTargetId": "live_skill_effect_target-attribute-attribute_2-2",
         "descriptionLangId": "la-generated-live_passive_skill_effect-all_parameter_up_permil_up-110-live_skill_effect_target-attribute-attribute_2-2.1-description",
         "description": "[attribute=pure]퓨어 타입[/attribute] 2명의 전체 파라미터가 11% UP"
+      }
+    ],
+    "live_passive_skill_effect-all_parameter_up_permil_up-150-live_skill_effect_target-attribute-attribute_1-2": [
+      {
+        "groupId": "live_passive_skill_effect-all_parameter_up_permil_up-150-live_skill_effect_target-attribute-attribute_1-2",
+        "number": 1,
+        "type": "LivePassiveSkillEffectType_LIVE_PASSIVE_SKILL_EFFECT_TYPE_ALL_PARAMETER_UP_PERMIL_UP",
+        "value": "150",
+        "liveSkillEffectTargetId": "live_skill_effect_target-attribute-attribute_1-2",
+        "descriptionLangId": "la-generated-live_passive_skill_effect-all_parameter_up_permil_up-150-live_skill_effect_target-attribute-attribute_1-2.1-description",
+        "description": "[attribute=cute]큐트 타입[/attribute] 2명의 전체 파라미터가 15% UP"
       }
     ],
     "live_passive_skill_effect-all_parameter_up_permil_up-150-live_skill_effect_target-attribute-attribute_2-2": [
@@ -4970,6 +4992,17 @@
         "liveSkillEffectTargetId": "live_skill_effect_target-attribute-attribute_3-2",
         "descriptionLangId": "la-generated-live_passive_skill_effect-technique_up_permil_up-410-live_skill_effect_target-attribute-attribute_3-2.1-description",
         "description": "[attribute=happy]해피 타입[/attribute] 2명의 테크닉이 41% UP"
+      }
+    ],
+    "live_passive_skill_effect-technique_up_permil_up-430-live_skill_effect_target-attribute-attribute_1-2": [
+      {
+        "groupId": "live_passive_skill_effect-technique_up_permil_up-430-live_skill_effect_target-attribute-attribute_1-2",
+        "number": 1,
+        "type": "LivePassiveSkillEffectType_LIVE_PASSIVE_SKILL_EFFECT_TYPE_TECHNIQUE_UP_PERMIL_UP",
+        "value": "430",
+        "liveSkillEffectTargetId": "live_skill_effect_target-attribute-attribute_1-2",
+        "descriptionLangId": "la-generated-live_passive_skill_effect-technique_up_permil_up-430-live_skill_effect_target-attribute-attribute_1-2.1-description",
+        "description": "[attribute=cute]큐트 타입[/attribute] 2명의 테크닉이 43% UP"
       }
     ],
     "live_passive_skill_effect-technique_up_permil_up-430-live_skill_effect_target-attribute-attribute_2-2": [

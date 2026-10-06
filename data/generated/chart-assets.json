@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "source_commit": "031e20bcb10708e47893618a1387b13364d810dd",
-  "master_version": "5267906a638d20ddfc5c68dcb7775b0bda3484dfbb65006cd8e7dc59232112bc",
-  "catalogRevision": 95,
+  "source_commit": "31a079885182479b4ae08c8124f8268c578abd59",
+  "master_version": "65badf8533aacbc04382f97f0f5f56740e761e6f5be6172d8440ae9061deebe7",
+  "catalogRevision": 97,
   "assetToolCommit": "13f150fe9dfbd367be53e5ea1c0a4ceb258b74f2",
   "charts": {
     "m0001:EASY": {
@@ -7259,6 +7259,116 @@
       "normalNoteCount": 118,
       "susSha256": "5dbff6943f24efa0b97fe78545b824d84b5d15cc4ce471cc60939c690d77905a"
     },
+    "m0360:EASY": {
+      "musicId": "m0360",
+      "difficulty": "EASY",
+      "chartAssetId": "chart_m0360_easy",
+      "chartHash": "3ca93c6e7972752a2c7e4ecef782c37f",
+      "fullComboNoteCount": 218,
+      "normalNoteCount": 121,
+      "susSha256": "774843563878a12d536d6eb7d95d842fe454b7665fd8d03be77eca7e7649b2ab"
+    },
+    "m0360:EXPERT": {
+      "musicId": "m0360",
+      "difficulty": "EXPERT",
+      "chartAssetId": "chart_m0360_expert",
+      "chartHash": "ce5774fdbf2ea2f40629569902e7850d",
+      "fullComboNoteCount": 1264,
+      "normalNoteCount": 684,
+      "susSha256": "67b49a5529d1d6e11afd0f155dae9ff259aec3bb9ce11ff95c29d97e267f1a63",
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+    },
+    "m0360:HARD": {
+      "musicId": "m0360",
+      "difficulty": "HARD",
+      "chartAssetId": "chart_m0360_hard",
+      "chartHash": "d40d610e5b66cdb93a6e780b9539f049",
+      "fullComboNoteCount": 741,
+      "normalNoteCount": 352,
+      "susSha256": "4ca0f28385a178d7ef4ec0794a9f7b0b91ccd4d795fa404c2fa5b5a1b8167abe"
+    },
+    "m0360:NORMAL": {
+      "musicId": "m0360",
+      "difficulty": "NORMAL",
+      "chartAssetId": "chart_m0360_normal",
+      "chartHash": "764ef4043dcf0b125c5eeac2f66d1334",
+      "fullComboNoteCount": 419,
+      "normalNoteCount": 197,
+      "susSha256": "23af45fd7bf9b08225d177dc3b48f14d7695900d096cfd5cdac41ef101f42e4a"
+    },
+    "m0361:EASY": {
+      "musicId": "m0361",
+      "difficulty": "EASY",
+      "chartAssetId": "chart_m0361_easy",
+      "chartHash": "b3d6c128ef39d09bb927929dc85487ea",
+      "fullComboNoteCount": 303,
+      "normalNoteCount": 100,
+      "susSha256": "e0f9e177c8cac1fd4f9b404824e035a51cef27aad13ac3d9301e10fe961d410d"
+    },
+    "m0361:EXPERT": {
+      "musicId": "m0361",
+      "difficulty": "EXPERT",
+      "chartAssetId": "chart_m0361_expert",
+      "chartHash": "cf7a8f9269d9e1fd8ecb469b37d19464",
+      "fullComboNoteCount": 1497,
+      "normalNoteCount": 280,
+      "susSha256": "47dbc17fc25bcbddc63ef2759cc849a9e0ffd813301eb51cf068734d4648d5ef",
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+    },
+    "m0361:HARD": {
+      "musicId": "m0361",
+      "difficulty": "HARD",
+      "chartAssetId": "chart_m0361_hard",
+      "chartHash": "d6368df43a23ac8c9b4d2cf496867526",
+      "fullComboNoteCount": 787,
+      "normalNoteCount": 222,
+      "susSha256": "d9973440d42be69a3057a728aac9dfa2f6144d10d86d4185f5752284520727f1"
+    },
+    "m0361:NORMAL": {
+      "musicId": "m0361",
+      "difficulty": "NORMAL",
+      "chartAssetId": "chart_m0361_normal",
+      "chartHash": "647103ebd74d0a2a9da481e5d8d89984",
+      "fullComboNoteCount": 466,
+      "normalNoteCount": 129,
+      "susSha256": "c7a320b084452c0369e3f7713bd1f951511fab4a9373874c1b7c5925146a8afc"
+    },
+    "m0362:EASY": {
+      "musicId": "m0362",
+      "difficulty": "EASY",
+      "chartAssetId": "chart_m0362_easy",
+      "chartHash": "cb85cb70ba22c297c0b835f77412ced1",
+      "fullComboNoteCount": 227,
+      "normalNoteCount": 91,
+      "susSha256": "22b963a15ac846a4dca3ed51e11928c9140542bfc7d6b328d1cccef191c164dc"
+    },
+    "m0362:EXPERT": {
+      "musicId": "m0362",
+      "difficulty": "EXPERT",
+      "chartAssetId": "chart_m0362_expert",
+      "chartHash": "0b0d97cddf978e16feaed06c8575c07e",
+      "fullComboNoteCount": 853,
+      "normalNoteCount": 531,
+      "susSha256": "a8d4449b0bbe11bf81814f57fae7d7b7669d6453c164b4a491a0d39a615bcfe5"
+    },
+    "m0362:HARD": {
+      "musicId": "m0362",
+      "difficulty": "HARD",
+      "chartAssetId": "chart_m0362_hard",
+      "chartHash": "ed2829e697b1610ce401315728a8d3a3",
+      "fullComboNoteCount": 628,
+      "normalNoteCount": 294,
+      "susSha256": "572ae2dd71a3f310e503546dc55fa80a7644eaa9b177cbdd6ceb1056ab8a6a03"
+    },
+    "m0362:NORMAL": {
+      "musicId": "m0362",
+      "difficulty": "NORMAL",
+      "chartAssetId": "chart_m0362_normal",
+      "chartHash": "808c5afa48eaf6ff0f6a7610aede782e",
+      "fullComboNoteCount": 381,
+      "normalNoteCount": 211,
+      "susSha256": "f936c56768c09555dfcd62e50f307b70ac7c004b9969df852e3ef2526fe8894d"
+    },
     "m0363:EASY": {
       "musicId": "m0363",
       "difficulty": "EASY",
@@ -7367,6 +7477,81 @@
       "fullComboNoteCount": 388,
       "normalNoteCount": 156,
       "susSha256": "3b529fb3feb28d76cb117aad18c33697dedf8cfdd0771823bc8246d1488e26b2"
+    },
+    "m0377:EASY": {
+      "musicId": "m0377",
+      "difficulty": "EASY",
+      "chartAssetId": "chart_m0377_easy",
+      "chartHash": "0d4f6569886181f9108831445a1f9713",
+      "fullComboNoteCount": 316,
+      "normalNoteCount": 47,
+      "susSha256": "376b26e87a338682c23459918e9f270f58c18883e7ef52a01009594f518eef3e"
+    },
+    "m0377:EXPERT": {
+      "musicId": "m0377",
+      "difficulty": "EXPERT",
+      "chartAssetId": "chart_m0377_expert",
+      "chartHash": "88559e3779e142d0cf7157ee2c8111f3",
+      "fullComboNoteCount": 999,
+      "normalNoteCount": 264,
+      "susSha256": "c8e58cd2f967ff2d4f283269bfcb5998f0c1b0d67cd5c17304febdf71eef9e5d",
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+    },
+    "m0377:HARD": {
+      "musicId": "m0377",
+      "difficulty": "HARD",
+      "chartAssetId": "chart_m0377_hard",
+      "chartHash": "712789863bd5f3a79d54a5264f956499",
+      "fullComboNoteCount": 814,
+      "normalNoteCount": 172,
+      "susSha256": "6291f871e77f410b9a8bbda574e6b0fe58af759a04f279171c68ac4cce4dca4c"
+    },
+    "m0377:NORMAL": {
+      "musicId": "m0377",
+      "difficulty": "NORMAL",
+      "chartAssetId": "chart_m0377_normal",
+      "chartHash": "0f4367f702f36b88298358531f59b3f4",
+      "fullComboNoteCount": 671,
+      "normalNoteCount": 40,
+      "susSha256": "1901c2222fb3a95f1d69305981dc0495b9d69a8f327e3b71c09e90604e435559"
+    },
+    "m0378:EASY": {
+      "musicId": "m0378",
+      "difficulty": "EASY",
+      "chartAssetId": "chart_m0378_easy",
+      "chartHash": "d7d14c0f83a237fcf55d3f391de8ea9a",
+      "fullComboNoteCount": 253,
+      "normalNoteCount": 102,
+      "susSha256": "50dfaf164bba0b9b1290192a385efc0db2a470c8b27c0009960a6957e93a8074"
+    },
+    "m0378:EXPERT": {
+      "musicId": "m0378",
+      "difficulty": "EXPERT",
+      "chartAssetId": "chart_m0378_expert",
+      "chartHash": "e271d68b68041023e62c2c0faa27e1bd",
+      "fullComboNoteCount": 976,
+      "normalNoteCount": 528,
+      "susSha256": "c9b0bbff9d633862b1374031bacef818f8e9d653905cf8c89d4a8a71179c2ff9",
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+    },
+    "m0378:HARD": {
+      "musicId": "m0378",
+      "difficulty": "HARD",
+      "chartAssetId": "chart_m0378_hard",
+      "chartHash": "7783becc9b08b39c742cf0be362effa4",
+      "fullComboNoteCount": 768,
+      "normalNoteCount": 346,
+      "susSha256": "dff49edaed412dbc7709a691dc5f4632e4f6b6ca9ee6da4c39ad9f5dfdeec5da",
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+    },
+    "m0378:NORMAL": {
+      "musicId": "m0378",
+      "difficulty": "NORMAL",
+      "chartAssetId": "chart_m0378_normal",
+      "chartHash": "380b30c490c46f3f53f5165b0be3ff0e",
+      "fullComboNoteCount": 468,
+      "normalNoteCount": 193,
+      "susSha256": "c8d0a994699d1cfb574f146a28a52e543839bb79cf46ef4b3dc6d434abed6dc9"
     },
     "m0413:EASY": {
       "musicId": "m0413",
