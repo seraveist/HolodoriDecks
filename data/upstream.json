@@ -1,8 +1,8 @@
 {
   "repository": "holodori-net/android-database",
   "ref": "main",
-  "commit": "031e20bcb10708e47893618a1387b13364d810dd",
-  "master_version": "5267906a638d20ddfc5c68dcb7775b0bda3484dfbb65006cd8e7dc59232112bc",
+  "commit": "31a079885182479b4ae08c8124f8268c578abd59",
+  "master_version": "65badf8533aacbc04382f97f0f5f56740e761e6f5be6172d8440ae9061deebe7",
   "normalizerVersion": 4,
   "format": "android-database-v1",
   "contract_commit": "9f0249a22993f0938b4dd0d082a198b667f0e1d5",
@@ -10,21 +10,21 @@
   "locales": {
     "ko": {
       "repository": "holodori-net/android-database",
-      "commit": "031e20bcb10708e47893618a1387b13364d810dd",
+      "commit": "31a079885182479b4ae08c8124f8268c578abd59",
       "suffix": "Kor",
       "language": "kor",
       "format": "android-database-v1"
     },
     "en": {
       "repository": "holodori-net/android-database",
-      "commit": "031e20bcb10708e47893618a1387b13364d810dd",
+      "commit": "31a079885182479b4ae08c8124f8268c578abd59",
       "suffix": "Eng",
       "language": "eng",
       "format": "android-database-v1"
     },
     "ja": {
       "repository": "holodori-net/android-database",
-      "commit": "031e20bcb10708e47893618a1387b13364d810dd",
+      "commit": "31a079885182479b4ae08c8124f8268c578abd59",
       "suffix": "Jpn",
       "language": "jpn",
       "format": "android-database-v1"
@@ -71,29 +71,29 @@
     "LiveActiveSkill.json"
   ],
   "fileHashes": {
-    "Card.json": "bcb235ecb49e52660932e055f65de1520d75579c5a9817018604541951dcbcc3",
+    "Card.json": "ae79e1f4a543934e2cc12c7e7fdd6bc05853ca5555f95cccecbf31eba9170f16",
     "Character.json": "46b6515cce4bb77ff52c369031d68301936eabaa3297787b1b0992928610cf74",
-    "LangCard_Kor.json": "9f61cf67e95a79ecd5d97764095362321694b3f01968856bc019e5d3406b963c",
+    "LangCard_Kor.json": "485bed714e387e85d44ff7834ad3dfa217ea4aa5f03798848b9339166659ea01",
     "LangCharacter_Kor.json": "12adab4f1e0e215aa6517d4d9f6a3026440a43b7dfc4113a4b569f649f5c4a86",
-    "Music.json": "0d400eb632892dcc88fc83218faf0aff6ecd6a4e5e791994ffb268074dca16d8",
-    "LangMusic_Kor.json": "64e5c5e134efa4ee47973273c0621b7cf4af0582ffcdb579bfc649adb817daef",
+    "Music.json": "7f1f13af8774667aec39c9dcc975e4c45c10c3e97a606db0fc2754775a33ef0d",
+    "LangMusic_Kor.json": "3908abef0e24e4ebd08ce12c97edeb30ed0f549bfbc104f24aabb316d34e9697",
     "CardLevel.json": "19c0deb8d0bddfab99f5f61cf3853d37547f42d63f6e15e14281cc11432f3e9e",
     "CardLevelLimit.json": "0057ae9a1fbdb6aa742e13a649de612a20dd0258a7130937d19cf6616c6479fe",
     "CardPotential.json": "fb473cc7f9979aade7ae19416ba37126b0cc21729e3df53ededb491af06a94e1",
     "LiveLeaderSkill.json": "1f1fb65f26586352a7173ea1f55ebbb08eef78eade9a0990b185e5a7c535cb3c",
     "LangGeneratedLiveLeaderSkill_Kor.json": "1a18e4eee2e8d93ae3005105b13c1b9f08b1ac4ce7066bfa5475039110901502",
-    "LiveActiveSkillLevel.json": "c8e1276f1586a46558237b80f0151a202b059d5e2504358dd6943af51e3dc046",
-    "LangGeneratedLiveActiveSkillLevel_Kor.json": "0cd8b4fe66d076adab1088261f6f1895e8658a4d9070928f0b14b5485d90edcd",
-    "LivePassiveSkillLevel.json": "556f5ffd0be1b6eb186acee1ffe51014f3eb4470f57e7faaee467c466b2c949b",
-    "LangGeneratedLivePassiveSkillLevel_Kor.json": "57a5a6ebf1399c0a6b6f51a6397e5dee8c8eb68046e2e491fb5a355b618bb830",
-    "LiveSpecialSkillLevel.json": "e7952e22e3832d66a58686e4f218b1b1870c1e169cbfd8e4aa4209b084d11f66",
-    "LangGeneratedLiveSpecialSkillLevel_Kor.json": "a02a3ed3f8b0d322ff8cc1e3fb510c9714f7607c5194ae6072e4815dc1c32e3e",
+    "LiveActiveSkillLevel.json": "1ab048d39601cd29e714955595d39e84f60474f0b1480241ca8354b42ba2aad3",
+    "LangGeneratedLiveActiveSkillLevel_Kor.json": "da190342d591d18a3a52a4179ce757755ff24e1a334826411bfa6404ad5974bc",
+    "LivePassiveSkillLevel.json": "f24f66673cad197a9ec8f53e8459d84d476d9d21917ad662aec04e880349d9e1",
+    "LangGeneratedLivePassiveSkillLevel_Kor.json": "6812ba87a7b7d5ac544b820d141055f3ab5c7e659fe70bdf314e3a6ea074b6b9",
+    "LiveSpecialSkillLevel.json": "0e6d603e07a4a1b8b291c42e67c60810ce95bceb055105e35366d7292ed87481",
+    "LangGeneratedLiveSpecialSkillLevel_Kor.json": "0259c1bf3f28d0768389da58a5049117db14d9273163ff8f3ad906bbbcb0b421",
     "LiveSkillTrigger.json": "6abb46ce7ce415d8155bf7bc55e39fa55cbc365887a100aff17ad285889bb2b8",
     "LangGeneratedLiveSkillTrigger_Kor.json": "a5d1127d34de42c3c65bc9f27868ff04e06ab9de7349e3ddf655cf6fdf4917a1",
     "LiveActiveSkillEffect.json": "9bd2018f27561f2568afe1727e2a41b2cbc4c1baf206f81294a0d10211de620b",
     "LangGeneratedLiveActiveSkillEffect_Kor.json": "a66d97d30eb18ee4f0991b838d8e382c64c22cc43a09a500e5847bb6d878dd25",
-    "LivePassiveSkillEffect.json": "c58de0210a774a6ab9da0b3f3d6b101d0d077368c8af349c25dc727976922032",
-    "LangGeneratedLivePassiveSkillEffect_Kor.json": "88816a4086ad85ea7e8f20a656a5c3a0e74add24d3642dc950c9d282d5b184da",
+    "LivePassiveSkillEffect.json": "b4d08cc37c5c75c1c5abb7cf7d88c8c6301cd78742dea4ca3619435d1db10d1c",
+    "LangGeneratedLivePassiveSkillEffect_Kor.json": "3bac33360cc088092bc28a1170702dbcd3f1d8d882feac2ae84cc9508b483a3d",
     "SkillTreeNodePosition.json": "2743ce0712c5785067f0303cb97ed75e46d6ec920af74722790739a0e9fb2549",
     "SkillTreeNode.json": "3db9c884cd3aa250af40103dbb7904704db0969d7014a820debceddda72d6dca",
     "SkillTreeEffect.json": "adec50ce8e85ffa82988dc97c568f21cd1f046836f9b49c8cc2dceed845069fa",
@@ -103,11 +103,11 @@
     "SkillTreeConnectEffect.json": "65947c9cb86585d3c75748f41d271b57a777a9b523dcdc903bbe2abd8eafc518",
     "SkillTreeConnectEffectExtent.json": "fc1a2579342df4d03f6a31c8c7d31ba621bfbfa5d3906225830a2b225f4ddde3",
     "PosterCollectEffect.json": "edcce51e3a7956dca9103c4fefa4673adb60e14c342fb4b0b7d368594d827d70",
-    "Condition.json": "7ce3f3bf43de0a72bf9b74bd3c8bd9f7892b2c3293521eb101f994f4d98cec58",
-    "Item.json": "cac3526ea74ea730e34d997ed494fc36b391d3e6ce48c044e905bdc457cfe076",
+    "Condition.json": "66573312561c87218f002d9dc64f788e9dc40735bd4a00534768de9d4390dc2d",
+    "Item.json": "7729ad4d5a74930ab4b245d66af96b3ac06d97bfc6706467d1f47eee32fab445",
     "CharacterGrouping.json": "b1790d92f0d8e816fa6341519c2c4a5db0f4a4de2dbf442b90aeaefaefe96794",
     "CharacterLevel.json": "39b94e0ed58e26ff5f299957992988ae35006c47714baaf5602589bd2cd4c02c",
     "SkillTreePoint.json": "23409a3e02236a39289f2557daf726cc41d4b676111686d34cc6e4f6681e9cfc",
-    "LiveActiveSkill.json": "3cf4e7cc7e778b4eb80175fdfe4ab383934a1ac1145ec0c95d24e391d4d0405a"
+    "LiveActiveSkill.json": "b457b0ce07a12c2dc2e35d341651ae4f104bd0fd4f5c39f577da41e28b4f6174"
   }
 }
