@@ -13,6 +13,7 @@ const tests = [
   "scripts/test-passive-target-priority.mjs",
   "scripts/test-unit-observations.mjs",
   "scripts/test-support-stacking.mjs",
+  "scripts/test-unit-support-costumes.mjs",
   "scripts/test-generic-order.mjs",
   "scripts/test-song-representative-order.mjs",
   "scripts/test-card-preparation.mjs",

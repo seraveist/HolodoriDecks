@@ -14,6 +14,7 @@ const tests = [
   'scripts/test-unit-display.mjs',
   'scripts/test-unit-observations.mjs', 'scripts/test-passive-stat-rounding.mjs',
   'scripts/test-passive-target-priority.mjs', 'scripts/test-support-stacking.mjs',
+  'scripts/test-unit-support-costumes.mjs',
   'scripts/test-generic-order.mjs', 'scripts/test-song-representative-order.mjs',
   'analysis/unit-score/probe-fixed-constants.mjs', 'scripts/test-scoring-handoff.mjs',
   'scripts/test-validation-aj-handoff.mjs',
