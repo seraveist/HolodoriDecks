@@ -494,7 +494,7 @@ try {
   const outfitRows = await evaluate(`([...document.querySelectorAll('.calculation-card:last-child .calculation-rows > span')]
     .map(row => ({ label: row.querySelector('i').textContent, value: row.querySelector('b').textContent })))`);
   assert.equal(outfitRows[0].label, "의상 스킬");
-  assert.deepEqual(outfitRows.map(row => row.value), ["40.5%", "70.1%", "0.0%", "0.0%", "38.7%"]);
+  assert.deepEqual(outfitRows.map(row => row.value), ["42.0%", "70.1%", "0.0%", "0.0%", "38.7%"]);
   if (process.env.BROWSER_SMOKE_ARTIFACT_DIR) {
     for (const [label, width] of [["desktop", 1440], ["mobile", 390]]) {
       await command("Emulation.setDeviceMetricsOverride", { width, height: 1000, deviceScaleFactor: 1, mobile: false });

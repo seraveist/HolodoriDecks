@@ -103,7 +103,8 @@ assert.deepEqual(gComposition.passive.supportByMember, Object.fromEntries(gMembe
 
 // Observation I changes only G's leader to Ayame (support +60%, no relevant
 // leader board effects). The game shows outfit separately and retains G's
-// Active/SP. The absolute 39.0% outfit value is not yet calibrated.
+// Active/SP. This test omits member boards; the reconstructed-board39.0%
+// display is covered separately by test-unit-support-costumes.mjs.
 const observedI = evaluateDeck({ leader: cPrepared.get("card-00010-5-uniq-0010-00"), members: gMembers });
 assert.equal(observedI.detail.power.memberParameter, 97617);
 assert.equal(observedI.detail.power.outfit, 0);
@@ -113,11 +114,11 @@ for (const category of ["active", "passive", "special"]) {
   assert.equal(observedI.detail.scoreBonus[category], observedG.detail.scoreBonus[category]);
 }
 assert.ok(observedI.detail.scoreBonus.outfit > 0);
-// Keep the uncalibrated outfit estimate while using the observed Active/SP.
-// The derived total is a regression value, not an observed game Unit Score.
-assert.equal(observedI.detail.scoreBonus.outfit, 40.5);
-assert.equal(observedI.scoreBonusPct, 149.3);
-assert.equal(observedI.unitScore, 536337);
+// Board-free normalized support: ceil(70.0070795*1.6)-70.1=42.0.
+// The derived total is not an observed game Unit Score.
+assert.equal(observedI.detail.scoreBonus.outfit, 42);
+assert.equal(observedI.scoreBonusPct, 150.8);
+assert.equal(observedI.unitScore, 539564);
 
 // Observation J keeps E's members under Ayame. Power, Active and SP remain
 // consistent with the requested experiment, but the game's Passive is 2.7%,
@@ -130,12 +131,12 @@ assert.equal(observedJ.overallPower, 109076);
 for (const category of ["active", "special"]) {
   assert.equal(observedJ.detail.scoreBonus[category], observedE.detail.scoreBonus[category]);
 }
-// Costume/passive attribution still uses the legacy estimate for this leader;
-// do not disguise the observed 2.7% passive as a successful absolute match.
-assert.equal(observedJ.detail.scoreBonus.outfit, 41.6);
-assert.equal(observedJ.detail.scoreBonus.passive, 3.2);
-assert.equal(observedJ.scoreBonusPct, 149.8);
-assert.equal(observedJ.unitScore, 555118);
+// Board-free three-source attribution. With the recorded member boards,
+// the separate support-costume regression reproduces2.7% passive instead.
+assert.equal(observedJ.detail.scoreBonus.outfit, 40.2);
+assert.equal(observedJ.detail.scoreBonus.passive, 2.6);
+assert.equal(observedJ.scoreBonusPct, 147.8);
+assert.equal(observedJ.unitScore, 550674);
 
 // K explicitly confirms E's composition and every displayed field after
 // restoring Ririka. Reevaluate after J so leader-specific intermediate state

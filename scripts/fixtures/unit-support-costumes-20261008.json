@@ -1,0 +1,349 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-08",
+  "scope": "Three historical60% observations with reconstructed boards and one fresh board-free five-member set in two outfit states supplied after the formula change. Historical board inheritance assumptions and computational leader reference are explicit. No fitted constants.",
+  "sources": [
+    "scripts/fixtures/unit-observations-20260908.json",
+    "analysis/unit-score/observations/M-20260909.json",
+    "analysis/unit-score/board-context.json"
+  ],
+  "cases": [
+    {
+      "id": "I",
+      "leaderId": "card-00010-5-uniq-0010-00",
+      "memberIds": [
+        "card-00022-5-uniq-0063-00",
+        "card-00018-5-uniq-0068-00",
+        "card-00027-5-uniq-0022-00",
+        "card-06002-5-uniq-0066-00",
+        "card-06004-5-uniq-0060-00"
+      ],
+      "profiles": [
+        {
+          "id": "card-00010-5-uniq-0010-00",
+          "level": 40,
+          "potential": 0
+        },
+        {
+          "id": "card-00022-5-uniq-0063-00",
+          "level": 80,
+          "potential": 1
+        },
+        {
+          "id": "card-00018-5-uniq-0068-00",
+          "level": 60,
+          "potential": 0
+        },
+        {
+          "id": "card-00027-5-uniq-0022-00",
+          "level": 70,
+          "potential": 0
+        },
+        {
+          "id": "card-06002-5-uniq-0066-00",
+          "level": 40,
+          "potential": 0
+        },
+        {
+          "id": "card-06004-5-uniq-0060-00",
+          "level": 70,
+          "potential": 1
+        }
+      ],
+      "accountBonuses": {
+        "leaderBoardSupportPct": 0,
+        "memberBoards": {
+          "chr-00022": {
+            "activationRatePct": 23.5,
+            "activationFrequencyPct": 4
+          },
+          "chr-00018": {
+            "activationRatePct": 0,
+            "activationFrequencyPct": 0
+          },
+          "chr-00027": {
+            "activationRatePct": 0,
+            "activationFrequencyPct": 0
+          },
+          "chr-06002": {
+            "activationRatePct": 20,
+            "activationFrequencyPct": 0
+          },
+          "chr-06004": {
+            "activationRatePct": 14,
+            "activationFrequencyPct": 4
+          }
+        }
+      },
+      "observed": {
+        "outfit": 39,
+        "active": 70.1,
+        "board": 9.4,
+        "passive": 0,
+        "special": 38.7
+      },
+      "passiveAbsent": true,
+      "boardInputStatus": "Earlier user-reported member-node values reconstructed; Ayame relevant leader support confirmed absent."
+    },
+    {
+      "id": "J",
+      "leaderId": "card-00010-5-uniq-0010-00",
+      "memberIds": [
+        "card-00026-5-uniq-0065-00",
+        "card-00018-5-uniq-0068-00",
+        "card-00027-5-uniq-0022-00",
+        "card-06002-5-uniq-0066-00",
+        "card-06004-5-uniq-0060-00"
+      ],
+      "profiles": [
+        {
+          "id": "card-00010-5-uniq-0010-00",
+          "level": 40,
+          "potential": 0
+        },
+        {
+          "id": "card-00026-5-uniq-0065-00",
+          "level": 70,
+          "potential": 1
+        },
+        {
+          "id": "card-00018-5-uniq-0068-00",
+          "level": 60,
+          "potential": 0
+        },
+        {
+          "id": "card-00027-5-uniq-0022-00",
+          "level": 70,
+          "potential": 0
+        },
+        {
+          "id": "card-06002-5-uniq-0066-00",
+          "level": 40,
+          "potential": 0
+        },
+        {
+          "id": "card-06004-5-uniq-0060-00",
+          "level": 70,
+          "potential": 1
+        }
+      ],
+      "accountBonuses": {
+        "leaderBoardSupportPct": 0,
+        "memberBoards": {
+          "chr-00026": {
+            "activationRatePct": 24.5,
+            "activationFrequencyPct": 4
+          },
+          "chr-00018": {
+            "activationRatePct": 0,
+            "activationFrequencyPct": 0
+          },
+          "chr-00027": {
+            "activationRatePct": 0,
+            "activationFrequencyPct": 0
+          },
+          "chr-06002": {
+            "activationRatePct": 20,
+            "activationFrequencyPct": 0
+          },
+          "chr-06004": {
+            "activationRatePct": 14,
+            "activationFrequencyPct": 4
+          }
+        }
+      },
+      "observed": {
+        "outfit": 41.5,
+        "active": 66.9,
+        "board": 10.2,
+        "passive": 2.7,
+        "special": 38.1
+      },
+      "passiveAbsent": false,
+      "boardInputStatus": "Earlier user-reported member-node values reconstructed; Ayame relevant leader support confirmed absent."
+    },
+    {
+      "id": "M",
+      "leaderId": "card-00010-5-uniq-0010-00",
+      "memberIds": [
+        "card-00026-5-uniq-0065-00",
+        "card-00022-5-uniq-0063-00",
+        "card-00021-5-uniq-0064-00",
+        "card-06002-5-uniq-0066-00",
+        "card-06004-5-uniq-0060-00"
+      ],
+      "profiles": [
+        {
+          "id": "card-00010-5-uniq-0010-00",
+          "level": 40,
+          "potential": 0
+        },
+        {
+          "id": "card-00026-5-uniq-0065-00",
+          "level": 70,
+          "potential": 1
+        },
+        {
+          "id": "card-00022-5-uniq-0063-00",
+          "level": 80,
+          "potential": 1
+        },
+        {
+          "id": "card-00021-5-uniq-0064-00",
+          "level": 80,
+          "potential": 1
+        },
+        {
+          "id": "card-06002-5-uniq-0066-00",
+          "level": 40,
+          "potential": 0
+        },
+        {
+          "id": "card-06004-5-uniq-0060-00",
+          "level": 70,
+          "potential": 1
+        }
+      ],
+      "accountBonuses": {
+        "leaderBoardSupportPct": 0,
+        "memberBoards": {
+          "chr-00026": {
+            "activationRatePct": 24.5,
+            "activationFrequencyPct": 4
+          },
+          "chr-00022": {
+            "activationRatePct": 23.5,
+            "activationFrequencyPct": 4
+          },
+          "chr-00021": {
+            "activationRatePct": 6,
+            "activationFrequencyPct": 0
+          },
+          "chr-06002": {
+            "activationRatePct": 20,
+            "activationFrequencyPct": 0
+          },
+          "chr-06004": {
+            "activationRatePct": 14,
+            "activationFrequencyPct": 4
+          }
+        }
+      },
+      "observed": {
+        "outfit": 37.5,
+        "active": 78.4,
+        "board": 12.8,
+        "passive": 6.7,
+        "special": 46.1
+      },
+      "passiveAbsent": false,
+      "boardInputStatus": "Earlier member-node values carried forward; unchanged state was not separately confirmed for M."
+    },
+    {
+      "id": "FRESH-SUPPORT",
+      "leaderId": "card-00010-5-uniq-0010-00",
+      "memberIds": [
+        "card-00030-5-uniq-0089-00",
+        "card-04015-5-uniq-0054-00",
+        "card-04017-5-uniq-0056-00",
+        "card-04002-5-uniq-0043-00",
+        "card-00037-5-uniq-0086-00"
+      ],
+      "profiles": [
+        {
+          "id": "card-00030-5-uniq-0089-00",
+          "level": 1,
+          "potential": 0
+        },
+        {
+          "id": "card-04015-5-uniq-0054-00",
+          "level": 1,
+          "potential": 0
+        },
+        {
+          "id": "card-04017-5-uniq-0056-00",
+          "level": 1,
+          "potential": 0
+        },
+        {
+          "id": "card-04002-5-uniq-0043-00",
+          "level": 1,
+          "potential": 0
+        },
+        {
+          "id": "card-00037-5-uniq-0086-00",
+          "level": 1,
+          "potential": 0
+        }
+      ],
+      "accountBonuses": null,
+      "costumeSupportPct": 60,
+      "observed": {
+        "outfit": 36.8,
+        "active": 61.8,
+        "board": 0,
+        "passive": 4.1,
+        "special": 35.5
+      },
+      "passiveAbsent": false,
+      "boardInputStatus": "User explicitly reported all five members Lv1/awakening0 and no boards in the current 2026-10-08 exchange.",
+      "prospective": true,
+      "memberOrderBasis": "Order listed by user; equal base-power capped targets follow this order.",
+      "leaderIdentityBasis": "Ayame computational reference from requested same-leader control. User confirmed60%/default outfit; leader identity and profile were not separately restated.",
+      "rawUserInput": "의상36.8%, 액티브61.8%, 보드없음, 패시브4.1%, 스페셜35.5% : 서포트60%의상"
+    },
+    {
+      "id": "FRESH-DEFAULT",
+      "leaderId": "card-00010-3-nrml-0010-00",
+      "memberIds": [
+        "card-00030-5-uniq-0089-00",
+        "card-04015-5-uniq-0054-00",
+        "card-04017-5-uniq-0056-00",
+        "card-04002-5-uniq-0043-00",
+        "card-00037-5-uniq-0086-00"
+      ],
+      "profiles": [
+        {
+          "id": "card-00030-5-uniq-0089-00",
+          "level": 1,
+          "potential": 0
+        },
+        {
+          "id": "card-04015-5-uniq-0054-00",
+          "level": 1,
+          "potential": 0
+        },
+        {
+          "id": "card-04017-5-uniq-0056-00",
+          "level": 1,
+          "potential": 0
+        },
+        {
+          "id": "card-04002-5-uniq-0043-00",
+          "level": 1,
+          "potential": 0
+        },
+        {
+          "id": "card-00037-5-uniq-0086-00",
+          "level": 1,
+          "potential": 0
+        }
+      ],
+      "accountBonuses": null,
+      "costumeSupportPct": 0,
+      "observed": {
+        "outfit": 0,
+        "active": 61.8,
+        "board": 0,
+        "passive": 3.7,
+        "special": 35.5
+      },
+      "passiveAbsent": false,
+      "boardInputStatus": "User explicitly reported all five members Lv1/awakening0 and no boards in the current 2026-10-08 exchange.",
+      "prospective": true,
+      "memberOrderBasis": "Order listed by user; equal base-power capped targets follow this order.",
+      "leaderIdentityBasis": "Ayame computational reference from requested same-leader control. User confirmed60%/default outfit; leader identity and profile were not separately restated.",
+      "rawUserInput": "의상없음, 액티브61.8%, 보드없음, 패시브3.7%, 스페셜35.5% : 기본의상"
+    }
+  ]
+}

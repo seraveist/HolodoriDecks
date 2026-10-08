@@ -379,11 +379,12 @@ def test_only_expensive_suites_can_be_skipped_with_explicit_matching_proof(reuse
     assert "node scripts/run-app-validation.mjs" in scoring["run"]
 
 
-@pytest.mark.parametrize("fail_index", [None, 0, 9, 19])
+@pytest.mark.parametrize("fail_index", [None, 0, 8, 10, 20])
 def test_shared_production_regressions_preserve_process_isolation_and_stop_on_failure(tmp_path, fail_index):
     script = (ROOT / "scripts/run-core-regressions.mjs").read_text()
     tests = re.findall(r'"(scripts/test-[\w-]+\.mjs)"', script)
-    assert len(tests) == 20
+    assert len(tests) == 21
+    assert tests.count("scripts/test-unit-support-costumes.mjs") == 1
     assert (ROOT / "scripts/run-app-validation.mjs").read_text().count('"run-core-regressions"') == 1
     (tmp_path / "scripts").mkdir()
     (tmp_path / "scripts/run-core-regressions.mjs").write_text(script)

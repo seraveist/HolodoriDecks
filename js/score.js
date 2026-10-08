@@ -1,8 +1,8 @@
 import { buildSongContext, songKernel, timelineSongProjection } from "./chart-score.js?v=1.3.1";
-import { unitDisplayBonuses, UNIT_DISPLAY_MODEL, UNIT_DISPLAY_CONTEXT } from "./unit-score.js?v=1.3.1";
+import { unitDisplayBonuses, UNIT_DISPLAY_MODEL, UNIT_SUPPORT_DISPLAY_MODEL, UNIT_DISPLAY_CONTEXT } from "./unit-score.js?v=1.3.1";
 import { resolveBoardProfile, boardStatBonuses } from "./board-score.js?v=1.3.1";
 
-export const SCORE_ENGINE_VERSION = "unit-score-v1.0-verified-display + song-score-v0.5-independent-song-base";
+export const SCORE_ENGINE_VERSION = "unit-score-v1.1-support-display + song-score-v0.5-independent-song-base";
 export const UNIT_SCORE_K = 2.037342;
 export const CALIBRATION_FIXTURES = Object.freeze([
   { power: 67629, bonus: 106.8, score: 284936 },
@@ -411,54 +411,6 @@ function expectedMaximum(items, probabilityKey) {
   return expected;
 }
 
-function applyUnitSupport(details, leaderSupportPct = 0, supportByMember = {}) {
-  return details.map((detail) => ({
-    ...detail,
-    scoreUpPct: detail.scoreUpPct * (1 + (
-      finite(leaderSupportPct) + finite(supportByMember?.[detail.cardId])
-    ) / 100),
-  }));
-}
-
-function legacyUnitScoreBonusBreakdown(members, passive, leaderSupportPct = 0, maximize = false) {
-  const special = specialAverages(members, UNIT_CONTEXT, false);
-  const baseDetails = activeDetails(members, UNIT_CONTEXT, 0, maximize);
-  const rateDetails = activeDetails(
-    members,
-    UNIT_CONTEXT,
-    special.activationRateAveragePct,
-    maximize,
-  );
-  const stagesWithSupport = (supportPct) => {
-    const activeStage = expectedMaximum(applyUnitSupport(baseDetails, supportPct), "coverage");
-    const passiveStage = expectedMaximum(
-      applyUnitSupport(baseDetails, supportPct, passive.supportByMember), "coverage",
-    );
-    // Apply additive support per member before selecting the strongest Active.
-    const specialStage = expectedMaximum(
-      applyUnitSupport(rateDetails, supportPct + special.supportAveragePct, passive.supportByMember), "coverage",
-    );
-    return {
-      active: round1(activeStage),
-      passive: round1(Math.max(0, passiveStage - activeStage)),
-      special: round1(Math.max(0, specialStage - passiveStage)),
-    };
-  };
-  const base = stagesWithSupport(0);
-  if (!leaderSupportPct) return { outfit: 0, ...base };
-
-  // G/I and E/J retain Active/SP when the leader changes. E/J's Passive does
-  // change, so do not force it to the no-leader counterfactual. Evaluate its
-  // marginal gain with the leader present; outfit receives the residual.
-  // This preserves the legacy total and permits context-dependent targeting
-  // competition, but does not yet reproduce the observed E/J Passive values
-  // or resolve indirect board attribution.
-  const supported = stagesWithSupport(leaderSupportPct);
-  const total = (parts) => Object.values(parts).reduce((sum, value) => sum + value, 0);
-  const memberParts = { ...base, passive: supported.passive };
-  return { outfit: round1(total(supported) - total(memberParts)), ...memberParts };
-}
-
 function unitDisplayConditionMet(condition, members) {
   const state = staticConditionState(condition, members);
   if (state !== null) return state;
@@ -481,18 +433,11 @@ function unitScoreBonusBreakdown(members, passive, leaderSupportPct, maximize, a
       specialRate: unitDisplayConditionMet(member.special.condition, members) ? member.special.activationRateUp : 0,
     };
   });
-  const displayed = unitDisplayBonuses(inputs, { leaderBoardSupportPct: accountBonuses.leaderBoardSupportPct, maximize });
-  if (leaderSupportPct > 0) {
-    // Active/SP invariance is observed for score-support costumes too. Their
-    // Outfit/Passive allocation was excluded; retain those legacy estimates.
-    const legacy = legacyUnitScoreBonusBreakdown(members, passive, leaderSupportPct, maximize);
-    const withoutBoard = unitDisplayBonuses(inputs.map(input => ({ ...input, rate: 0, frequency: 0 })), { maximize });
-    // Preserve the existing costume estimate and apply the measured board delta.
-    // Costume × board attribution still needs a separate in-game observation.
-    return { ...legacy, active: displayed.active, special: displayed.special,
-      passive: round1(Math.max(0, legacy.passive + displayed.passive - withoutBoard.passive)), board: displayed.board };
-  }
-  return displayed;
+  return unitDisplayBonuses(inputs, {
+    leaderOutfitSupportPct: leaderSupportPct,
+    leaderBoardSupportPct: accountBonuses.leaderBoardSupportPct,
+    maximize,
+  });
 }
 
 function exactSameIntervalExpected(group, liveDuration) {
@@ -905,7 +850,7 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
 
   return {
     potentialComputed: includePotential,
-    unitBonusModel: leaderEffects.support > 0 ? "legacy-score-support-costume" : UNIT_DISPLAY_MODEL,
+    unitBonusModel: leaderEffects.support > 0 ? UNIT_SUPPORT_DISPLAY_MODEL : UNIT_DISPLAY_MODEL,
     accountBonusKey: accountBonusKey(normalizedAccountBonuses),
     accountBonuses: normalizedAccountBonuses,
     primaryMet,
