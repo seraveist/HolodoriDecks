@@ -2,8 +2,8 @@
   "format": "holodori-boards",
   "version": 1,
   "source_repository": "holodori-net/android-database",
-  "source_commit": "2d5a1a5123f8ddda74b74d9d75662d3c8d541887",
-  "master_version": "65badf8533aacbc04382f97f0f5f56740e761e6f5be6172d8440ae9061deebe7",
+  "source_commit": "8a3abd453cc0a987a830634f98f255c787eb69ba",
+  "master_version": "e1eea8627c36e512ed0f8f662d0d80e14b9000cb8facd546d38e492e91a3c528",
   "characters": {
     "chr-00001": {
       "layoutId": "tree-model-001",
@@ -22250,6 +22250,11 @@
       "connectEffectId": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-001-rare_5",
       "potentialGroupId": "card_potential_grp-rarity_5"
     },
+    "card-00027-5-uniq-0092-00": {
+      "characterId": "chr-00027",
+      "connectEffectId": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-001-rare_5",
+      "potentialGroupId": "card_potential_grp-rarity_5"
+    },
     "card-00028-3-nrml-0023-00": {
       "characterId": "chr-00028",
       "connectEffectId": null,
@@ -22318,6 +22323,11 @@
     "card-00032-5-uniq-0026-00": {
       "characterId": "chr-00032",
       "connectEffectId": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_5",
+      "potentialGroupId": "card_potential_grp-rarity_5"
+    },
+    "card-00032-5-uniq-0093-00": {
+      "characterId": "chr-00032",
+      "connectEffectId": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-004-rare_5",
       "potentialGroupId": "card_potential_grp-rarity_5"
     },
     "card-00034-3-nrml-0027-00": {
@@ -22545,6 +22555,11 @@
       "connectEffectId": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-003-rare_5",
       "potentialGroupId": "card_potential_grp-rarity_5"
     },
+    "card-03008-5-uniq-0095-00": {
+      "characterId": "chr-03008",
+      "connectEffectId": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-001-rare_5",
+      "potentialGroupId": "card_potential_grp-rarity_5"
+    },
     "card-03009-3-nrml-0041-00": {
       "characterId": "chr-03009",
       "connectEffectId": null,
@@ -22703,6 +22718,11 @@
     "card-04014-5-uniq-0053-00": {
       "characterId": "chr-04014",
       "connectEffectId": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-003-rare_5",
+      "potentialGroupId": "card_potential_grp-rarity_5"
+    },
+    "card-04014-5-uniq-0094-00": {
+      "characterId": "chr-04014",
+      "connectEffectId": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-002-rare_5",
       "potentialGroupId": "card_potential_grp-rarity_5"
     },
     "card-04015-3-nrml-0054-00": {
