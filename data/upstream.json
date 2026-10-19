@@ -1,8 +1,8 @@
 {
   "repository": "holodori-net/android-database",
   "ref": "main",
-  "commit": "8a3abd453cc0a987a830634f98f255c787eb69ba",
-  "master_version": "e1eea8627c36e512ed0f8f662d0d80e14b9000cb8facd546d38e492e91a3c528",
+  "commit": "fb21249d6bb141a0fd7b0a3519054dbb6b4a8a54",
+  "master_version": "452bd7acfd1b9f90cc85d9978aea55b1a6bf6c2cddaff470c640462830c8c00d",
   "normalizerVersion": 4,
   "format": "android-database-v1",
   "contract_commit": "99907b3807bc761b684e7867282e42c955e73b63",
@@ -10,21 +10,21 @@
   "locales": {
     "ko": {
       "repository": "holodori-net/android-database",
-      "commit": "8a3abd453cc0a987a830634f98f255c787eb69ba",
+      "commit": "fb21249d6bb141a0fd7b0a3519054dbb6b4a8a54",
       "suffix": "Kor",
       "language": "kor",
       "format": "android-database-v1"
     },
     "en": {
       "repository": "holodori-net/android-database",
-      "commit": "8a3abd453cc0a987a830634f98f255c787eb69ba",
+      "commit": "fb21249d6bb141a0fd7b0a3519054dbb6b4a8a54",
       "suffix": "Eng",
       "language": "eng",
       "format": "android-database-v1"
     },
     "ja": {
       "repository": "holodori-net/android-database",
-      "commit": "8a3abd453cc0a987a830634f98f255c787eb69ba",
+      "commit": "fb21249d6bb141a0fd7b0a3519054dbb6b4a8a54",
       "suffix": "Jpn",
       "language": "jpn",
       "format": "android-database-v1"
@@ -103,7 +103,7 @@
     "SkillTreeConnectEffect.json": "65947c9cb86585d3c75748f41d271b57a777a9b523dcdc903bbe2abd8eafc518",
     "SkillTreeConnectEffectExtent.json": "fc1a2579342df4d03f6a31c8c7d31ba621bfbfa5d3906225830a2b225f4ddde3",
     "PosterCollectEffect.json": "edcce51e3a7956dca9103c4fefa4673adb60e14c342fb4b0b7d368594d827d70",
-    "Condition.json": "5de9a2cac08f7b304fa723f6f954dcad2ea658444743851f7f74a829b57df18b",
+    "Condition.json": "c0236352ef1665a59c29dcab905e4e3894fb6d367a0ad69e26099c2683d69833",
     "Item.json": "fd01961dfb7d7b9a6d6e444bb13e7a324c72c7be54be230d18dcafd9ed9cb2be",
     "CharacterGrouping.json": "b1790d92f0d8e816fa6341519c2c4a5db0f4a4de2dbf442b90aeaefaefe96794",
     "CharacterLevel.json": "39b94e0ed58e26ff5f299957992988ae35006c47714baaf5602589bd2cd4c02c",
