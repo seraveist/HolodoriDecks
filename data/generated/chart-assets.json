@@ -2,7 +2,7 @@
   "version": 1,
   "source_commit": "fb21249d6bb141a0fd7b0a3519054dbb6b4a8a54",
   "master_version": "452bd7acfd1b9f90cc85d9978aea55b1a6bf6c2cddaff470c640462830c8c00d",
-  "catalogRevision": 101,
+  "catalogRevision": 102,
   "assetToolCommit": "13f150fe9dfbd367be53e5ea1c0a4ceb258b74f2",
   "charts": {
     "m0001:EASY": {
