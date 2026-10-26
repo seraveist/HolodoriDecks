@@ -8,11 +8,6 @@
     "ja": "fb21249d6bb141a0fd7b0a3519054dbb6b4a8a54"
   },
   "changed_refs": [
-    "master_version",
-    "core_master_files",
-    "locale:ko",
-    "locale:en",
-    "locale:ja",
     "chart_assets"
   ],
   "counts": {
