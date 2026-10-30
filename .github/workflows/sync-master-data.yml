@@ -95,6 +95,16 @@ jobs:
           cp data/generated/chart-index.json /tmp/chart-index-before.json
           cp data/generated/exact-runtime-index.json /tmp/exact-runtime-index-before.json
 
+      - name: Restore verified catalogue high-water mark
+        if: inputs.dry_run != true
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          # Unique keys retain the latest verified revision on no-change runs.
+          # Cache misses still enforce the committed chart-assets revision.
+          path: .local/chart-assets/catalog-observation.json
+          key: chart-catalog-observation-v1-${{ runner.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: chart-catalog-observation-v1-${{ runner.os }}-
+
       - name: Resolve and normalize upstream snapshot
         id: sync
         env:
@@ -128,7 +138,7 @@ jobs:
         if: steps.sync.outputs.changed == 'true'
         run: |
           python scripts/validate-generated-data.py --baseline /tmp/manifest-before.json
-          python -m pytest -q tests/test_sync.py tests/test_master_migration.py tests/test_board_data.py
+          python -m pytest -q tests/test_sync.py tests/test_master_migration.py tests/test_chart_asset_sync.py tests/test_board_data.py
 
       - name: Evaluate Master auto-merge safety
         id: gate
@@ -275,6 +285,16 @@ jobs:
             echo "- validation candidate: ${{ steps.sync_commit.outputs.head_sha || 'not-needed' }}"
             echo "- dry run: ${{ inputs.dry_run || false }}"
           } >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ steps.sync.outcome }}" = "success" ]; then
+            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          report = json.loads(Path('.local/chart-assets/catalog-observation.json').read_text(encoding='utf-8'))
+          print(f"- verified catalogue revision: {report['catalogRevision']}")
+          print(f"- committed catalogue revision before sync: {report['committedRevision']}")
+          print(f"- chart asset decision: {report['decision']}")
+          PY
+          fi
 
   validate_sync:
     needs: sync

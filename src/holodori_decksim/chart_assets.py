@@ -111,17 +111,21 @@ def sync_chart_assets(commit: str, *, root: Path = ROOT) -> bool:
     generated = root / "data/generated"
     target = generated / "chart-assets.json"
     old = read_json(target, {})
+    cache = root / ".local/chart-assets"
+    observation_path = cache / "catalog-observation.json"
+    observation = read_json(observation_path, {})
     master = AndroidMaster(commit)
     rows = json.loads(master.table("MusicDifficultyChart.json")[0])
     details = json.loads(master.table("MusicDifficulty.json")[0])
     detail_index = {(x["music_id"], x["difficulty_type"]): x["data"] for x in details}
     # Always refresh the catalogue, including runs where the master is unchanged.
     current = fetch_catalog(catalog.fetch, HTTPError)
-    if current.revisionId < old.get("catalogRevision", 0):
+    committed_revision = old.get("catalogRevision", 0)
+    previous_revision = observation.get("catalogRevision", 0)
+    if current.revisionId < max(committed_revision, previous_revision):
         raise ValueError("Asset catalogue revision regressed")
     entries = {x.name: x for x in current.resources}
     runtime = read_json(generated / "exact-runtime-index.json", {}).get("charts", {})
-    cache = root / ".local/chart-assets"
     cache.mkdir(parents=True, exist_ok=True)
     pending_metadata = {}
 
@@ -171,7 +175,25 @@ def sync_chart_assets(commit: str, *, root: Path = ROOT) -> bool:
     payload = {"version": 1, "source_commit": commit, "master_version": master.version,
                "catalogRevision": current.revisionId, "assetToolCommit": TOOL_COMMIT, "charts": charts}
     # Publish only after every asset's hash, header and master relationship passed.
-    changed = payload != old or bool(pending_metadata)
+    # Only the catalogue revision is observational metadata. Compare every
+    # other field (including unknown future fields) conservatively, and never
+    # suppress newly parsed/repaired timelines. All asset checks above still
+    # run when the master, catalogue revision and chart identities are equal.
+    changed = ({k: v for k, v in payload.items() if k != "catalogRevision"}
+               != {k: v for k, v in old.items() if k != "catalogRevision"}
+               or bool(pending_metadata))
+    decision = "content-changed" if changed else "metadata-only" if payload != old else "unchanged"
+    print(f"[chart-assets] verified catalogue r{current.revisionId}; committed r{committed_revision}; "
+          f"previous verified r{previous_revision}; {decision}", file=sys.stderr)
+    # Keep a high-water mark outside published data. Actions caches this small
+    # observation, never a catalogue substitute or a reason to skip verification.
+    observation_path.write_text(json.dumps({
+        "catalogRevision": current.revisionId, "committedRevision": committed_revision,
+        "previousVerifiedRevision": previous_revision, "decision": decision,
+        "source_commit": commit, "master_version": master.version,
+    }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    if not changed:
+        return False
     (generated / "charts").mkdir(exist_ok=True)
     for key, metadata in sorted(pending_metadata.items()):
         (generated / "charts" / f"{key.replace(':', '-')}.json").write_text(

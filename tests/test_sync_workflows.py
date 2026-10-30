@@ -59,6 +59,48 @@ def test_master_sync_avoids_empty_array_expansion_on_macos_bash():
     assert not re.search(r"\$\{[^}]*\[@\]", script)
 
 
+def test_metadata_only_result_skips_rebuild_diff_and_pr_validation():
+    jobs = workflow("sync-master-data.yml")["jobs"]
+    steps = jobs["sync"]["steps"]
+    for name in ["Rebuild locale, chart, and Runtime Exact derived data", "Validate synchronized data",
+                 "Evaluate Master auto-merge safety", "Detect generated diff", "Commit validation candidate"]:
+        step = next(step for step in steps if step.get("name") == name)
+        assert not condition(step["if"], {"steps.sync.outputs.changed": "false", "inputs.dry_run": False})
+    assert not condition(jobs["validate_sync"]["if"], {"needs.sync.outputs.has_diff": "", "inputs.dry_run": False})
+    assert set(jobs["merge"]["needs"]) == {"sync", "validate_sync"} and "if" not in jobs["merge"]
+    assert any("tests/test_chart_asset_sync.py" in step.get("run", "") for step in steps)
+
+
+def test_catalogue_observation_cache_is_narrow_and_disabled_in_dry_runs():
+    steps = workflow("sync-master-data.yml")["jobs"]["sync"]["steps"]
+    cache = next(step for step in steps if step.get("name") == "Restore verified catalogue high-water mark")
+    assert re.fullmatch(r"actions/cache@[0-9a-f]{40}", cache["uses"])
+    assert cache["with"]["path"] == ".local/chart-assets/catalog-observation.json"
+    assert "github.run_id" in cache["with"]["key"] and "github.run_attempt" in cache["with"]["key"]
+    assert cache["with"]["key"].startswith(cache["with"]["restore-keys"])
+    assert condition(cache["if"], {"inputs.dry_run": False})
+    assert not condition(cache["if"], {"inputs.dry_run": True})
+    assert steps.index(cache) < next(i for i, step in enumerate(steps) if step.get("id") == "sync")
+
+
+@pytest.mark.parametrize("outcome", ["success", "failure"])
+def test_job_summary_reports_latest_verified_revision_only_after_success(tmp_path, outcome):
+    steps = workflow("sync-master-data.yml")["jobs"]["sync"]["steps"]
+    script = next(step["run"] for step in steps if step.get("name") == "Job summary")
+    script = re.sub(r"\$\{\{(.*?)\}\}", lambda match: outcome if match[1].strip() == "steps.sync.outcome" else "n/a", script)
+    if outcome == "success":
+        path = tmp_path / ".local/chart-assets/catalog-observation.json"
+        path.parent.mkdir(parents=True)
+        path.write_text(json.dumps({"catalogRevision": 108, "committedRevision": 103, "decision": "metadata-only"}))
+    summary = tmp_path / "summary.md"
+    completed = subprocess.run(["/bin/bash", "-e", "-c", script], cwd=tmp_path,
+        env={**os.environ, "GITHUB_STEP_SUMMARY": str(summary)}, capture_output=True, text=True)
+    assert completed.returncode == 0, completed.stderr
+    output = summary.read_text()
+    assert ("verified catalogue revision: 108" in output) is (outcome == "success")
+    assert ("chart asset decision: metadata-only" in output) is (outcome == "success")
+
+
 @pytest.mark.parametrize("force,expected_args", [("false", ["0"]), ("true", ["1", "--force"])])
 @pytest.mark.parametrize("changed,exit_code", [("false", 0), ("true", 0), ("true", 23)])
 def test_master_sync_command_arguments_outputs_and_failure(tmp_path, force, expected_args, changed, exit_code):
