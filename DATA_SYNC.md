@@ -10,6 +10,16 @@ Chart hashes and normal-note counts are no longer master fields. Every unpinned 
 
 The asset tool, `holodori-scores` parser and Sonolus converter are pinned to Git commits. Unchanged compatible Runtime Exact entries retain their existing fixed corpus. New or changed assets produce local timelines only if every note category, note order, all five SP slots and fever window pass validation. Unsupported timelines are recorded and remain in Master fallback; hash checks are never bypassed.
 
+### Content changes versus catalogue observations
+
+After every chart has passed the existing resource and SUS checks, the sync compares the complete new `chart-assets.json` payload with the committed payload, excluding **only** its top-level `catalogRevision`. A revision-only difference is ignored only when every other field is equal and no local timeline needs to be created or repaired. The committed file and its revision then remain the provenance of the last published content snapshot. No normalization, i18n timestamp refresh, sync-state rewrite or generated PR follows this observation alone.
+
+Master/source commits, master version, schema/tool versions, chart membership, asset IDs, MD5, decrypted SHA-256, note counts and timeline availability remain change triggers. Changed SUS bytes, including note timing, SP or Fever changes with the same combo count, still update hashes and rebuild supported timelines. New/removed or unknown payload fields are not ignored. Independent master/locale/input-hash changes, missing generated files and explicit `--force` retain their existing rebuild behavior.
+
+Every successful live check logs the latest verified revision, previous verified revision, committed revision and decision (`metadata-only`, `unchanged` or `content-changed`). It also writes `.local/chart-assets/catalog-observation.json`; publishing Actions runs cache only this small observation and include it in the job summary. Revision rollback is rejected against the greater of the committed revision and the restored verified high-water mark, even after a revision-only run. Cache eviction/miss falls back to the committed revision; the cache never supplies catalogue contents, skips verification or changes content equality. Dry runs do not save this cache. Failed asset verification does not advance the observation.
+
+For example, an unchanged chart set at r103 followed by r105 and r108 now reports `changed=false` twice while retaining the published r103 snapshot and recording r108 as the latest observation. A real chart or master change publishes the current verified revision with the changed content through all existing structural, anomaly, full-validation and exact-PR-head gates. The existing Pages deployment check still repairs missed deployments and dispatches nothing when current `main` is already deployed or deploying.
+
 A reproducible `holodori-sync --force --pinned` rebuild uses committed asset provenance and the pinned master; it does not query the live catalogue. Use Python 3.12 for live asset synchronization:
 
 ```bash
