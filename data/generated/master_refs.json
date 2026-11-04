@@ -3509,6 +3509,17 @@
         "description": "Myth2명의 스코어 서포트 효과 12%"
       }
     ],
+    "live_passive_skill_effect-live_active_skill_effect_up_permil_up-120-live_skill_effect_target-character_grouping-grp-regloss-2": [
+      {
+        "groupId": "live_passive_skill_effect-live_active_skill_effect_up_permil_up-120-live_skill_effect_target-character_grouping-grp-regloss-2",
+        "number": 1,
+        "type": "LivePassiveSkillEffectType_LIVE_PASSIVE_SKILL_EFFECT_TYPE_LIVE_ACTIVE_SKILL_EFFECT_UP_PERMIL_UP",
+        "value": "120",
+        "liveSkillEffectTargetId": "live_skill_effect_target-character_grouping-grp-regloss-2",
+        "descriptionLangId": "la-generated-live_passive_skill_effect-live_active_skill_effect_up_permil_up-120-live_skill_effect_target-character_grouping-grp-regloss-2.1-description",
+        "description": "ReGLOSS2명의 스코어 서포트 효과 12%"
+      }
+    ],
     "live_passive_skill_effect-live_active_skill_effect_up_permil_up-40-live_skill_effect_target-attribute-attribute_1-3": [
       {
         "groupId": "live_passive_skill_effect-live_active_skill_effect_up_permil_up-40-live_skill_effect_target-attribute-attribute_1-3",
@@ -3738,6 +3749,17 @@
         "liveSkillEffectTargetId": "live_skill_effect_target-character_grouping-grp-myth-2",
         "descriptionLangId": "la-generated-live_passive_skill_effect-live_active_skill_effect_up_permil_up-90-live_skill_effect_target-character_grouping-grp-myth-2.1-description",
         "description": "Myth2명의 스코어 서포트 효과 9%"
+      }
+    ],
+    "live_passive_skill_effect-live_active_skill_effect_up_permil_up-90-live_skill_effect_target-character_grouping-grp-regloss-2": [
+      {
+        "groupId": "live_passive_skill_effect-live_active_skill_effect_up_permil_up-90-live_skill_effect_target-character_grouping-grp-regloss-2",
+        "number": 1,
+        "type": "LivePassiveSkillEffectType_LIVE_PASSIVE_SKILL_EFFECT_TYPE_LIVE_ACTIVE_SKILL_EFFECT_UP_PERMIL_UP",
+        "value": "90",
+        "liveSkillEffectTargetId": "live_skill_effect_target-character_grouping-grp-regloss-2",
+        "descriptionLangId": "la-generated-live_passive_skill_effect-live_active_skill_effect_up_permil_up-90-live_skill_effect_target-character_grouping-grp-regloss-2.1-description",
+        "description": "ReGLOSS2명의 스코어 서포트 효과 9%"
       }
     ],
     "live_passive_skill_effect-performance_up_permil_up-100-live_skill_effect_target-attribute-attribute_1-2": [
