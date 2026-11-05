@@ -12,6 +12,7 @@ import sys
 from urllib.parse import urlparse
 
 from .master_source import AndroidMaster, request_bytes
+from .chart_parser import ADAPTER_VERSION, repair_verified_chart
 
 ROOT = Path(__file__).resolve().parents[2]
 DIFFICULTIES = {1: "EASY", 2: "NORMAL", 3: "HARD", 4: "EXPERT"}
@@ -173,12 +174,18 @@ def sync_chart_assets(commit: str, *, root: Path = ROOT) -> bool:
         sus_path.write_bytes(raw)
         try:
             score, lengths = load_sus(sus_path)
+            score, repairs = repair_verified_chart(score, raw, lengths, chart)
             metadata = validate_timeline(chart_metadata(score, lengths), chart, values)
         except (ValueError, AssertionError, KeyError, IndexError, ZeroDivisionError) as exc:
             chart["timelineUnavailable"] = f"{type(exc).__name__}: {exc}"
         else:
             pending_metadata[key] = {"version": 1, **chart, "sourceFile": entry.name,
                                      "parserCommit": PARSER_COMMIT, "converterCommit": CONVERTER_COMMIT, **metadata}
+            if repairs:
+                pending_metadata[key]["parserAdapter"] = {
+                    "version": ADAPTER_VERSION, "sourceSusSha256": chart["susSha256"],
+                    "reclassifiedEnds": sum(item["reclassifiedEnds"] for item in repairs),
+                }
         return key, chart
 
     with ThreadPoolExecutor(max_workers=8) as pool:

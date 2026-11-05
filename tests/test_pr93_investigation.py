@@ -9,6 +9,7 @@ import pytest
 import yaml
 
 from test_chart_parser_regression import sus_fixture
+from holodori_decksim.chart_parser import repair_verified_chart
 
 
 def load_investigation():
@@ -123,3 +124,36 @@ def test_non_overlapping_chart_is_unchanged_by_candidate():
     corrected, changes = module.candidate.candidate_score(score, text, lengths)
     assert changes == []
     assert chart_metadata(score, lengths) == chart_metadata(corrected, lengths)
+
+
+def test_production_repair_refuses_unknown_chart_or_changed_source():
+    raw = sus_fixture()
+    sentinel = object()
+    for chart in ({"musicId": "m9999", "difficulty": "EXPERT"},
+                  {"musicId": "m0388", "difficulty": "EXPERT"}):
+        result, changes = repair_verified_chart(sentinel, raw, [], chart)
+        assert result is sentinel and changes == []
+
+
+def test_source_scoped_repair_uses_original_validator_after_correction(monkeypatch):
+    pytest.importorskip("holodori.scores")
+    from io import StringIO
+    from holodori.scores import chart_metadata, load_sus
+    from holodori_decksim import chart_parser
+    from holodori_decksim.chart_assets import headers, validate_timeline
+    raw = sus_fixture(direction="1").decode()
+    raw = raw.replace("#FULL_COMBO_NOTE_COUNT 9", "#FULL_COMBO_NOTE_COUNT 18")
+    raw = raw.replace("#LONG_START_NOTE_COUNT 1", "#LONG_START_NOTE_COUNT 2")
+    raw = raw.replace("#LONG_CONTINUE_NOTE_COUNT 7", "#LONG_CONTINUE_NOTE_COUNT 14")
+    raw = raw.replace("#LONG_END_NOTE_COUNT 0", "#LONG_END_NOTE_COUNT 1")
+    raw = (raw + "#000381:11\n#001321:21\n").encode()
+    chart = {"musicId": "m9999", "difficulty": "EXPERT", "fullComboNoteCount": 18}
+    values = headers(raw, "m9999", 18)
+    score, lengths = load_sus(StringIO(raw.decode()))
+    with pytest.raises(ValueError, match="long_end"):
+        validate_timeline(chart_metadata(score, lengths), chart, values)
+    monkeypatch.setitem(chart_parser.VERIFIED_SOURCES, "m9999:EXPERT", hashlib.sha256(raw).hexdigest())
+    corrected, changes = chart_parser.repair_verified_chart(score, raw, lengths, chart)
+    assert changes[0]["reclassifiedEnds"] == 1
+    result = validate_timeline(chart_metadata(corrected, lengths), chart, values)
+    assert len(result["notes"]) == 18

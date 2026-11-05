@@ -15,6 +15,7 @@ from urllib.parse import urlparse
 
 from holodori_decksim.chart_assets import fetch_catalog, headers, verify_resource
 from holodori_decksim.master_source import AndroidMaster, request_bytes
+from holodori_decksim.chart_parser import repair_verified_chart, VERIFIED_SOURCES
 
 HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location("chart_audit", HERE / "audit-chart-timelines.py")
@@ -120,12 +121,13 @@ def traced_parse(raw):
     return meta, captured
 
 
-def trial_candidate(raw, chart):
+def trial_candidate(raw, chart, *, scoped=False):
     from holodori.scores import chart_metadata, load_sus
     text = raw.decode("utf-8-sig")
     score, lengths = load_sus(StringIO(text))
     original = chart_metadata(score, lengths)
-    corrected, changes = candidate.candidate_score(score, text, lengths)
+    corrected, changes = (repair_verified_chart(score, raw, lengths, chart) if scoped
+                          else candidate.candidate_score(score, text, lengths))
     meta = chart_metadata(corrected, lengths)
     original_notes, notes = original["notes"], meta["notes"]
     if len(notes) != len(original_notes) or original["skills"] != meta["skills"] or original["fever"] != meta["fever"]:
@@ -163,6 +165,7 @@ def regression_corpus(assets, entries, master_rows, detail_rows, difficulties, d
     with ThreadPoolExecutor(max_workers=8) as pool:
         sources = dict(pool.map(verify, assets["charts"].items()))
     result = {"verifiedSources": len(sources), "baselinePasses": 0, "candidatePasses": 0,
+              "scopedCandidatePasses": 0, "scopedChangedCharts": {},
               "regressions": [], "changedCharts": {}, "candidateErrors": {}}
     for key, raw in sorted(sources.items()):
         chart = assets["charts"][key]
@@ -172,6 +175,12 @@ def regression_corpus(assets, entries, master_rows, detail_rows, difficulties, d
             baseline = {"status": "parser-error", "error": f"{type(error).__name__}: {error}"}
         passed = baseline["status"] == "passed-existing-validator"
         result["baselinePasses"] += int(passed)
+        scoped = (trial_candidate(raw, chart, scoped=True) if key in VERIFIED_SOURCES else baseline)
+        result["scopedCandidatePasses"] += int(scoped["status"] == "passed-existing-validator")
+        if scoped.get("changes"):
+            result["scopedChangedCharts"][key] = {"status": scoped["status"], "changes": scoped["changes"]}
+        if passed and scoped["status"] != "passed-existing-validator":
+            result["regressions"].append(key)
         try:
             trial = trial_candidate(raw, chart)
         except Exception as error:
@@ -237,6 +246,7 @@ def main():
                 result.update(officialMd5AndSizeVerified=True, sourceSize=entry.size,
                               independentSpFeverChecks=sp_checks(meta), parserTrace=trace)
                 result["candidate"] = trial_candidate(raw, chart)
+                result["scopedRepair"] = trial_candidate(raw, chart, scoped=True)
                 report["charts"][key].update(result)
                 print(json.dumps({"key": key, **{k: result[k] for k in ("status", "categoryCounts", "specialNoteCounts", "independentSpFeverChecks")}}, ensure_ascii=False))
             except Exception as error:
