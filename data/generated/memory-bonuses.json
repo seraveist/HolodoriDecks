@@ -2,8 +2,8 @@
   "format": "holodori-memory-bonuses",
   "version": 1,
   "source_repository": "holodori-net/android-database",
-  "source_commit": "e2455d5ba4c53c8dae048a308aeb635f0a95555f",
-  "master_version": "1aba922e9cd282db2396b19d220524b46e7ac10459c5ffb3c1b6f6d4eb9f550d",
+  "source_commit": "2a6bd4b0a73ca33422ea1dd5d61a41566ee276bc",
+  "master_version": "a968ca86762ff8aeb79996a4c0151e60962b5c70be8757b14410b14499f1a2ef",
   "rows": [
     {
       "count": 1,

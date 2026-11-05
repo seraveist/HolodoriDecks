@@ -1,9 +1,9 @@
 {
   "version": 1,
   "source_repository": "holodori-net/android-database",
-  "source_commit": "e2455d5ba4c53c8dae048a308aeb635f0a95555f",
-  "chart_count": 908,
-  "exact_metadata_count": 172,
+  "source_commit": "2a6bd4b0a73ca33422ea1dd5d61a41566ee276bc",
+  "chart_count": 928,
+  "exact_metadata_count": 188,
   "stale_metadata_count": 0,
   "stale_metadata": [],
   "charts": {
@@ -9988,7 +9988,7 @@
       "fullComboNoteCount": 1185,
       "normalNoteCount": 647,
       "maxComboCountRewardThreshold": 950,
-      "chartHash": "b08b0b7914b3482ce8272cc3dd3d1c03",
+      "chartHash": "68ccdb347bba8d9c504d25deeb0f7c1a",
       "metadataPath": null
     },
     "m0368:EASY": {
@@ -10471,6 +10471,102 @@
       "chartHash": "52ba60b21433163ef2cf28f922330bb1",
       "metadataPath": "./charts/m0388-EXPERT.json"
     },
+    "m0394:EASY": {
+      "musicId": "m0394",
+      "difficulty": "EASY",
+      "difficultyType": 1,
+      "difficultyLevel": 2,
+      "chartAssetId": "chart_m0394_easy",
+      "fullComboNoteCount": 182,
+      "normalNoteCount": 48,
+      "maxComboCountRewardThreshold": 150,
+      "chartHash": "5f6830e8db4eccd963c9a7d09d674ff5",
+      "metadataPath": "./charts/m0394-EASY.json"
+    },
+    "m0394:NORMAL": {
+      "musicId": "m0394",
+      "difficulty": "NORMAL",
+      "difficultyType": 2,
+      "difficultyLevel": 9,
+      "chartAssetId": "chart_m0394_normal",
+      "fullComboNoteCount": 390,
+      "normalNoteCount": 119,
+      "maxComboCountRewardThreshold": 300,
+      "chartHash": "550b506ec17eac713c4fa2903b72e6de",
+      "metadataPath": "./charts/m0394-NORMAL.json"
+    },
+    "m0394:HARD": {
+      "musicId": "m0394",
+      "difficulty": "HARD",
+      "difficultyType": 3,
+      "difficultyLevel": 17,
+      "chartAssetId": "chart_m0394_hard",
+      "fullComboNoteCount": 651,
+      "normalNoteCount": 236,
+      "maxComboCountRewardThreshold": 500,
+      "chartHash": "37e5d7953873383bfccc8813cab5f7ec",
+      "metadataPath": "./charts/m0394-HARD.json"
+    },
+    "m0394:EXPERT": {
+      "musicId": "m0394",
+      "difficulty": "EXPERT",
+      "difficultyType": 4,
+      "difficultyLevel": 23,
+      "chartAssetId": "chart_m0394_expert",
+      "fullComboNoteCount": 815,
+      "normalNoteCount": 370,
+      "maxComboCountRewardThreshold": 650,
+      "chartHash": "a652cad77d4a9a307c70163cf3f1a49a",
+      "metadataPath": null
+    },
+    "m0396:EASY": {
+      "musicId": "m0396",
+      "difficulty": "EASY",
+      "difficultyType": 1,
+      "difficultyLevel": 3,
+      "chartAssetId": "chart_m0396_easy",
+      "fullComboNoteCount": 200,
+      "normalNoteCount": 75,
+      "maxComboCountRewardThreshold": 150,
+      "chartHash": "89ff5de3e7d292b379cb09680de4889a",
+      "metadataPath": "./charts/m0396-EASY.json"
+    },
+    "m0396:NORMAL": {
+      "musicId": "m0396",
+      "difficulty": "NORMAL",
+      "difficultyType": 2,
+      "difficultyLevel": 10,
+      "chartAssetId": "chart_m0396_normal",
+      "fullComboNoteCount": 343,
+      "normalNoteCount": 138,
+      "maxComboCountRewardThreshold": 250,
+      "chartHash": "f75be52668ae2355e23b3d68e8ac067e",
+      "metadataPath": "./charts/m0396-NORMAL.json"
+    },
+    "m0396:HARD": {
+      "musicId": "m0396",
+      "difficulty": "HARD",
+      "difficultyType": 3,
+      "difficultyLevel": 17,
+      "chartAssetId": "chart_m0396_hard",
+      "fullComboNoteCount": 630,
+      "normalNoteCount": 215,
+      "maxComboCountRewardThreshold": 500,
+      "chartHash": "445882a2859ad035af48b2310adef954",
+      "metadataPath": "./charts/m0396-HARD.json"
+    },
+    "m0396:EXPERT": {
+      "musicId": "m0396",
+      "difficulty": "EXPERT",
+      "difficultyType": 4,
+      "difficultyLevel": 25,
+      "chartAssetId": "chart_m0396_expert",
+      "fullComboNoteCount": 848,
+      "normalNoteCount": 256,
+      "maxComboCountRewardThreshold": 700,
+      "chartHash": "e456cc28228847e6798c5815c7617700",
+      "metadataPath": null
+    },
     "m0413:EASY": {
       "musicId": "m0413",
       "difficulty": "EASY",
@@ -10711,6 +10807,54 @@
       "chartHash": "7541c805c17de30744b213ba6d233995",
       "metadataPath": "./charts/m0527-EXPERT.json"
     },
+    "m0528:EASY": {
+      "musicId": "m0528",
+      "difficulty": "EASY",
+      "difficultyType": 1,
+      "difficultyLevel": 4,
+      "chartAssetId": "chart_m0528_easy",
+      "fullComboNoteCount": 215,
+      "normalNoteCount": 92,
+      "maxComboCountRewardThreshold": 150,
+      "chartHash": "823733b6c88a02bf362685cf690e2315",
+      "metadataPath": "./charts/m0528-EASY.json"
+    },
+    "m0528:NORMAL": {
+      "musicId": "m0528",
+      "difficulty": "NORMAL",
+      "difficultyType": 2,
+      "difficultyLevel": 10,
+      "chartAssetId": "chart_m0528_normal",
+      "fullComboNoteCount": 464,
+      "normalNoteCount": 132,
+      "maxComboCountRewardThreshold": 350,
+      "chartHash": "5f6c492c7cd9d1cd616f6e58862adf77",
+      "metadataPath": "./charts/m0528-NORMAL.json"
+    },
+    "m0528:HARD": {
+      "musicId": "m0528",
+      "difficulty": "HARD",
+      "difficultyType": 3,
+      "difficultyLevel": 18,
+      "chartAssetId": "chart_m0528_hard",
+      "fullComboNoteCount": 626,
+      "normalNoteCount": 239,
+      "maxComboCountRewardThreshold": 500,
+      "chartHash": "f54500b7d21d988203abc8e66408853e",
+      "metadataPath": null
+    },
+    "m0528:EXPERT": {
+      "musicId": "m0528",
+      "difficulty": "EXPERT",
+      "difficultyType": 4,
+      "difficultyLevel": 24,
+      "chartAssetId": "chart_m0528_expert",
+      "fullComboNoteCount": 878,
+      "normalNoteCount": 394,
+      "maxComboCountRewardThreshold": 700,
+      "chartHash": "124328a47c6abf92edd3a5cc183fcaf0",
+      "metadataPath": "./charts/m0528-EXPERT.json"
+    },
     "m0548:EASY": {
       "musicId": "m0548",
       "difficulty": "EASY",
@@ -10807,6 +10951,54 @@
       "chartHash": "b670a088e3b6300d916fff14f6b3773d",
       "metadataPath": null
     },
+    "m0550:EASY": {
+      "musicId": "m0550",
+      "difficulty": "EASY",
+      "difficultyType": 1,
+      "difficultyLevel": 2,
+      "chartAssetId": "chart_m0550_easy",
+      "fullComboNoteCount": 214,
+      "normalNoteCount": 31,
+      "maxComboCountRewardThreshold": 150,
+      "chartHash": "84ddac3d9bb06d21f14b2e19890d0c74",
+      "metadataPath": "./charts/m0550-EASY.json"
+    },
+    "m0550:NORMAL": {
+      "musicId": "m0550",
+      "difficulty": "NORMAL",
+      "difficultyType": 2,
+      "difficultyLevel": 9,
+      "chartAssetId": "chart_m0550_normal",
+      "fullComboNoteCount": 336,
+      "normalNoteCount": 71,
+      "maxComboCountRewardThreshold": 250,
+      "chartHash": "8b2515760505aaa96e58be3c9c4ed846",
+      "metadataPath": "./charts/m0550-NORMAL.json"
+    },
+    "m0550:HARD": {
+      "musicId": "m0550",
+      "difficulty": "HARD",
+      "difficultyType": 3,
+      "difficultyLevel": 16,
+      "chartAssetId": "chart_m0550_hard",
+      "fullComboNoteCount": 531,
+      "normalNoteCount": 142,
+      "maxComboCountRewardThreshold": 400,
+      "chartHash": "440e3fd3a0ec5b4121f58981c53d1093",
+      "metadataPath": "./charts/m0550-HARD.json"
+    },
+    "m0550:EXPERT": {
+      "musicId": "m0550",
+      "difficulty": "EXPERT",
+      "difficultyType": 4,
+      "difficultyLevel": 25,
+      "chartAssetId": "chart_m0550_expert",
+      "fullComboNoteCount": 718,
+      "normalNoteCount": 210,
+      "maxComboCountRewardThreshold": 550,
+      "chartHash": "cbe9cb1580f0409f765300ca8d9d71e3",
+      "metadataPath": "./charts/m0550-EXPERT.json"
+    },
     "m0551:EASY": {
       "musicId": "m0551",
       "difficulty": "EASY",
@@ -10854,6 +11046,54 @@
       "maxComboCountRewardThreshold": 800,
       "chartHash": "ef5188bbd4e45a5857949a2ab4e55152",
       "metadataPath": "./charts/m0551-EXPERT.json"
+    },
+    "m0552:EASY": {
+      "musicId": "m0552",
+      "difficulty": "EASY",
+      "difficultyType": 1,
+      "difficultyLevel": 4,
+      "chartAssetId": "chart_m0552_easy",
+      "fullComboNoteCount": 331,
+      "normalNoteCount": 49,
+      "maxComboCountRewardThreshold": 250,
+      "chartHash": "3cde592d4e241d1d5fa8557c1d971056",
+      "metadataPath": "./charts/m0552-EASY.json"
+    },
+    "m0552:NORMAL": {
+      "musicId": "m0552",
+      "difficulty": "NORMAL",
+      "difficultyType": 2,
+      "difficultyLevel": 10,
+      "chartAssetId": "chart_m0552_normal",
+      "fullComboNoteCount": 487,
+      "normalNoteCount": 106,
+      "maxComboCountRewardThreshold": 400,
+      "chartHash": "c273c84bbffd2ae5fd9648c2db045a38",
+      "metadataPath": "./charts/m0552-NORMAL.json"
+    },
+    "m0552:HARD": {
+      "musicId": "m0552",
+      "difficulty": "HARD",
+      "difficultyType": 3,
+      "difficultyLevel": 19,
+      "chartAssetId": "chart_m0552_hard",
+      "fullComboNoteCount": 632,
+      "normalNoteCount": 265,
+      "maxComboCountRewardThreshold": 500,
+      "chartHash": "5ffcb4050e403d16e86d4b75cbd3d16a",
+      "metadataPath": "./charts/m0552-HARD.json"
+    },
+    "m0552:EXPERT": {
+      "musicId": "m0552",
+      "difficulty": "EXPERT",
+      "difficultyType": 4,
+      "difficultyLevel": 26,
+      "chartAssetId": "chart_m0552_expert",
+      "fullComboNoteCount": 995,
+      "normalNoteCount": 348,
+      "maxComboCountRewardThreshold": 800,
+      "chartHash": "4a2e649a96d37635abdded1d9df7e584",
+      "metadataPath": null
     },
     "m9999:EASY": {
       "musicId": "m9999",
