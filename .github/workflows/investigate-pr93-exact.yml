@@ -1,0 +1,51 @@
+name: Investigate PR93 Exact failures
+
+on:
+  push:
+    branches: [investigate/pr93-exact]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: investigate-pr93-exact
+  cancel-in-progress: false
+
+jobs:
+  investigate:
+    runs-on: macos-15
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install existing pinned sync tooling
+        run: |
+          python -m pip install --disable-pip-version-check --retries 5 --timeout 30 -e '.[test,sync]'
+          python -m pip install --disable-pip-version-check --retries 5 --timeout 30 --no-deps 'git+https://github.com/HolodoriDB/holodori-scores@292549eaf4ac7b82bd239fcacb719bae6dfa7ad9'
+      - name: Run parser and integrity regressions
+        run: python -m pytest -q tests/test_chart_asset_sync.py tests/test_chart_parser_regression.py tests/test_pr93_investigation.py
+      - name: Verify and inspect six original charts without publication
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/investigate-pr93-exact.py --output .local/pr93-investigation/report.json
+      - name: Require unchanged generated data
+        if: always()
+        run: git diff --exit-code -- data
+      - name: Upload diagnostic report only
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: pr93-exact-investigation
+          path: .local/pr93-investigation/report.json
+          if-no-files-found: warn
+          retention-days: 7

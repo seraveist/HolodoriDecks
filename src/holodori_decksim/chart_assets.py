@@ -84,9 +84,20 @@ def validate_timeline(meta: dict, chart: dict, values: dict) -> dict:
         previous = time
     for kind, name in COUNTS.items():
         if counts[kind] != int(values[f"{name}_NOTE_COUNT"]):
-            raise ValueError(f"parser {kind} count differs from verified SUS")
+            # Keep the first failing category, but include every category so a
+            # reclassification can be distinguished from lost/extra events.
+            # Diagnostics never change the parsed notes or verified counts.
+            detail = ", ".join(
+                f"{category}=parsed:{counts[category]}/sus:{int(values[f'{header}_NOTE_COUNT'])}"
+                for category, header in COUNTS.items()
+            )
+            raise ValueError(f"parser {kind} count differs from verified SUS; {detail}")
     if int(values.get("DAMAGE_NOTE_COUNT", 0)) or int(values.get("GHOST_NOTE_COUNT", 0)):
-        raise ValueError("unsupported damage/ghost notes")
+        raise ValueError(
+            "unsupported damage/ghost notes; "
+            f"damage={int(values.get('DAMAGE_NOTE_COUNT', 0))}, "
+            f"ghost={int(values.get('GHOST_NOTE_COUNT', 0))}"
+        )
     skills = [{"slot": x["skill_slot_no"], "time": x["time"], "combo": x["skill_starts_at_combo"]}
               for x in meta.get("skills", [])]
     if [x["slot"] for x in skills] != [1, 2, 3, 4, 5]:

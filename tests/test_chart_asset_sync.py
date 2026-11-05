@@ -147,6 +147,22 @@ def test_missing_local_timeline_is_repaired_even_with_identical_asset_payload(ch
     assert path.read_bytes() == before
 
 
+def test_category_rejection_records_diagnostics_without_publishing_a_timeline(chart_sync):
+    state = chart_sync
+    path = state.generated / "charts/m0001-EASY.json"
+    before = path.read_bytes()
+    # The verified SUS still declares one tap. Total count alone cannot approve
+    # the differently classified parser event for the changed source hash.
+    state.timeline["notes"][0][0] = "long_end"
+    assert state.run() is True
+    chart = json.loads((state.generated / "chart-assets.json").read_text())["charts"]["m0001:EASY"]
+    assert "parser tap count differs" in chart["timelineUnavailable"]
+    assert "tap=parsed:0/sus:1" in chart["timelineUnavailable"]
+    assert "long_end=parsed:1/sus:0" in chart["timelineUnavailable"]
+    assert path.read_bytes() == before
+    assert json.loads(before)["chartHash"] != chart["chartHash"]
+
+
 @pytest.mark.parametrize("floor", ["committed", "observed"])
 def test_revision_regression_is_fatal_even_after_an_ignored_revision(chart_sync, floor):
     state = chart_sync
