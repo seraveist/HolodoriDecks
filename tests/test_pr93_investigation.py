@@ -1,5 +1,6 @@
 """Read-only live-audit trust boundaries and tracing parity."""
 import hashlib
+from collections import Counter
 import importlib.util
 from pathlib import Path
 from types import SimpleNamespace
@@ -83,3 +84,42 @@ def test_investigation_workflow_has_no_write_permissions_or_source_uploads():
     assert "git diff --exit-code -- data" in commands
     assert "git push" not in commands
     assert "holodori-sync" not in commands
+
+
+@pytest.mark.parametrize("second_width", [1, 2])
+def test_single_marker_labels_only_one_overlapping_width_matched_end(second_width):
+    pytest.importorskip("holodori.scores")
+    from holodori.scores import chart_metadata, load_sus
+    from io import StringIO
+    from sonolus_converters.notes.slide import Slide
+    module = load_investigation()
+    text = sus_fixture(direction="1").decode().replace("#00152:11", f"#00152:1{second_width}")
+    text += f"#000381:1{second_width}\n#001321:2{second_width}\n"
+    score, lengths = load_sus(StringIO(text))
+    before = chart_metadata(score, lengths)
+    corrected, changes = module.candidate.candidate_score(score, text, lengths)
+    after = chart_metadata(corrected, lengths)
+    before_counts = Counter(k for k, _ in before["notes"])
+    counts = Counter(k for k, _ in after["notes"])
+    assert before_counts["long_flick_end"] == 2
+    assert counts["long_flick_end"] == counts["long_end"] == 1
+    assert [t for _, t in before["notes"]] == [t for _, t in after["notes"]]
+    assert before["skills"] == after["skills"]
+    assert before["fever"] == after["fever"]
+    assert len(changes) == 1 and changes[0]["reclassifiedEnds"] == 1
+    ends = [note.connections[-1] for note in corrected.notes if isinstance(note, Slide)]
+    selected = next(end for end in ends if end.direction)
+    assert round(selected.size * 2) == second_width
+    assert chart_metadata(score, lengths) == before  # input score was not mutated
+
+
+def test_non_overlapping_chart_is_unchanged_by_candidate():
+    pytest.importorskip("holodori.scores")
+    from holodori.scores import chart_metadata, load_sus
+    from io import StringIO
+    module = load_investigation()
+    text = sus_fixture(direction="1").decode()
+    score, lengths = load_sus(StringIO(text))
+    corrected, changes = module.candidate.candidate_score(score, text, lengths)
+    assert changes == []
+    assert chart_metadata(score, lengths) == chart_metadata(corrected, lengths)

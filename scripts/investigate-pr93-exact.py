@@ -20,6 +20,9 @@ HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location("chart_audit", HERE / "audit-chart-timelines.py")
 audit = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(audit)
+candidate_spec = importlib.util.spec_from_file_location("endpoint_candidate", HERE / "pr93-endpoint-candidate.py")
+candidate = importlib.util.module_from_spec(candidate_spec)
+candidate_spec.loader.exec_module(candidate)
 
 
 def verified_source(entry, chart, *, download, decrypt):
@@ -117,9 +120,79 @@ def traced_parse(raw):
     return meta, captured
 
 
+def trial_candidate(raw, chart):
+    from holodori.scores import chart_metadata, load_sus
+    text = raw.decode("utf-8-sig")
+    score, lengths = load_sus(StringIO(text))
+    original = chart_metadata(score, lengths)
+    corrected, changes = candidate.candidate_score(score, text, lengths)
+    meta = chart_metadata(corrected, lengths)
+    original_notes, notes = original["notes"], meta["notes"]
+    if len(notes) != len(original_notes) or original["skills"] != meta["skills"] or original["fever"] != meta["fever"]:
+        raise ValueError("Candidate changed total notes, SP, or Fever")
+    end_types = {"long_end", "long_flick_end"}
+    for before, after in zip(original_notes, notes):
+        if before[1] != after[1]:
+            raise ValueError("Candidate changed a note timestamp")
+        if before[0] != after[0] and not (
+            before[0].removeprefix("critical_") in end_types
+            and after[0].removeprefix("critical_") in end_types
+            and before[0].startswith("critical_") == after[0].startswith("critical_")
+        ):
+            raise ValueError("Candidate changed a non-end event or critical state")
+    result = audit.audit_raw(raw, chart, parser=lambda data: meta)
+    # Counts and markers, but no full scoring timeline, leave the runner.
+    result.update(changes=changes, timestampsSpFeverAndCriticalStateUnchanged=True)
+    return result
+
+
+def regression_corpus(assets, entries, master_rows, detail_rows, difficulties, decrypt, raw_cache):
+    from concurrent.futures import ThreadPoolExecutor
+
+    def verify(item):
+        key, chart = item
+        identity = (chart["musicId"], difficulties[chart["difficulty"]])
+        if (master_rows[identity]["data"]["fullComboNoteCount"] != chart["fullComboNoteCount"]
+                or detail_rows[identity]["data"]["chartAssetId"] != chart["chartAssetId"]):
+            raise ValueError(f"Master/asset mismatch: {key}")
+        raw = raw_cache.get(key)
+        if raw is None:
+            raw = verified_source(entries[chart["chartAssetId"] + ".sus"], chart, download=request_bytes, decrypt=decrypt)
+        return key, raw
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        sources = dict(pool.map(verify, assets["charts"].items()))
+    result = {"verifiedSources": len(sources), "baselinePasses": 0, "candidatePasses": 0,
+              "regressions": [], "changedCharts": {}, "candidateErrors": {}}
+    for key, raw in sorted(sources.items()):
+        chart = assets["charts"][key]
+        try:
+            baseline = audit.audit_raw(raw, chart)
+        except Exception as error:
+            baseline = {"status": "parser-error", "error": f"{type(error).__name__}: {error}"}
+        passed = baseline["status"] == "passed-existing-validator"
+        result["baselinePasses"] += int(passed)
+        try:
+            trial = trial_candidate(raw, chart)
+        except Exception as error:
+            result["candidateErrors"][key] = f"{type(error).__name__}: {error}"
+            if passed:
+                result["regressions"].append(key)
+            continue
+        candidate_passed = trial["status"] == "passed-existing-validator"
+        result["candidatePasses"] += int(candidate_passed)
+        if passed and not candidate_passed:
+            result["regressions"].append(key)
+        if trial["changes"]:
+            result["changedCharts"][key] = {"baselineStatus": baseline["status"], "candidateStatus": trial["status"],
+                                           "changes": trial["changes"], "specialNoteCounts": trial["specialNoteCounts"]}
+    return result
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--regression-corpus", action="store_true", help="Verify all current original SUS files and compare candidate acceptance")
     args = parser.parse_args()
     report = {"mode": "live-read-only-investigation", "complete": False,
               "generatedDataWrites": False, "exactRegistrations": False, "charts": {}}
@@ -146,6 +219,7 @@ def main():
         report["verifiedCatalogRevision"] = current.revisionId
         entries = {e.name: e for e in current.resources}
         difficulties = {"EASY": 1, "NORMAL": 2, "HARD": 3, "EXPERT": 4}
+        raw_cache = {}
         for key in audit.TARGETS:
             chart = assets["charts"][key]
             report["charts"][key] = {"status": "not-yet-verified", "chartHash": chart["chartHash"], "susSha256": chart["susSha256"]}
@@ -157,15 +231,20 @@ def main():
                     raise ValueError("Master asset identity mismatch")
                 entry = entries[chart["chartAssetId"] + ".sus"]
                 raw = verified_source(entry, chart, download=request_bytes, decrypt=decrypt)
+                raw_cache[key] = raw
                 meta, trace = traced_parse(raw)
                 result = audit.audit_raw(raw, chart, parser=lambda data: meta)
                 result.update(officialMd5AndSizeVerified=True, sourceSize=entry.size,
                               independentSpFeverChecks=sp_checks(meta), parserTrace=trace)
+                result["candidate"] = trial_candidate(raw, chart)
                 report["charts"][key].update(result)
                 print(json.dumps({"key": key, **{k: result[k] for k in ("status", "categoryCounts", "specialNoteCounts", "independentSpFeverChecks")}}, ensure_ascii=False))
             except Exception as error:
                 report["charts"][key].update(status="source-or-parser-error", error=f"{type(error).__name__}: {error}")
         report["complete"] = all("officialMd5AndSizeVerified" in row for row in report["charts"].values())
+        if args.regression_corpus:
+            report["regressionCorpus"] = regression_corpus(assets, entries, master_rows, detail_rows, difficulties, decrypt, raw_cache)
+            report["complete"] = report["complete"] and not report["regressionCorpus"]["regressions"]
     except Exception as error:
         report["fatalError"] = f"{type(error).__name__}: {error}"
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False) + "\n")

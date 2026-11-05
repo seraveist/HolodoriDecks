@@ -37,7 +37,7 @@ jobs:
       - name: Verify and inspect six original charts without publication
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: python scripts/investigate-pr93-exact.py --output .local/pr93-investigation/report.json
+        run: python scripts/investigate-pr93-exact.py --regression-corpus --output .local/pr93-investigation/report.json
       - name: Require unchanged generated data
         if: always()
         run: git diff --exit-code -- data
