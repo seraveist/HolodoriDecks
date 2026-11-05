@@ -3,7 +3,7 @@
   "source_repository": "holodori-net/android-database",
   "source_commit": "e2455d5ba4c53c8dae048a308aeb635f0a95555f",
   "chart_count": 908,
-  "exact_metadata_count": 168,
+  "exact_metadata_count": 172,
   "stale_metadata_count": 0,
   "stale_metadata": [],
   "charts": {
@@ -10457,7 +10457,7 @@
       "normalNoteCount": 364,
       "maxComboCountRewardThreshold": 600,
       "chartHash": "14774c061c664f2d0e8b8854467f2e30",
-      "metadataPath": null
+      "metadataPath": "./charts/m0388-HARD.json"
     },
     "m0388:EXPERT": {
       "musicId": "m0388",
@@ -10469,7 +10469,7 @@
       "normalNoteCount": 461,
       "maxComboCountRewardThreshold": 800,
       "chartHash": "52ba60b21433163ef2cf28f922330bb1",
-      "metadataPath": null
+      "metadataPath": "./charts/m0388-EXPERT.json"
     },
     "m0413:EASY": {
       "musicId": "m0413",
@@ -10793,7 +10793,7 @@
       "normalNoteCount": 291,
       "maxComboCountRewardThreshold": 600,
       "chartHash": "7c9f0c3faa4a91321882fac156a7fe1d",
-      "metadataPath": null
+      "metadataPath": "./charts/m0549-HARD.json"
     },
     "m0549:EXPERT": {
       "musicId": "m0549",
@@ -10853,7 +10853,7 @@
       "normalNoteCount": 199,
       "maxComboCountRewardThreshold": 800,
       "chartHash": "ef5188bbd4e45a5857949a2ab4e55152",
-      "metadataPath": null
+      "metadataPath": "./charts/m0551-EXPERT.json"
     },
     "m9999:EASY": {
       "musicId": "m9999",
