@@ -6394,7 +6394,7 @@
       "fullComboNoteCount": 938,
       "normalNoteCount": 389,
       "susSha256": "2c4378ae519b763d8155c129d0b5044196976e09d8696490ab02ecd47e9a39f3",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:389/sus:389, flick=parsed:68/sus:68, long_start=parsed:124/sus:124, long_end=parsed:76/sus:79, long_flick_end=parsed:48/sus:45, long_relay=parsed:26/sus:26, long_continuation=parsed:207/sus:207"
     },
     "m0332:HARD": {
       "musicId": "m0332",
@@ -6404,7 +6404,7 @@
       "fullComboNoteCount": 760,
       "normalNoteCount": 339,
       "susSha256": "3ff6ee7d1cd71dee02d97f51ca01123bcd8c4f2ea3315468552abc603b557328",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:339/sus:339, flick=parsed:21/sus:21, long_start=parsed:97/sus:97, long_end=parsed:79/sus:81, long_flick_end=parsed:18/sus:16, long_relay=parsed:20/sus:20, long_continuation=parsed:186/sus:186"
     },
     "m0332:NORMAL": {
       "musicId": "m0332",
@@ -6432,7 +6432,7 @@
       "fullComboNoteCount": 888,
       "normalNoteCount": 469,
       "susSha256": "b8b5cc75f444340f0bf0b043c3818220e3c5146a76e153cf760d449293f0accd",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=24"
     },
     "m0333:HARD": {
       "musicId": "m0333",
@@ -6469,7 +6469,7 @@
       "fullComboNoteCount": 720,
       "normalNoteCount": 338,
       "susSha256": "9655417d99683a0ce4ee2460adf19d7e7934a69f2c52b46f0ea298dee47dc8e4",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:338/sus:338, flick=parsed:24/sus:24, long_start=parsed:62/sus:62, long_end=parsed:52/sus:54, long_flick_end=parsed:10/sus:8, long_relay=parsed:72/sus:72, long_continuation=parsed:162/sus:162"
     },
     "m0334:HARD": {
       "musicId": "m0334",
@@ -6506,7 +6506,7 @@
       "fullComboNoteCount": 1173,
       "normalNoteCount": 561,
       "susSha256": "d81f0b95e2362529853e6726e0b3d3727305631f801090d9347fbf027c4f87b8",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=28"
     },
     "m0335:HARD": {
       "musicId": "m0335",
@@ -6543,7 +6543,7 @@
       "fullComboNoteCount": 879,
       "normalNoteCount": 354,
       "susSha256": "454f050ef4fbddd5f51818db3dec38c18a6757381e4dddbefe5de1bac41672fd",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=32"
     },
     "m0336:HARD": {
       "musicId": "m0336",
@@ -6652,7 +6652,7 @@
       "fullComboNoteCount": 1014,
       "normalNoteCount": 223,
       "susSha256": "3b113602ff2237e5fbb4c79d27f9f2dcbcf60827e3532ca611f9f8ccf4afdf84",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=8"
     },
     "m0339:HARD": {
       "musicId": "m0339",
@@ -6689,7 +6689,7 @@
       "fullComboNoteCount": 1364,
       "normalNoteCount": 600,
       "susSha256": "21013dadffd32e265fba27794bb2f2b54cc69cdf64f9c347968ed6e6654ae6db",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=20"
     },
     "m0340:HARD": {
       "musicId": "m0340",
@@ -6726,7 +6726,7 @@
       "fullComboNoteCount": 958,
       "normalNoteCount": 464,
       "susSha256": "b6523da612971b3c8816a8fbb5d86d14d569b259aae84387f2818dd31944d969",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:464/sus:464, flick=parsed:85/sus:85, long_start=parsed:109/sus:109, long_end=parsed:80/sus:83, long_flick_end=parsed:29/sus:26, long_relay=parsed:40/sus:40, long_continuation=parsed:151/sus:151"
     },
     "m0341:HARD": {
       "musicId": "m0341",
@@ -6763,7 +6763,7 @@
       "fullComboNoteCount": 1158,
       "normalNoteCount": 658,
       "susSha256": "590d98225c545f2e3739cf75b348625c44d4964356eda6d7ab2ed9079472d60c",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=263"
     },
     "m0342:HARD": {
       "musicId": "m0342",
@@ -6773,7 +6773,7 @@
       "fullComboNoteCount": 941,
       "normalNoteCount": 535,
       "susSha256": "07486333404ee1406b0b5f7553fa6164bf34d30c58e95eb45cb21500e8390d52",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=52"
     },
     "m0342:NORMAL": {
       "musicId": "m0342",
@@ -6801,7 +6801,7 @@
       "fullComboNoteCount": 1106,
       "normalNoteCount": 674,
       "susSha256": "70886d934ec49de671e19ee971592bdafbb68caef5769de84d2168872d91cf12",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:674/sus:674, flick=parsed:114/sus:114, long_start=parsed:95/sus:95, long_end=parsed:78/sus:82, long_flick_end=parsed:17/sus:13, long_relay=parsed:31/sus:31, long_continuation=parsed:97/sus:97"
     },
     "m0344:HARD": {
       "musicId": "m0344",
@@ -6910,7 +6910,7 @@
       "fullComboNoteCount": 850,
       "normalNoteCount": 423,
       "susSha256": "0921d50839961706d56055d6e63dfcb75609c1d04ccd3d067dea0ba59a64e221",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:423/sus:423, flick=parsed:34/sus:34, long_start=parsed:79/sus:79, long_end=parsed:69/sus:71, long_flick_end=parsed:10/sus:8, long_relay=parsed:52/sus:52, long_continuation=parsed:183/sus:183"
     },
     "m0348:HARD": {
       "musicId": "m0348",
@@ -6983,7 +6983,7 @@
       "fullComboNoteCount": 1538,
       "normalNoteCount": 452,
       "susSha256": "ff6864d6c9fd9dd089f1c30a66e33bc8841527d01877fedac8ea9765037b3ec8",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=300"
     },
     "m0350:HARD": {
       "musicId": "m0350",
@@ -7029,7 +7029,7 @@
       "fullComboNoteCount": 528,
       "normalNoteCount": 218,
       "susSha256": "7defa7016e60030263b908da23d8d1b69dc081ae69f0c8a2234fa097fb31e3f1",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:218/sus:218, flick=parsed:11/sus:11, long_start=parsed:60/sus:60, long_end=parsed:49/sus:51, long_flick_end=parsed:11/sus:9, long_relay=parsed:20/sus:20, long_continuation=parsed:159/sus:159"
     },
     "m0351:NORMAL": {
       "musicId": "m0351",
@@ -7066,7 +7066,7 @@
       "fullComboNoteCount": 640,
       "normalNoteCount": 321,
       "susSha256": "f39acc366a08d344740cdad5d5dc80551d1df9f9dcaedb862558677c0e58ce5d",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:321/sus:321, flick=parsed:30/sus:30, long_start=parsed:74/sus:74, long_end=parsed:62/sus:63, long_flick_end=parsed:12/sus:11, long_relay=parsed:25/sus:25, long_continuation=parsed:116/sus:116"
     },
     "m0352:NORMAL": {
       "musicId": "m0352",
@@ -7130,7 +7130,7 @@
       "fullComboNoteCount": 959,
       "normalNoteCount": 368,
       "susSha256": "fef9718a6a11c67afb677d2e0e52a1675b09ebb9e3f3e3158e4070849c8e986c",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:368/sus:368, flick=parsed:89/sus:89, long_start=parsed:113/sus:113, long_end=parsed:76/sus:80, long_flick_end=parsed:37/sus:33, long_relay=parsed:134/sus:134, long_continuation=parsed:142/sus:142"
     },
     "m0354:HARD": {
       "musicId": "m0354",
@@ -7140,7 +7140,7 @@
       "fullComboNoteCount": 572,
       "normalNoteCount": 245,
       "susSha256": "70d19eb8ccf9b3fccccb82bb6e957c87c199577255a97ba9cf86041feda0ee3c",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:245/sus:245, flick=parsed:31/sus:31, long_start=parsed:76/sus:76, long_end=parsed:54/sus:55, long_flick_end=parsed:22/sus:21, long_relay=parsed:41/sus:41, long_continuation=parsed:103/sus:103"
     },
     "m0354:NORMAL": {
       "musicId": "m0354",
@@ -7276,7 +7276,7 @@
       "fullComboNoteCount": 1264,
       "normalNoteCount": 684,
       "susSha256": "67b49a5529d1d6e11afd0f155dae9ff259aec3bb9ce11ff95c29d97e267f1a63",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:684/sus:684, flick=parsed:93/sus:93, long_start=parsed:147/sus:147, long_end=parsed:132/sus:133, long_flick_end=parsed:15/sus:14, long_relay=parsed:79/sus:79, long_continuation=parsed:114/sus:114"
     },
     "m0360:HARD": {
       "musicId": "m0360",
@@ -7313,7 +7313,7 @@
       "fullComboNoteCount": 1497,
       "normalNoteCount": 280,
       "susSha256": "47dbc17fc25bcbddc63ef2759cc849a9e0ffd813301eb51cf068734d4648d5ef",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=24"
     },
     "m0361:HARD": {
       "musicId": "m0361",
@@ -7422,7 +7422,7 @@
       "fullComboNoteCount": 983,
       "normalNoteCount": 233,
       "susSha256": "ec9034088e01c610a8f446f22c817a4e5a5bd2980e424d3669d2cb3a17f3190f",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=15"
     },
     "m0365:HARD": {
       "musicId": "m0365",
@@ -7459,7 +7459,7 @@
       "fullComboNoteCount": 831,
       "normalNoteCount": 328,
       "susSha256": "c8c3f317734b4f22c60f79afb80245ea48684c673268cfeb800b6204b450cafd",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=31"
     },
     "m0366:HARD": {
       "musicId": "m0366",
@@ -7469,7 +7469,7 @@
       "fullComboNoteCount": 616,
       "normalNoteCount": 204,
       "susSha256": "ac059acd0fa7ef64a68f41aeb77665cb835f30105d76cac874e30782c865bb0f",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=19"
     },
     "m0366:NORMAL": {
       "musicId": "m0366",
@@ -7497,7 +7497,7 @@
       "fullComboNoteCount": 1185,
       "normalNoteCount": 647,
       "susSha256": "b29ff5bb101afc9b570b995dc476be118690a30b87b3a30dceb6c190c0c01b6e",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=60"
     },
     "m0367:HARD": {
       "musicId": "m0367",
@@ -7507,7 +7507,7 @@
       "fullComboNoteCount": 800,
       "normalNoteCount": 377,
       "susSha256": "e85f3661902c2ca6b1fd1aee2dd9d934b68c4640ac3adeaa744c1a25bbc10acc",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=36"
     },
     "m0367:NORMAL": {
       "musicId": "m0367",
@@ -7571,7 +7571,7 @@
       "fullComboNoteCount": 1089,
       "normalNoteCount": 468,
       "susSha256": "3563f57b3a5f058b27152ea6520c260217ed8d5605de39e3853ba093d8a7eb92",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=22"
     },
     "m0369:HARD": {
       "musicId": "m0369",
@@ -7752,7 +7752,7 @@
       "fullComboNoteCount": 827,
       "normalNoteCount": 265,
       "susSha256": "df20cef583eab899d7568d1985cb515e410ee1787dd04fe9866fc5fd6ce2dcc0",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:265/sus:265, flick=parsed:81/sus:81, long_start=parsed:128/sus:128, long_end=parsed:74/sus:75, long_flick_end=parsed:54/sus:53, long_relay=parsed:25/sus:25, long_continuation=parsed:200/sus:200"
     },
     "m0376:HARD": {
       "musicId": "m0376",
@@ -7789,7 +7789,7 @@
       "fullComboNoteCount": 999,
       "normalNoteCount": 264,
       "susSha256": "c8e58cd2f967ff2d4f283269bfcb5998f0c1b0d67cd5c17304febdf71eef9e5d",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=4"
     },
     "m0377:HARD": {
       "musicId": "m0377",
@@ -7826,7 +7826,7 @@
       "fullComboNoteCount": 976,
       "normalNoteCount": 528,
       "susSha256": "c9b0bbff9d633862b1374031bacef818f8e9d653905cf8c89d4a8a71179c2ff9",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=36"
     },
     "m0378:HARD": {
       "musicId": "m0378",
@@ -7836,7 +7836,7 @@
       "fullComboNoteCount": 768,
       "normalNoteCount": 346,
       "susSha256": "dff49edaed412dbc7709a691dc5f4632e4f6b6ca9ee6da4c39ad9f5dfdeec5da",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:346/sus:346, flick=parsed:27/sus:27, long_start=parsed:60/sus:60, long_end=parsed:52/sus:53, long_flick_end=parsed:8/sus:7, long_relay=parsed:40/sus:40, long_continuation=parsed:235/sus:235"
     },
     "m0378:NORMAL": {
       "musicId": "m0378",
@@ -7863,8 +7863,7 @@
       "chartHash": "52ba60b21433163ef2cf28f922330bb1",
       "fullComboNoteCount": 989,
       "normalNoteCount": 461,
-      "susSha256": "ed8bcdb1a26186b3d5cc54a8d09481b35139192ccc7fd09b5e14d597c19687f9",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "susSha256": "ed8bcdb1a26186b3d5cc54a8d09481b35139192ccc7fd09b5e14d597c19687f9"
     },
     "m0388:HARD": {
       "musicId": "m0388",
@@ -7873,8 +7872,7 @@
       "chartHash": "14774c061c664f2d0e8b8854467f2e30",
       "fullComboNoteCount": 761,
       "normalNoteCount": 364,
-      "susSha256": "5b164dd572cf42d72a0281d3894cbee42bfc632df24339ee704b963021665a99",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "susSha256": "5b164dd572cf42d72a0281d3894cbee42bfc632df24339ee704b963021665a99"
     },
     "m0388:NORMAL": {
       "musicId": "m0388",
@@ -7902,7 +7900,7 @@
       "fullComboNoteCount": 1227,
       "normalNoteCount": 354,
       "susSha256": "e161a728bb70a0ad2a716c2261ba7fc0920d6c333d9565f287ecbb42b4178f44",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:354/sus:354, flick=parsed:127/sus:127, long_start=parsed:261/sus:261, long_end=parsed:187/sus:188, long_flick_end=parsed:74/sus:73, long_relay=parsed:23/sus:23, long_continuation=parsed:201/sus:201"
     },
     "m0413:HARD": {
       "musicId": "m0413",
@@ -7939,7 +7937,7 @@
       "fullComboNoteCount": 870,
       "normalNoteCount": 387,
       "susSha256": "65c6708394241bd8489add941c0d2c9e707335f215504be1f24f46dfccac62c6",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:387/sus:387, flick=parsed:62/sus:62, long_start=parsed:115/sus:115, long_end=parsed:98/sus:104, long_flick_end=parsed:17/sus:11, long_relay=parsed:26/sus:26, long_continuation=parsed:165/sus:165"
     },
     "m0459:HARD": {
       "musicId": "m0459",
@@ -8012,7 +8010,7 @@
       "fullComboNoteCount": 1144,
       "normalNoteCount": 352,
       "susSha256": "ffca5baeeab5e5dd32449fb95a8f40bcb045cc8c8ce35920c48677e69ef2b523",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=208"
     },
     "m0525:HARD": {
       "musicId": "m0525",
@@ -8022,7 +8020,7 @@
       "fullComboNoteCount": 812,
       "normalNoteCount": 337,
       "susSha256": "36a6a60665282ff3971a628d71e98f7b312cd3cef953dd4fd93a08d607386e42",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=12"
     },
     "m0525:NORMAL": {
       "musicId": "m0525",
@@ -8122,7 +8120,7 @@
       "fullComboNoteCount": 978,
       "normalNoteCount": 422,
       "susSha256": "9816bc7cbe4fa7646f1e8fd595bdf314389b82a0aef613996102ec963cd16557",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=515"
     },
     "m0549:HARD": {
       "musicId": "m0549",
@@ -8131,8 +8129,7 @@
       "chartHash": "7c9f0c3faa4a91321882fac156a7fe1d",
       "fullComboNoteCount": 724,
       "normalNoteCount": 291,
-      "susSha256": "72ae9a37765f72709ffe4b3cae202c410748b637c4ee3d608f2b4d9288c9789c",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "susSha256": "72ae9a37765f72709ffe4b3cae202c410748b637c4ee3d608f2b4d9288c9789c"
     },
     "m0549:NORMAL": {
       "musicId": "m0549",
@@ -8159,8 +8156,7 @@
       "chartHash": "ef5188bbd4e45a5857949a2ab4e55152",
       "fullComboNoteCount": 1031,
       "normalNoteCount": 199,
-      "susSha256": "f40637f62fe12bc91f3d30a357547a37c7d5b4db1849d700974f4eec461ee317",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS"
+      "susSha256": "f40637f62fe12bc91f3d30a357547a37c7d5b4db1849d700974f4eec461ee317"
     },
     "m0551:HARD": {
       "musicId": "m0551",
