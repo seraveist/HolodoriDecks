@@ -1,8 +1,8 @@
 {
   "repository": "holodori-net/android-database",
   "ref": "main",
-  "commit": "2a6bd4b0a73ca33422ea1dd5d61a41566ee276bc",
-  "master_version": "a968ca86762ff8aeb79996a4c0151e60962b5c70be8757b14410b14499f1a2ef",
+  "commit": "94e722fd5c893544d86c56c201420839eaa3901f",
+  "master_version": "946df5578961c3cc9a9830a7f0af65713e46e0ed55ce52cdd508bd3dc6ec5314",
   "normalizerVersion": 4,
   "format": "android-database-v1",
   "contract_commit": "9fc9d4bb22ae201f503568d40d864df480b4b8e3",
@@ -10,21 +10,21 @@
   "locales": {
     "ko": {
       "repository": "holodori-net/android-database",
-      "commit": "2a6bd4b0a73ca33422ea1dd5d61a41566ee276bc",
+      "commit": "94e722fd5c893544d86c56c201420839eaa3901f",
       "suffix": "Kor",
       "language": "kor",
       "format": "android-database-v1"
     },
     "en": {
       "repository": "holodori-net/android-database",
-      "commit": "2a6bd4b0a73ca33422ea1dd5d61a41566ee276bc",
+      "commit": "94e722fd5c893544d86c56c201420839eaa3901f",
       "suffix": "Eng",
       "language": "eng",
       "format": "android-database-v1"
     },
     "ja": {
       "repository": "holodori-net/android-database",
-      "commit": "2a6bd4b0a73ca33422ea1dd5d61a41566ee276bc",
+      "commit": "94e722fd5c893544d86c56c201420839eaa3901f",
       "suffix": "Jpn",
       "language": "jpn",
       "format": "android-database-v1"
@@ -75,7 +75,7 @@
     "Character.json": "46b6515cce4bb77ff52c369031d68301936eabaa3297787b1b0992928610cf74",
     "LangCard_Kor.json": "c77c829ceb09def0d97271e51390f2ee04be4d2f97b21837a6555f1c3609a044",
     "LangCharacter_Kor.json": "12adab4f1e0e215aa6517d4d9f6a3026440a43b7dfc4113a4b569f649f5c4a86",
-    "Music.json": "efedcaa3604a796275dcc347f9aa6673f0a0124c795ded20c3fb269a3b56b744",
+    "Music.json": "47a98a55e266244db3cf7f55eb405959f6b6ec5f91b652c4e3c6ac58a01efba7",
     "LangMusic_Kor.json": "60a9d43b7b2dfce4de150fd3e2c01f82e78b53039d99744f7dab989a09ff6518",
     "CardLevel.json": "19c0deb8d0bddfab99f5f61cf3853d37547f42d63f6e15e14281cc11432f3e9e",
     "CardLevelLimit.json": "0057ae9a1fbdb6aa742e13a649de612a20dd0258a7130937d19cf6616c6479fe",
