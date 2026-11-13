@@ -1,14 +1,14 @@
 {
   "source_repository": "holodori-net/android-database",
-  "source_commit": "94e722fd5c893544d86c56c201420839eaa3901f",
+  "source_commit": "eb340453e64b4cfcf4f83e6a2b9a81f992c09b6e",
   "source_format": "android-database-v1",
   "contract_commit": "9fc9d4bb22ae201f503568d40d864df480b4b8e3",
   "contract_sha256": "deb048bedf79ad78b65e923b5ed2536c200f777afb1768844f63459a0be92c8d",
-  "master_version": "946df5578961c3cc9a9830a7f0af65713e46e0ed55ce52cdd508bd3dc6ec5314",
+  "master_version": "9171c5282eaf618dab68c4ca2459cfd386c79aad7fb56db59496f2058f78d875",
   "character_count": 62,
-  "card_count": 204,
-  "music_count": 232,
-  "leader_card_count": 204,
+  "card_count": 209,
+  "music_count": 240,
+  "leader_card_count": 209,
   "board_schema_version": 1,
   "board_counts": {
     "characters": 54,
@@ -29,21 +29,21 @@
   "locales": {
     "ko": {
       "repository": "holodori-net/android-database",
-      "commit": "94e722fd5c893544d86c56c201420839eaa3901f",
+      "commit": "eb340453e64b4cfcf4f83e6a2b9a81f992c09b6e",
       "suffix": "Kor",
       "language": "kor",
       "format": "android-database-v1"
     },
     "en": {
       "repository": "holodori-net/android-database",
-      "commit": "94e722fd5c893544d86c56c201420839eaa3901f",
+      "commit": "eb340453e64b4cfcf4f83e6a2b9a81f992c09b6e",
       "suffix": "Eng",
       "language": "eng",
       "format": "android-database-v1"
     },
     "ja": {
       "repository": "holodori-net/android-database",
-      "commit": "94e722fd5c893544d86c56c201420839eaa3901f",
+      "commit": "eb340453e64b4cfcf4f83e6a2b9a81f992c09b6e",
       "suffix": "Jpn",
       "language": "jpn",
       "format": "android-database-v1"
