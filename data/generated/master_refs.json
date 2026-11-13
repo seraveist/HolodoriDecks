@@ -4015,6 +4015,17 @@
         "description": "4기생2명의 퍼포먼스가 32% UP"
       }
     ],
+    "live_passive_skill_effect-performance_up_permil_up-320-live_skill_effect_target-character_grouping-grp-indonesia-gen_2-2": [
+      {
+        "groupId": "live_passive_skill_effect-performance_up_permil_up-320-live_skill_effect_target-character_grouping-grp-indonesia-gen_2-2",
+        "number": 1,
+        "type": "LivePassiveSkillEffectType_LIVE_PASSIVE_SKILL_EFFECT_TYPE_PERFORMANCE_UP_PERMIL_UP",
+        "value": "320",
+        "liveSkillEffectTargetId": "live_skill_effect_target-character_grouping-grp-indonesia-gen_2-2",
+        "descriptionLangId": "la-generated-live_passive_skill_effect-performance_up_permil_up-320-live_skill_effect_target-character_grouping-grp-indonesia-gen_2-2.1-description",
+        "description": "ID 2기생2명의 퍼포먼스가 32% UP"
+      }
+    ],
     "live_passive_skill_effect-performance_up_permil_up-340-live_skill_effect_target-character_grouping-grp-gamers-2": [
       {
         "groupId": "live_passive_skill_effect-performance_up_permil_up-340-live_skill_effect_target-character_grouping-grp-gamers-2",
@@ -4189,6 +4200,17 @@
         "liveSkillEffectTargetId": "live_skill_effect_target-character_grouping-grp-gen_4-2",
         "descriptionLangId": "la-generated-live_passive_skill_effect-performance_up_permil_up-430-live_skill_effect_target-character_grouping-grp-gen_4-2.1-description",
         "description": "4기생2명의 퍼포먼스가 43% UP"
+      }
+    ],
+    "live_passive_skill_effect-performance_up_permil_up-430-live_skill_effect_target-character_grouping-grp-indonesia-gen_2-2": [
+      {
+        "groupId": "live_passive_skill_effect-performance_up_permil_up-430-live_skill_effect_target-character_grouping-grp-indonesia-gen_2-2",
+        "number": 1,
+        "type": "LivePassiveSkillEffectType_LIVE_PASSIVE_SKILL_EFFECT_TYPE_PERFORMANCE_UP_PERMIL_UP",
+        "value": "430",
+        "liveSkillEffectTargetId": "live_skill_effect_target-character_grouping-grp-indonesia-gen_2-2",
+        "descriptionLangId": "la-generated-live_passive_skill_effect-performance_up_permil_up-430-live_skill_effect_target-character_grouping-grp-indonesia-gen_2-2.1-description",
+        "description": "ID 2기생2명의 퍼포먼스가 43% UP"
       }
     ],
     "live_passive_skill_effect-performance_up_permil_up-450-live_skill_effect_target-character_grouping-grp-gen_1-2": [
@@ -5016,6 +5038,17 @@
         "description": "4기생2명의 테크닉이 32% UP"
       }
     ],
+    "live_passive_skill_effect-technique_up_permil_up-320-live_skill_effect_target-character_grouping-grp-gen_5-2": [
+      {
+        "groupId": "live_passive_skill_effect-technique_up_permil_up-320-live_skill_effect_target-character_grouping-grp-gen_5-2",
+        "number": 1,
+        "type": "LivePassiveSkillEffectType_LIVE_PASSIVE_SKILL_EFFECT_TYPE_TECHNIQUE_UP_PERMIL_UP",
+        "value": "320",
+        "liveSkillEffectTargetId": "live_skill_effect_target-character_grouping-grp-gen_5-2",
+        "descriptionLangId": "la-generated-live_passive_skill_effect-technique_up_permil_up-320-live_skill_effect_target-character_grouping-grp-gen_5-2.1-description",
+        "description": "5기생2명의 테크닉이 32% UP"
+      }
+    ],
     "live_passive_skill_effect-technique_up_permil_up-320-live_skill_effect_target-character_grouping-grp-promise-2": [
       {
         "groupId": "live_passive_skill_effect-technique_up_permil_up-320-live_skill_effect_target-character_grouping-grp-promise-2",
@@ -5135,6 +5168,17 @@
         "liveSkillEffectTargetId": "live_skill_effect_target-character_grouping-grp-gen_4-2",
         "descriptionLangId": "la-generated-live_passive_skill_effect-technique_up_permil_up-430-live_skill_effect_target-character_grouping-grp-gen_4-2.1-description",
         "description": "4기생2명의 테크닉이 43% UP"
+      }
+    ],
+    "live_passive_skill_effect-technique_up_permil_up-430-live_skill_effect_target-character_grouping-grp-gen_5-2": [
+      {
+        "groupId": "live_passive_skill_effect-technique_up_permil_up-430-live_skill_effect_target-character_grouping-grp-gen_5-2",
+        "number": 1,
+        "type": "LivePassiveSkillEffectType_LIVE_PASSIVE_SKILL_EFFECT_TYPE_TECHNIQUE_UP_PERMIL_UP",
+        "value": "430",
+        "liveSkillEffectTargetId": "live_skill_effect_target-character_grouping-grp-gen_5-2",
+        "descriptionLangId": "la-generated-live_passive_skill_effect-technique_up_permil_up-430-live_skill_effect_target-character_grouping-grp-gen_5-2.1-description",
+        "description": "5기생2명의 테크닉이 43% UP"
       }
     ],
     "live_passive_skill_effect-technique_up_permil_up-430-live_skill_effect_target-character_grouping-grp-promise-2": [
