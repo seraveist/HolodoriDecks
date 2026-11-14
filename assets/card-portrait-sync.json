@@ -1,5 +1,16 @@
 {
   "cards": {
+    "card-00002-5-uniq-0104-00": {
+      "asset_id": "00002-5-uniq-0104-00",
+      "catalog_entry": "img_card_full_00002-5-uniq-0104-00",
+      "catalog_object_name": "nTGFgD",
+      "catalog_revision": 114,
+      "height": 1024,
+      "sha256": "98275953cbbcf7abf2928c7cf15d0fa241c8992f8b7a00ab67e4586a45c86ad8",
+      "unity_object": "img_card_full_00002-5-uniq-0104-00",
+      "unity_object_type": "Texture2D",
+      "width": 2048
+    },
     "card-00004-5-uniq-0081-00": {
       "asset_class": "card-illustration",
       "asset_id": "00004-5-uniq-0081-00",
@@ -147,6 +158,17 @@
       "unity_object_type": "WebP illustration",
       "width": 768
     },
+    "card-00019-5-uniq-0108-00": {
+      "asset_id": "00019-5-uniq-0108-00",
+      "catalog_entry": "img_card_full_00019-5-uniq-0108-00",
+      "catalog_object_name": "xkyBkc",
+      "catalog_revision": 114,
+      "height": 1024,
+      "sha256": "a1722739c73de1fb720542a79c70835172ce9c26739e21cdc56fefbfc3aa9dc7",
+      "unity_object": "img_card_full_00019-5-uniq-0108-00",
+      "unity_object_type": "Texture2D",
+      "width": 2048
+    },
     "card-00023-5-uniq-0085-00": {
       "asset_id": "00023-5-uniq-0085-00",
       "catalog_entry": "img_card_full_00023-5-uniq-0085-00",
@@ -198,6 +220,17 @@
       "height": 1024,
       "sha256": "9c2e3f2c6ab7ef365912e6a525f9976dd174b7130263cfa808222f99642ce8a2",
       "unity_object": "img_card_full_00030-5-uniq-0089-00",
+      "unity_object_type": "Texture2D",
+      "width": 2048
+    },
+    "card-00031-5-uniq-0105-00": {
+      "asset_id": "00031-5-uniq-0105-00",
+      "catalog_entry": "img_card_full_00031-5-uniq-0105-00",
+      "catalog_object_name": "U9gq9l",
+      "catalog_revision": 114,
+      "height": 1024,
+      "sha256": "1c1eb625da926d8dfea33303cc6434022d629f11cc0ef051783e57b590580d77",
+      "unity_object": "img_card_full_00031-5-uniq-0105-00",
       "unity_object_type": "Texture2D",
       "width": 2048
     },
@@ -387,6 +420,17 @@
       "unity_object_type": "WebP illustration",
       "width": 768
     },
+    "card-03006-5-uniq-0107-00": {
+      "asset_id": "03006-5-uniq-0107-00",
+      "catalog_entry": "img_card_full_03006-5-uniq-0107-00",
+      "catalog_object_name": "vVop3s",
+      "catalog_revision": 114,
+      "height": 1024,
+      "sha256": "e55f849a2de14fe55e7e148d31bfc399f77d4e7541224018029fc7f839a84fe8",
+      "unity_object": "img_card_full_03006-5-uniq-0107-00",
+      "unity_object_type": "Texture2D",
+      "width": 2048
+    },
     "card-03007-5-uniq-0100-00": {
       "asset_class": "card-illustration",
       "asset_id": "03007-5-uniq-0100-00",
@@ -471,6 +515,17 @@
       "unity_object": "apps/web/public/game/illustrations/card-04003-5-uniq-0072-00.webp",
       "unity_object_type": "WebP illustration",
       "width": 768
+    },
+    "card-04007-5-uniq-0106-00": {
+      "asset_id": "04007-5-uniq-0106-00",
+      "catalog_entry": "img_card_full_04007-5-uniq-0106-00",
+      "catalog_object_name": "T0QtL2",
+      "catalog_revision": 114,
+      "height": 1024,
+      "sha256": "ccff7154af635377e8c908952f4d6c9bf100655c33b5c0584dd350fb75714461",
+      "unity_object": "img_card_full_04007-5-uniq-0106-00",
+      "unity_object_type": "Texture2D",
+      "width": 2048
     },
     "card-04012-5-uniq-0087-00": {
       "asset_id": "04012-5-uniq-0087-00",
@@ -632,16 +687,9 @@
       "width": 768
     }
   },
-  "catalog_revision": 101,
-  "public_card_art": {
-    "asset_class": "card-illustration",
-    "commit": "4380f1b9cd59f1377ecd41e2333e8b0952a9b1f1",
-    "manifest_path": "data/generated/card-art-manifest.json",
-    "repository": "asciisyaez/yagoo-dori",
-    "retrieved_at": "2026-10-30"
-  },
+  "catalog_revision": 114,
   "source": "Holodori game Octo CDN",
   "tool_commit": "13f150fe9dfbd367be53e5ea1c0a4ceb258b74f2",
   "tool_repository": "HolodoriDB/holodori-asset-tools",
-  "version": 3
+  "version": 1
 }
