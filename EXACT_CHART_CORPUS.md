@@ -1,5 +1,16 @@
 # Exact chart corpus compatibility audit
 
+## 2026-10-21 current-master investigation
+
+The five hash-rejected Runtime objects remain excluded. All five already have
+current, validated Local Exact files introduced by PR #69 on 2026-09-30.
+Runtime coverage stays **698/880**; combined Local/Runtime coverage is
+**843/880** (146 Local, 698 Runtime, one overlap). No new recovery or master/art
+resync was needed. See the [investigation and limits](analysis/exact-runtime-hash-audit-20261021.md)
+and [reproducible comparison report](analysis/exact-runtime-hash-audit-20261021.json).
+
+The snapshots below are historical audit results, not current coverage counts.
+
 This document records the compatibility audit and v1.1.0 runtime intake design for the public Exact chart-timeline source used by Holodori DeckSim. The third-party chart corpus is **not** bulk-redistributed by this repository.
 
 ## Pinned source

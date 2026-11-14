@@ -1,0 +1,1333 @@
+{
+  "version": 1,
+  "source": {
+    "repository": "asciisyaez/yagoo-dori",
+    "commit": "6c2c95d52c268862d34fb523d965f09a3108bbbd",
+    "path": "data/generated/holodori-chart-timelines.json",
+    "url": "https://raw.githubusercontent.com/asciisyaez/yagoo-dori/6c2c95d52c268862d34fb523d965f09a3108bbbd/data/generated/holodori-chart-timelines.json",
+    "sha256": "0c34e934a20e29e5ded8140ab31d12617f832ed723d2b56e535d3db19c276534",
+    "sourceId": "holodori-best-chart-corpus-r51",
+    "apiRevision": 51,
+    "retrievedAt": "2026-08-02",
+    "sourceLicense": null
+  },
+  "master": {
+    "sourceCommit": "fb21249d6bb141a0fd7b0a3519054dbb6b4a8a54",
+    "masterVersion": "452bd7acfd1b9f90cc85d9978aea55b1a6bf6c2cddaff470c640462830c8c00d",
+    "catalogRevision": 101
+  },
+  "coverage": {
+    "masterCharts": 880,
+    "runtimeExact": 698,
+    "localExact": 146,
+    "overlap": 1,
+    "combinedExact": 843,
+    "withoutExact": 37,
+    "rejectedRuntime": 5,
+    "rejectedWithLocalExact": 5,
+    "newlyRecoveredRuntime": 0,
+    "newlyRecoveredCombined": 0,
+    "sourceUnavailable": 25,
+    "sourceUnavailableWithLocalExact": 21,
+    "masterKeysOutsideCorpus": 152
+  },
+  "rejected": [
+    {
+      "key": "m0066:EXPERT",
+      "reasons": [
+        "chart-hash-mismatch"
+      ],
+      "decision": "keep-pinned-runtime-excluded",
+      "localExactAvailable": true,
+      "currentSusDigestMatchesLocal": true,
+      "sourceObjectSha256": "7f6cd2779ecad496f426cea01573787985ebd8ea046d785d57c9386e9de97e33",
+      "old": {
+        "chartHash": "8096bd7fec1ad3b3a4956339197fdcd7",
+        "susSha256": "dc8918f4a177253104fcc926d9e3f9cac223fb236c40ef78eaf15db3d9f658c8",
+        "source": {
+          "apiRevision": 51,
+          "retrievedAt": "2026-08-02",
+          "sus": {
+            "url": "https://api.holodori.best/api/asset/resources/chart_m0066_expert.sus/chart_m0066_expert.sus",
+            "sha256": "dc8918f4a177253104fcc926d9e3f9cac223fb236c40ef78eaf15db3d9f658c8",
+            "etag": "\"802bb63fa321ef1c1458a115ab192bcb\"",
+            "lastModified": "Thu, 30 Jul 2026 04:50:26 GMT",
+            "contentType": "application/vnd.sus-calendar"
+          },
+          "metadata": {
+            "url": "https://api.holodori.best/api/asset/resources/chart_m0066_expert.sus/chart_m0066_expert.json",
+            "sha256": "8f8900d42bba0473fd487f9c770d88c5706ec464b1e1bf0b0ff59c08b833313a",
+            "etag": "W/\"ac1206d68d172c73f223738a72234c95\"",
+            "lastModified": "Sat, 01 Aug 2026 04:26:03 GMT",
+            "contentType": "application/json"
+          }
+        },
+        "fullComboNoteCount": 966,
+        "normalNoteCount": 312,
+        "skills": [
+          {
+            "slot": 1,
+            "time": 13.090909,
+            "combo": 51
+          },
+          {
+            "slot": 2,
+            "time": 52.363636,
+            "combo": 306
+          },
+          {
+            "slot": 3,
+            "time": 69.818182,
+            "combo": 437
+          },
+          {
+            "slot": 4,
+            "time": 100.363636,
+            "combo": 744
+          },
+          {
+            "slot": 5,
+            "time": 117.818182,
+            "combo": 849
+          }
+        ],
+        "fever": {
+          "start": 52.363636,
+          "end": 73.817045
+        }
+      },
+      "current": {
+        "chartHash": "f89715c0d323d5f1f9bdcf8dd3fc0d3e",
+        "susSha256": "199c400aba084281a7d9fa6edd6e265a9d168f09018fd77328577ae36dbfa170",
+        "fullComboNoteCount": 966,
+        "normalNoteCount": 312,
+        "metadataPath": "./charts/m0066-EXPERT.json",
+        "parserCommit": "292549eaf4ac7b82bd239fcacb719bae6dfa7ad9",
+        "converterCommit": "100e0ac4e5d2a895089b565f38800d1cc6a0b28e",
+        "skills": [
+          {
+            "slot": 1,
+            "time": 13.090909,
+            "combo": 51
+          },
+          {
+            "slot": 2,
+            "time": 52.363636,
+            "combo": 306
+          },
+          {
+            "slot": 3,
+            "time": 69.818182,
+            "combo": 437
+          },
+          {
+            "slot": 4,
+            "time": 100.363636,
+            "combo": 744
+          },
+          {
+            "slot": 5,
+            "time": 117.818182,
+            "combo": 849
+          }
+        ],
+        "fever": {
+          "start": 52.363636,
+          "end": 73.817045
+        }
+      },
+      "comparison": {
+        "pairing": "same-type chronological rank; not a proof of note identity",
+        "oldNotesSha256": "744bf631d2b1ff162693b1b693ce473cb00182542027b10aeee5e8b93d337c14",
+        "currentNotesSha256": "a6f03c4839843b01d1579443f121c877e00c5683b92c3d066e95951f416522dc",
+        "countsByType": {
+          "critical_flick": {
+            "old": 18,
+            "current": 18
+          },
+          "critical_long_continuation": {
+            "old": 111,
+            "current": 109
+          },
+          "critical_long_end": {
+            "old": 43,
+            "current": 43
+          },
+          "critical_long_relay": {
+            "old": 26,
+            "current": 28
+          },
+          "critical_long_start": {
+            "old": 43,
+            "current": 43
+          },
+          "critical_tap": {
+            "old": 41,
+            "current": 41
+          },
+          "flick": {
+            "old": 7,
+            "current": 7
+          },
+          "long_continuation": {
+            "old": 206,
+            "current": 204
+          },
+          "long_end": {
+            "old": 79,
+            "current": 79
+          },
+          "long_flick_end": {
+            "old": 4,
+            "current": 4
+          },
+          "long_relay": {
+            "old": 34,
+            "current": 36
+          },
+          "long_start": {
+            "old": 83,
+            "current": 83
+          },
+          "tap": {
+            "old": 271,
+            "current": 271
+          }
+        },
+        "countDifferences": 8,
+        "exactTimeDifferences": 73,
+        "roundingOnlyDifferences": 1,
+        "largerTimeDifferences": 72,
+        "maxAbsDeltaMicroseconds": 14590909,
+        "samples": [
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 91,
+            "oldMicroseconds": 110454545,
+            "currentMicroseconds": 111000000,
+            "deltaMicroseconds": 545455
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 92,
+            "oldMicroseconds": 111000000,
+            "currentMicroseconds": 111272727,
+            "deltaMicroseconds": 272727
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 93,
+            "oldMicroseconds": 111272727,
+            "currentMicroseconds": 111545455,
+            "deltaMicroseconds": 272728
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 94,
+            "oldMicroseconds": 111545455,
+            "currentMicroseconds": 111818182,
+            "deltaMicroseconds": 272727
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 95,
+            "oldMicroseconds": 111818182,
+            "currentMicroseconds": 112090909,
+            "deltaMicroseconds": 272727
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 96,
+            "oldMicroseconds": 112090909,
+            "currentMicroseconds": 112363636,
+            "deltaMicroseconds": 272727
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 97,
+            "oldMicroseconds": 112363636,
+            "currentMicroseconds": 112636364,
+            "deltaMicroseconds": 272728
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 98,
+            "oldMicroseconds": 112636364,
+            "currentMicroseconds": 126818182,
+            "deltaMicroseconds": 14181818
+          }
+        ],
+        "skillsEqual": true,
+        "feverEqual": true,
+        "skillTimeDeltasMicroseconds": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "skillComboDeltas": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "key": "m0337:EASY",
+      "reasons": [
+        "chart-hash-mismatch"
+      ],
+      "decision": "keep-pinned-runtime-excluded",
+      "localExactAvailable": true,
+      "currentSusDigestMatchesLocal": true,
+      "sourceObjectSha256": "56e80817362b73a73ca1d30b5489996d551e337e84278201ba15c43215b15eea",
+      "old": {
+        "chartHash": "b944cd143582f59e96bfb8aa258b2f77",
+        "susSha256": "fb51bfb3a02cd03a07348b208bc6e3211e3b7e551f71f33525b57fc4cd903791",
+        "source": {
+          "apiRevision": 51,
+          "retrievedAt": "2026-08-02",
+          "sus": {
+            "url": "https://api.holodori.best/api/asset/resources/chart_m0337_easy.sus/chart_m0337_easy.sus",
+            "sha256": "fb51bfb3a02cd03a07348b208bc6e3211e3b7e551f71f33525b57fc4cd903791",
+            "etag": "\"a8a90d19f1e7ee0f707fd9d13a644aec\"",
+            "lastModified": "Thu, 30 Jul 2026 04:56:49 GMT",
+            "contentType": "application/vnd.sus-calendar"
+          },
+          "metadata": {
+            "url": "https://api.holodori.best/api/asset/resources/chart_m0337_easy.sus/chart_m0337_easy.json",
+            "sha256": "a2c4bcfe674e38b17fac734f21ce35158b2558d9a14514d2347e6d08b9290977",
+            "etag": "W/\"bed540f62481fa37173a477c9e0e48f9\"",
+            "lastModified": "Sat, 01 Aug 2026 04:26:13 GMT",
+            "contentType": "application/json"
+          }
+        },
+        "fullComboNoteCount": 361,
+        "normalNoteCount": 57,
+        "skills": [
+          {
+            "slot": 1,
+            "time": 15.157895,
+            "combo": 16
+          },
+          {
+            "slot": 2,
+            "time": 35.368421,
+            "combo": 75
+          },
+          {
+            "slot": 3,
+            "time": 55.578947,
+            "combo": 148
+          },
+          {
+            "slot": 4,
+            "time": 78.315789,
+            "combo": 221
+          },
+          {
+            "slot": 5,
+            "time": 98.526316,
+            "combo": 301
+          }
+        ],
+        "fever": {
+          "start": 68.210526,
+          "end": 88.209868
+        }
+      },
+      "current": {
+        "chartHash": "6baa05c06d7554471d19221e31f31d2f",
+        "susSha256": "a24ac67248ce747bb95389f1cfe09a5b8a38d1a398f95cb668931f9c567fbc34",
+        "fullComboNoteCount": 361,
+        "normalNoteCount": 57,
+        "metadataPath": "./charts/m0337-EASY.json",
+        "parserCommit": "292549eaf4ac7b82bd239fcacb719bae6dfa7ad9",
+        "converterCommit": "100e0ac4e5d2a895089b565f38800d1cc6a0b28e",
+        "skills": [
+          {
+            "slot": 1,
+            "time": 16.421053,
+            "combo": 19
+          },
+          {
+            "slot": 2,
+            "time": 34.105263,
+            "combo": 75
+          },
+          {
+            "slot": 3,
+            "time": 54.315789,
+            "combo": 148
+          },
+          {
+            "slot": 4,
+            "time": 77.052632,
+            "combo": 221
+          },
+          {
+            "slot": 5,
+            "time": 98.526316,
+            "combo": 317
+          }
+        ],
+        "fever": {
+          "start": 66.947368,
+          "end": 86.946711
+        }
+      },
+      "comparison": {
+        "pairing": "same-type chronological rank; not a proof of note identity",
+        "oldNotesSha256": "2d33e17d8d89f8cc67128cb49b1f40f2c32164ddca076df52ea473b6e6600663",
+        "currentNotesSha256": "60cb29a626d056be9649857bf67598f1a249ec324bfda99cc4ef7133ddeeb093",
+        "countsByType": {
+          "critical_long_continuation": {
+            "old": 4,
+            "current": 4
+          },
+          "critical_long_end": {
+            "old": 1,
+            "current": 1
+          },
+          "critical_long_start": {
+            "old": 1,
+            "current": 1
+          },
+          "critical_tap": {
+            "old": 8,
+            "current": 8
+          },
+          "long_continuation": {
+            "old": 205,
+            "current": 205
+          },
+          "long_end": {
+            "old": 38,
+            "current": 38
+          },
+          "long_relay": {
+            "old": 17,
+            "current": 17
+          },
+          "long_start": {
+            "old": 38,
+            "current": 38
+          },
+          "tap": {
+            "old": 49,
+            "current": 49
+          }
+        },
+        "countDifferences": 0,
+        "exactTimeDifferences": 361,
+        "roundingOnlyDifferences": 0,
+        "largerTimeDifferences": 361,
+        "maxAbsDeltaMicroseconds": 1263158,
+        "samples": [
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 0,
+            "oldMicroseconds": 21473684,
+            "currentMicroseconds": 20210526,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 1,
+            "oldMicroseconds": 21631579,
+            "currentMicroseconds": 20368421,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 2,
+            "oldMicroseconds": 21789474,
+            "currentMicroseconds": 20526316,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 3,
+            "oldMicroseconds": 21947368,
+            "currentMicroseconds": 20684211,
+            "deltaMicroseconds": -1263157
+          },
+          {
+            "type": "critical_long_end",
+            "indexWithinType": 0,
+            "oldMicroseconds": 22105263,
+            "currentMicroseconds": 20842105,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_start",
+            "indexWithinType": 0,
+            "oldMicroseconds": 21315789,
+            "currentMicroseconds": 20052632,
+            "deltaMicroseconds": -1263157
+          },
+          {
+            "type": "critical_tap",
+            "indexWithinType": 0,
+            "oldMicroseconds": 12631579,
+            "currentMicroseconds": 11368421,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_tap",
+            "indexWithinType": 1,
+            "oldMicroseconds": 15157895,
+            "currentMicroseconds": 13894737,
+            "deltaMicroseconds": -1263158
+          }
+        ],
+        "skillsEqual": false,
+        "feverEqual": false,
+        "skillTimeDeltasMicroseconds": [
+          1263158,
+          -1263158,
+          -1263158,
+          -1263157,
+          0
+        ],
+        "skillComboDeltas": [
+          3,
+          0,
+          0,
+          0,
+          16
+        ]
+      }
+    },
+    {
+      "key": "m0337:EXPERT",
+      "reasons": [
+        "chart-hash-mismatch"
+      ],
+      "decision": "keep-pinned-runtime-excluded",
+      "localExactAvailable": true,
+      "currentSusDigestMatchesLocal": true,
+      "sourceObjectSha256": "412331794bf3916c89ebf46802a72f1f36eae0a548f233032acbb7ac3464e8ac",
+      "old": {
+        "chartHash": "4abac55b4efe382e72e0918979b3bf0f",
+        "susSha256": "fd5d6092115c2a938f7e5a7e978c46b6812e5d5ad124d8ac72f40931c210811f",
+        "source": {
+          "apiRevision": 51,
+          "retrievedAt": "2026-08-02",
+          "sus": {
+            "url": "https://api.holodori.best/api/asset/resources/chart_m0337_expert.sus/chart_m0337_expert.sus",
+            "sha256": "fd5d6092115c2a938f7e5a7e978c46b6812e5d5ad124d8ac72f40931c210811f",
+            "etag": "\"9bf282f98b771a3f41dfa310f8cce3b4\"",
+            "lastModified": "Thu, 30 Jul 2026 04:56:51 GMT",
+            "contentType": "application/vnd.sus-calendar"
+          },
+          "metadata": {
+            "url": "https://api.holodori.best/api/asset/resources/chart_m0337_expert.sus/chart_m0337_expert.json",
+            "sha256": "93570ac2aa805cf19692c44943fd26d5a876dec64465b7b7decf817e941078ee",
+            "etag": "W/\"c6bb2fd881e35502d9601c47b4b16cb7\"",
+            "lastModified": "Sat, 01 Aug 2026 04:26:14 GMT",
+            "contentType": "application/json"
+          }
+        },
+        "fullComboNoteCount": 1209,
+        "normalNoteCount": 354,
+        "skills": [
+          {
+            "slot": 1,
+            "time": 15.157895,
+            "combo": 151
+          },
+          {
+            "slot": 2,
+            "time": 35.368421,
+            "combo": 377
+          },
+          {
+            "slot": 3,
+            "time": 55.578947,
+            "combo": 550
+          },
+          {
+            "slot": 4,
+            "time": 78.315789,
+            "combo": 820
+          },
+          {
+            "slot": 5,
+            "time": 99.789474,
+            "combo": 1059
+          }
+        ],
+        "fever": {
+          "start": 68.210526,
+          "end": 88.209868
+        }
+      },
+      "current": {
+        "chartHash": "e5d7d6797f7a67e05cf0dd12f0636077",
+        "susSha256": "03b7c85f8860a501e564156ab0c64edbc5bcd13692a129a79460c027f79accb9",
+        "fullComboNoteCount": 1209,
+        "normalNoteCount": 354,
+        "metadataPath": "./charts/m0337-EXPERT.json",
+        "parserCommit": "292549eaf4ac7b82bd239fcacb719bae6dfa7ad9",
+        "converterCommit": "100e0ac4e5d2a895089b565f38800d1cc6a0b28e",
+        "skills": [
+          {
+            "slot": 1,
+            "time": 16.421053,
+            "combo": 170
+          },
+          {
+            "slot": 2,
+            "time": 34.105263,
+            "combo": 377
+          },
+          {
+            "slot": 3,
+            "time": 54.315789,
+            "combo": 550
+          },
+          {
+            "slot": 4,
+            "time": 77.052632,
+            "combo": 820
+          },
+          {
+            "slot": 5,
+            "time": 98.526316,
+            "combo": 1059
+          }
+        ],
+        "fever": {
+          "start": 66.947368,
+          "end": 86.946711
+        }
+      },
+      "comparison": {
+        "pairing": "same-type chronological rank; not a proof of note identity",
+        "oldNotesSha256": "c83e867521e01ec23531b9eece54870a3a94c0b1d23276220cfc5f27a5907ba8",
+        "currentNotesSha256": "5facf29a87ed1d7e3aa4e6151fdf0ae6d4bd4f74fce8e1e9139c61f93d35ff99",
+        "countsByType": {
+          "critical_flick": {
+            "old": 25,
+            "current": 25
+          },
+          "critical_long_continuation": {
+            "old": 7,
+            "current": 7
+          },
+          "critical_long_end": {
+            "old": 2,
+            "current": 2
+          },
+          "critical_long_flick_end": {
+            "old": 6,
+            "current": 6
+          },
+          "critical_long_relay": {
+            "old": 6,
+            "current": 6
+          },
+          "critical_long_start": {
+            "old": 8,
+            "current": 8
+          },
+          "critical_tap": {
+            "old": 74,
+            "current": 74
+          },
+          "flick": {
+            "old": 84,
+            "current": 83
+          },
+          "long_continuation": {
+            "old": 285,
+            "current": 299
+          },
+          "long_end": {
+            "old": 101,
+            "current": 101
+          },
+          "long_flick_end": {
+            "old": 57,
+            "current": 59
+          },
+          "long_relay": {
+            "old": 116,
+            "current": 99
+          },
+          "long_start": {
+            "old": 158,
+            "current": 160
+          },
+          "tap": {
+            "old": 280,
+            "current": 280
+          }
+        },
+        "countDifferences": 36,
+        "exactTimeDifferences": 1181,
+        "roundingOnlyDifferences": 0,
+        "largerTimeDifferences": 1181,
+        "maxAbsDeltaMicroseconds": 47828948,
+        "samples": [
+          {
+            "type": "critical_flick",
+            "indexWithinType": 0,
+            "oldMicroseconds": 23052632,
+            "currentMicroseconds": 21789474,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_flick",
+            "indexWithinType": 1,
+            "oldMicroseconds": 23684211,
+            "currentMicroseconds": 22421053,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_flick",
+            "indexWithinType": 2,
+            "oldMicroseconds": 24315789,
+            "currentMicroseconds": 23052632,
+            "deltaMicroseconds": -1263157
+          },
+          {
+            "type": "critical_flick",
+            "indexWithinType": 3,
+            "oldMicroseconds": 25578947,
+            "currentMicroseconds": 24315789,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_flick",
+            "indexWithinType": 4,
+            "oldMicroseconds": 26210526,
+            "currentMicroseconds": 24947368,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_flick",
+            "indexWithinType": 5,
+            "oldMicroseconds": 26842105,
+            "currentMicroseconds": 25578947,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_flick",
+            "indexWithinType": 6,
+            "oldMicroseconds": 28736842,
+            "currentMicroseconds": 27473684,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_flick",
+            "indexWithinType": 7,
+            "oldMicroseconds": 29368421,
+            "currentMicroseconds": 28105263,
+            "deltaMicroseconds": -1263158
+          }
+        ],
+        "skillsEqual": false,
+        "feverEqual": false,
+        "skillTimeDeltasMicroseconds": [
+          1263158,
+          -1263158,
+          -1263158,
+          -1263157,
+          -1263158
+        ],
+        "skillComboDeltas": [
+          19,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "key": "m0337:HARD",
+      "reasons": [
+        "chart-hash-mismatch"
+      ],
+      "decision": "keep-pinned-runtime-excluded",
+      "localExactAvailable": true,
+      "currentSusDigestMatchesLocal": true,
+      "sourceObjectSha256": "2574b89fe71cdaca8100d09993ff94d922710181361951a5e94359c7e6c353f1",
+      "old": {
+        "chartHash": "9d9aa557b1d1f0d1ef667ff402491456",
+        "susSha256": "2c32d317c4895385fc9dd7338fb34c2248dff1f968797228077bfb18b7c2f527",
+        "source": {
+          "apiRevision": 51,
+          "retrievedAt": "2026-08-02",
+          "sus": {
+            "url": "https://api.holodori.best/api/asset/resources/chart_m0337_hard.sus/chart_m0337_hard.sus",
+            "sha256": "2c32d317c4895385fc9dd7338fb34c2248dff1f968797228077bfb18b7c2f527",
+            "etag": "\"f5656fe04020ce4060e45e94d6a0ceaf\"",
+            "lastModified": "Thu, 30 Jul 2026 04:56:51 GMT",
+            "contentType": "application/vnd.sus-calendar"
+          },
+          "metadata": {
+            "url": "https://api.holodori.best/api/asset/resources/chart_m0337_hard.sus/chart_m0337_hard.json",
+            "sha256": "50af46d9264a51297f6035e09ce9e82ce0a928aae22ba6ad4add2deca88037f2",
+            "etag": "W/\"c5044af4683d7dfe1972dcc4b18e213a\"",
+            "lastModified": "Sat, 01 Aug 2026 04:26:14 GMT",
+            "contentType": "application/json"
+          }
+        },
+        "fullComboNoteCount": 914,
+        "normalNoteCount": 239,
+        "skills": [
+          {
+            "slot": 1,
+            "time": 15.157895,
+            "combo": 108
+          },
+          {
+            "slot": 2,
+            "time": 35.368421,
+            "combo": 244
+          },
+          {
+            "slot": 3,
+            "time": 55.578947,
+            "combo": 385
+          },
+          {
+            "slot": 4,
+            "time": 78.315789,
+            "combo": 634
+          },
+          {
+            "slot": 5,
+            "time": 98.526316,
+            "combo": 788
+          }
+        ],
+        "fever": {
+          "start": 68.210526,
+          "end": 88.209868
+        }
+      },
+      "current": {
+        "chartHash": "3c7867526c6f54838e4758d849b56219",
+        "susSha256": "710c6864aee854942c775495f08b0950ac93515ee2b9ec201789c0d1672991ee",
+        "fullComboNoteCount": 914,
+        "normalNoteCount": 239,
+        "metadataPath": "./charts/m0337-HARD.json",
+        "parserCommit": "292549eaf4ac7b82bd239fcacb719bae6dfa7ad9",
+        "converterCommit": "100e0ac4e5d2a895089b565f38800d1cc6a0b28e",
+        "skills": [
+          {
+            "slot": 1,
+            "time": 16.421053,
+            "combo": 88
+          },
+          {
+            "slot": 2,
+            "time": 34.105263,
+            "combo": 244
+          },
+          {
+            "slot": 3,
+            "time": 54.315789,
+            "combo": 385
+          },
+          {
+            "slot": 4,
+            "time": 77.052632,
+            "combo": 634
+          },
+          {
+            "slot": 5,
+            "time": 98.526316,
+            "combo": 816
+          }
+        ],
+        "fever": {
+          "start": 66.947368,
+          "end": 86.946711
+        }
+      },
+      "comparison": {
+        "pairing": "same-type chronological rank; not a proof of note identity",
+        "oldNotesSha256": "2b744dd3199a7dbeecd47fb7c772c49003c9b75899d493ba744fc6522505fe05",
+        "currentNotesSha256": "1a298cd6f123f821a6e83dd315e4e6c1574c0eda73bb0752e189ccd08b885af5",
+        "countsByType": {
+          "critical_flick": {
+            "old": 1,
+            "current": 1
+          },
+          "critical_long_continuation": {
+            "old": 43,
+            "current": 43
+          },
+          "critical_long_end": {
+            "old": 10,
+            "current": 10
+          },
+          "critical_long_flick_end": {
+            "old": 2,
+            "current": 2
+          },
+          "critical_long_relay": {
+            "old": 28,
+            "current": 28
+          },
+          "critical_long_start": {
+            "old": 12,
+            "current": 12
+          },
+          "critical_tap": {
+            "old": 58,
+            "current": 58
+          },
+          "flick": {
+            "old": 23,
+            "current": 23
+          },
+          "long_continuation": {
+            "old": 228,
+            "current": 234
+          },
+          "long_end": {
+            "old": 77,
+            "current": 73
+          },
+          "long_flick_end": {
+            "old": 24,
+            "current": 26
+          },
+          "long_relay": {
+            "old": 126,
+            "current": 124
+          },
+          "long_start": {
+            "old": 101,
+            "current": 99
+          },
+          "tap": {
+            "old": 181,
+            "current": 181
+          }
+        },
+        "countDifferences": 16,
+        "exactTimeDifferences": 895,
+        "roundingOnlyDifferences": 0,
+        "largerTimeDifferences": 895,
+        "maxAbsDeltaMicroseconds": 24000000,
+        "samples": [
+          {
+            "type": "critical_flick",
+            "indexWithinType": 0,
+            "oldMicroseconds": 113368421,
+            "currentMicroseconds": 112105263,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 0,
+            "oldMicroseconds": 64578947,
+            "currentMicroseconds": 63315789,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 1,
+            "oldMicroseconds": 64736842,
+            "currentMicroseconds": 63473684,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 2,
+            "oldMicroseconds": 64894737,
+            "currentMicroseconds": 63631579,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 3,
+            "oldMicroseconds": 65052632,
+            "currentMicroseconds": 63789474,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 4,
+            "oldMicroseconds": 65210526,
+            "currentMicroseconds": 63947368,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 5,
+            "oldMicroseconds": 67105263,
+            "currentMicroseconds": 65842105,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 6,
+            "oldMicroseconds": 67263158,
+            "currentMicroseconds": 66000000,
+            "deltaMicroseconds": -1263158
+          }
+        ],
+        "skillsEqual": false,
+        "feverEqual": false,
+        "skillTimeDeltasMicroseconds": [
+          1263158,
+          -1263158,
+          -1263158,
+          -1263157,
+          0
+        ],
+        "skillComboDeltas": [
+          -20,
+          0,
+          0,
+          0,
+          28
+        ]
+      }
+    },
+    {
+      "key": "m0337:NORMAL",
+      "reasons": [
+        "chart-hash-mismatch"
+      ],
+      "decision": "keep-pinned-runtime-excluded",
+      "localExactAvailable": true,
+      "currentSusDigestMatchesLocal": true,
+      "sourceObjectSha256": "dcb075836465f93233cb747fef04b22b77805f73fcaf0c862178f7a5c2750baa",
+      "old": {
+        "chartHash": "66abaebacfd911ff68637cfd193a642a",
+        "susSha256": "7c3de99ef7bddfd5c7a0cb19b1dfbfdd83f194210e01a8a4eed7381a66a1a0d8",
+        "source": {
+          "apiRevision": 51,
+          "retrievedAt": "2026-08-02",
+          "sus": {
+            "url": "https://api.holodori.best/api/asset/resources/chart_m0337_normal.sus/chart_m0337_normal.sus",
+            "sha256": "7c3de99ef7bddfd5c7a0cb19b1dfbfdd83f194210e01a8a4eed7381a66a1a0d8",
+            "etag": "\"d035f7a333261c039b1756d606d42e74\"",
+            "lastModified": "Thu, 30 Jul 2026 04:56:51 GMT",
+            "contentType": "application/vnd.sus-calendar"
+          },
+          "metadata": {
+            "url": "https://api.holodori.best/api/asset/resources/chart_m0337_normal.sus/chart_m0337_normal.json",
+            "sha256": "837ad793e72ed702b5479b7330b7511becf148c2d682b7534857862aa77237a3",
+            "etag": "W/\"2cfc4cee2f12062e4fcc30a0caed6cbd\"",
+            "lastModified": "Sat, 01 Aug 2026 04:26:14 GMT",
+            "contentType": "application/json"
+          }
+        },
+        "fullComboNoteCount": 507,
+        "normalNoteCount": 132,
+        "skills": [
+          {
+            "slot": 1,
+            "time": 15.157895,
+            "combo": 35
+          },
+          {
+            "slot": 2,
+            "time": 35.368421,
+            "combo": 133
+          },
+          {
+            "slot": 3,
+            "time": 55.578947,
+            "combo": 229
+          },
+          {
+            "slot": 4,
+            "time": 78.315789,
+            "combo": 341
+          },
+          {
+            "slot": 5,
+            "time": 98.526316,
+            "combo": 431
+          }
+        ],
+        "fever": {
+          "start": 68.210526,
+          "end": 88.209868
+        }
+      },
+      "current": {
+        "chartHash": "6ebf653bc847ad3fcd519169bacd8a6f",
+        "susSha256": "e46f6b7518314c0549ca92fb4ff356d52fa7c442be37ad43ce57811887731b2b",
+        "fullComboNoteCount": 507,
+        "normalNoteCount": 132,
+        "metadataPath": "./charts/m0337-NORMAL.json",
+        "parserCommit": "292549eaf4ac7b82bd239fcacb719bae6dfa7ad9",
+        "converterCommit": "100e0ac4e5d2a895089b565f38800d1cc6a0b28e",
+        "skills": [
+          {
+            "slot": 1,
+            "time": 16.421053,
+            "combo": 45
+          },
+          {
+            "slot": 2,
+            "time": 34.105263,
+            "combo": 133
+          },
+          {
+            "slot": 3,
+            "time": 54.315789,
+            "combo": 229
+          },
+          {
+            "slot": 4,
+            "time": 77.052632,
+            "combo": 341
+          },
+          {
+            "slot": 5,
+            "time": 98.526316,
+            "combo": 434
+          }
+        ],
+        "fever": {
+          "start": 66.947368,
+          "end": 86.946711
+        }
+      },
+      "comparison": {
+        "pairing": "same-type chronological rank; not a proof of note identity",
+        "oldNotesSha256": "aa459edbf4735214ab7ec63fe04d88a1cbcc126c2491d3e44d3b55cf28c4a5f8",
+        "currentNotesSha256": "65a84f9995bf68b0e181ccab504050fd5484017a31f6825de39a826aa58889ca",
+        "countsByType": {
+          "critical_long_continuation": {
+            "old": 9,
+            "current": 9
+          },
+          "critical_long_end": {
+            "old": 4,
+            "current": 4
+          },
+          "critical_long_relay": {
+            "old": 1,
+            "current": 1
+          },
+          "critical_long_start": {
+            "old": 4,
+            "current": 4
+          },
+          "critical_tap": {
+            "old": 61,
+            "current": 61
+          },
+          "long_continuation": {
+            "old": 181,
+            "current": 181
+          },
+          "long_end": {
+            "old": 55,
+            "current": 55
+          },
+          "long_relay": {
+            "old": 66,
+            "current": 66
+          },
+          "long_start": {
+            "old": 55,
+            "current": 55
+          },
+          "tap": {
+            "old": 71,
+            "current": 71
+          }
+        },
+        "countDifferences": 0,
+        "exactTimeDifferences": 507,
+        "roundingOnlyDifferences": 0,
+        "largerTimeDifferences": 507,
+        "maxAbsDeltaMicroseconds": 1263158,
+        "samples": [
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 0,
+            "oldMicroseconds": 44368421,
+            "currentMicroseconds": 43105263,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 1,
+            "oldMicroseconds": 44526316,
+            "currentMicroseconds": 43263158,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 2,
+            "oldMicroseconds": 54473684,
+            "currentMicroseconds": 53210526,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 3,
+            "oldMicroseconds": 54631579,
+            "currentMicroseconds": 53368421,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 4,
+            "oldMicroseconds": 54789474,
+            "currentMicroseconds": 53526316,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 5,
+            "oldMicroseconds": 54947368,
+            "currentMicroseconds": 53684211,
+            "deltaMicroseconds": -1263157
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 6,
+            "oldMicroseconds": 55105263,
+            "currentMicroseconds": 53842105,
+            "deltaMicroseconds": -1263158
+          },
+          {
+            "type": "critical_long_continuation",
+            "indexWithinType": 7,
+            "oldMicroseconds": 72789474,
+            "currentMicroseconds": 71526316,
+            "deltaMicroseconds": -1263158
+          }
+        ],
+        "skillsEqual": false,
+        "feverEqual": false,
+        "skillTimeDeltasMicroseconds": [
+          1263158,
+          -1263158,
+          -1263158,
+          -1263157,
+          0
+        ],
+        "skillComboDeltas": [
+          10,
+          0,
+          0,
+          0,
+          3
+        ]
+      }
+    }
+  ],
+  "sourceUnavailable": [
+    {
+      "key": "m0318:EASY",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0323:EASY",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0323:EXPERT",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0323:HARD",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0323:NORMAL",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0324:EASY",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0324:EXPERT",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0324:HARD",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0324:NORMAL",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0325:EASY",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0325:EXPERT",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0325:HARD",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0325:NORMAL",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0346:EASY",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0346:EXPERT",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0346:HARD",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0346:NORMAL",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0347:EASY",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0347:EXPERT",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0347:HARD",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m0347:NORMAL",
+      "reason": "source-api-unreachable-cloudflare-challenge-at-intake"
+    },
+    {
+      "key": "m9999:EASY",
+      "reason": "source-chart-does-not-contain-five-special-markers"
+    },
+    {
+      "key": "m9999:EXPERT",
+      "reason": "source-chart-does-not-contain-five-special-markers"
+    },
+    {
+      "key": "m9999:HARD",
+      "reason": "source-chart-does-not-contain-five-special-markers"
+    },
+    {
+      "key": "m9999:NORMAL",
+      "reason": "source-chart-does-not-contain-five-special-markers"
+    }
+  ]
+}

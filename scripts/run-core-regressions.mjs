@@ -23,6 +23,7 @@ const tests = [
   "scripts/test-exact-pruning.mjs",
   "scripts/test-beam-search.mjs",
   "scripts/test-exact-runtime-source.mjs",
+  "scripts/test-exact-runtime-rejections.mjs",
   "scripts/test-master-source.mjs",
   "scripts/test-optimization-session.mjs",
   "scripts/test-chart-abort.mjs",
