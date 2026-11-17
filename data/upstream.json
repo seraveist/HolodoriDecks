@@ -1,8 +1,8 @@
 {
   "repository": "holodori-net/android-database",
   "ref": "main",
-  "commit": "1d863974b994b5803a139604e5d721035e2012db",
-  "master_version": "9171c5282eaf618dab68c4ca2459cfd386c79aad7fb56db59496f2058f78d875",
+  "commit": "bd5ae52cc5ed1634e910f1e60157e68b03277308",
+  "master_version": "1e7e0e9790e0d2e27712c5eb3f71470230fa977f9b75d7c8fa7b2a7dad3c292d",
   "normalizerVersion": 4,
   "format": "android-database-v1",
   "contract_commit": "9fc9d4bb22ae201f503568d40d864df480b4b8e3",
@@ -10,21 +10,21 @@
   "locales": {
     "ko": {
       "repository": "holodori-net/android-database",
-      "commit": "1d863974b994b5803a139604e5d721035e2012db",
+      "commit": "bd5ae52cc5ed1634e910f1e60157e68b03277308",
       "suffix": "Kor",
       "language": "kor",
       "format": "android-database-v1"
     },
     "en": {
       "repository": "holodori-net/android-database",
-      "commit": "1d863974b994b5803a139604e5d721035e2012db",
+      "commit": "bd5ae52cc5ed1634e910f1e60157e68b03277308",
       "suffix": "Eng",
       "language": "eng",
       "format": "android-database-v1"
     },
     "ja": {
       "repository": "holodori-net/android-database",
-      "commit": "1d863974b994b5803a139604e5d721035e2012db",
+      "commit": "bd5ae52cc5ed1634e910f1e60157e68b03277308",
       "suffix": "Jpn",
       "language": "jpn",
       "format": "android-database-v1"
