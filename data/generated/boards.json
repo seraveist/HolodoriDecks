@@ -2,8 +2,8 @@
   "format": "holodori-boards",
   "version": 1,
   "source_repository": "holodori-net/android-database",
-  "source_commit": "bd5ae52cc5ed1634e910f1e60157e68b03277308",
-  "master_version": "1e7e0e9790e0d2e27712c5eb3f71470230fa977f9b75d7c8fa7b2a7dad3c292d",
+  "source_commit": "f3c4fa98c7995a6556bcb016a3250950186db617",
+  "master_version": "7c4ab23b96e2c1dd01ae6d5ac5842d19f6e5ca23cfa25ba7fb361be681b40580",
   "characters": {
     "chr-00001": {
       "layoutId": "tree-model-001",
@@ -599,6 +599,11 @@
         "y": -10
       },
       {
+        "id": "G-026",
+        "x": -1,
+        "y": -11
+      },
+      {
         "id": "R-001",
         "x": 0,
         "y": 1
@@ -912,6 +917,11 @@
         "id": "R-063",
         "x": 9,
         "y": 8
+      },
+      {
+        "id": "R-064",
+        "x": 0,
+        "y": 14
       },
       {
         "id": "S-001",
@@ -1371,6 +1381,11 @@
         "y": -10
       },
       {
+        "id": "G-026",
+        "x": -1,
+        "y": -11
+      },
+      {
         "id": "R-001",
         "x": 0,
         "y": 1
@@ -1684,6 +1699,11 @@
         "id": "R-063",
         "x": 9,
         "y": 8
+      },
+      {
+        "id": "R-064",
+        "x": 0,
+        "y": 14
       },
       {
         "id": "S-001",
@@ -2143,6 +2163,11 @@
         "y": -10
       },
       {
+        "id": "G-026",
+        "x": -1,
+        "y": -11
+      },
+      {
         "id": "R-001",
         "x": 0,
         "y": 1
@@ -2456,6 +2481,11 @@
         "id": "R-063",
         "x": -9,
         "y": 8
+      },
+      {
+        "id": "R-064",
+        "x": 0,
+        "y": 14
       },
       {
         "id": "S-001",
@@ -2915,6 +2945,11 @@
         "y": -10
       },
       {
+        "id": "G-026",
+        "x": -1,
+        "y": -11
+      },
+      {
         "id": "R-001",
         "x": 0,
         "y": 1
@@ -3228,6 +3263,11 @@
         "id": "R-063",
         "x": -9,
         "y": 8
+      },
+      {
+        "id": "R-064",
+        "x": 0,
+        "y": 14
       },
       {
         "id": "S-001",
@@ -7965,6 +8005,25 @@
         ]
       }
     },
+    "G-026": {
+      "1": {
+        "groupId": "G-026",
+        "number": 1,
+        "type": "SkillTreeNodeType_SKILL_TREE_NODE_TYPE_ALL_MEMBER",
+        "grade": 1,
+        "skillTreeEffectId": "skill_tree_effect-mini_game_reward_quantity_up_permil_up-5-skill_tree_effect_target-all-always-shogi",
+        "viewConditionGroupId": "cd-player_level-30",
+        "consumptionSkillTreePointQuantity": 3,
+        "autoSelectionPriority": 1,
+        "consumptions": [
+          {
+            "resourceType": "ResourceType_RESOURCE_TYPE_ITEM",
+            "resourceId": "item-skill_tree_allmember-1",
+            "quantity": "160"
+          }
+        ]
+      }
+    },
     "R-001": {
       "1": {
         "groupId": "R-001",
@@ -9248,6 +9307,30 @@
         ]
       }
     },
+    "R-064": {
+      "1": {
+        "groupId": "R-064",
+        "number": 1,
+        "type": "SkillTreeNodeType_SKILL_TREE_NODE_TYPE_LEADER",
+        "grade": 3,
+        "skillTreeEffectId": "skill_tree_effect-live_active_skill_activation_probability_up_permil_up-100-skill_tree_effect_target-all-set_live_leader",
+        "viewConditionGroupId": "cd-player_level-25",
+        "consumptionSkillTreePointQuantity": 6,
+        "autoSelectionPriority": 3,
+        "consumptions": [
+          {
+            "resourceType": "ResourceType_RESOURCE_TYPE_ITEM",
+            "resourceId": "item-skill_tree_leader-3",
+            "quantity": "10"
+          },
+          {
+            "resourceType": "ResourceType_RESOURCE_TYPE_ITEM",
+            "resourceId": "item-skill_tree_leader-2",
+            "quantity": "100"
+          }
+        ]
+      }
+    },
     "S-001": {
       "1": {
         "groupId": "S-001",
@@ -10222,6 +10305,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -10285,6 +10369,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -10378,6 +10463,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -10441,6 +10527,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -10534,6 +10621,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -10597,6 +10685,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -10690,6 +10779,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -10753,6 +10843,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -10846,6 +10937,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -10909,6 +11001,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -11002,6 +11095,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -11065,6 +11159,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -11158,6 +11253,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -11221,6 +11317,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -11314,6 +11411,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -11377,6 +11475,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -11470,6 +11569,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -11533,6 +11633,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -11626,6 +11727,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -11689,6 +11791,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -11782,6 +11885,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -11845,6 +11949,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -11938,6 +12043,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -12001,6 +12107,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -12094,6 +12201,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -12157,6 +12265,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -12250,6 +12359,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -12313,6 +12423,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -12406,6 +12517,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -12469,6 +12581,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -12562,6 +12675,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -12625,6 +12739,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -12718,6 +12833,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -12781,6 +12897,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -12874,6 +12991,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -12937,6 +13055,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -13030,6 +13149,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -13093,6 +13213,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -13186,6 +13307,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -13249,6 +13371,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -13342,6 +13465,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -13405,6 +13529,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -13498,6 +13623,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -13561,6 +13687,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -13654,6 +13781,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -13717,6 +13845,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -13810,6 +13939,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -13873,6 +14003,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -13966,6 +14097,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -14029,6 +14161,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -14122,6 +14255,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -14185,6 +14319,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -14278,6 +14413,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -14341,6 +14477,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -14434,6 +14571,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -14497,6 +14635,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -14590,6 +14729,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -14653,6 +14793,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -14746,6 +14887,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -14809,6 +14951,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -14902,6 +15045,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -14965,6 +15109,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -15058,6 +15203,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -15121,6 +15267,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -15214,6 +15361,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -15277,6 +15425,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -15370,6 +15519,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -15433,6 +15583,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -15526,6 +15677,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -15589,6 +15741,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -15682,6 +15835,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -15745,6 +15899,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -15838,6 +15993,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -15901,6 +16057,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -15994,6 +16151,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -16057,6 +16215,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -16150,6 +16309,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -16213,6 +16373,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -16306,6 +16467,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -16369,6 +16531,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -16462,6 +16625,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -16525,6 +16689,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -16618,6 +16783,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -16681,6 +16847,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -16774,6 +16941,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -16837,6 +17005,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -16930,6 +17099,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -16993,6 +17163,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -17086,6 +17257,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -17149,6 +17321,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -17242,6 +17415,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -17305,6 +17479,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -17398,6 +17573,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -17461,6 +17637,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -17554,6 +17731,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -17617,6 +17795,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -17710,6 +17889,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -17773,6 +17953,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -17866,6 +18047,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -17929,6 +18111,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -18022,6 +18205,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -18085,6 +18269,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -18178,6 +18363,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -18241,6 +18427,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -18334,6 +18521,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -18397,6 +18585,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -18490,6 +18679,7 @@
       "G-023": 1,
       "G-024": 1,
       "G-025": 1,
+      "G-026": 1,
       "R-001": 1,
       "R-002": 1,
       "R-003": 1,
@@ -18553,6 +18743,7 @@
       "R-061": 1,
       "R-062": 1,
       "R-063": 1,
+      "R-064": 1,
       "S-001": 1,
       "S-002": 1,
       "S-003": 1,
@@ -19077,6 +19268,15 @@
       "nameLangId": "la-skill_tree_effect-name-leader",
       "descriptionLangId": "la-generated-skill_tree_effect-life_up-50-skill_tree_effect_target-all-set_live_leader-description"
     },
+    "skill_tree_effect-live_active_skill_activation_probability_up_permil_up-100-skill_tree_effect_target-all-set_live_leader": {
+      "id": "skill_tree_effect-live_active_skill_activation_probability_up_permil_up-100-skill_tree_effect_target-all-set_live_leader",
+      "effectType": "SkillTreeEffectType_SKILL_TREE_EFFECT_TYPE_LIVE_ACTIVE_SKILL_ACTIVATION_PROBABILITY_UP_PERMIL_UP",
+      "value": "100",
+      "skillTreeEffectTargetId": "skill_tree_effect_target-all",
+      "characterTriggerType": "SkillTreeEffectCharacterTriggerType_SKILL_TREE_EFFECT_CHARACTER_TRIGGER_TYPE_SET_LIVE_LEADER",
+      "nameLangId": "la-skill_tree_effect-name-leader",
+      "descriptionLangId": "la-generated-skill_tree_effect-live_active_skill_activation_probability_up_permil_up-100-skill_tree_effect_target-all-set_live_leader-description"
+    },
     "skill_tree_effect-live_active_skill_activation_probability_up_permil_up-20-skill_tree_effect_target-skill_tree_character-always": {
       "id": "skill_tree_effect-live_active_skill_activation_probability_up_permil_up-20-skill_tree_effect_target-skill_tree_character-always",
       "effectType": "SkillTreeEffectType_SKILL_TREE_EFFECT_TYPE_LIVE_ACTIVE_SKILL_ACTIVATION_PROBABILITY_UP_PERMIL_UP",
@@ -19371,6 +19571,18 @@
       ],
       "nameLangId": "la-skill_tree_effect-name-park",
       "descriptionLangId": "la-generated-skill_tree_effect-mini_game_reward_quantity_up_permil_up-5-skill_tree_effect_target-all-always-jump_rope-description"
+    },
+    "skill_tree_effect-mini_game_reward_quantity_up_permil_up-5-skill_tree_effect_target-all-always-shogi": {
+      "id": "skill_tree_effect-mini_game_reward_quantity_up_permil_up-5-skill_tree_effect_target-all-always-shogi",
+      "effectType": "SkillTreeEffectType_SKILL_TREE_EFFECT_TYPE_MINI_GAME_REWARD_QUANTITY_UP_PERMIL_UP",
+      "value": "5",
+      "skillTreeEffectTargetId": "skill_tree_effect_target-all",
+      "characterTriggerType": "SkillTreeEffectCharacterTriggerType_SKILL_TREE_EFFECT_CHARACTER_TRIGGER_TYPE_ALWAYS",
+      "miniGameTypes": [
+        "MiniGameType_MINI_GAME_TYPE_SHOGI"
+      ],
+      "nameLangId": "la-skill_tree_effect-name-park",
+      "descriptionLangId": "la-generated-skill_tree_effect-mini_game_reward_quantity_up_permil_up-5-skill_tree_effect_target-all-always-shogi-description"
     },
     "skill_tree_effect-mini_game_reward_quantity_up_permil_up-5-skill_tree_effect_target-all-always-splash_ball": {
       "id": "skill_tree_effect-mini_game_reward_quantity_up_permil_up-5-skill_tree_effect_target-all-always-splash_ball",
@@ -21206,6 +21418,24 @@
         "descriptionLangId": "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-004-rare_5.2-description"
       }
     },
+    "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-005-rare_5": {
+      "1": {
+        "id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-005-rare_5",
+        "level": 1,
+        "connectEffectType": "SkillTreeConnectEffectType_SKILL_TREE_CONNECT_EFFECT_TYPE_SKILL_TREE_EFFECT_UP",
+        "skillTreeConnectEffectExtentGroupId": "skill_tree_connect_effect_extent-card_area-005",
+        "effectPermilUp": "1350",
+        "descriptionLangId": "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-005-rare_5.1-description"
+      },
+      "2": {
+        "id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-005-rare_5",
+        "level": 2,
+        "connectEffectType": "SkillTreeConnectEffectType_SKILL_TREE_CONNECT_EFFECT_TYPE_SKILL_TREE_EFFECT_UP",
+        "skillTreeConnectEffectExtentGroupId": "skill_tree_connect_effect_extent-card_area-005",
+        "effectPermilUp": "1850",
+        "descriptionLangId": "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-005-rare_5.2-description"
+      }
+    },
     "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-001-rare_5": {
       "1": {
         "id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-001-rare_5",
@@ -21386,6 +21616,24 @@
         "descriptionLangId": "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-004-rare_4.2-description"
       }
     },
+    "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-005-rare_5": {
+      "1": {
+        "id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-005-rare_5",
+        "level": 1,
+        "connectEffectType": "SkillTreeConnectEffectType_SKILL_TREE_CONNECT_EFFECT_TYPE_SKILL_TREE_EFFECT_UP",
+        "skillTreeConnectEffectExtentGroupId": "skill_tree_connect_effect_extent-content_area-005",
+        "effectPermilUp": "1350",
+        "descriptionLangId": "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-005-rare_5.1-description"
+      },
+      "2": {
+        "id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-005-rare_5",
+        "level": 2,
+        "connectEffectType": "SkillTreeConnectEffectType_SKILL_TREE_CONNECT_EFFECT_TYPE_SKILL_TREE_EFFECT_UP",
+        "skillTreeConnectEffectExtentGroupId": "skill_tree_connect_effect_extent-content_area-005",
+        "effectPermilUp": "1850",
+        "descriptionLangId": "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-005-rare_5.2-description"
+      }
+    },
     "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-001-rare_5": {
       "1": {
         "id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-001-rare_5",
@@ -21402,6 +21650,24 @@
         "skillTreeConnectEffectExtentGroupId": "skill_tree_connect_effect_extent-general_purpose_area-001",
         "effectPermilUp": "1050",
         "descriptionLangId": "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-001-rare_5.2-description"
+      }
+    },
+    "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-002-rare_5": {
+      "1": {
+        "id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-002-rare_5",
+        "level": 1,
+        "connectEffectType": "SkillTreeConnectEffectType_SKILL_TREE_CONNECT_EFFECT_TYPE_SKILL_TREE_EFFECT_UP",
+        "skillTreeConnectEffectExtentGroupId": "skill_tree_connect_effect_extent-general_purpose_area-002",
+        "effectPermilUp": "750",
+        "descriptionLangId": "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-002-rare_5.1-description"
+      },
+      "2": {
+        "id": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-002-rare_5",
+        "level": 2,
+        "connectEffectType": "SkillTreeConnectEffectType_SKILL_TREE_CONNECT_EFFECT_TYPE_SKILL_TREE_EFFECT_UP",
+        "skillTreeConnectEffectExtentGroupId": "skill_tree_connect_effect_extent-general_purpose_area-002",
+        "effectPermilUp": "1250",
+        "descriptionLangId": "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-002-rare_5.2-description"
       }
     },
     "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-001-rare_5": {
@@ -21568,6 +21834,28 @@
       {
         "x": 0,
         "y": 2
+      }
+    ],
+    "skill_tree_connect_effect_extent-card_area-005": [
+      {
+        "x": -1,
+        "y": -1
+      },
+      {
+        "x": -1,
+        "y": 0
+      },
+      {
+        "x": -1,
+        "y": 1
+      },
+      {
+        "x": 0,
+        "y": -1
+      },
+      {
+        "x": 0,
+        "y": 1
       }
     ],
     "skill_tree_connect_effect_extent-center_area-001": [
@@ -21768,6 +22056,28 @@
         "y": 0
       }
     ],
+    "skill_tree_connect_effect_extent-content_area-005": [
+      {
+        "x": 0,
+        "y": -1
+      },
+      {
+        "x": 0,
+        "y": 1
+      },
+      {
+        "x": 1,
+        "y": -1
+      },
+      {
+        "x": 1,
+        "y": 0
+      },
+      {
+        "x": 1,
+        "y": 1
+      }
+    ],
     "skill_tree_connect_effect_extent-general_purpose_area-001": [
       {
         "x": -2,
@@ -21812,6 +22122,40 @@
       {
         "x": 1,
         "y": 1
+      },
+      {
+        "x": 2,
+        "y": 0
+      }
+    ],
+    "skill_tree_connect_effect_extent-general_purpose_area-002": [
+      {
+        "x": -2,
+        "y": 0
+      },
+      {
+        "x": -1,
+        "y": 0
+      },
+      {
+        "x": 0,
+        "y": -2
+      },
+      {
+        "x": 0,
+        "y": -1
+      },
+      {
+        "x": 0,
+        "y": 1
+      },
+      {
+        "x": 0,
+        "y": 2
+      },
+      {
+        "x": 1,
+        "y": 0
       },
       {
         "x": 2,
@@ -22090,6 +22434,11 @@
       "connectEffectId": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-003-rare_5",
       "potentialGroupId": "card_potential_grp-rarity_5"
     },
+    "card-00015-5-uniq-0120-00": {
+      "characterId": "chr-00015",
+      "connectEffectId": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-005-rare_5",
+      "potentialGroupId": "card_potential_grp-rarity_5"
+    },
     "card-00016-3-nrml-0014-00": {
       "characterId": "chr-00016",
       "connectEffectId": null,
@@ -22288,6 +22637,11 @@
     "card-00028-5-uniq-0070-00": {
       "characterId": "chr-00028",
       "connectEffectId": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-005-rare_5",
+      "potentialGroupId": "card_potential_grp-rarity_5"
+    },
+    "card-00028-5-uniq-0121-00": {
+      "characterId": "chr-00028",
+      "connectEffectId": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-002-rare_5",
       "potentialGroupId": "card_potential_grp-rarity_5"
     },
     "card-00030-3-nrml-0024-00": {
@@ -22680,6 +23034,11 @@
       "connectEffectId": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-002-rare_5",
       "potentialGroupId": "card_potential_grp-rarity_5"
     },
+    "card-04003-5-uniq-0122-00": {
+      "characterId": "chr-04003",
+      "connectEffectId": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-005-rare_5",
+      "potentialGroupId": "card_potential_grp-rarity_5"
+    },
     "card-04007-3-nrml-0047-00": {
       "characterId": "chr-04007",
       "connectEffectId": null,
@@ -22753,6 +23112,11 @@
     "card-04013-5-uniq-0083-00": {
       "characterId": "chr-04013",
       "connectEffectId": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-001-rare_5",
+      "potentialGroupId": "card_potential_grp-rarity_5"
+    },
+    "card-04013-5-uniq-0123-00": {
+      "characterId": "chr-04013",
+      "connectEffectId": "skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-005-rare_5",
       "potentialGroupId": "card_potential_grp-rarity_5"
     },
     "card-04014-3-nrml-0053-00": {
@@ -23162,6 +23526,17 @@
       "inventoryItemCategoryType": "InventoryItemCategoryType_INVENTORY_ITEM_CATEGORY_TYPE_CARD_LEVELING",
       "isDisplayOwned": true,
       "order": 1052
+    },
+    "item-skill_tree_leader-3": {
+      "id": "item-skill_tree_leader-3",
+      "nameLangId": "la-item-skill_tree_leader-3-name",
+      "descriptionLangId": "la-item-skill_tree_leader-3-description",
+      "type": "ItemType_ITEM_TYPE_SKILL_TREE",
+      "assetId": "skill-tree-leader-3",
+      "resourceObtainmentRouteGroupId": "resource_obtainment_route-item-skill_tree_leader-3",
+      "inventoryItemCategoryType": "InventoryItemCategoryType_INVENTORY_ITEM_CATEGORY_TYPE_CARD_LEVELING",
+      "isDisplayOwned": true,
+      "order": 1053
     }
   },
   "groupings": {
@@ -24090,6 +24465,8 @@
     "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-003-rare_5.2-description",
     "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-004-rare_5.1-description",
     "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-004-rare_5.2-description",
+    "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-005-rare_5.1-description",
+    "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-card_area-005-rare_5.2-description",
     "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-001-rare_5.1-description",
     "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-001-rare_5.2-description",
     "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-center_area-002-rare_5.1-description",
@@ -24110,8 +24487,12 @@
     "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-003-rare_5.2-description",
     "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-004-rare_4.1-description",
     "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-004-rare_4.2-description",
+    "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-005-rare_5.1-description",
+    "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-content_area-005-rare_5.2-description",
     "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-001-rare_5.1-description",
     "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-001-rare_5.2-description",
+    "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-002-rare_5.1-description",
+    "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-general_purpose_area-002-rare_5.2-description",
     "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-001-rare_5.1-description",
     "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-001-rare_5.2-description",
     "la-generated-skill_tree_connect_effect-skill_tree_effect_up-skill_tree_connect_effect_extent-leader_area-002-rare_4.1-description",
@@ -24174,6 +24555,7 @@
     "la-generated-skill_tree_effect-all_parameter_up_permil_up-10-skill_tree_effect_target-all-set_live_leader-description",
     "la-generated-skill_tree_effect-all_parameter_up_permil_up-30-skill_tree_effect_target-all-set_live_leader-description",
     "la-generated-skill_tree_effect-life_up-50-skill_tree_effect_target-all-set_live_leader-description",
+    "la-generated-skill_tree_effect-live_active_skill_activation_probability_up_permil_up-100-skill_tree_effect_target-all-set_live_leader-description",
     "la-generated-skill_tree_effect-live_active_skill_activation_probability_up_permil_up-20-skill_tree_effect_target-skill_tree_character-always-description",
     "la-generated-skill_tree_effect-live_active_skill_activation_probability_up_permil_up-30-skill_tree_effect_target-skill_tree_character-always-description",
     "la-generated-skill_tree_effect-live_active_skill_activation_probability_up_permil_up-60-skill_tree_effect_target-skill_tree_character-always-description",
@@ -24203,6 +24585,7 @@
     "la-generated-skill_tree_effect-mini_game_reward_quantity_up_permil_up-5-skill_tree_effect_target-all-always-combo_card_game-description",
     "la-generated-skill_tree_effect-mini_game_reward_quantity_up_permil_up-5-skill_tree_effect_target-all-always-cooking_puzzle-description",
     "la-generated-skill_tree_effect-mini_game_reward_quantity_up_permil_up-5-skill_tree_effect_target-all-always-jump_rope-description",
+    "la-generated-skill_tree_effect-mini_game_reward_quantity_up_permil_up-5-skill_tree_effect_target-all-always-shogi-description",
     "la-generated-skill_tree_effect-mini_game_reward_quantity_up_permil_up-5-skill_tree_effect_target-all-always-splash_ball-description",
     "la-generated-skill_tree_effect-mini_game_reward_quantity_up_permil_up-5-skill_tree_effect_target-all-chase-description",
     "la-generated-skill_tree_effect-performance_up-10-skill_tree_effect_target-all-always-description",
@@ -24466,6 +24849,8 @@
     "la-item-skill_tree_leader-1-name",
     "la-item-skill_tree_leader-2-description",
     "la-item-skill_tree_leader-2-name",
+    "la-item-skill_tree_leader-3-description",
+    "la-item-skill_tree_leader-3-name",
     "la-skill_tree_effect-name-all",
     "la-skill_tree_effect-name-card",
     "la-skill_tree_effect-name-leader",
