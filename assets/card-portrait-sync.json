@@ -116,6 +116,17 @@
       "unity_object_type": "WebP illustration",
       "width": 768
     },
+    "card-00015-5-uniq-0120-00": {
+      "asset_id": "00015-5-uniq-0120-00",
+      "catalog_entry": "img_card_full_00015-5-uniq-0120-00",
+      "catalog_object_name": "5i83sh",
+      "catalog_revision": 119,
+      "height": 1024,
+      "sha256": "eafd6e50859d22e7c3bd2e6a26779033749751e9a2076db80f1be1b35cebbf99",
+      "unity_object": "img_card_full_00015-5-uniq-0120-00",
+      "unity_object_type": "Texture2D",
+      "width": 2048
+    },
     "card-00016-5-uniq-0076-00": {
       "asset_class": "card-illustration",
       "asset_id": "00016-5-uniq-0076-00",
@@ -211,6 +222,17 @@
       "unity_object": "apps/web/public/game/illustrations/card-00028-5-uniq-0070-00.webp",
       "unity_object_type": "WebP illustration",
       "width": 768
+    },
+    "card-00028-5-uniq-0121-00": {
+      "asset_id": "00028-5-uniq-0121-00",
+      "catalog_entry": "img_card_full_00028-5-uniq-0121-00",
+      "catalog_object_name": "2XK53u",
+      "catalog_revision": 119,
+      "height": 1024,
+      "sha256": "3a87f4cd5b12c14b8c4b08d0c47aadc938f009f4576a64fe670f7a5f4650657e",
+      "unity_object": "img_card_full_00028-5-uniq-0121-00",
+      "unity_object_type": "Texture2D",
+      "width": 2048
     },
     "card-00030-5-uniq-0089-00": {
       "asset_id": "00030-5-uniq-0089-00",
@@ -516,6 +538,17 @@
       "unity_object_type": "WebP illustration",
       "width": 768
     },
+    "card-04003-5-uniq-0122-00": {
+      "asset_id": "04003-5-uniq-0122-00",
+      "catalog_entry": "img_card_full_04003-5-uniq-0122-00",
+      "catalog_object_name": "kBWpBi",
+      "catalog_revision": 119,
+      "height": 1024,
+      "sha256": "a79e4d5149cf7d98765f064af61745a757919cce302a45bddc5ee749b25ed5a6",
+      "unity_object": "img_card_full_04003-5-uniq-0122-00",
+      "unity_object_type": "Texture2D",
+      "width": 2048
+    },
     "card-04007-5-uniq-0106-00": {
       "asset_id": "04007-5-uniq-0106-00",
       "catalog_entry": "img_card_full_04007-5-uniq-0106-00",
@@ -558,6 +591,17 @@
       "unity_object": "apps/web/public/game/illustrations/card-04013-5-uniq-0083-00.webp",
       "unity_object_type": "WebP illustration",
       "width": 768
+    },
+    "card-04013-5-uniq-0123-00": {
+      "asset_id": "04013-5-uniq-0123-00",
+      "catalog_entry": "img_card_full_04013-5-uniq-0123-00",
+      "catalog_object_name": "UzTPcg",
+      "catalog_revision": 119,
+      "height": 1024,
+      "sha256": "2e6819073d1e5325e40a835bb58f1841db5f0f030ff9efe19e4bc88c57402906",
+      "unity_object": "img_card_full_04013-5-uniq-0123-00",
+      "unity_object_type": "Texture2D",
+      "width": 2048
     },
     "card-04014-5-uniq-0094-00": {
       "asset_id": "04014-5-uniq-0094-00",
@@ -687,7 +731,7 @@
       "width": 768
     }
   },
-  "catalog_revision": 114,
+  "catalog_revision": 119,
   "source": "Holodori game Octo CDN",
   "tool_commit": "13f150fe9dfbd367be53e5ea1c0a4ceb258b74f2",
   "tool_repository": "HolodoriDB/holodori-asset-tools",
