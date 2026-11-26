@@ -135,13 +135,16 @@ test('category removal preserves the other three fields and central Connect plac
     assert.ok(change.removed.every(id=>[type,'S'].includes(catalog.node('chr-00001',id).type)));
   }
 });
+// The raw Master defines the red membership; the known connector is separate.
+const soraRedIds = catalog.raw.layouts[catalog.raw.characters[id].layoutId]
+  .map(node => node.id).filter(nodeId => nodeId.startsWith('R-') && Object.hasOwn(catalog.raw.resolved[id], nodeId));
 test('category removal reports and atomically clears its disconnected Connect card',()=>{
   let state=applyBoardNodePlan(empty(),categoryPlan(empty(),'R'),catalog);
   const card=Object.keys(catalog.raw.cards).find(card=>catalog.canConnect(card));
   state=assignConnector(state,{characterId:id,slotId:'S-002'},card,new Set([card]),catalog);
   const change=categoryPlan(state,'R','remove');
   assert.deepEqual(change.removedCards,[{slotId:'S-002',cardId:card}]);
-  assert.equal(change.removed.length,64);
+  assert.deepEqual([...change.removed].sort(), [...soraRedIds, 'S-002'].sort());
   const next=applyBoardNodePlan(state,change,catalog);
   assert.deepEqual(next.boards[id].connectors,{});assert.deepEqual(selected(next),[]);
   assert.equal(state.boards[id].connectors['S-002'],card);
@@ -154,13 +157,13 @@ test('batch plans reject Connect category, stale inputs, tampering, and perform 
   assert.throws(()=>applyBoardNodePlan(apply(empty(),'B-001'),change,catalog),/BOARD_PATH_CHANGED/);
   assert.throws(()=>applyBoardNodePlan(empty(),{...change,added:[]},catalog),/BOARD_PATH_CHANGED/);
   assert.equal(categoryPlan(empty(),'G','remove').needsConfirmation,false);
-  assert.deepEqual(boardCategoryStatus(empty(),id,catalog).R,{selected:0,total:63,complete:false});
+  assert.deepEqual(boardCategoryStatus(empty(),id,catalog).R,{selected:0,total:soraRedIds.length,complete:false});
 });
 test('bulk select repairs missing paths even when all category cells were already selected',()=>{
   let state=applyBoardNodePlan(empty(),categoryPlan(empty(),'R'),catalog);
   state=toggleBoardNode(state,id,'S-002',catalog);
   assert.equal(boardCategoryStatus(state,id,catalog).R.complete,false);
-  assert.equal(boardCategoryStatus(state,id,catalog).R.selected,63);
+  assert.equal(boardCategoryStatus(state,id,catalog).R.selected,soraRedIds.length);
   const change=categoryPlan(state,'R');assert.deepEqual(change.added,['S-002']);
   assert.equal(boardCategoryStatus(applyBoardNodePlan(state,change,catalog),id,catalog).R.complete,true);
 });

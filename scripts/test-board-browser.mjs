@@ -192,7 +192,13 @@ try{
   assert.equal((await boardState()).boards['chr-00001'],undefined);
   await click('[data-board-category="R"][data-board-action="category-select"]');
   await click('#board-confirm-dialog [data-board-action="confirm"]');
-  assert.equal((await boardState()).boards['chr-00001'].unlockedNodes.length,64);
+  // Derive the fixture from the raw layout, not the UI's selection logic.
+  const soraId = 'chr-00001';
+  const redIds = boards.layouts[boards.characters[soraId].layoutId]
+    .map(node => node.id).filter(id => id.startsWith('R-') && Object.hasOwn(boards.resolved[soraId], id)).sort();
+  assert.ok(redIds.length > 0, 'Master board fixture has no red nodes');
+  // This layout needs the S-002 connector cell to keep every red route connected.
+  assert.deepEqual((await boardState()).boards[soraId].unlockedNodes.slice().sort(), [...redIds, 'S-002'].sort());
   assert.equal(await evaluate(`document.querySelector('[data-board-category="R"][data-board-action="category-select"]').disabled`),true);
   await click('[data-board-category="R"][data-board-action="category-remove"]');
   await click('#board-confirm-dialog [data-board-action="confirm"]');

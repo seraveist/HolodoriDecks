@@ -133,13 +133,33 @@ function conceptLeaderPotential(leader, concept) {
   return leader.leader.primaryEffects[stat] + leader.leader.additionalEffects[stat];
 }
 
+function sameStaticCondition(left, right) {
+  return left?.kind === right?.kind && left?.value === right?.value && left?.count === right?.count;
+}
+
+function optimisticSpecialSupport(special) {
+  return Math.max(Number(special?.support) || 0, Number(special?.conditionalSupport) || 0);
+}
+
 function partialHeuristic(leader, selected, concept) {
   let value = selected.reduce((sum, member) => sum + conceptMemberValue(member, concept), 0);
   for (const condition of leader.leader.primaryCondition) {
     value += memberConditionProgress(condition, selected) * 24_000;
   }
   for (const member of selected) {
-    value += memberConditionProgress(member.passive?.condition, selected) * 2_400;
+    const passive = member.passive;
+    value += memberConditionProgress(passive?.condition, selected) * 2_400;
+    if (passive?.additionalEffect && !sameStaticCondition(passive.condition, passive.additionalCondition)) {
+      value += memberConditionProgress(passive.additionalCondition, selected) * 2_400;
+    }
+    const special = member.special;
+    const supportGain = optimisticSpecialSupport(special) - (Number(special?.support) || 0);
+    const condition = special?.condition;
+    if (supportGain > 0) {
+      const progress = condition?.kind === "life" ? Number(condition.threshold) <= 1000
+        : memberConditionProgress(condition, selected);
+      value += supportGain * progress * 80;
+    }
   }
   return value + conceptLeaderPotential(leader, concept) * 250;
 }
@@ -175,7 +195,9 @@ function fourStarSynergyValue(member, leader, coreMembers) {
   if (relevantToLeader(member, leader)) value += 100_000;
 
   for (const core of coreMembers) {
-    if (memberMatchesStaticCondition(member, core.passive?.condition)) value += 8_000;
+    const passive = core.passive;
+    if (memberMatchesStaticCondition(member, passive?.condition)
+      || (passive?.additionalEffect && memberMatchesStaticCondition(member, passive.additionalCondition))) value += 8_000;
   }
 
   const passive = member.passive;
@@ -189,7 +211,19 @@ function fourStarSynergyValue(member, leader, coreMembers) {
     }
   }
 
-  value += Number(member.special?.support || 0) * 80;
+  const secondary = passive?.additionalEffect;
+  if (secondary) {
+    const targetCount = coreMembers.filter(core => targetMatchesMember(secondary.target, core)).length;
+    if (targetCount || secondary.target?.kind === "self") {
+      value += Number(secondary.value || 0) * Math.max(1, Math.min(targetCount, secondary.target?.count ?? 5)) * 120;
+      if (passive.additionalCondition && !sameStaticCondition(passive.condition, passive.additionalCondition)) {
+        const currentMatches = coreMembers.filter(core => memberMatchesStaticCondition(core, passive.additionalCondition)).length;
+        value += Math.min(currentMatches, Number(passive.additionalCondition.count) || 1) * 1_200;
+      }
+    }
+  }
+
+  value += optimisticSpecialSupport(member.special) * 80;
   value += Number(member.special?.activationRateUp || 0) * 40;
   return value;
 }

@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 
 const productionUrl = process.env.PRODUCTION_URL || "https://holosims.net/";
 const deploymentSha = String(process.env.DEPLOYMENT_SHA || "").trim();
 const base = new URL(productionUrl);
+const canonicalOrigin = new URL(process.env.PRODUCTION_CANONICAL_URL || "https://holosims.net/").origin;
 const knownPortrait = "card-00010-5-uniq-0069-00";
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -56,7 +58,7 @@ for (const locale of ["ko", "en", "ja"]) {
   const page = await response.text();
   verifyNavigation(page);
   assert.ok(page.includes(`lang="${locale}"`));
-  assert.ok(page.includes(`rel="canonical" href="${base.origin}/${locale}/"`));
+  assert.ok(page.includes(`rel="canonical" href="${canonicalOrigin}/${locale}/"`));
   assert.ok(page.includes(`data-card-asset-revision="${deploymentSha}"`));
   assert.ok(page.includes('http-equiv="Content-Security-Policy"'));
 }
@@ -68,7 +70,11 @@ for (const file of ["robots.txt", "sitemap.xml"]) {
 const manifestResponse = await request(withRevision("/data/generated/manifest.json"));
 assert.equal(manifestResponse.ok, true, `manifest request failed: ${manifestResponse.status}`);
 const manifest = await manifestResponse.json();
+const expectedMaster = JSON.parse(await readFile(new URL("../data/generated/manifest.json", import.meta.url), "utf8"));
 assert.match(String(manifest.source_commit || ""), /^[0-9a-f]{40}$/);
+assert.equal(manifest.source_commit, expectedMaster.source_commit, "production serves the wrong upstream Master commit");
+assert.match(String(manifest.master_version || ""), /^[0-9a-f]{64}$/);
+assert.equal(manifest.master_version, expectedMaster.master_version, "production serves the wrong Master version");
 assert.ok(Number(manifest.card_count) >= 6, "manifest card count is invalid");
 assert.ok(Number(manifest.music_count) > 0, "manifest music count is invalid");
 

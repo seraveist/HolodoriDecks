@@ -122,6 +122,7 @@ function specialWindows(members, context) {
     if (!member) return null;
     const start = Math.max(0, finite(event.time));
     const duration = Math.max(0, finite(member.special?.duration));
+    const combo = Math.max(0, Math.round(finite(event.combo ?? event.skill_starts_at_combo)));
     return {
       slot,
       cardId: member.id,
@@ -129,8 +130,11 @@ function specialWindows(members, context) {
       start,
       end: Math.min(context.duration, start + duration),
       duration,
-      combo: Math.max(0, Math.round(finite(event.combo ?? event.skill_starts_at_combo))),
-      support: finite(member.special?.support),
+      combo,
+      // The conditional Score Support value replaces the primary value at SP activation.
+      support: conditionMet(member.special?.condition, members, combo)
+        ? finite(member.special?.conditionalSupport) || finite(member.special?.support)
+        : finite(member.special?.support),
       activationRateUp: finite(member.special?.activationRateUp),
       condition: member.special?.condition ?? null,
       specialLevel: member.special?.level ?? 1,
@@ -171,7 +175,7 @@ function buildActiveChecks(members, context, windows, maximize = false) {
     for (let time = interval; time <= context.duration + 1e-9; time += interval) {
       const combo = comboAt(context, time);
       const rateUp = activationRateUpAt(windows, time, members, combo);
-      const effectiveProbability = clamp(finite(active?.probability) * (1 + (rateUp + finite(active?.boardActivationRatePct)) / 100), 0, 1);
+      const effectiveProbability = clamp(finite(active?.probability) * (1 + (rateUp + finite(active?.boardActivationRatePct) + finite(active?.passiveActivationRatePct)) / 100), 0, 1);
       const probability = maximize && effectiveProbability > 0 ? 1 : effectiveProbability;
       const row = {
         cardId: member.id,

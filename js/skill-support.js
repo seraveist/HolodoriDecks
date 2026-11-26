@@ -64,7 +64,7 @@ export const CARD_SKILL_SUPPORT_REGISTRY = Object.freeze({
     }),
     LiveActiveSkillEffectType_LIVE_ACTIVE_SKILL_EFFECT_TYPE_SCORE_UP_EFFECT_UP_PERMIL_UP: Object.freeze({
       requiredFields: Object.freeze(["value"]),
-      supportedContexts: Object.freeze([SKILL_CONTEXT.specialPrimary]),
+      supportedContexts: Object.freeze([SKILL_CONTEXT.specialPrimary, SKILL_CONTEXT.specialAdditional]),
       scoreScope: SCORE_SCOPE.handled,
     }),
     LiveActiveSkillEffectType_LIVE_ACTIVE_SKILL_EFFECT_TYPE_LIVE_ACTIVE_SKILL_ACTIVATION_PROBABILITY_UP_PERMIL_UP: Object.freeze({
@@ -84,6 +84,12 @@ export const CARD_SKILL_SUPPORT_REGISTRY = Object.freeze({
     }),
   }),
   passiveEffects: Object.freeze({
+    LivePassiveSkillEffectType_LIVE_PASSIVE_SKILL_EFFECT_TYPE_LIVE_ACTIVE_SKILL_ACTIVATION_PROBABILITY_UP_PERMIL_UP: Object.freeze({
+      requiredFields: Object.freeze(["value", "liveSkillEffectTargetId"]),
+      supportedContexts: Object.freeze([SKILL_CONTEXT.passive]),
+      supportedTargetKinds: Object.freeze(["all", "self", "attribute", "group"]),
+      scoreScope: SCORE_SCOPE.handled,
+    }),
     LivePassiveSkillEffectType_LIVE_PASSIVE_SKILL_EFFECT_TYPE_ALL_PARAMETER_UP_PERMIL_UP: Object.freeze({
       requiredFields: Object.freeze(["value", "liveSkillEffectTargetId"]),
       supportedContexts: Object.freeze([SKILL_CONTEXT.passive]),
@@ -315,6 +321,17 @@ function auditPassiveLevel(card, row, level, masterRefs) {
       context: SKILL_CONTEXT.passive,
       kind: "passive_effect",
       required: true,
+    }),
+    ...checkMasterGroup({
+      card, masterRefs, collection: "triggers",
+      groupId: row?.additionalLiveSkillTriggerGroupId, rules: CARD_SKILL_SUPPORT_REGISTRY.triggers,
+      skillKind: "passive", level, context: SKILL_CONTEXT.passive, kind: "trigger",
+    }),
+    ...checkMasterGroup({
+      card, masterRefs, collection: "passive_effects",
+      groupId: row?.additionalLivePassiveSkillEffectGroupId, rules: CARD_SKILL_SUPPORT_REGISTRY.passiveEffects,
+      skillKind: "passive", level, context: SKILL_CONTEXT.passive, kind: "passive_effect",
+      required: Boolean(row?.additionalLiveSkillTriggerGroupId),
     }),
   ];
 }

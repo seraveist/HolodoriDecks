@@ -58,11 +58,12 @@ export function unitDisplayBonuses(members, { leaderOutfitSupportPct = 0, leader
     value: Math.max(0, finite(m.value)),
     support: Math.max(0, finite(m.support)),
     rate: Math.max(0, finite(m.rate)),
+    passiveRate: Math.max(0, finite(m.passiveRate)),
     frequency: Math.max(0, finite(m.frequency)),
   }));
   const adjusted = base.map(m => ({
     ...m,
-    probability: maximize ? m.probability : ceilUnit(Math.min(1, m.rawProbability * (1 + m.rate / 100)) * 100) / 100,
+    probability: maximize ? m.probability : ceilUnit(Math.min(1, m.rawProbability * (1 + (m.rate + m.passiveRate) / 100)) * 100) / 100,
     interval: m.interval / (1 + m.frequency / 100),
   }));
   const baseWeights = normalizedWeights(base);
@@ -77,7 +78,7 @@ export function unitDisplayBonuses(members, { leaderOutfitSupportPct = 0, leader
   base.forEach(m => {
     const w = (maximize ? m.probability : m.rawProbability) * m.value * m.duration / m.interval;
     outfitWeight += w * O;
-    passiveWeight += w * m.support;
+    passiveWeight += w * (m.support + (maximize ? 0 : m.passiveRate));
     boardWeight += w * 100 * ((1 + (maximize ? 0 : m.rate) / 100) * (1 + m.frequency / 100) * (1 + L / 100) - 1);
   });
   const weight = outfitWeight + passiveWeight + boardWeight;

@@ -9,7 +9,7 @@ on:
         default: false
         type: boolean
       dry_run:
-        description: Validate changes without pushing a sync branch or PR
+        description: Run full candidate validation without pushing, opening a PR, or deploying
         required: false
         default: false
         type: boolean
@@ -48,7 +48,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ inputs.dry_run && github.ref || 'main' }}
+          ref: ${{ inputs.dry_run && github.sha || 'main' }}
           fetch-depth: 0
 
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -188,17 +188,35 @@ jobs:
       # also creates a synchronize event and an approval notification.
       - name: Commit validation candidate
         id: sync_commit
-        if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run != true
+        if: steps.diff.outputs.has_diff == 'true'
         env:
-          SYNC_BRANCH: automation/master-data-candidate
+          MASTER_VERSION: ${{ steps.sync.outputs.master_version }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -B "$SYNC_BRANCH"
           git add data/generated data/upstream.json data/sync_state.json
-          git commit -m "Sync Holodori master data to ${{ steps.sync.outputs.master_version }}"
-          git push --force origin "$SYNC_BRANCH"
+          git commit -m "Sync Holodori master data to $MASTER_VERSION"
           echo "head_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Push non-dry-run validation candidate
+        if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run != true
+        env:
+          SYNC_BRANCH: automation/master-data-candidate
+        run: git push --force origin "HEAD:refs/heads/$SYNC_BRANCH"
+
+      - name: Bundle dry-run validation candidate without pushing
+        if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run == true
+        run: git bundle create "$RUNNER_TEMP/master-candidate.bundle" HEAD '^HEAD^'
+
+      - name: Upload dry-run validation candidate
+        if: steps.diff.outputs.has_diff == 'true' && inputs.dry_run == true
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: master-sync-candidate
+          path: ${{ runner.temp }}/master-candidate.bundle
+          if-no-files-found: error
+          retention-days: 3
+          overwrite: true
 
       - name: Prepare validated PR description
         id: pr_body
@@ -298,18 +316,19 @@ jobs:
 
   validate_sync:
     needs: sync
-    if: >-
-      needs.sync.outputs.has_diff == 'true' &&
-      inputs.dry_run != true
+    if: needs.sync.outputs.has_diff == 'true'
     permissions:
       contents: read
       actions: read
     uses: ./.github/workflows/validate.yml
     with:
       checkout_ref: ${{ needs.sync.outputs.head_sha }}
+      candidate_artifact: ${{ inputs.dry_run && 'master-sync-candidate' || '' }}
+      full_validation: ${{ inputs.dry_run == true }}
 
   merge:
     needs: [sync, validate_sync]
+    if: inputs.dry_run != true
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:

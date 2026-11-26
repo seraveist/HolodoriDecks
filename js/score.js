@@ -125,20 +125,27 @@ function skillLevel(skill, useLevelTwo) {
 function parsePassive(skill, potential) {
   const level = skillLevel(skill, potential >= 4);
   if (!level) return null;
-  const effectId = level.livePassiveSkillEffectGroupId ?? "";
-  const value = permilValueFromId(effectId);
-  const target = targetFromEffectId(effectId);
-  let kind = "support";
-  let stat = null;
-  if (effectId.includes("all_parameter_up")) kind = target.kind === "self" ? "selfAll" : "all";
-  else if (effectId.includes("performance_up")) { kind = "stat"; stat = "p"; }
-  else if (effectId.includes("technique_up")) { kind = "stat"; stat = "t"; }
-  else if (effectId.includes("sense_up")) { kind = "stat"; stat = "s"; }
+  const parseEffect = (effectId = "") => {
+    const value = permilValueFromId(effectId);
+    const target = targetFromEffectId(effectId);
+    let kind = "support";
+    let stat = null;
+    if (effectId.includes("all_parameter_up")) kind = target.kind === "self" ? "selfAll" : "all";
+    else if (effectId.includes("performance_up")) { kind = "stat"; stat = "p"; }
+    else if (effectId.includes("technique_up")) { kind = "stat"; stat = "t"; }
+    else if (effectId.includes("sense_up")) { kind = "stat"; stat = "s"; }
+    else if (effectId.includes("activation_probability_up")) kind = "activationRate";
+    return { kind, stat, value, target };
+  };
   return {
     level: finite(level.level, 1),
     description: cleanDescription(level.description),
     condition: conditionFromId(level.liveSkillTriggerGroupId),
-    effect: { kind, stat, value, target },
+    effect: parseEffect(level.livePassiveSkillEffectGroupId),
+    ...(level.additionalLivePassiveSkillEffectGroupId && {
+      additionalEffect: parseEffect(level.additionalLivePassiveSkillEffectGroupId),
+      additionalCondition: conditionFromId(level.additionalLiveSkillTriggerGroupId),
+    }),
   };
 }
 
@@ -175,6 +182,7 @@ function parseSpecial(skill, potential) {
     level: finite(level.level, 1),
     duration: Math.max(0, finite(level.effectDurationMillisecond) / 1000),
     support: primaryId.includes("score_up_effect_up") ? permilValueFromId(primaryId) : 0,
+    conditionalSupport: additionalId.includes("score_up_effect_up") ? permilValueFromId(additionalId) : 0,
     activationRateUp: additionalId.includes("activation_probability_up") ? permilValueFromId(additionalId) : 0,
     condition: conditionFromId(level.additionalLiveSkillTriggerGroupId),
     description: cleanDescription(level.description),
@@ -281,6 +289,7 @@ function addEffects(target, source) {
 function passiveEvaluation(members) {
   const bonusRatesByMember = new Map(members.map((member) => [member.id, { p: 0, t: 0, s: 0 }]));
   const supportByMember = new Map(members.map((member) => [member.id, 0]));
+  const activationRateByMember = new Map();
   const activeStates = [];
 
   for (const owner of members) {
@@ -288,28 +297,32 @@ function passiveEvaluation(members) {
     if (!passive) continue;
     const active = staticConditionState(passive.condition, members) !== false;
     activeStates.push({ cardId: owner.id, active, label: active ? "활성" : "비활성" });
-    if (!active) continue;
-    const effect = passive.effect;
-    const targets = eligibleTargets(effect.target, owner, members)
-      // Observation C supports base-total selection for single-stat buffs.
-      // Use the same priority for support; its absolute bonus and equal-total
-      // tie behavior are not yet isolated by the in-game observations.
-      .sort((left, right) => (right.stats.p + right.stats.t + right.stats.s)
-        - (left.stats.p + left.stats.t + left.stats.s))
-      .slice(0, effect.target?.count ?? 5);
-    if (effect.kind === "support") {
-      for (const target of targets) {
-        supportByMember.set(target.id, (supportByMember.get(target.id) ?? 0) + effect.value);
-      }
-      continue;
-    }
-    for (const target of targets) {
-      if (effect.kind === "selfAll" || effect.kind === "all") {
-        for (const stat of ["p", "t", "s"]) {
-          bonusRatesByMember.get(target.id)[stat] += effect.value;
+    const effects = [];
+    if (active && passive.effect) effects.push(passive.effect);
+    if (passive.additionalEffect && staticConditionState(passive.additionalCondition, members) !== false) effects.push(passive.additionalEffect);
+    for (const effect of effects) {
+      const targets = eligibleTargets(effect.target, owner, members)
+        // Observation C supports base-total selection for single-stat buffs.
+        // For score support and activation rate, use the same priority as a model
+        // assumption; in-game selection and equal-total tiebreak are unverified.
+        .sort((left, right) => (right.stats.p + right.stats.t + right.stats.s)
+          - (left.stats.p + left.stats.t + left.stats.s))
+        .slice(0, effect.target?.count ?? 5);
+      if (effect.kind === "support" || effect.kind === "activationRate") {
+        const bonuses = effect.kind === "support" ? supportByMember : activationRateByMember;
+        for (const target of targets) {
+          bonuses.set(target.id, (bonuses.get(target.id) ?? 0) + effect.value);
         }
-      } else if (effect.kind === "stat") {
-        bonusRatesByMember.get(target.id)[effect.stat] += effect.value;
+        continue;
+      }
+      for (const target of targets) {
+        if (effect.kind === "selfAll" || effect.kind === "all") {
+          for (const stat of ["p", "t", "s"]) {
+            bonusRatesByMember.get(target.id)[stat] += effect.value;
+          }
+        } else if (effect.kind === "stat") {
+          bonusRatesByMember.get(target.id)[effect.stat] += effect.value;
+        }
       }
     }
   }
@@ -328,6 +341,7 @@ function passiveEvaluation(members) {
     bonusStats,
     supportPoints,
     supportByMember: Object.fromEntries(supportByMember),
+    activationRateByMember: Object.fromEntries(activationRateByMember),
     activeStates,
   };
 }
@@ -368,7 +382,12 @@ function specialAverages(members, context, suppressLifeRate = false) {
   for (const member of members) {
     const special = member.special;
     const coverage = clamp(finite(special?.duration) / Math.max(1, context.duration), 0, 1);
-    supportAveragePct += finite(special?.support) * coverage;
+    const support = finite(special?.support);
+    const conditional = finite(special?.conditionalSupport);
+    // The localized conditional value is modeled as a replacement, like Active.
+    const resolved = conditional ? support + (conditional - support)
+      * dynamicConditionAvailability(special.condition, members, context) : support;
+    supportAveragePct += resolved * coverage;
     if (suppressLifeRate && special?.condition?.kind === "life") continue;
     activationRateAveragePct += finite(special?.activationRateUp)
       * coverage
@@ -381,7 +400,8 @@ function activeDetails(members, context, activationRateAveragePct, maximize = fa
   return members.map((member) => {
     const active = member.active;
     const checks = Math.floor(context.duration / Math.max(0.001, active.interval));
-    const probability = clamp(active.probability * (1 + (activationRateAveragePct + finite(active.boardActivationRatePct)) / 100), 0, 1);
+    const probability = clamp(active.probability * (1 + (activationRateAveragePct + finite(active.boardActivationRatePct)
+      + finite(active.passiveActivationRatePct)) / 100), 0, 1);
     const effectiveProbability = maximize && probability > 0 ? 1 : probability;
     const expectedActivations = checks * effectiveProbability;
     const coverage = clamp(expectedActivations * Math.min(active.duration, active.interval) / context.duration, 0, 1);
@@ -429,7 +449,10 @@ function unitScoreBonusBreakdown(members, passive, leaderSupportPct, maximize, a
       support: passive.supportByMember[member.id] ?? 0,
       rate: board?.activationRatePct ?? 0,
       frequency: board?.activationFrequencyPct ?? 0,
-      specialSupport: member.special.support, specialDuration: member.special.duration,
+      passiveRate: passive.activationRateByMember[member.id] ?? 0,
+      specialSupport: unitDisplayConditionMet(member.special.condition, members)
+        ? member.special.conditionalSupport || member.special.support : member.special.support,
+      specialDuration: member.special.duration,
       specialRate: unitDisplayConditionMet(member.special.condition, members) ? member.special.activationRateUp : 0,
     };
   });
@@ -816,7 +839,7 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   // Unit Score detail is decomposed by mechanic category without double-counting.
   // The legacy same-cycle loss diagnostic is separate from the new display
   // model's normalized overlap calculation and the song's actual timeline.
-  const unitSkill = skillEvaluation(members, UNIT_CONTEXT, false);
+  const unitSkill = skillEvaluation(withPassiveActivationRates(members, passive), UNIT_CONTEXT, false);
   const internalActive = unitSkill.active.correctedPct;
   const internalActiveBase = unitSkill.activeBase.correctedPct;
   const rateGain = Math.max(0, internalActive - internalActiveBase);
@@ -887,6 +910,14 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   };
 }
 
+function withPassiveActivationRates(members, passive) {
+  if (!Object.keys(passive.activationRateByMember).length) return members;
+  return members.map(member => {
+    const rate = passive.activationRateByMember[member.id];
+    return rate ? { ...member, active: { ...member.active, passiveActivationRatePct: rate } } : member;
+  });
+}
+
 export function prepareDeckComposition({ leader, members, separateRole = true, accountBonuses = null }) {
   return buildDeckComposition({ leader, members, separateRole, includePotential: true, accountBonuses });
 }
@@ -920,13 +951,14 @@ export function evaluateDeck({
   if (!composition) return null;
 
   const songBonuses = music ? normalizeAccountBonuses(accountBonuses, leader, music) : composition.accountBonuses;
-  const songMembers = music ? members.map(member => {
+  const adjustedMembers = withPassiveActivationRates(members, composition.passive);
+  const songMembers = music ? adjustedMembers.map(member => {
     const board = songBonuses.memberBoards[member.characterId];
     if (!board?.activationRatePct && !board?.activationFrequencyPct) return member;
     return { ...member, active: { ...member.active,
       boardActivationRatePct: board.activationRatePct,
       interval: member.active.interval / (1 + board.activationFrequencyPct / 100) } };
-  }) : members;
+  }) : adjustedMembers;
   const songStats = music ? boardStatBonuses(members, songBonuses) : null;
   const songPower = songStats ? ['p', 't', 's'].reduce((sum, stat) => sum + Math.round((composition.preEnhancementStats[stat]
     - composition.boardStats.board[stat] - composition.boardStats.memory[stat] + songStats.board[stat] + songStats.memory[stat])
@@ -996,7 +1028,7 @@ export function evaluateDeck({
     },
     passiveStates: composition.passive.activeStates,
     diagnostics: includeDiagnostics
-      ? diagnostics(members, diagnosticContext, composition.passive.activeStates, leader, composition.additionalMet, projectedDiagnostics)
+      ? diagnostics(songMembers, diagnosticContext, composition.passive.activeStates, leader, composition.additionalMet, projectedDiagnostics)
       : [],
   };
 }

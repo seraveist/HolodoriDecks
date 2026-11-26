@@ -36,7 +36,7 @@ def test_master_validation_is_called_directly_on_generated_commit():
     assert validate["with"]["checkout_ref"] == "${{ needs.sync.outputs.head_sha }}"
     assert "validate_sync" in jobs["merge"]["needs"]
     checkout = workflow("validate.yml")["jobs"]["validate"]["steps"][0]
-    assert checkout["with"]["ref"] == "${{ inputs.checkout_ref || github.sha }}"
+    assert checkout["with"]["ref"] == "${{ inputs.candidate_artifact && github.sha || inputs.checkout_ref || github.sha }}"
     assert "--event pull_request" not in str(jobs)
 
 
@@ -67,7 +67,7 @@ def test_metadata_only_result_skips_rebuild_diff_and_pr_validation():
         step = next(step for step in steps if step.get("name") == name)
         assert not condition(step["if"], {"steps.sync.outputs.changed": "false", "inputs.dry_run": False})
     assert not condition(jobs["validate_sync"]["if"], {"needs.sync.outputs.has_diff": "", "inputs.dry_run": False})
-    assert set(jobs["merge"]["needs"]) == {"sync", "validate_sync"} and "if" not in jobs["merge"]
+    assert set(jobs["merge"]["needs"]) == {"sync", "validate_sync"} and jobs["merge"]["if"] == "inputs.dry_run != true"
     assert any("tests/test_chart_asset_sync.py" in step.get("run", "") for step in steps)
 
 
@@ -150,13 +150,15 @@ def test_master_schedule_runs_daily_at_midnight_fifteen_korean_time():
 def test_master_pr_branch_is_not_updated_until_full_validation_passes():
     jobs = workflow("sync-master-data.yml")["jobs"]
     sync = jobs["sync"]["steps"]
-    candidate = next(step for step in sync if step.get("id") == "sync_commit")
+    candidate = next(step for step in sync if step.get("name") == "Push non-dry-run validation candidate")
     assert candidate["env"]["SYNC_BRANCH"] == "automation/master-data-candidate"
+    assert "git push" in candidate["run"]
     assert not any("gh pr " in step.get("run", "") for step in sync)
     assert "automation/master-data-sync" not in str(sync)
     publish = jobs["merge"]
     assert set(publish["needs"]) == {"sync", "validate_sync"}
-    assert "if" not in publish  # default success() blocks publication after failed/skipped validation
+    # success() is still implicit; do not add always() or bypass failed validation.
+    assert publish["if"] == "inputs.dry_run != true"
     assert publish["steps"][0]["with"]["ref"] == "${{ needs.sync.outputs.head_sha }}"
     push = next(step for step in publish["steps"] if "git push" in step.get("run", ""))
     assert 'test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"' in push["run"]
@@ -180,7 +182,8 @@ def test_review_only_updates_still_require_full_validation(safe, event, auto_mer
     assert condition(jobs["validate_sync"]["if"], values)
     merge = next(step for step in jobs["merge"]["steps"] if step.get("id") == "auto_merge")
     assert condition(merge["if"], values) is can_merge
-    assert not condition(jobs["validate_sync"]["if"], {**values, "inputs.dry_run": True})
+    assert condition(jobs["validate_sync"]["if"], {**values, "inputs.dry_run": True})
+    assert not condition(jobs["merge"]["if"], {**values, "inputs.dry_run": True})
     assert not condition(jobs["validate_sync"]["if"], {**values, "needs.sync.outputs.has_diff": "false"})
 
 
@@ -293,7 +296,7 @@ def test_required_validation_fails_when_macos_workflow_checks_do_not_pass(tmp_pa
     jobs = workflow("validate.yml")["jobs"]
     contracts = jobs["workflow_contracts"]
     assert contracts["runs-on"] == "macos-15"
-    assert contracts["steps"][0]["with"]["ref"] == "${{ inputs.checkout_ref || github.sha }}"
+    assert contracts["steps"][0]["with"]["ref"] == "${{ inputs.candidate_artifact && github.sha || inputs.checkout_ref || github.sha }}"
     assert any("python -m pytest -q tests/test_sync_workflows.py" in step.get("run", "") for step in contracts["steps"])
     validate = jobs["validate"]
     assert set(validate["needs"]) == {"changes", "metadata", "workflow_contracts", "app", "public", "historical"}
@@ -421,11 +424,14 @@ def test_only_expensive_suites_can_be_skipped_with_explicit_matching_proof(reuse
     assert "node scripts/run-app-validation.mjs" in scoring["run"]
 
 
-@pytest.mark.parametrize("fail_index", [None, 0, 8, 10, 20])
+@pytest.mark.parametrize("fail_index", [None, 0, 8, 10, -1])
 def test_shared_production_regressions_preserve_process_isolation_and_stop_on_failure(tmp_path, fail_index):
     script = (ROOT / "scripts/run-core-regressions.mjs").read_text()
     tests = re.findall(r'"(scripts/test-[\w-]+\.mjs)"', script)
-    assert len(tests) == 21
+    assert len(tests) == len(set(tests))
+    assert "scripts/test-holiday-master-scoring.mjs" in tests
+    if fail_index == -1:
+        fail_index = len(tests) - 1
     assert tests.count("scripts/test-unit-support-costumes.mjs") == 1
     assert (ROOT / "scripts/run-app-validation.mjs").read_text().count('"run-core-regressions"') == 1
     (tmp_path / "scripts").mkdir()
@@ -440,3 +446,62 @@ def test_shared_production_regressions_preserve_process_isolation_and_stop_on_fa
                                cwd=tmp_path, capture_output=True, text=True, timeout=15)
     assert completed.returncode == (0 if fail_index is None else 23), completed.stderr
     assert (tmp_path / "calls.txt").read_text().splitlines() == tests[:None if fail_index is None else fail_index + 1]
+
+
+def test_master_dry_run_transfers_and_validates_exact_candidate_without_push():
+    jobs = workflow("sync-master-data.yml")["jobs"]
+    steps = jobs["sync"]["steps"]
+    by_name = {step.get("name"): step for step in steps}
+    for dry_run in (False, True):
+        values = {"steps.diff.outputs.has_diff": "true", "inputs.dry_run": dry_run}
+        assert condition(by_name["Commit validation candidate"]["if"], values)
+        assert condition(by_name["Push non-dry-run validation candidate"]["if"], values) is not dry_run
+        assert condition(by_name["Bundle dry-run validation candidate without pushing"]["if"], values) is dry_run
+        assert condition(by_name["Upload dry-run validation candidate"]["if"], values) is dry_run
+    assert "git push" not in by_name["Commit validation candidate"]["run"]
+    assert "git push" not in by_name["Bundle dry-run validation candidate without pushing"]["run"]
+    validate = jobs["validate_sync"]["with"]
+    assert validate["candidate_artifact"] == "${{ inputs.dry_run && 'master-sync-candidate' || '' }}"
+    assert validate["full_validation"] == "${{ inputs.dry_run == true }}"
+    for validation_job in workflow("validate.yml")["jobs"].values():
+        checkout, restore, *_ = validation_job["steps"]
+        assert checkout["with"]["ref"] == "${{ inputs.candidate_artifact && github.sha || inputs.checkout_ref || github.sha }}"
+        assert restore["uses"] == "./.github/actions/restore-sync-candidate"
+        assert restore["with"] == {"artifact": "${{ inputs.candidate_artifact }}", "sha": "${{ inputs.checkout_ref }}"}
+
+
+def test_dry_run_bundle_restores_exact_sha_on_shallow_checkout(tmp_path):
+    def git(*args, cwd, **kwargs):
+        return subprocess.run(["git", *args], cwd=cwd, check=True, capture_output=True, text=True, **kwargs).stdout.strip()
+    source = tmp_path / "source"
+    source.mkdir()
+    git("init", cwd=source)
+    git("config", "user.name", "fixture", cwd=source)
+    git("config", "user.email", "fixture@example.invalid", cwd=source)
+    git("commit", "--allow-empty", "-m", "baseline", cwd=source)
+    base = git("rev-parse", "HEAD", cwd=source)
+    checking = tmp_path / "checking"
+    git("clone", "--depth=1", source.as_uri(), str(checking), cwd=tmp_path)
+    (source / "manifest.json").write_text('{"master":"new"}')
+    git("add", "manifest.json", cwd=source)
+    git("commit", "-m", "candidate", cwd=source)
+    candidate = git("rev-parse", "HEAD", cwd=source)
+    runner_temp = tmp_path / "runner"
+    artifact = runner_temp / "master-sync-candidate"
+    artifact.mkdir(parents=True)
+    step = next(step for step in workflow("sync-master-data.yml")["jobs"]["sync"]["steps"]
+                if step.get("name") == "Bundle dry-run validation candidate without pushing")
+    # Upload/download Actions preserve the file inside the artifact directory.
+    cmd = step["run"].replace("$RUNNER_TEMP", str(artifact))
+    subprocess.run(["bash", "-e", "-c", cmd], cwd=source, check=True, capture_output=True)
+    restore = yaml.load((ROOT / ".github/actions/restore-sync-candidate/action.yml").read_text(),
+                        Loader=yaml.BaseLoader)["runs"]["steps"][-1]["run"]
+    env = {**os.environ, "RUNNER_TEMP": str(runner_temp)}
+    bad = subprocess.run(["bash", "-c", restore], cwd=checking, env={**env, "EXPECTED_HEAD": base},
+                         capture_output=True)
+    assert bad.returncode != 0
+    assert git("rev-parse", "HEAD", cwd=checking) == base
+    subprocess.run(["bash", "-c", restore], cwd=checking, env={**env, "EXPECTED_HEAD": candidate},
+                   check=True, capture_output=True)
+    assert git("rev-parse", "HEAD", cwd=checking) == candidate
+    assert (checking / "manifest.json").read_text() == '{"master":"new"}'
