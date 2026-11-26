@@ -79,6 +79,23 @@ test('all current selected Master effects compile; every slot/range pair is disj
   }
 });
 
+test('R-064 grants activation rate only when its owner leads; G-026 has no live-score effect', () => {
+  const owner = 'chr-00001', other = 'chr-00022';
+  const master = catalog.board(owner);
+  // Source-only branches may not have imported the 1.3.0 Master yet.
+  if (!master.byId.has('R-064') && !master.byId.has('G-026')) return;
+  assert.ok(master.byId.has('R-064') && master.byId.has('G-026'));
+  const isolated = nodes => compile(stateWith({ [owner]: board(owner, nodes) }));
+  const withRate = isolated(['R-064']);
+  const leading = resolveBoardProfile(withRate, owner);
+  assert.equal(leading.leaderBoardSupportPct, 0);
+  assert.equal(leading.directScorePct, 0);
+  assert.deepEqual(Object.keys(leading.memberBoards).sort(), characters.map(c => c.id).sort());
+  assert.ok(Object.values(leading.memberBoards).every(member => member.activationRatePct === 10));
+  assert.deepEqual(resolveBoardProfile(withRate, other), resolveBoardProfile(isolated([]), other));
+  assert.deepEqual(resolveBoardProfile(isolated(['R-064', 'G-026']), owner), leading);
+});
+
 test('memory table, per-stat rounding, empty profile and changed profile cache', () => {
   const args = input('AS'), state = emptyBoardState(catalog), original = evaluateDeck(args);
   assert.deepEqual(evaluateDeck({ ...args, accountBonuses: { boardProfile: compile(state) } }), original);

@@ -166,6 +166,30 @@ function searchCard(id, {
   assert.ok(pool.length < fiveStars.length + fourStars.length, "mixed pool was not pruned");
 }
 
+// Search pruning must retain low-parameter cards with modeled holiday-style
+// secondary synergy or conditional SP; exact final evaluation still applies conditions.
+{
+  const core = Array.from({ length: 15 }, (_, i) => searchCard(`holiday-core-${i}`));
+  const regular = Array.from({ length: 24 }, (_, i) =>
+    searchCard(`holiday-regular-${i}`, { rarity: 4, parameter: 10000 + i }));
+  const secondary = searchCard("secondary", { rarity: 4, parameter: 1 });
+  secondary.passive = {
+    condition: null, effect: { kind: "support", value: 0, target: { kind: "all" } },
+    additionalCondition: { kind: "attribute", value: 1, count: 3 },
+    additionalEffect: { kind: "stat", stat: "s", value: 13, target: { kind: "attribute", value: 1, count: 2 } },
+  };
+  const special = searchCard("conditional", { rarity: 4, parameter: 1 });
+  special.special = { ...special.special, conditionalSupport: 120, condition: { kind: "attribute", value: 1, count: 3 } };
+  const placeholder = searchCard("control", { rarity: 4, parameter: 1 });
+  placeholder.passive = { ...secondary.passive, additionalEffect: { ...secondary.passive.additionalEffect,
+    target: { kind: "attribute", value: 2, count: 2 } } };
+  regular.forEach(card => { card.special.support = 50; });
+  const shortlist = memberCandidatePool([...core, ...regular, secondary, special, placeholder], leader);
+  assert.ok(shortlist.includes(secondary), "matching secondary passive should protect a low-parameter candidate");
+  assert.ok(shortlist.includes(special), "conditional Special support should protect a low-parameter candidate");
+  assert.ok(!shortlist.includes(placeholder), "a secondary passive without targets must not be promoted");
+}
+
 // Once a character survives mixed-rarity pruning, all of that character's variants stay available.
 {
   const variantLeader = searchCard("PRUNE-VARIANT-L");

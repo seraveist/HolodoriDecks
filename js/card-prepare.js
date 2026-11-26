@@ -156,30 +156,37 @@ function passiveKind(effectId, structuredType) {
   if (type.includes("PERFORMANCE") || effectId.includes("performance_up")) return "p";
   if (type.includes("TECHNIQUE") || effectId.includes("technique_up")) return "t";
   if (type.includes("SENSE") || effectId.includes("sense_up")) return "s";
+  if (type.includes("ACTIVATION_PROBABILITY_UP") || effectId.includes("activation_probability_up")) return "activationRate";
   return "support";
 }
 
 function parsePassive(skill, requestedLevel, masterRefs) {
   const level = skillLevel(skill, requestedLevel);
   if (!level) return null;
-  const effectId = level.livePassiveSkillEffectGroupId ?? "";
-  const structured = passiveEffects(masterRefs, effectId);
-  const primary = structured.find((row) => Number.isFinite(Number(row?.value))) ?? structured[0] ?? null;
-  const value = effectPct(primary) ?? permilValueFromId(effectId);
-  const target = targetFromEffectId(effectId);
-  const kindHint = passiveKind(effectId, primary?.type);
-  let kind = "support";
-  let stat = null;
-  if (kindHint === "all") kind = target.kind === "self" ? "selfAll" : "all";
-  else if (["p", "t", "s"].includes(kindHint)) {
-    kind = "stat";
-    stat = kindHint;
-  }
+  const parseEffect = (effectId = "") => {
+    const structured = passiveEffects(masterRefs, effectId);
+    const primary = structured.find((row) => Number.isFinite(Number(row?.value))) ?? structured[0] ?? null;
+    const value = effectPct(primary) ?? permilValueFromId(effectId);
+    const target = targetFromEffectId(primary?.liveSkillEffectTargetId ?? effectId);
+    const kindHint = passiveKind(effectId, primary?.type);
+    let kind = kindHint;
+    let stat = null;
+    if (kindHint === "all") kind = target.kind === "self" ? "selfAll" : "all";
+    else if (["p", "t", "s"].includes(kindHint)) {
+      kind = "stat";
+      stat = kindHint;
+    }
+    return { kind, stat, value, target };
+  };
   return {
     level: finite(level.level, 1),
     description: cleanDescription(level.description),
     condition: conditionFromMaster(masterRefs, level.liveSkillTriggerGroupId),
-    effect: { kind, stat, value, target },
+    effect: parseEffect(level.livePassiveSkillEffectGroupId),
+    ...(level.additionalLivePassiveSkillEffectGroupId && {
+      additionalEffect: parseEffect(level.additionalLivePassiveSkillEffectGroupId),
+      additionalCondition: conditionFromMaster(masterRefs, level.additionalLiveSkillTriggerGroupId),
+    }),
   };
 }
 
@@ -196,15 +203,12 @@ function parseSpecial(skill, requestedLevel, masterRefs) {
   }
   const primaryId = level.liveActiveSkillEffectGroupId ?? "";
   const additionalId = level.additionalLiveActiveSkillEffectGroupId ?? "";
-  const supportEffect = activeEffects(masterRefs, primaryId)
-    .find((row) => String(row?.type ?? "").includes("SCORE_UP_EFFECT_UP"));
-  const rateEffect = activeEffects(masterRefs, additionalId)
-    .find((row) => String(row?.type ?? "").includes("ACTIVATION_PROBABILITY_UP"));
   return {
     level: finite(level.level, 1),
     duration: Math.max(0, finite(level.effectDurationMillisecond) / 1000),
-    support: effectPct(supportEffect) ?? (primaryId.includes("score_up_effect_up") ? permilValueFromId(primaryId) : 0),
-    activationRateUp: effectPct(rateEffect) ?? (additionalId.includes("activation_probability_up") ? permilValueFromId(additionalId) : 0),
+    support: structuredSpecialPct(masterRefs, primaryId, "SCORE_UP_EFFECT_UP"),
+    conditionalSupport: structuredSpecialPct(masterRefs, additionalId, "SCORE_UP_EFFECT_UP"),
+    activationRateUp: structuredSpecialPct(masterRefs, additionalId, "ACTIVATION_PROBABILITY_UP"),
     condition: conditionFromMaster(masterRefs, level.additionalLiveSkillTriggerGroupId),
     description: cleanDescription(level.description),
   };

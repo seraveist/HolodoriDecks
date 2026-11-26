@@ -81,7 +81,7 @@ Master publication does not wait for portrait synchronization. After merging, th
 Manual inputs:
 
 - `force`: rebuild the currently resolved snapshot even if source references are unchanged.
-- `dry_run`: run normalization and all validation without pushing the automation branch or creating/updating a PR.
+- `dry_run`: normalize the selected ref and, when there is a generated diff, run the full reusable validation (including source and public browser checks). The exact candidate is transferred as a short-lived Git bundle artifact, not pushed to a branch. No PR, merge, or deployment is performed.
 - `auto_merge` (default `true`): call full validation, merge a safe update, and ensure Pages deployment. Set `false` to leave a generated PR for manual handling.
 
 Dry runs check out the selected workflow ref so a fix branch can be tested before merge. Publishing runs always generate updates from current `main`.

@@ -5,16 +5,17 @@ export function unitScoreOrders(members) {
   const power = (member) => member.stats.p + member.stats.t + member.stats.s;
   const tiedPowers = new Set();
   for (const owner of members) {
-    const target = owner.passive?.effect?.target;
-    if (!target || target.kind === "self") continue;
-    const eligible = members.filter((member) => target.kind === "all"
-      || (target.kind === "attribute" && member.attribute === target.value)
-      || (target.kind === "group" && member.groupings.has(target.value)))
-      .sort((a, b) => power(b) - power(a));
-    const count = target.count ?? 5;
-    if (count > 0 && count < eligible.length
-      && power(eligible[count - 1]) === power(eligible[count])) {
-      tiedPowers.add(power(eligible[count]));
+    for (const target of [owner.passive?.effect?.target, owner.passive?.additionalEffect?.target]) {
+      if (!target || target.kind === "self") continue;
+      const eligible = members.filter((member) => target.kind === "all"
+        || (target.kind === "attribute" && member.attribute === target.value)
+        || (target.kind === "group" && member.groupings.has(target.value)))
+        .sort((a, b) => power(b) - power(a));
+      const count = target.count ?? 5;
+      if (count > 0 && count < eligible.length
+        && power(eligible[count - 1]) === power(eligible[count])) {
+        tiedPowers.add(power(eligible[count]));
+      }
     }
   }
   if (!tiedPowers.size) return [members];

@@ -17,6 +17,7 @@ const tests = [
   "scripts/test-generic-order.mjs",
   "scripts/test-song-representative-order.mjs",
   "scripts/test-card-preparation.mjs",
+  "scripts/test-holiday-master-scoring.mjs",
   "scripts/test-simulation-targets.mjs",
   "scripts/test-collision-choice.mjs",
   "scripts/test-exact-global-search.mjs",
