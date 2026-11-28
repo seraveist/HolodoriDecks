@@ -23,7 +23,7 @@ const BEAM_MEMBER_LIMIT = 52;
 const BEAM_WIDTH = 360;
 const BEAM_SECONDARY_WIDTH = 180;
 const DEFAULT_RESULT_COUNT = 5;
-const MAX_RESULT_COUNT = 30;
+export const MAX_RESULT_COUNT = 30;
 
 const CONCEPT_STAT = Object.freeze({
   performance: "p",

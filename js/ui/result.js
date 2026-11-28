@@ -56,6 +56,9 @@ const LOCAL_COPY = Object.freeze({
     potentialUnitScore: "잠재 유닛 스코어",
     detailsShow: "+ 상세 보기",
     detailsHide: "- 접기",
+    searchExact: "전체 조합 검사",
+    searchApproximate: "유력 조합 탐색",
+    searchScope: (search, decks, orders, expanded) => `${search} · ${decks}개 편성의 ${orders}가지 배치 비교${expanded ? " · 근접 후보 확대" : ""}`,
     recommendationAria: (rank) => `추천 TOP ${rank} 편성 카드`,
   },
   en: {
@@ -95,6 +98,9 @@ const LOCAL_COPY = Object.freeze({
     potentialUnitScore: "Potential Unit Score",
     detailsShow: "+ View Details",
     detailsHide: "- Collapse",
+    searchExact: "All eligible compositions screened",
+    searchApproximate: "Promising compositions screened",
+    searchScope: (search, decks, orders, expanded) => `${search} · ${orders} orders compared across ${decks} decks${expanded ? " · Close candidates expanded" : ""}`,
     recommendationAria: (rank) => `Recommended TOP ${rank} deck cards`,
   },
   ja: {
@@ -134,6 +140,9 @@ const LOCAL_COPY = Object.freeze({
     potentialUnitScore: "潜在ユニットスコア",
     detailsShow: "+ 詳細を見る",
     detailsHide: "- 閉じる",
+    searchExact: "全編成を一次評価",
+    searchApproximate: "有力な編成を一次評価",
+    searchScope: (search, decks, orders, expanded) => `${search} · ${decks}編成の${orders}通りの配置を比較${expanded ? " · 僅差の候補を拡大" : ""}`,
     recommendationAria: (rank) => `おすすめ TOP ${rank} 編成カード`,
   },
 });
@@ -576,7 +585,16 @@ export function renderResult(data, state, recommendation = null) {
     return;
   }
 
-  container.innerHTML = results.map((result, index) => resultDetails(
+  const orderScope = recommendation.orderOptimization;
+  const searchMethod = recommendation.searchMode === "exact" ? copy().searchExact : copy().searchApproximate;
+  const searchScope = orderScope && song ? copy().searchScope(
+    searchMethod,
+    formatNumber(orderScope.shortlistedCount),
+    formatNumber(orderScope.evaluatedCount),
+    recommendation.shortlistExpanded,
+  ) : "";
+  const scopeNote = searchScope ? `<p class="timeline-head-note" data-search-scope>${escapeHtml(searchScope)}</p>` : "";
+  container.innerHTML = scopeNote + results.map((result, index) => resultDetails(
     result,
     index,
     data,
