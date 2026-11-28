@@ -166,6 +166,7 @@ function parseActive(skill, potential) {
     duration: Math.max(0, finite(level.effectDurationMillisecond) / 1000),
     baseScoreUp,
     conditionalScoreUp: conditionalScoreUp || baseScoreUp,
+    activationCondition: conditionFromId(level.liveSkillTriggerGroupId),
     condition: conditionFromId(level.additionalLiveSkillTriggerGroupId),
     description: cleanDescription(level.description),
   };
@@ -262,12 +263,13 @@ function allConditionsMet(conditions, members) {
   return conditions.every((condition) => staticConditionState(condition, members) !== false);
 }
 
-function dynamicConditionAvailability(condition, members, context) {
+function dynamicConditionAvailability(condition, members, context, allowCombo = true) {
   if (!condition) return 1;
   const staticState = staticConditionState(condition, members);
   if (staticState === true) return 1;
   if (staticState === false) return 0;
   if (condition.kind === "combo") {
+    if (!allowCombo) return finite(condition.threshold) <= 0 ? 1 : 0;
     return clamp((context.notes - finite(condition.threshold)) / Math.max(1, context.notes), 0, 1);
   }
   if (condition.kind === "life") return finite(condition.threshold) <= 1000 ? 1 : 0;
@@ -365,10 +367,11 @@ function activeConditionalShare(active, members, context) {
   return 0.5;
 }
 
-function resolvedActiveScore(active, members, context, maximize = false) {
+function resolvedActiveScore(active, members, context, maximize, allowCombo) {
   const base = finite(active?.baseScoreUp);
   const conditional = finite(active?.conditionalScoreUp, base);
   if (!active?.conditionalScoreUp || !active?.condition) return base;
+  if (!allowCombo && active.condition.kind === "combo") return finite(active.condition.threshold) <= 0 ? conditional : base;
   if (maximize) {
     if (active.condition.kind === "combo") return context.notes > finite(active.condition.threshold) ? conditional : base;
     return dynamicConditionAvailability(active.condition, members, context) > 0 ? conditional : base;
@@ -376,7 +379,7 @@ function resolvedActiveScore(active, members, context, maximize = false) {
   return base + (conditional - base) * activeConditionalShare(active, members, context);
 }
 
-function specialAverages(members, context, suppressLifeRate = false) {
+function specialAverages(members, context, suppressLifeRate = false, allowCombo = true) {
   let supportAveragePct = 0;
   let activationRateAveragePct = 0;
   for (const member of members) {
@@ -386,20 +389,20 @@ function specialAverages(members, context, suppressLifeRate = false) {
     const conditional = finite(special?.conditionalSupport);
     // The localized conditional value is modeled as a replacement, like Active.
     const resolved = conditional ? support + (conditional - support)
-      * dynamicConditionAvailability(special.condition, members, context) : support;
+      * dynamicConditionAvailability(special.condition, members, context, allowCombo) : support;
     supportAveragePct += resolved * coverage;
     if (suppressLifeRate && special?.condition?.kind === "life") continue;
     activationRateAveragePct += finite(special?.activationRateUp)
       * coverage
-      * dynamicConditionAvailability(special?.condition, members, context);
+      * dynamicConditionAvailability(special?.condition, members, context, allowCombo);
   }
   return { supportAveragePct, activationRateAveragePct };
 }
 
-function activeDetails(members, context, activationRateAveragePct, maximize = false) {
+function activeDetails(members, context, activationRateAveragePct, maximize = false, allowCombo = true) {
   return members.map((member) => {
     const active = member.active;
-    const checks = Math.floor(context.duration / Math.max(0.001, active.interval));
+    const checks = active.activationBlocked ? 0 : Math.floor(context.duration / Math.max(0.001, active.interval));
     const probability = clamp(active.probability * (1 + (activationRateAveragePct + finite(active.boardActivationRatePct)
       + finite(active.passiveActivationRatePct)) / 100), 0, 1);
     const effectiveProbability = maximize && probability > 0 ? 1 : probability;
@@ -414,7 +417,7 @@ function activeDetails(members, context, activationRateAveragePct, maximize = fa
       effectiveProbability,
       expectedActivations,
       coverage,
-      scoreUpPct: resolvedActiveScore(active, members, context, maximize),
+      scoreUpPct: resolvedActiveScore(active, members, context, maximize, allowCombo),
     };
   });
 }
@@ -596,9 +599,10 @@ function applyStaticSupport(details, supportProfile = {}, specialSupportAverageP
   });
 }
 
-function songSkillMultiplier(members, context, supportProfile = {}, maximize = false) {
-  const special = specialAverages(members, context);
-  const rawDetails = activeDetails(members, context, special.activationRateAveragePct, maximize);
+function songSkillMultiplier(members, context, supportProfile, playMode, maximize = false) {
+  const allowCombo = playMode === "manual";
+  const special = specialAverages(members, context, false, allowCombo);
+  const rawDetails = activeDetails(members, context, special.activationRateAveragePct, maximize, allowCombo);
   const supported = applyStaticSupport(rawDetails, supportProfile, special.supportAveragePct);
   const { details, active } = uniformSongActiveEvaluation(supported, context);
   return { skillMultiplier: 1 + active.correctedPct / 100, special, details, active };
@@ -690,8 +694,8 @@ function projectSong(baseScore, members, music, difficulty, supportProfile = {},
       evaluationTarget,
     });
   }
-  const selectedExpected = needExpected ? songSkillMultiplier(members, selected, supportProfile) : null;
-  const selectedMaximum = needMaximum ? songSkillMultiplier(members, selected, supportProfile, true) : null;
+  const selectedExpected = needExpected ? songSkillMultiplier(members, selected, supportProfile, playMode) : null;
+  const selectedMaximum = needMaximum ? songSkillMultiplier(members, selected, supportProfile, playMode, true) : null;
   const manual = playMode === "manual";
   const selectedKernel = cachedSongKernel(selected, playMode, scoreRules);
   const genericKernel = cachedSongKernel(generic, "auto", scoreRules);
@@ -725,7 +729,9 @@ function projectSong(baseScore, members, music, difficulty, supportProfile = {},
 
 function diagnostics(members, context, passiveStates, leader, additionalLeaderConditionMet, projectedDetails = null) {
   const intervalCount = {};
-  for (const member of members) intervalCount[member.active.interval] = (intervalCount[member.active.interval] ?? 0) + 1;
+  for (const member of members) {
+    if (!member.active.activationBlocked) intervalCount[member.active.interval] = (intervalCount[member.active.interval] ?? 0) + 1;
+  }
   const passiveMap = new Map(passiveStates.map((row) => [row.cardId, row]));
   const fallbackSkill = projectedDetails ? null : skillEvaluation(members, context);
   const activeMap = new Map((projectedDetails ?? fallbackSkill.details).map((row) => [row.cardId, row]));
@@ -743,6 +749,7 @@ function diagnostics(members, context, passiveStates, leader, additionalLeaderCo
       profile: member.profile,
       activeLevel: member.active.level,
       activeDescription: member.active.description,
+      activeAvailable: !member.active.activationBlocked,
       passiveLevel: member.passive?.level ?? 1,
       passiveDescription: member.passive?.description ?? "정보 없음",
       specialLevel: member.special.level,
@@ -757,7 +764,7 @@ function diagnostics(members, context, passiveStates, leader, additionalLeaderCo
       scoreUpPct: active.scoreUpPct,
       activationChecks: active.activationChecks ?? [],
       staticSupportPct: finite(active.staticSupportPct),
-      collision: intervalCount[member.active.interval] > 1,
+      collision: !member.active.activationBlocked && intervalCount[member.active.interval] > 1,
       passiveActive: passive?.active ?? true,
       passiveLabel: passive?.label ?? "활성",
       leaderConditionMatched: leaderConditions.some((condition) => memberMatchesCondition(member, condition)),
@@ -839,11 +846,12 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   // Unit Score detail is decomposed by mechanic category without double-counting.
   // The legacy same-cycle loss diagnostic is separate from the new display
   // model's normalized overlap calculation and the song's actual timeline.
-  const unitSkill = skillEvaluation(withPassiveActivationRates(members, passive), UNIT_CONTEXT, false);
+  const activeMembers = withActiveModifiers(members, passive);
+  const unitSkill = skillEvaluation(activeMembers, UNIT_CONTEXT, false);
   const internalActive = unitSkill.active.correctedPct;
   const internalActiveBase = unitSkill.activeBase.correctedPct;
   const rateGain = Math.max(0, internalActive - internalActiveBase);
-  const unitBreakdown = unitScoreBonusBreakdown(members, passive, leaderEffects.support, false, normalizedAccountBonuses);
+  const unitBreakdown = unitScoreBonusBreakdown(activeMembers, passive, leaderEffects.support, false, normalizedAccountBonuses);
   const active = unitBreakdown.active;
   const activeBase = active;
   const scoreBonusDetail = {
@@ -859,7 +867,7 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   let potentialUnitScore = unitScore;
   let potentialScoreBonusPct = scoreBonusPct;
   if (includePotential) {
-    const potentialBreakdown = unitScoreBonusBreakdown(members, passive, leaderEffects.support, true, normalizedAccountBonuses);
+    const potentialBreakdown = unitScoreBonusBreakdown(activeMembers, passive, leaderEffects.support, true, normalizedAccountBonuses);
     const potentialScoreBonusDetail = {
       outfit: potentialBreakdown.outfit,
       active: potentialBreakdown.active,
@@ -910,11 +918,16 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   };
 }
 
-function withPassiveActivationRates(members, passive) {
-  if (!Object.keys(passive.activationRateByMember).length) return members;
+function withActiveModifiers(members, passive) {
+  if (!Object.keys(passive.activationRateByMember).length
+      && !members.some(member => member.active.activationCondition)) return members;
   return members.map(member => {
+    const active = member.active;
     const rate = passive.activationRateByMember[member.id];
-    return rate ? { ...member, active: { ...member.active, passiveActivationRatePct: rate } } : member;
+    if (staticConditionState(active.activationCondition, members) === false) {
+      return { ...member, active: { ...active, activationBlocked: true, probability: 0, baseScoreUp: 0, conditionalScoreUp: 0 } };
+    }
+    return rate ? { ...member, active: { ...active, passiveActivationRatePct: rate } } : member;
   });
 }
 
@@ -951,7 +964,7 @@ export function evaluateDeck({
   if (!composition) return null;
 
   const songBonuses = music ? normalizeAccountBonuses(accountBonuses, leader, music) : composition.accountBonuses;
-  const adjustedMembers = withPassiveActivationRates(members, composition.passive);
+  const adjustedMembers = withActiveModifiers(members, composition.passive);
   const songMembers = music ? adjustedMembers.map(member => {
     const board = songBonuses.memberBoards[member.characterId];
     if (!board?.activationRatePct && !board?.activationFrequencyPct) return member;

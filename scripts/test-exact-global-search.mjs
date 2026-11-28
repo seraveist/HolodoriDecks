@@ -3,6 +3,7 @@ import fs from "node:fs";
 import { exactShortlistSize, optimizeOwnedDeck } from "../js/recommend.js";
 import { optimizeRecommendationOrders } from "../js/order.js";
 import { evaluateDeck } from "../js/score.js";
+import { runOptimization } from "../js/optimizer-core.js";
 
 const rules = JSON.parse(fs.readFileSync(new URL("../data/generated/live-score-rules.json", import.meta.url), "utf8"));
 const leader = { id: "L", characterId: "char-L", characterName: "L", leader: { primaryCondition: [], primaryEffects: { p: 0, t: 0, s: 0, support: 0 }, additionalCondition: [], additionalEffects: { p: 0, t: 0, s: 0, support: 0 }, description: "" } };
@@ -34,3 +35,28 @@ assert.equal(staged.score.rankingScore, best, `staged ${staged.score.rankingScor
 assert.ok(exactShortlistSize(2_022, 50) >= 12);
 assert.ok(exactShortlistSize(700, 50) > 10);
 console.log(`exact global-search regression: ${best}, shortlist ${shortlist}`);
+
+// A large tie at the window boundary expands the shortlist without redoing
+// the composition search. A clear score separation keeps the original budget.
+{
+  const fixed = rows.slice(0, 4);
+  const replacements = Array.from({ length: 26 }, (_, index) => member(`R${index}`, 60, 100, 10));
+  const cards = [leader, ...fixed, ...replacements];
+  const run = (cardRows) => runOptimization({
+    preparedCards: new Map(cardRows.map(row => [row.id, row])),
+    ownedCardIds: cardRows.map(row => row.id),
+    currentMembers: [leader.id, ...fixed.map(row => row.id), null],
+    lockedSlots: [true, true, true, true, true, false],
+    searchMusic, exactMusic, difficulty: "EXPERT", playMode: "manual", resultCount: 5,
+  });
+  const tied = run(cards);
+  assert.equal(tied.shortlistExpanded, true);
+  assert.equal(tied.stageOneShortlistCount, 26);
+  assert.equal(tied.orderOptimization.evaluatedCount, 26 * 120);
+  assert.equal(tied.results.length, 5);
+  const separated = run(cards.map((row, index) =>
+    index >= 5 && index < 10 ? { ...row, stats: { p: 5000, t: 5000, s: 5000 } } : row));
+  assert.equal(separated.shortlistExpanded, false);
+  assert.equal(separated.stageOneShortlistCount, 24);
+  assert.equal(separated.orderOptimization.evaluatedCount, 24 * 120);
+}

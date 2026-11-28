@@ -188,3 +188,17 @@ node scripts/test-exact-runtime-source.mjs
 ```
 
 `--strict` may be used when an audit should fail if any source-available chart is rejected. Normal Master sync uses the non-strict mode so a changed Master can safely reduce Runtime Exact coverage instead of failing the whole data sync.
+
+
+## 2026-11-28 홀리데이 EXPERT
+
+공식 카탈로그의 파일 크기·MD5, 복호화된 SUS SHA-256, Master의 곡·난이도·풀콤보 수와 SUS 노트 종류별 수를 대조했다. 아래 네 채보에서 노트 시간과 SP 5개 시점, Fever 구간을 유지했다.
+
+| 악곡 | Local Exact 검증 |
+| --- | --- |
+| Holiday Dream | 겹친 롱노트 끝 4개를 단일 플릭 표식 규칙으로 재분류 |
+| 絶対忠誠♡なのなのら！ | 겹친 롱노트 끝 1개를 재분류 |
+| TAKO∞TAKOVER | Ghost 표식 48개가 시각 가이드 6개로 파싱됨. 가이드 제거 전후 채점 노트 1,049개와 SP/Fever가 동일 |
+| SUNAO | 겹친 롱노트 끝 1개를 재분류 |
+
+롱노트 보정과 Ghost 예외는 감사한 원본 해시에만 적용된다. 새 해시, 다른 Ghost 수 또는 Damage가 있는 채보는 기존 검증을 통과해야 한다. [원본 자산 대조](https://github.com/seraveist/HolodoriDecks/actions/runs/46121402069) · [Ghost 가이드 대조](https://github.com/seraveist/HolodoriDecks/actions/runs/46121695866)

@@ -39,6 +39,7 @@ export const CARD_SKILL_SUPPORT_REGISTRY = Object.freeze({
     LiveSkillTriggerType_LIVE_SKILL_TRIGGER_TYPE_DECK_CARD_ATTRIBUTE: Object.freeze({
       requiredFields: Object.freeze(["threshold", "cardAttributeType"]),
       supportedContexts: Object.freeze([
+        SKILL_CONTEXT.activePrimary,
         SKILL_CONTEXT.activeAdditional,
         SKILL_CONTEXT.passive,
         SKILL_CONTEXT.specialAdditional,
@@ -47,6 +48,7 @@ export const CARD_SKILL_SUPPORT_REGISTRY = Object.freeze({
     LiveSkillTriggerType_LIVE_SKILL_TRIGGER_TYPE_DECK_CARD_CHARACTER_GROUPING: Object.freeze({
       requiredFields: Object.freeze(["threshold", "characterGroupingId"]),
       supportedContexts: Object.freeze([
+        SKILL_CONTEXT.activePrimary,
         SKILL_CONTEXT.activeAdditional,
         SKILL_CONTEXT.passive,
         SKILL_CONTEXT.specialAdditional,
@@ -275,6 +277,17 @@ function auditActiveLevel(card, row, level, masterRefs) {
     card,
     masterRefs,
     collection: "triggers",
+    groupId: row?.liveSkillTriggerGroupId,
+    rules: CARD_SKILL_SUPPORT_REGISTRY.triggers,
+    skillKind: "active",
+    level,
+    context: SKILL_CONTEXT.activePrimary,
+    kind: "trigger",
+  }));
+  issues.push(...checkMasterGroup({
+    card,
+    masterRefs,
+    collection: "triggers",
     groupId: row?.additionalLiveSkillTriggerGroupId,
     rules: CARD_SKILL_SUPPORT_REGISTRY.triggers,
     skillKind: "active",
@@ -436,6 +449,7 @@ export function cardSkillSupportStatus(card, masterRefs) {
   for (const [index, row] of (card?.skills?.active?.levels ?? []).entries()) {
     const level = finiteLevel(row, index + 1);
     registerGroupTypes("active_effects", row?.liveActiveSkillEffectGroupId, observed.activeEffectTypes, CARD_SKILL_SUPPORT_REGISTRY.activeEffects);
+    registerGroupTypes("triggers", row?.liveSkillTriggerGroupId, observed.triggerTypes, CARD_SKILL_SUPPORT_REGISTRY.triggers);
     registerGroupTypes("triggers", row?.additionalLiveSkillTriggerGroupId, observed.triggerTypes, CARD_SKILL_SUPPORT_REGISTRY.triggers);
     registerGroupTypes("active_effects", row?.additionalLiveActiveSkillEffectGroupId, observed.activeEffectTypes, CARD_SKILL_SUPPORT_REGISTRY.activeEffects);
     issues.push(...auditActiveLevel(card, row, level, masterRefs));

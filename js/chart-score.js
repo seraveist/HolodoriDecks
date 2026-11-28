@@ -114,7 +114,7 @@ function expectedMaximum(events) {
   return expected;
 }
 
-function specialWindows(members, context) {
+function specialWindows(members, context, playMode) {
   const events = context.skillTimeline ?? [];
   return events.map((event) => {
     const slot = Math.round(finite(event.slot ?? event.skill_slot_no));
@@ -122,7 +122,9 @@ function specialWindows(members, context) {
     if (!member) return null;
     const start = Math.max(0, finite(event.time));
     const duration = Math.max(0, finite(member.special?.duration));
-    const combo = Math.max(0, Math.round(finite(event.combo ?? event.skill_starts_at_combo)));
+    const combo = playMode === "manual" ? Math.max(0, Math.round(finite(event.combo ?? event.skill_starts_at_combo))) : 0;
+    const condition = member.special?.condition ?? null;
+    const comboBlocked = playMode !== "manual" && condition?.kind === "combo" && combo < finite(condition.threshold);
     return {
       slot,
       cardId: member.id,
@@ -132,11 +134,11 @@ function specialWindows(members, context) {
       duration,
       combo,
       // The conditional Score Support value replaces the primary value at SP activation.
-      support: conditionMet(member.special?.condition, members, combo)
+      support: conditionMet(condition, members, combo)
         ? finite(member.special?.conditionalSupport) || finite(member.special?.support)
         : finite(member.special?.support),
-      activationRateUp: finite(member.special?.activationRateUp),
-      condition: member.special?.condition ?? null,
+      activationRateUp: comboBlocked ? 0 : finite(member.special?.activationRateUp),
+      condition,
       specialLevel: member.special?.level ?? 1,
       description: member.special?.description ?? "",
     };
@@ -164,7 +166,7 @@ function supportForMember(supportProfile, memberId) {
     + finite(supportProfile?.passiveSupportByMember?.[memberId]);
 }
 
-function buildActiveChecks(members, context, windows, maximize = false) {
+function buildActiveChecks(members, context, windows, playMode, maximize = false) {
   const byMember = new Map();
   const all = [];
   for (const member of members) {
@@ -172,8 +174,8 @@ function buildActiveChecks(members, context, windows, maximize = false) {
     const interval = Math.max(0.001, finite(active?.interval, 30));
     const duration = Math.max(0, finite(active?.duration));
     const checks = [];
-    for (let time = interval; time <= context.duration + 1e-9; time += interval) {
-      const combo = comboAt(context, time);
+    for (let time = interval; !active?.activationBlocked && time <= context.duration + 1e-9; time += interval) {
+      const combo = playMode === "manual" ? comboAt(context, time) : 0;
       const rateUp = activationRateUpAt(windows, time, members, combo);
       const effectiveProbability = clamp(finite(active?.probability) * (1 + (rateUp + finite(active?.boardActivationRatePct) + finite(active?.passiveActivationRatePct)) / 100), 0, 1);
       const probability = maximize && effectiveProbability > 0 ? 1 : effectiveProbability;
@@ -207,8 +209,8 @@ function probabilityAny(events) {
 }
 
 function timelineSkillEvaluation(members, context, supportProfile, playMode, scoreRules, maximize = false) {
-  const windows = specialWindows(members, context);
-  const checks = buildActiveChecks(members, context, windows, maximize);
+  const windows = specialWindows(members, context, playMode);
+  const checks = buildActiveChecks(members, context, windows, playMode, maximize);
   const notes = context.noteTimeline ?? [];
   const scoring = timelineWeights(context, playMode, scoreRules);
   let skillWeight = 0;

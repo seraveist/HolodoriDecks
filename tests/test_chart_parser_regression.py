@@ -82,6 +82,23 @@ def test_pinned_parser_special_notes_still_fail_closed(damage, ghost):
     assert f"damage={damage}, ghost={ghost}" in str(error.value)
 
 
+def test_visual_ghost_exception_is_bound_to_the_verified_asset():
+    verified = {
+        **CHART, "musicId": "m0408", "difficulty": "EXPERT",
+        "susSha256": "c4afaf6768789cc93e81c16eead790c5ee19d9b2ac917e3b6b4770fa6749c4a7",
+    }
+    raw = sus_fixture(ghost=48)
+    values = headers(raw, "m9999", 9)
+    meta = valid_metadata()
+    assert len(validate_timeline(meta, verified, values)["notes"]) == 9
+    with pytest.raises(ValueError, match="unsupported damage/ghost notes"):
+        validate_timeline(meta, {**verified, "susSha256": "0" * 64}, values)
+    with pytest.raises(ValueError, match="unsupported damage/ghost notes"):
+        validate_timeline(meta, verified, {**values, "GHOST_NOTE_COUNT": "49"})
+    with pytest.raises(ValueError, match="unsupported damage/ghost notes"):
+        validate_timeline(meta, verified, {**values, "DAMAGE_NOTE_COUNT": "1"})
+
+
 def valid_metadata():
     return {"notes": [["long_start", 0.0]] + [
         ["long_continuation", index / 4] for index in range(1, 8)

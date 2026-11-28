@@ -25,6 +25,12 @@ COUNTS = {"tap": "NORMAL", "flick": "FLICK", "long_start": "LONG_START",
           "long_end": "LONG_END", "long_flick_end": "LONG_FLICK_END",
           "long_relay": "LONG_RELAY", "long_continuation": "LONG_CONTINUE"}
 
+# The pinned parser emits visual Guide objects for this verified SUS's
+# ghost stream. Removing them preserves every scoring note and SP/Fever marker.
+VISUAL_GHOST_SOURCES = {
+    "m0408:EXPERT": ("c4afaf6768789cc93e81c16eead790c5ee19d9b2ac917e3b6b4770fa6749c4a7", 48),
+}
+
 
 def read_json(path, default):
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else default
@@ -93,12 +99,12 @@ def validate_timeline(meta: dict, chart: dict, values: dict) -> dict:
                 for category, header in COUNTS.items()
             )
             raise ValueError(f"parser {kind} count differs from verified SUS; {detail}")
-    if int(values.get("DAMAGE_NOTE_COUNT", 0)) or int(values.get("GHOST_NOTE_COUNT", 0)):
-        raise ValueError(
-            "unsupported damage/ghost notes; "
-            f"damage={int(values.get('DAMAGE_NOTE_COUNT', 0))}, "
-            f"ghost={int(values.get('GHOST_NOTE_COUNT', 0))}"
-        )
+    damage = int(values.get("DAMAGE_NOTE_COUNT", 0))
+    ghosts = int(values.get("GHOST_NOTE_COUNT", 0))
+    key = f"{chart.get('musicId', '')}:{chart.get('difficulty', '')}"
+    guides = VISUAL_GHOST_SOURCES.get(key)
+    if damage or (ghosts and guides != (chart.get("susSha256"), ghosts)):
+        raise ValueError(f"unsupported damage/ghost notes; damage={damage}, ghost={ghosts}")
     skills = [{"slot": x["skill_slot_no"], "time": x["time"], "combo": x["skill_starts_at_combo"]}
               for x in meta.get("skills", [])]
     if [x["slot"] for x in skills] != [1, 2, 3, 4, 5]:

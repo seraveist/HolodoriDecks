@@ -8266,8 +8266,7 @@
       "chartHash": "3d42a614e91e146744680e212420c158",
       "fullComboNoteCount": 1267,
       "normalNoteCount": 346,
-      "susSha256": "33e0de7f1ada49f7fc53a5648fe1659f55c154a1423ca10c85ff7c198b305f6a",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:346/sus:346, flick=parsed:52/sus:52, long_start=parsed:132/sus:132, long_end=parsed:103/sus:107, long_flick_end=parsed:29/sus:25, long_relay=parsed:44/sus:44, long_continuation=parsed:561/sus:561"
+      "susSha256": "33e0de7f1ada49f7fc53a5648fe1659f55c154a1423ca10c85ff7c198b305f6a"
     },
     "m0405:HARD": {
       "musicId": "m0405",
@@ -8303,8 +8302,7 @@
       "chartHash": "deb5dc3899dcd7fa6d0024400802f357",
       "fullComboNoteCount": 723,
       "normalNoteCount": 353,
-      "susSha256": "b2993c6e188fb90040e084caf8fac3493490d7dd924eef4abf9b7daff0accc0e",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:353/sus:353, flick=parsed:39/sus:39, long_start=parsed:101/sus:101, long_end=parsed:85/sus:86, long_flick_end=parsed:16/sus:15, long_relay=parsed:5/sus:5, long_continuation=parsed:124/sus:124"
+      "susSha256": "b2993c6e188fb90040e084caf8fac3493490d7dd924eef4abf9b7daff0accc0e"
     },
     "m0407:HARD": {
       "musicId": "m0407",
@@ -8340,8 +8338,7 @@
       "chartHash": "d546c1faa9b3b23a17434cead6adbd49",
       "fullComboNoteCount": 1049,
       "normalNoteCount": 569,
-      "susSha256": "c4afaf6768789cc93e81c16eead790c5ee19d9b2ac917e3b6b4770fa6749c4a7",
-      "timelineUnavailable": "ValueError: unsupported damage/ghost notes; damage=0, ghost=48"
+      "susSha256": "c4afaf6768789cc93e81c16eead790c5ee19d9b2ac917e3b6b4770fa6749c4a7"
     },
     "m0408:HARD": {
       "musicId": "m0408",
@@ -8487,8 +8484,7 @@
       "chartHash": "13fa00e29afd5e638195b60ffcf39362",
       "fullComboNoteCount": 820,
       "normalNoteCount": 420,
-      "susSha256": "77802e354f4f4e2fce96fdd20158af72a4a49ad48d607caa7812195716bb2dd1",
-      "timelineUnavailable": "ValueError: parser long_end count differs from verified SUS; tap=parsed:420/sus:420, flick=parsed:46/sus:46, long_start=parsed:80/sus:80, long_end=parsed:74/sus:75, long_flick_end=parsed:6/sus:5, long_relay=parsed:55/sus:55, long_continuation=parsed:139/sus:139"
+      "susSha256": "77802e354f4f4e2fce96fdd20158af72a4a49ad48d607caa7812195716bb2dd1"
     },
     "m0462:HARD": {
       "musicId": "m0462",
