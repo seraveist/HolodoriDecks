@@ -7,12 +7,14 @@ import { optimizeRecommendationOrders } from "../js/order.js";
 
 const read = name => JSON.parse(fs.readFileSync(new URL(`../data/generated/${name}.json`, import.meta.url)));
 const ids = ["card-00028-5-uniq-0121-00", "card-04003-5-uniq-0122-00", "card-04013-5-uniq-0123-00"];
-const cards = read("cards").filter(card => ids.includes(card.id));
+const mikoId = "card-00015-5-uniq-0120-00";
+const holidayIds = [mikoId, ...ids];
+const cards = read("cards").filter(card => holidayIds.includes(card.id));
 if (!cards.length) {
   console.log("Holiday scoring regression: master snapshot precedes the holiday cards");
   process.exit(0);
 }
-assert.equal(cards.length, ids.length, "partial holiday scoring cohort");
+assert.equal(cards.length, holidayIds.length, "partial holiday scoring cohort");
 const characters = new Map(read("characters").map(c => [c.id, c]));
 const masterRefs = read("master_refs");
 const leader = {
@@ -43,10 +45,34 @@ const permutations = rows => rows.length <= 1 ? [rows] : rows.flatMap((row, inde
   permutations(rows.filter((_, i) => i !== index)).map(tail => [row, ...tail]));
 const metadata = [[60, 120, 70, 145, 12], [70, 145, 85, 175, 10], [55, 110, 65, 135, 13]];
 for (const potential of [0, 5]) {
-  const profiles = Object.fromEntries(ids.map(id => [id, { level: 40, potential }]));
+  const profiles = Object.fromEntries(holidayIds.map(id => [id, { level: 40, potential }]));
   const prepared = prepareScoreCards(cards, characters, profiles, { masterRefs });
   const legacy = prepareLegacy(cards, characters, profiles);
   const luna = prepared.get(ids[0]);
+  for (const id of [mikoId, luna.id]) {
+    const card = prepared.get(id);
+    assert.deepEqual(card.active.activationCondition, { kind: "attribute", value: 1, count: 2 });
+    assert.deepEqual(card.active, legacy.get(id).active);
+    const fillers = [member("a", 2, 2000), member("b", 2, 1000), member("c", 2, 3000), member("d", 2, 500)];
+    const cuteLeader = { ...leader, attribute: 1 };
+    const accountBonuses = { memberBoards: { [card.characterId]: { activationRatePct: 30, activationFrequencyPct: 10 } } };
+    for (const music of [null, master, exact]) {
+      const evaluate = (candidate, rest) => evaluateDeck({
+        leader: cuteLeader, members: [candidate, ...rest], music, accountBonuses, includeDiagnostics: true,
+      });
+      const blocked = evaluate(card, fillers);
+      const silent = evaluate({ ...card, active: { ...card.active, probability: 0 } }, fillers);
+      assert.equal(blocked.rankingScore, silent.rankingScore);
+      assert.equal(blocked.potentialRankingScore, silent.potentialRankingScore);
+      assert.equal(blocked.diagnostics[0].activeAvailable, false);
+      assert.equal(blocked.diagnostics[0].checks, 0);
+      assert.equal(blocked.diagnostics[0].coverage, 0);
+      const allowed = evaluate(card, [{ ...fillers[0], attribute: 1 }, ...fillers.slice(1)]);
+      assert.equal(allowed.diagnostics[0].activeAvailable, true);
+      assert.ok(allowed.diagnostics[0].checks > 0);
+      assert.ok(allowed.rankingScore > blocked.rankingScore);
+    }
+  }
   const rate = potential ? 19 : 14;
   const sense = potential ? 17 : 13;
   assert.equal(luna.passive.effect.kind, "activationRate");

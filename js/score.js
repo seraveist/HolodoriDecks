@@ -166,6 +166,7 @@ function parseActive(skill, potential) {
     duration: Math.max(0, finite(level.effectDurationMillisecond) / 1000),
     baseScoreUp,
     conditionalScoreUp: conditionalScoreUp || baseScoreUp,
+    activationCondition: conditionFromId(level.liveSkillTriggerGroupId),
     condition: conditionFromId(level.additionalLiveSkillTriggerGroupId),
     description: cleanDescription(level.description),
   };
@@ -399,7 +400,7 @@ function specialAverages(members, context, suppressLifeRate = false) {
 function activeDetails(members, context, activationRateAveragePct, maximize = false) {
   return members.map((member) => {
     const active = member.active;
-    const checks = Math.floor(context.duration / Math.max(0.001, active.interval));
+    const checks = active.activationBlocked ? 0 : Math.floor(context.duration / Math.max(0.001, active.interval));
     const probability = clamp(active.probability * (1 + (activationRateAveragePct + finite(active.boardActivationRatePct)
       + finite(active.passiveActivationRatePct)) / 100), 0, 1);
     const effectiveProbability = maximize && probability > 0 ? 1 : probability;
@@ -725,7 +726,9 @@ function projectSong(baseScore, members, music, difficulty, supportProfile = {},
 
 function diagnostics(members, context, passiveStates, leader, additionalLeaderConditionMet, projectedDetails = null) {
   const intervalCount = {};
-  for (const member of members) intervalCount[member.active.interval] = (intervalCount[member.active.interval] ?? 0) + 1;
+  for (const member of members) {
+    if (!member.active.activationBlocked) intervalCount[member.active.interval] = (intervalCount[member.active.interval] ?? 0) + 1;
+  }
   const passiveMap = new Map(passiveStates.map((row) => [row.cardId, row]));
   const fallbackSkill = projectedDetails ? null : skillEvaluation(members, context);
   const activeMap = new Map((projectedDetails ?? fallbackSkill.details).map((row) => [row.cardId, row]));
@@ -743,6 +746,7 @@ function diagnostics(members, context, passiveStates, leader, additionalLeaderCo
       profile: member.profile,
       activeLevel: member.active.level,
       activeDescription: member.active.description,
+      activeAvailable: !member.active.activationBlocked,
       passiveLevel: member.passive?.level ?? 1,
       passiveDescription: member.passive?.description ?? "정보 없음",
       specialLevel: member.special.level,
@@ -757,7 +761,7 @@ function diagnostics(members, context, passiveStates, leader, additionalLeaderCo
       scoreUpPct: active.scoreUpPct,
       activationChecks: active.activationChecks ?? [],
       staticSupportPct: finite(active.staticSupportPct),
-      collision: intervalCount[member.active.interval] > 1,
+      collision: !member.active.activationBlocked && intervalCount[member.active.interval] > 1,
       passiveActive: passive?.active ?? true,
       passiveLabel: passive?.label ?? "활성",
       leaderConditionMatched: leaderConditions.some((condition) => memberMatchesCondition(member, condition)),
@@ -839,11 +843,12 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   // Unit Score detail is decomposed by mechanic category without double-counting.
   // The legacy same-cycle loss diagnostic is separate from the new display
   // model's normalized overlap calculation and the song's actual timeline.
-  const unitSkill = skillEvaluation(withPassiveActivationRates(members, passive), UNIT_CONTEXT, false);
+  const activeMembers = withActiveModifiers(members, passive);
+  const unitSkill = skillEvaluation(activeMembers, UNIT_CONTEXT, false);
   const internalActive = unitSkill.active.correctedPct;
   const internalActiveBase = unitSkill.activeBase.correctedPct;
   const rateGain = Math.max(0, internalActive - internalActiveBase);
-  const unitBreakdown = unitScoreBonusBreakdown(members, passive, leaderEffects.support, false, normalizedAccountBonuses);
+  const unitBreakdown = unitScoreBonusBreakdown(activeMembers, passive, leaderEffects.support, false, normalizedAccountBonuses);
   const active = unitBreakdown.active;
   const activeBase = active;
   const scoreBonusDetail = {
@@ -859,7 +864,7 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   let potentialUnitScore = unitScore;
   let potentialScoreBonusPct = scoreBonusPct;
   if (includePotential) {
-    const potentialBreakdown = unitScoreBonusBreakdown(members, passive, leaderEffects.support, true, normalizedAccountBonuses);
+    const potentialBreakdown = unitScoreBonusBreakdown(activeMembers, passive, leaderEffects.support, true, normalizedAccountBonuses);
     const potentialScoreBonusDetail = {
       outfit: potentialBreakdown.outfit,
       active: potentialBreakdown.active,
@@ -910,11 +915,16 @@ function buildDeckComposition({ leader, members, separateRole = true, includePot
   };
 }
 
-function withPassiveActivationRates(members, passive) {
-  if (!Object.keys(passive.activationRateByMember).length) return members;
+function withActiveModifiers(members, passive) {
+  if (!Object.keys(passive.activationRateByMember).length
+      && !members.some(member => member.active.activationCondition)) return members;
   return members.map(member => {
+    const active = member.active;
     const rate = passive.activationRateByMember[member.id];
-    return rate ? { ...member, active: { ...member.active, passiveActivationRatePct: rate } } : member;
+    if (staticConditionState(active.activationCondition, members) === false) {
+      return { ...member, active: { ...active, activationBlocked: true, probability: 0, baseScoreUp: 0, conditionalScoreUp: 0 } };
+    }
+    return rate ? { ...member, active: { ...active, passiveActivationRatePct: rate } } : member;
   });
 }
 
@@ -951,7 +961,7 @@ export function evaluateDeck({
   if (!composition) return null;
 
   const songBonuses = music ? normalizeAccountBonuses(accountBonuses, leader, music) : composition.accountBonuses;
-  const adjustedMembers = withPassiveActivationRates(members, composition.passive);
+  const adjustedMembers = withActiveModifiers(members, composition.passive);
   const songMembers = music ? adjustedMembers.map(member => {
     const board = songBonuses.memberBoards[member.characterId];
     if (!board?.activationRatePct && !board?.activationFrequencyPct) return member;

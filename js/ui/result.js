@@ -357,7 +357,12 @@ function songProjection(score, song, difficulty) {
 
 function diagnosticSkillPayload(row) {
   return encodeURIComponent(JSON.stringify([
-    { label: `${t("skill.active")} Lv${row.activeLevel}`, description: cleanGameMarkup(row.activeDescription) },
+    {
+      label: `${t("skill.active")} Lv${row.activeLevel}`,
+      description: cleanGameMarkup(row.activeAvailable === false
+        ? `${copy().inactivePrefix} · ${row.activeDescription}`
+        : row.activeDescription),
+    },
     {
       label: `${t("skill.passive")} Lv${row.passiveLevel}`,
       description: cleanGameMarkup(row.passiveActive

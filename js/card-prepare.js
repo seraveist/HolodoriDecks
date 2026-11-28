@@ -145,6 +145,7 @@ function parseActive(skill, requestedLevel, masterRefs) {
     duration: Math.max(0, finite(level.effectDurationMillisecond) / 1000),
     baseScoreUp,
     conditionalScoreUp: conditionalScoreUp || baseScoreUp,
+    activationCondition: conditionFromMaster(masterRefs, level.liveSkillTriggerGroupId),
     condition: conditionFromMaster(masterRefs, level.additionalLiveSkillTriggerGroupId),
     description: cleanDescription(level.description),
   };

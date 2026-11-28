@@ -172,7 +172,7 @@ function buildActiveChecks(members, context, windows, maximize = false) {
     const interval = Math.max(0.001, finite(active?.interval, 30));
     const duration = Math.max(0, finite(active?.duration));
     const checks = [];
-    for (let time = interval; time <= context.duration + 1e-9; time += interval) {
+    for (let time = interval; !active?.activationBlocked && time <= context.duration + 1e-9; time += interval) {
       const combo = comboAt(context, time);
       const rateUp = activationRateUpAt(windows, time, members, combo);
       const effectiveProbability = clamp(finite(active?.probability) * (1 + (rateUp + finite(active?.boardActivationRatePct) + finite(active?.passiveActivationRatePct)) / 100), 0, 1);
