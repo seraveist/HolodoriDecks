@@ -89,7 +89,7 @@ def test_visual_ghost_exception_is_bound_to_the_verified_asset():
     }
     raw = sus_fixture(ghost=48)
     values = headers(raw, "m9999", 9)
-    meta = parse(raw)
+    meta = valid_metadata()
     assert len(validate_timeline(meta, verified, values)["notes"]) == 9
     with pytest.raises(ValueError, match="unsupported damage/ghost notes"):
         validate_timeline(meta, {**verified, "susSha256": "0" * 64}, values)

@@ -101,7 +101,7 @@ def validate_timeline(meta: dict, chart: dict, values: dict) -> dict:
             raise ValueError(f"parser {kind} count differs from verified SUS; {detail}")
     damage = int(values.get("DAMAGE_NOTE_COUNT", 0))
     ghosts = int(values.get("GHOST_NOTE_COUNT", 0))
-    key = f"{chart['musicId']}:{chart['difficulty']}"
+    key = f"{chart['musicId']}:{chart.get('difficulty', '')}"
     guides = VISUAL_GHOST_SOURCES.get(key)
     if damage or (ghosts and guides != (chart.get("susSha256"), ghosts)):
         raise ValueError(f"unsupported damage/ghost notes; damage={damage}, ghost={ghosts}")
