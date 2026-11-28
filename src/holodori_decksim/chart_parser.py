@@ -1,7 +1,7 @@
 """Source-scoped repair for overlapping long ends sharing one flick marker.
 
-The pinned upstream parser is unchanged. Only five audited PR #93 SUS hashes
-are eligible; every repaired timeline still passes the original validator.
+The pinned upstream parser is unchanged. Only audited SUS hashes are eligible;
+every repaired timeline still passes the category and timing validator.
 """
 import hashlib
 from collections import defaultdict
@@ -9,6 +9,9 @@ from copy import deepcopy
 
 ADAPTER_VERSION = "pr93-single-flick-end-v1"
 VERIFIED_SOURCES = {
+    "m0405:EXPERT": "33e0de7f1ada49f7fc53a5648fe1659f55c154a1423ca10c85ff7c198b305f6a",
+    "m0407:EXPERT": "b2993c6e188fb90040e084caf8fac3493490d7dd924eef4abf9b7daff0accc0e",
+    "m0462:EXPERT": "77802e354f4f4e2fce96fdd20158af72a4a49ad48d607caa7812195716bb2dd1",
     "m0388:HARD": "5b164dd572cf42d72a0281d3894cbee42bfc632df24339ee704b963021665a99",
     "m0388:EXPERT": "ed8bcdb1a26186b3d5cc54a8d09481b35139192ccc7fd09b5e14d597c19687f9",
     "m0549:HARD": "72ae9a37765f72709ffe4b3cae202c410748b637c4ee3d608f2b4d9288c9789c",
