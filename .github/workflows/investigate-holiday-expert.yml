@@ -1,0 +1,21 @@
+name: Verify missing Holiday EXPERT timing
+on:
+  push:
+    branches: [investigate/holiday-expert]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: macos-15
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+      - run: |
+          python -m pip install -e '.[sync]'
+          python -m pip install --no-deps 'git+https://github.com/HolodoriDB/holodori-scores@292549eaf4ac7b82bd239fcacb719bae6dfa7ad9'
+      - run: python scripts/audit-holiday-expert.py
