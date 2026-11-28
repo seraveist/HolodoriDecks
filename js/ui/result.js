@@ -11,6 +11,13 @@ import { getSlotLabel } from "./member.js?v=1.3.1";
 import { requiredElement } from "./dom.js?v=1.3.1";
 import { calculationSettings } from "../calculation-mode.js?v=1.3.1";
 
+const HOLIDAY_LUNA_ID = "card-00028-5-uniq-0121-00";
+const HOLIDAY_CONDITIONAL_SPECIAL_IDS = new Set([
+  HOLIDAY_LUNA_ID,
+  "card-04003-5-uniq-0122-00",
+  "card-04013-5-uniq-0123-00",
+]);
+
 const LOCAL_COPY = Object.freeze({
   ko: {
     notSelected: "미선택",
@@ -26,6 +33,8 @@ const LOCAL_COPY = Object.freeze({
     chartExact: "실제 채보 노트·SP 순서 반영",
     chartMaster: "Master 풀콤보 노트 수 반영 · SP 타이밍 근사",
     chartEstimated: "노트 밀도 추정",
+    holidaySpecialAssumption: "홀리데이 SP는 조건 충족 시 조건부 서포트 값으로 계산합니다. 인게임 미검증입니다.",
+    holidayLunaAssumption: "루나 발동률 보정은 기본 종합력 상위 큐트 2명에 상대 배율로 적용하며, 라이프는 1000으로 가정합니다.",
     specialTimeline: "스페셜 스킬 발동 순서",
     inactivePrefix: "비활성",
     skillInfoAria: (name) => `${name} 스킬 정보 보기`,
@@ -63,6 +72,8 @@ const LOCAL_COPY = Object.freeze({
     chartExact: "Exact chart notes and SP order applied",
     chartMaster: "Master full-combo note count applied · SP timing approximated",
     chartEstimated: "Estimated from note density",
+    holidaySpecialAssumption: "Holiday SP uses the conditional support value when its condition is met. This rule is unverified in-game.",
+    holidayLunaAssumption: "Luna’s model uses a relative activation-rate boost for the two Cute members with the highest base power, and assumes 1,000 life.",
     specialTimeline: "Special Skill Order",
     inactivePrefix: "Inactive",
     skillInfoAria: (name) => `View skill information for ${name}`,
@@ -100,6 +111,8 @@ const LOCAL_COPY = Object.freeze({
     chartExact: "実譜面ノーツ・SP順序を反映",
     chartMaster: "Masterのフルコンボ数を反映 · SP時刻は近似",
     chartEstimated: "ノーツ密度から推定",
+    holidaySpecialAssumption: "ホリデーSPは条件成立時に条件付きサポート値を使用します。この仕様は実機未検証です。",
+    holidayLunaAssumption: "ルーナは基礎総合力が高いキュート2人に発動率を倍率で補正し、ライフは1000と仮定します。",
     specialTimeline: "スペシャルスキル発動順",
     inactivePrefix: "非発動",
     skillInfoAria: (name) => `${name}のスキル情報を表示`,
@@ -495,6 +508,14 @@ function resultDetails(result, index, data, state, song, open) {
   )).join("");
   const comparisonSummary = `<small>${escapeHtml(comparisonLabel)} ${formatNumber(comparisonValue)}</small>`;
   const rank = index + 1;
+  const memberIds = result.members.slice(1);
+  const holidayAssumptions = [];
+  if (memberIds.some((id) => HOLIDAY_CONDITIONAL_SPECIAL_IDS.has(id))) {
+    holidayAssumptions.push(copy().holidaySpecialAssumption);
+  }
+  if (memberIds.includes(HOLIDAY_LUNA_ID)) {
+    holidayAssumptions.push(copy().holidayLunaAssumption);
+  }
 
   return `
     <details class="recommendation-result-card" data-result-index="${index}"${open ? " open" : ""}>
@@ -520,6 +541,7 @@ function resultDetails(result, index, data, state, song, open) {
       </summary>
       <div class="recommendation-result-body">
         ${songProjection(score, song, state.difficulty)}
+        ${holidayAssumptions.length ? `<p class="timeline-head-note" data-holiday-scoring-note>${escapeHtml(holidayAssumptions.join(" "))}</p>` : ""}
         <div class="result-context-row">
           <div class="result-metrics">
             ${metric(expectedLabel, expectedValue, potentialTarget ? "" : "is-concept")}
