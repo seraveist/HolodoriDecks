@@ -14,7 +14,7 @@ from holodori_decksim.chart_assets import CONVERTER_COMMIT, PARSER_COMMIT, fetch
 from holodori_decksim.chart_parser import repair_overlapping_flick_ends
 from holodori_decksim.master_source import request_bytes
 
-keys = ("m0405:EXPERT", "m0407:EXPERT", "m0408:EXPERT", "m0462:EXPERT")
+keys = ("m0408:EXPERT",)
 provenance = json.loads(Path("data/generated/chart-assets.json").read_text())["charts"]
 entries = {entry.name: entry for entry in fetch_catalog(catalog.fetch, HTTPError).resources}
 for key in keys:
@@ -44,8 +44,16 @@ for key in keys:
     print("CHART_AUDIT", key, json.dumps({"repairs": repairs, "ghost": values.get("GHOST_NOTE_COUNT", "0"),
           "damage": values.get("DAMAGE_NOTE_COUNT", "0"), "sp": parsed["skills"], "rawSha256": sha256(raw).hexdigest(),
           "ghostHeaders": sorted(k for k in values if "GHOST" in k)}))
+    guides = [note for note in score.notes if type(note).__name__ == "Guide"]
+    assert int(values["GHOST_NOTE_COUNT"]) == 48
+    assert int(values.get("DAMAGE_NOTE_COUNT", 0)) == 0
+    assert guides
+    score.notes[:] = [note for note in score.notes if type(note).__name__ != "Guide"]
+    without_guides = chart_metadata(score, lengths)
+    assert all(parsed[field] == without_guides[field] for field in ("notes", "skills", "fever"))
+    print("VISUAL_ONLY", key, len(guides), len(parsed["notes"]))
     try:
-        metadata = validate_timeline(parsed, chart, values)
+        metadata = validate_timeline(parsed, chart, {**values, "GHOST_NOTE_COUNT": "0"})
     except ValueError as error:
         print("CHART_REJECTED", key, str(error))
         continue
