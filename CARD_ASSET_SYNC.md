@@ -53,14 +53,15 @@ Master data is deployed independently after its own validation and merge. Portra
 
 - when `main` receives a changed `data/generated/cards.json`;
 - when the asset-sync implementation itself is merged;
-- twice per day at **11:00 and 23:00 KST** so assets can be retried when an upstream image source lags behind Master publication;
+- twice per day at **11:23 and 23:23 KST** to retry upstream image publication;
+- after a successful automated Master merge when its card or member images are missing;
 - by manual `workflow_dispatch`.
 
 A manual `dry_run` resolves portraits but does not push the automation branch or create a PR.
 
 Dry runs use the selected workflow ref for testing fixes before merge; publishing runs always start from current `main`.
 
-The manual `auto_merge` input defaults to `true`; set it to `false` to leave a generated PR open. After a successful image merge, Pages is dispatched if needed. A no-change audit also retries a missing or failed deployment of current `main`.
+The manual `auto_merge` input defaults to `true`; set it to `false` to leave a generated PR open. After a successful image merge or a no-change audit, Pages is requested if the live revision differs from current `main` and no deployment for that SHA is active.
 
 ## Primary public card-art snapshot
 

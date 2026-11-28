@@ -68,25 +68,23 @@ assert.throws(() => convertRuntimeChartObject({
 assert.throws(() => convertRuntimeChartObject({ ...sourceChart, upstreamChartHash: "stale" }, chartEntry), /chart hash mismatch/);
 
 const sourceText = JSON.stringify(sourceChart);
+const end = 10 + Buffer.byteLength(sourceText) - 1;
+const contentRange = `bytes 10-${end}/${end + 1}`;
+let reply = [sourceText, { status: 206, headers: { "Content-Range": contentRange } }];
 let requests = 0;
 const originalFetch = globalThis.fetch;
 globalThis.fetch = async (url, options = {}) => {
   requests += 1;
   assert.equal(String(url), "https://example.test/pinned.json");
-  assert.equal(options.headers?.Range, `bytes=10-${10 + Buffer.byteLength(sourceText) - 1}`);
-  return {
-    status: 206,
-    headers: { get: (name) => String(name).toLowerCase() === "content-range" ? `bytes=10-${10 + Buffer.byteLength(sourceText) - 1}/${10 + Buffer.byteLength(sourceText)}`.replace("bytes=", "bytes ") : null },
-    text: async () => sourceText,
-    body: { cancel: async () => {} },
-  };
+  assert.equal(options.headers?.Range, `bytes=10-${end}`);
+  return new Response(...reply);
 };
 
 try {
   const runtimeEntry = {
     ...chartEntry,
     start: 10,
-    end: 10 + Buffer.byteLength(sourceText) - 1,
+    end,
     length: Buffer.byteLength(sourceText),
     objectSha256: createHash("sha256").update(sourceText).digest("hex"),
   };
@@ -100,6 +98,23 @@ try {
   assert.equal(requests, 1);
   assert.equal(result.metadata.sourceRuntime, true);
   assert.equal(result.metadata.notes.length, 3);
+
+  reply = [sourceText, { status: 206 }];
+  assert.equal((await loadSelectedChart(resources, "mtest", "EXPERT")).metadata.sourceRuntime, true);
+  for (const invalidReply of [
+    [sourceText],
+    [sourceText, { status: 206, headers: { "Content-Range": `bytes 0-${end}/${end + 1}` } }],
+    [sourceText.slice(1), { status: 206 }],
+    [sourceText.replace('mtest', 'mxxxx'), { status: 206 }],
+  ]) {
+    reply = invalidReply;
+    assert.equal((await loadSelectedChart(resources, "mtest", "EXPERT")).metadata, null);
+  }
+  reply = [sourceText, { status: 206 }];
+  const noDigest = { ...resources, runtimeChartsByKey: new Map([["mtest:EXPERT", { ...runtimeEntry, objectSha256: null }]]) };
+  const beforeMissingDigest = requests;
+  assert.equal((await loadSelectedChart(noDigest, "mtest", "EXPERT")).metadata, null);
+  assert.equal(requests, beforeMissingDigest);
 
   const runtimeFetch = globalThis.fetch;
   const localResources = {
@@ -128,7 +143,7 @@ try {
   }
   globalThis.fetch = async (url) => String(url).includes("mtest-EXPERT.json")
     ? { ok: true, json: async () => brokenMetadata[0] }
-    : { status: 503, body: { cancel: async () => {} } };
+    : new Response(null, { status: 503 });
   const fallback = await loadSelectedChart(localResources, "mtest", "EXPERT");
   assert.equal(fallback.metadata, null);
   assert.equal(fallback.fullComboNoteCount, chartEntry.fullComboNoteCount);
@@ -156,5 +171,6 @@ assert.equal(actualRuntime.currentMasterChartCount, actualCharts.chart_count);
 assert.equal(actualRuntime.runtimeExactCount, Object.keys(actualRuntime.charts ?? {}).length);
 for (const [key, runtime] of Object.entries(actualRuntime.charts ?? {})) {
   assert.equal(runtimeEntryMatchesChart(runtime, actualCharts.charts?.[key]), true, `${key}: runtime/master mismatch`);
+  assert.match(runtime.objectSha256, /^[0-9a-f]{64}$/, `${key}: missing Runtime object digest`);
 }
 console.log(`exact runtime index coherence: ${actualRuntime.runtimeExactCount}/${actualRuntime.currentMasterChartCount}`);

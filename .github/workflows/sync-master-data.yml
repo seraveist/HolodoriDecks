@@ -19,8 +19,9 @@ on:
         default: true
         type: boolean
   schedule:
-    # 00:15 KST every day.
-    - cron: "15 15 * * *"
+    # Full catalogue checks at 00:15/12:15 KST. Lightweight Master checks every two hours.
+    - cron: "15 3,15 * * *"
+    - cron: "37 0-22/2 * * *"
 
 permissions:
   actions: write
@@ -33,7 +34,47 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  preflight:
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && inputs.dry_run)
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    outputs:
+      run_sync: ${{ steps.plan.outputs.run_sync }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: github.event.schedule == '37 0-22/2 * * *'
+        with:
+          ref: main
+          persist-credentials: false
+          sparse-checkout: data/upstream.json
+          sparse-checkout-cone-mode: false
+      - name: Decide whether to run full synchronization
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          if [ "$SCHEDULE" != '37 0-22/2 * * *' ]; then
+            echo 'run_sync=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          source="$(jq -er '.repository' data/upstream.json)"
+          ref="$(jq -er '.ref' data/upstream.json)"
+          current="$(jq -er '.commit' data/upstream.json)"
+          upstream="$(gh api "repos/$source/commits/$ref" --jq .sha)"
+          [[ "$upstream" =~ ^[0-9a-f]{40}$ ]]
+          echo "Master source $source@$upstream (committed $current)." >> "$GITHUB_STEP_SUMMARY"
+          if [ "$current" = "$upstream" ]; then
+            echo 'run_sync=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'run_sync=true' >> "$GITHUB_OUTPUT"
+          fi
+
   sync:
+    needs: preflight
+    if: needs.preflight.outputs.run_sync == 'true'
     # Official catalogues reject hosted Ubuntu/Windows egress. Standard hosted
     # macOS can fetch and verify them; no self-hosted runner is required.
     runs-on: macos-15
@@ -44,6 +85,7 @@ jobs:
       pr_title: ${{ steps.pr_body.outputs.title }}
       pr_body: ${{ steps.pr_body.outputs.body }}
       head_sha: ${{ steps.sync_commit.outputs.head_sha }}
+      portraits_needed: ${{ steps.audit_portraits.outputs.needed }}
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -140,6 +182,24 @@ jobs:
           python scripts/validate-generated-data.py --baseline /tmp/manifest-before.json
           python -m pytest -q tests/test_sync.py tests/test_master_migration.py tests/test_chart_asset_sync.py tests/test_board_data.py
 
+      - name: Check scoring support before publishing a candidate
+        if: steps.sync.outputs.changed == 'true'
+        env:
+          UPSTREAM_COMMIT: ${{ steps.sync.outputs.upstream_commit }}
+        run: |
+          if ! node scripts/test-card-preparation.mjs > "$RUNNER_TEMP/scoring-support.log" 2>&1; then
+            cat "$RUNNER_TEMP/scoring-support.log"
+            {
+              echo "### Scoring validation failed for $UPSTREAM_COMMIT"
+              echo 'Review the affected card IDs and skill types below. Re-run after the scoring support is updated.'
+              echo '```text'
+              cat "$RUNNER_TEMP/scoring-support.log"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          cat "$RUNNER_TEMP/scoring-support.log"
+
       - name: Evaluate Master auto-merge safety
         id: gate
         if: steps.sync.outputs.changed == 'true'
@@ -183,6 +243,17 @@ jobs:
           git status --short -- data/generated data/upstream.json data/sync_state.json
           git diff --stat -- data/generated data/upstream.json data/sync_state.json
           cat /tmp/master-automerge-gate.json
+
+      - name: Check whether synced cards or members need images
+        id: audit_portraits
+        if: steps.diff.outputs.has_diff == 'true'
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          from holodori_decksim.card_assets import audit_portraits as cards
+          from holodori_decksim.character_assets import audit_portraits as characters
+          needed = cards()['missing_count'] or characters()['missing_count']
+          print(f"needed={str(bool(needed)).lower()}")
+          PY
 
       # Keep failed candidates off the PR branch: pushing an existing PR head
       # also creates a synchronize event and an approval notification.
@@ -408,14 +479,16 @@ jobs:
           echo "Master PR #$PR_NUMBER passed full validation at $EXPECTED_HEAD; merged = ${MERGED:-false}." >> "$GITHUB_STEP_SUMMARY"
 
   deploy:
-    needs: [sync, merge]
-    # No-change runs also retry a previously failed/missed deployment.
+    needs: [preflight, sync, merge]
+    # Also reconcile a previously missed deployment on no-change runs.
     if: >-
       always() && !cancelled() &&
       inputs.dry_run != true &&
       (github.event_name != 'workflow_dispatch' || inputs.auto_merge == true) &&
-      needs.sync.result == 'success' &&
-      ((needs.merge.result == 'success' && needs.merge.outputs.merged == 'true') || needs.sync.outputs.has_diff != 'true')
+      needs.preflight.result == 'success' &&
+      (needs.preflight.outputs.run_sync == 'false' ||
+        (needs.sync.result == 'success' &&
+          ((needs.merge.result == 'success' && needs.merge.outputs.merged == 'true') || needs.sync.outputs.has_diff != 'true')))
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -430,3 +503,16 @@ jobs:
         run: python scripts/ensure-pages-deployment.py
       - name: Deployment summary
         run: echo "Pages dispatched for current main = ${{ steps.pages.outputs.dispatched }}. Portrait collection is independent." >> "$GITHUB_STEP_SUMMARY"
+
+  portraits:
+    needs: [sync, merge]
+    if: needs.merge.outputs.merged == 'true' && needs.sync.outputs.portraits_needed == 'true'
+    permissions:
+      actions: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Request portrait collection after the validated Master merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run sync-card-assets.yml --repo "$GITHUB_REPOSITORY" --ref main

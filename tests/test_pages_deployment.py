@@ -14,16 +14,16 @@ def run(sha, *, status="completed", conclusion="success", updated="2026-09-08T01
     return {"head_sha": sha, "status": status, "conclusion": conclusion, "updated_at": updated}
 
 
-@pytest.mark.parametrize("runs,expected", [
-    ([], True),
-    ([run("current")], False),
-    ([run("old")], True),
-    ([run("current", conclusion="failure"), run("old")], True),
-    ([run("current", status="queued", conclusion=None), run("old")], False),
-    ([run("current", status="in_progress", conclusion=None)], False),
-    ([run("current"), run("old", updated="2026-09-08T02:00:00Z")], True),
+@pytest.mark.parametrize("live,runs,expected", [
+    (None, [], "deployment-needed"),
+    ("current", [], "already-deployed"),
+    ("old", [run("current")], "deployment-needed"),  # Later deployment reverted the live site.
+    ("current", [run("current", conclusion="failure")], "already-deployed"),  # Smoke failed after publishing.
+    ("old", [run("current", status="queued", conclusion=None)], "deployment-active"),
+    (None, [run("current", status="in_progress", conclusion=None)], "deployment-active"),
+    ("old", [run("old", status="in_progress", conclusion=None)], "deployment-needed"),
 ])
-def test_missing_or_failed_deployment_is_retried_without_duplicate_runs(runs, expected):
+def test_live_revision_controls_recovery_with_active_dispatch_deduplication(live, runs, expected):
     calls = []
     def api(path, *, method="GET", payload=None):
         calls.append((path, method, payload))
@@ -31,7 +31,12 @@ def test_missing_or_failed_deployment_is_retried_without_duplicate_runs(runs, ex
             return {"sha": "current"}
         if method == "GET":
             return {"workflow_runs": runs}
-    result = deployment.ensure_pages_deployment("owner/repo", api=api)
-    assert result["dispatched"] is expected
+    result = deployment.ensure_pages_deployment("owner/repo", api=api, observe=lambda: live)
+    assert result["reason"] == expected
+    assert result["live_sha"] == live
+    assert result["dispatched"] is (expected == "deployment-needed")
     dispatches = [call for call in calls if call[1] == "POST"]
-    assert dispatches == ([("repos/owner/repo/actions/workflows/pages.yml/dispatches", "POST", {"ref": "main"})] if expected else [])
+    assert dispatches == ([("repos/owner/repo/actions/workflows/pages.yml/dispatches", "POST", {"ref": "main"})]
+                          if result["dispatched"] else [])
+    if live == "current":
+        assert len(calls) == 1  # No Actions API polling for a healthy site.

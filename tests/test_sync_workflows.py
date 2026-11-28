@@ -143,8 +143,13 @@ def test_master_sync_command_arguments_outputs_and_failure(tmp_path, force, expe
         ]
 
 
-def test_master_schedule_runs_daily_at_midnight_fifteen_korean_time():
-    assert workflow("sync-master-data.yml")["on"]["schedule"] == [{"cron": "15 15 * * *"}]
+def test_master_schedule_preserves_full_catalogue_checks_alongside_fast_sha_checks():
+    definition = workflow("sync-master-data.yml")
+    assert definition["on"]["schedule"] == [{"cron": "15 3,15 * * *"}, {"cron": "37 0-22/2 * * *"}]
+    jobs = definition["jobs"]
+    assert jobs["preflight"]["permissions"] == {"contents": "read"}
+    assert jobs["sync"]["needs"] == "preflight"
+    assert jobs["sync"]["if"] == "needs.preflight.outputs.run_sync == 'true'"
 
 
 def test_master_pr_branch_is_not_updated_until_full_validation_passes():
@@ -199,9 +204,10 @@ def test_review_only_updates_still_require_full_validation(safe, event, auto_mer
 ])
 def test_data_deployment_does_not_depend_on_portrait_result(diff, merge_result, merged, sync_result, dry_run, expected):
     job = workflow("sync-master-data.yml")["jobs"]["deploy"]
-    assert set(job["needs"]) == {"sync", "merge"}
+    assert set(job["needs"]) == {"preflight", "sync", "merge"}
     assert "sync-card-assets" not in str(job)
     assert condition(job["if"], {"github.event_name": "schedule", "inputs.dry_run": dry_run,
+        "needs.preflight.result": "success", "needs.preflight.outputs.run_sync": "true",
         "needs.sync.result": sync_result, "needs.merge.result": merge_result,
         "needs.merge.outputs.merged": merged,
         "needs.sync.outputs.has_diff": diff}) is expected
@@ -224,7 +230,21 @@ def test_partial_images_can_be_committed_and_merged_before_reporting_errors(pend
 
 
 def test_portrait_schedule_runs_twice_daily_in_korean_time():
-    assert workflow("sync-card-assets.yml")["on"]["schedule"] == [{"cron": "0 2,14 * * *"}]
+    assert workflow("sync-card-assets.yml")["on"]["schedule"] == [{"cron": "23 2,14 * * *"}]
+
+
+def test_master_polls_repair_pages_and_dispatches_missing_portraits_only_after_merge():
+    jobs = workflow("sync-master-data.yml")["jobs"]
+    assert condition(jobs["deploy"]["if"], {
+        "needs.preflight.result": "success", "needs.preflight.outputs.run_sync": "false",
+        "needs.sync.result": "skipped", "needs.merge.result": "skipped", "inputs.dry_run": False,
+        "github.event_name": "schedule",
+    })
+    portrait = jobs["portraits"]
+    assert "gh workflow run sync-card-assets.yml" in portrait["steps"][0]["run"]
+    for merged, needed in [("true", "true"), ("true", "false"), ("", "true")]:
+        assert condition(portrait["if"], {"needs.merge.outputs.merged": merged,
+                                          "needs.sync.outputs.portraits_needed": needed}) is (merged == needed == "true")
 
 
 def test_portrait_collection_uses_the_verified_octo_hosted_runner():

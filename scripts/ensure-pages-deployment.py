@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
-"""Dispatch Pages when current main has neither a successful nor active deployment."""
+"""Reconcile the revision served by Pages with the current main commit."""
 from __future__ import annotations
 
 import argparse
 import json
 import os
+import re
 import subprocess
+import time
+from urllib.error import URLError
+from urllib.request import Request, urlopen
+
+PRODUCTION_URL = "https://holosims.net/"
 
 
 def github_api(path: str, *, method: str = "GET", payload: dict | None = None):
@@ -19,20 +25,31 @@ def github_api(path: str, *, method: str = "GET", payload: dict | None = None):
     return json.loads(result.stdout) if result.stdout.strip() else None
 
 
-def ensure_pages_deployment(repository: str, *, api=github_api) -> dict:
+def production_revision() -> str | None:
+    request = Request(f"{PRODUCTION_URL}?deployment-check={time.time_ns()}",
+                      headers={"Cache-Control": "no-cache", "User-Agent": "HolodoriDeckSim deployment check"})
+    try:
+        with urlopen(request, timeout=12) as response:
+            html = response.read(256 * 1024)
+    except (URLError, TimeoutError) as error:
+        print(f"::warning::Could not verify the live Pages revision: {error}")
+        return None
+    marker = re.search(rb'data-card-asset-revision="([0-9a-f]{40})"', html)
+    return marker.group(1).decode("ascii") if marker else None
+
+
+def ensure_pages_deployment(repository: str, *, api=github_api, observe=production_revision) -> dict:
     prefix = f"repos/{repository}"
     head = api(f"{prefix}/commits/main")["sha"]
-    runs = api(f"{prefix}/actions/workflows/pages.yml/runs?branch=main&per_page=100")["workflow_runs"]
-    # Compare the most recent successful deployment, not any historical success:
-    # a newer run could have deployed an older commit after a manual rerun.
-    successes = [run for run in runs if run.get("conclusion") == "success"]
-    latest = max(successes, key=lambda run: run["updated_at"], default=None)
-    if latest and latest["head_sha"] == head:
-        return {"dispatched": False, "head_sha": head, "reason": "already-deployed"}
+    live = observe()
+    result = {"dispatched": False, "head_sha": head, "live_sha": live}
+    if live == head:
+        return {**result, "reason": "already-deployed"}
+    runs = api(f"{prefix}/actions/workflows/pages.yml/runs?branch=main&head_sha={head}")["workflow_runs"]
     if any(run["head_sha"] == head and run["status"] != "completed" for run in runs):
-        return {"dispatched": False, "head_sha": head, "reason": "deployment-active"}
+        return {**result, "reason": "deployment-active"}
     api(f"{prefix}/actions/workflows/pages.yml/dispatches", method="POST", payload={"ref": "main"})
-    return {"dispatched": True, "head_sha": head, "reason": "deployment-needed"}
+    return {**result, "dispatched": True, "reason": "deployment-needed"}
 
 
 def main() -> None:

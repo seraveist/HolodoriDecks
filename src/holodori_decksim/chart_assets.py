@@ -154,7 +154,10 @@ def sync_chart_assets(commit: str, *, root: Path = ROOT) -> bool:
         asset_id = detail_index[(music_id, difficulty_type)]["chartAssetId"]
         if not re.fullmatch(r"chart_m\d+_(easy|normal|hard|expert)", asset_id):
             raise ValueError(f"Unexpected chart asset ID: {asset_id}")
-        entry = entries[asset_id + ".sus"]
+        entry = entries.get(asset_id + ".sus")
+        if entry is None:
+            raise ValueError(f"Catalogue r{current.revisionId} does not contain {asset_id}.sus for "
+                             f"Master {commit}; retry once the official asset is available")
         if urlparse(entry.url).hostname != "asset.game-hololive-dreams.com" or not entry.url.startswith("https://"):
             raise ValueError("Untrusted chart asset host")
         if not re.fullmatch(r"[0-9a-f]{1,32}", entry.md5):

@@ -10,13 +10,27 @@ permissions:
 defaults:
   run:
     shell: bash
-concurrency:
-  group: pages
-  cancel-in-progress: true
-
 jobs:
-  deploy:
+  preflight:
     if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Require current main before entering the deployment queue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          head="$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)"
+          if [ "$head" != "$GITHUB_SHA" ]; then
+            echo "::error::This run targets $GITHUB_SHA, but main is $head. Dispatch a fresh Pages run on main."
+            exit 1
+          fi
+
+  deploy:
+    needs: preflight
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     permissions:
       contents: read
       pages: write
@@ -26,6 +40,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      PAGES_ARTIFACT: github-pages-${{ github.run_attempt }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -45,11 +61,23 @@ jobs:
         run: python scripts/build-pages-artifact.py --revision "$CARD_ASSET_REVISION"
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
+          name: ${{ env.PAGES_ARTIFACT }}
           path: _site
           include-hidden-files: true
+      - name: Recheck main immediately before publication
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          head="$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)"
+          if [ "$head" != "$GITHUB_SHA" ]; then
+            echo "::error::main advanced to $head while building $GITHUB_SHA. A fresh deployment is required."
+            exit 1
+          fi
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+        with:
+          artifact_name: ${{ env.PAGES_ARTIFACT }}
 
   smoke:
     needs: deploy
@@ -64,6 +92,8 @@ jobs:
         env:
           PRODUCTION_URL: https://holosims.net/
           DEPLOYMENT_SHA: ${{ github.sha }}
-        run: node scripts/test-production-smoke.mjs
+        run: |
+          node scripts/test-production-smoke.mjs
+          node scripts/test-production-exact.mjs
       - name: Summary
         run: echo "Production smoke passed for ${{ github.sha }} at https://holosims.net/." >> "$GITHUB_STEP_SUMMARY"
