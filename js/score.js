@@ -263,12 +263,13 @@ function allConditionsMet(conditions, members) {
   return conditions.every((condition) => staticConditionState(condition, members) !== false);
 }
 
-function dynamicConditionAvailability(condition, members, context) {
+function dynamicConditionAvailability(condition, members, context, allowCombo = true) {
   if (!condition) return 1;
   const staticState = staticConditionState(condition, members);
   if (staticState === true) return 1;
   if (staticState === false) return 0;
   if (condition.kind === "combo") {
+    if (!allowCombo) return finite(condition.threshold) <= 0 ? 1 : 0;
     return clamp((context.notes - finite(condition.threshold)) / Math.max(1, context.notes), 0, 1);
   }
   if (condition.kind === "life") return finite(condition.threshold) <= 1000 ? 1 : 0;
@@ -366,10 +367,11 @@ function activeConditionalShare(active, members, context) {
   return 0.5;
 }
 
-function resolvedActiveScore(active, members, context, maximize = false) {
+function resolvedActiveScore(active, members, context, maximize, allowCombo) {
   const base = finite(active?.baseScoreUp);
   const conditional = finite(active?.conditionalScoreUp, base);
   if (!active?.conditionalScoreUp || !active?.condition) return base;
+  if (!allowCombo && active.condition.kind === "combo") return finite(active.condition.threshold) <= 0 ? conditional : base;
   if (maximize) {
     if (active.condition.kind === "combo") return context.notes > finite(active.condition.threshold) ? conditional : base;
     return dynamicConditionAvailability(active.condition, members, context) > 0 ? conditional : base;
@@ -377,7 +379,7 @@ function resolvedActiveScore(active, members, context, maximize = false) {
   return base + (conditional - base) * activeConditionalShare(active, members, context);
 }
 
-function specialAverages(members, context, suppressLifeRate = false) {
+function specialAverages(members, context, suppressLifeRate = false, allowCombo = true) {
   let supportAveragePct = 0;
   let activationRateAveragePct = 0;
   for (const member of members) {
@@ -387,17 +389,17 @@ function specialAverages(members, context, suppressLifeRate = false) {
     const conditional = finite(special?.conditionalSupport);
     // The localized conditional value is modeled as a replacement, like Active.
     const resolved = conditional ? support + (conditional - support)
-      * dynamicConditionAvailability(special.condition, members, context) : support;
+      * dynamicConditionAvailability(special.condition, members, context, allowCombo) : support;
     supportAveragePct += resolved * coverage;
     if (suppressLifeRate && special?.condition?.kind === "life") continue;
     activationRateAveragePct += finite(special?.activationRateUp)
       * coverage
-      * dynamicConditionAvailability(special?.condition, members, context);
+      * dynamicConditionAvailability(special?.condition, members, context, allowCombo);
   }
   return { supportAveragePct, activationRateAveragePct };
 }
 
-function activeDetails(members, context, activationRateAveragePct, maximize = false) {
+function activeDetails(members, context, activationRateAveragePct, maximize = false, allowCombo = true) {
   return members.map((member) => {
     const active = member.active;
     const checks = active.activationBlocked ? 0 : Math.floor(context.duration / Math.max(0.001, active.interval));
@@ -415,7 +417,7 @@ function activeDetails(members, context, activationRateAveragePct, maximize = fa
       effectiveProbability,
       expectedActivations,
       coverage,
-      scoreUpPct: resolvedActiveScore(active, members, context, maximize),
+      scoreUpPct: resolvedActiveScore(active, members, context, maximize, allowCombo),
     };
   });
 }
@@ -597,9 +599,10 @@ function applyStaticSupport(details, supportProfile = {}, specialSupportAverageP
   });
 }
 
-function songSkillMultiplier(members, context, supportProfile = {}, maximize = false) {
-  const special = specialAverages(members, context);
-  const rawDetails = activeDetails(members, context, special.activationRateAveragePct, maximize);
+function songSkillMultiplier(members, context, supportProfile, playMode, maximize = false) {
+  const allowCombo = playMode === "manual";
+  const special = specialAverages(members, context, false, allowCombo);
+  const rawDetails = activeDetails(members, context, special.activationRateAveragePct, maximize, allowCombo);
   const supported = applyStaticSupport(rawDetails, supportProfile, special.supportAveragePct);
   const { details, active } = uniformSongActiveEvaluation(supported, context);
   return { skillMultiplier: 1 + active.correctedPct / 100, special, details, active };
@@ -691,8 +694,8 @@ function projectSong(baseScore, members, music, difficulty, supportProfile = {},
       evaluationTarget,
     });
   }
-  const selectedExpected = needExpected ? songSkillMultiplier(members, selected, supportProfile) : null;
-  const selectedMaximum = needMaximum ? songSkillMultiplier(members, selected, supportProfile, true) : null;
+  const selectedExpected = needExpected ? songSkillMultiplier(members, selected, supportProfile, playMode) : null;
+  const selectedMaximum = needMaximum ? songSkillMultiplier(members, selected, supportProfile, playMode, true) : null;
   const manual = playMode === "manual";
   const selectedKernel = cachedSongKernel(selected, playMode, scoreRules);
   const genericKernel = cachedSongKernel(generic, "auto", scoreRules);

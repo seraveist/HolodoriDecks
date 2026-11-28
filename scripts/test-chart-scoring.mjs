@@ -185,6 +185,33 @@ const genericContext = {
 
 const L = leader();
 
+// AUTO keeps all scoring notes but uses a live combo of zero for skill conditions.
+{
+  const condition = { kind: "combo", threshold: 1 };
+  const active = { ...C, active: { ...C.active, baseScoreUp: 50, conditionalScoreUp: 100, condition } };
+  const support = { ...A, special: { ...A.special, support: 30, conditionalSupport: 100, activationRateUp: 50, condition } };
+  const members = [B, support, active, D, E];
+  for (const metadata of [chart.metadata, null, undefined]) {
+    const music = { ...song, _chart: metadata === undefined ? null : { ...chart, metadata } };
+    const auto = evaluateDeck({ leader: L, members, music, playMode: "auto" }).songProjection;
+    const manual = evaluateDeck({ leader: L, members, music, playMode: "manual" }).songProjection;
+    const detail = (projection, target) => projection[target].details.find(row => row.cardId === C.id);
+    assert.equal(auto.context.notes, manual.context.notes);
+    assert.equal(detail(auto, "expected").rawScoreUpPct ?? detail(auto, "expected").scoreUpPct, 50);
+    assert.equal(detail(auto, "maximum").rawScoreUpPct ?? detail(auto, "maximum").scoreUpPct, 50);
+    assert.ok(detail(manual, "expected").scoreUpPct > 50);
+    assert.equal(auto.expected.special.activationRateAveragePct, 0);
+    assert.ok(manual.expected.special.activationRateAveragePct > 0);
+    assert.ok(auto.expected.special.supportAveragePct < manual.expected.special.supportAveragePct);
+    if (metadata) {
+      assert.ok(detail(auto, "expected").activationChecks.every(check => check.combo === 0));
+      assert.equal(auto.specialWindows[1].support, 30);
+      assert.equal(manual.specialWindows[1].support, 100);
+    }
+  }
+}
+
+
 // The song boundary must not expire a skill which actually continues beyond
 // the final note. A real runtime chart (m0327:EXPERT) ends after playing_seconds.
 {
