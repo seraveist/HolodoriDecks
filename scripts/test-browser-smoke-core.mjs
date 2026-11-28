@@ -518,13 +518,7 @@ try {
     const originalFetch = globalThis.fetch;
     globalThis.fetch = async (url, options = {}) => {
       range = options.headers?.Range ?? options.headers?.range ?? '';
-      return {
-        status: 206,
-        headers: { get: (name) => String(name).toLowerCase() === 'content-range'
-          ? 'bytes 0-${sourceLength - 1}/${sourceLength}' : null },
-        text: async () => sourceText,
-        body: { cancel: async () => {} },
-      };
+      return new Response(sourceText, { status: 206 });
     };
     try {
       const resources = {

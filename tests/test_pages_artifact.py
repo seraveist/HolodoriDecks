@@ -17,6 +17,10 @@ def test_pages_upload_preserves_nojekyll_marker():
                   if step.get('uses', '').startswith('actions/upload-pages-artifact@'))
     # The builder copies .nojekyll; upload-pages-artifact v5 excludes it by default.
     assert upload['with']['include-hidden-files'] == 'true'
+    deploy = next(step for step in workflow['jobs']['deploy']['steps']
+                  if step.get('uses', '').startswith('actions/deploy-pages@'))
+    assert upload['with']['name'] == deploy['with']['artifact_name'] == '${{ env.PAGES_ARTIFACT }}'
+    assert 'github.run_attempt' in workflow['jobs']['deploy']['env']['PAGES_ARTIFACT']
 
 
 @pytest.mark.parametrize('relative', ['', 'data/generated/site', 'js/site', 'assets/site', 'scripts/site', '.git/site'])
@@ -41,9 +45,14 @@ def test_artifact_builder_does_not_mix_previous_output(tmp_path):
 def test_runtime_coherence_validation_rejects_mismatched_master(tmp_path):
     generated = tmp_path / 'data/generated'
     (generated / 'i18n').mkdir(parents=True)
+    commit, version = 'new-master', 'version'
     values = {
-        'i18n/manifest.json': {'required_entry_count': 1, 'card_name_alias_count': 0, 'locales': {'ko': {}, 'en': {}, 'ja': {}}},
-        'chart-index.json': {'source_commit': 'new-master', 'chart_count': 1},
+        'manifest.json': {'source_commit': commit, 'master_version': version},
+        'i18n/manifest.json': {'required_entry_count': 1, 'card_name_alias_count': 0, 'master_version': version,
+                               'locales': {name: {'commit': commit, 'source_version': version} for name in ('ko', 'en', 'ja')}},
+        'chart-index.json': {'source_commit': commit, 'chart_count': 1},
+        'chart-assets.json': {'source_commit': commit, 'master_version': version, 'charts': {'key': {}}},
+        'live-score-rules.json': {'source_commit': commit},
         'exact-runtime-index.json': {'runtimeExactCount': 0, 'charts': {}, 'currentMasterSourceCommit': 'old-master', 'currentMasterChartCount': 1, 'source': {'sha256': 'a' * 64}},
     }
     for name, value in values.items():

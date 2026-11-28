@@ -32,7 +32,7 @@ holodori-sync
 
 The collection job runs on GitHub's standard `macos-15` runner. The [2026-09-30 network comparison](https://github.com/seraveist/HolodoriDecks/actions/runs/36667631871) verified all three official catalogues (revision 94, 845 SUS resources) and a chart download on hosted macOS. Standard Ubuntu, Ubuntu ARM and Windows runners returned HTTP 403 for the same requests. The rejection is environment-dependent; it does not require moving automation outside GitHub Actions.
 
-Full candidate validation, including the optimized public artifact, PR publication and deployment continue on standard Ubuntu runners with the existing gates. No personal computer, self-hosted runner, runner variable or additional account secret is required. The daily schedule and manual workflow inputs are unchanged. If access changes, the manually triggered `Check hosted sync network` workflow compares the four standard environments without modifying data or publishing anything. It reports individual blocked environments and fails only when none can verify a catalogue and chart, or a probe cannot finish. Catalogue or integrity failures still stop live sync before publication.
+Full candidate validation, PR publication and deployment use standard Ubuntu runners. CI regenerates the derived locale and chart data from the pinned Master to verify the committed files. Pages builds from that committed data. The manual `Check hosted sync network` workflow compares four hosted environments and reports blocked routes. Catalogue or integrity failures stop synchronization before publication.
 
 ## Generated data flow
 
@@ -72,11 +72,11 @@ GitHub Pages deployment
 
 Validated, non-anomalous updates are automatically merged. The validation workflow is called directly with the generated commit SHA, so bot-created PR workflow approval is not required for this path. The PR head is checked again before merging. Anomalous updates remain open for manual review.
 
-Master publication does not wait for portrait synchronization. After merging, the workflow dispatches Pages for current `main`; missing portraits use the existing placeholder. Successful no-change runs also check whether current `main` has been deployed and retry a failed or missed deployment. A successful or active deployment of that commit is not duplicated.
+After a Master merge, the workflow reconciles Pages with current `main` and dispatches portrait collection independently if the candidate has missing images. Lightweight and full no-change runs also check the actual live revision and request Pages when the revision differs and no deployment for `main` is active.
 
 ## Workflow
 
-`.github/workflows/sync-master-data.yml` runs every day at **00:15 KST** and can also be started manually.
+`.github/workflows/sync-master-data.yml` schedules full Master and official catalogue checks at **00:15 and 12:15 KST**. It additionally checks the upstream Master SHA every two hours at **:37** and runs full validation when it detects a new SHA. Manual invocation runs the full sync path.
 
 Manual inputs:
 
@@ -219,7 +219,7 @@ the compiled profile described in `BOARD_UI.md`.
 ## Member face icons
 
 The portrait workflow also runs `scripts/sync-character-assets.py` twice daily
-(11:00 and 23:00 KST). It maps each board-enabled character's Master `asset_id`
+(11:23 and 23:23 KST). It maps each board-enabled character's Master `asset_id`
 to the exact `img_chr_icon_normal_{asset_id}` Octo bundle. Source byte size and
 MD5, texture identity and 256×256 dimensions are checked before an atomic,
 lossless WebP write to `assets/characters/{character_id}.webp`. Source/output

@@ -217,7 +217,7 @@ jobs:
       - name: Build optimized Pages artifact
         env:
           CARD_ASSET_REVISION: ${{ inputs.checkout_ref || github.sha }}
-        run: python scripts/build-pages-artifact.py --revision "$CARD_ASSET_REVISION"
+        run: python scripts/build-pages-artifact.py --revision "$CARD_ASSET_REVISION" --verify-derived
       - name: Validate transport, cache and CSS regressions
         run: |
           mkdir -p .local

@@ -91,7 +91,7 @@ Local Exact exists
 otherwise compatible Runtime Exact entry exists
 → request bytes=start-end from the pinned public snapshot
 → require HTTP 206
-→ require matching Content-Range
+→ require matching Content-Range when the browser can read it
 → verify returned byte length
 → require and verify per-object SHA-256
 → parse the source chart object
@@ -105,12 +105,7 @@ any failure
 
 A representative `m0049 / EXPERT` range is about `49.7 KB`; the browser does not download the full source corpus at application startup.
 
-The pinned GitHub Raw source was verified with browser-style Range semantics:
-
-- `206 Partial Content`
-- `Content-Range`
-- `Access-Control-Allow-Origin: *`
-- no response content-encoding on the tested Range request
+The pinned GitHub Raw source returns `206 Partial Content` and a `Content-Range` header for range requests. It allows cross-origin reads but does not expose `Content-Range` to browser scripts. The loader verifies the exact byte length and the pinned object SHA-256 even when the header is hidden. Pages checks a Runtime-only and a Local Exact chart in Chrome after each deployment.
 
 ## Current-Master coherence
 

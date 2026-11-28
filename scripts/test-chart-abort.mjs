@@ -14,7 +14,7 @@ const runtime = {
   start: 0,
   end: 9,
   length: 10,
-  objectSha256: "",
+  objectSha256: "a".repeat(64),
 };
 const resources = {
   version: "test",

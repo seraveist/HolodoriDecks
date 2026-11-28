@@ -161,16 +161,6 @@ export function convertRuntimeChartObject(sourceChart, chartEntry) {
   return metadata;
 }
 
-async function sha256Hex(text) {
-  try {
-    if (!globalThis.crypto?.subtle || typeof TextEncoder === "undefined") return null;
-    const digest = await globalThis.crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
-    return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
-  } catch {
-    return null;
-  }
-}
-
 async function loadRuntimeMetadata(resources, chartEntry, runtimeEntry, { signal = null } = {}) {
   if (signal?.aborted) return null;
   const sourceUrl = resources?.runtimeIndex?.source?.url;
@@ -178,8 +168,11 @@ async function loadRuntimeMetadata(resources, chartEntry, runtimeEntry, { signal
   const start = Number(runtimeEntry.start);
   const end = Number(runtimeEntry.end);
   const length = Number(runtimeEntry.length);
-  if (!Number.isInteger(start) || !Number.isInteger(end) || !Number.isInteger(length)
-    || start < 0 || end < start || length !== end - start + 1) return null;
+  const expectedSha = runtimeEntry.objectSha256;
+  if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end) || !Number.isSafeInteger(length)
+    || start < 0 || end < start || length !== end - start + 1
+    || typeof expectedSha !== "string" || !/^[0-9a-f]{64}$/.test(expectedSha)
+    || !globalThis.crypto?.subtle) return null;
 
   let response;
   try {
@@ -192,31 +185,23 @@ async function loadRuntimeMetadata(resources, chartEntry, runtimeEntry, { signal
   } catch {
     return null;
   }
-  if (signal?.aborted) {
-    try { await response.body?.cancel(); } catch { /* ignore */ }
-    return null;
-  }
-  if (response.status !== 206) {
-    try { await response.body?.cancel(); } catch { /* ignore */ }
-    return null;
-  }
-  const contentRange = String(response.headers?.get?.("content-range") ?? "").toLowerCase();
-  if (!contentRange.startsWith(`bytes ${start}-${end}/`)) {
+  // GitHub Raw does not expose Content-Range to cross-origin browser scripts.
+  // The mandatory digest binds the returned bytes to this chart even then.
+  const contentRange = response.headers.get("content-range");
+  if (signal?.aborted || response.status !== 206 || (contentRange !== null
+    && !new RegExp(`^bytes ${start}-${end}/(?:[0-9]+|\\*)$`, "i").test(contentRange))) {
     try { await response.body?.cancel(); } catch { /* ignore */ }
     return null;
   }
 
   try {
-    const text = await response.text();
-    if (signal?.aborted) return null;
-    if (typeof TextEncoder !== "undefined" && new TextEncoder().encode(text).byteLength !== length) return null;
-    const expectedSha = String(runtimeEntry.objectSha256 ?? "");
-    if (expectedSha) {
-      const actualSha = await sha256Hex(text);
-      if (signal?.aborted || !actualSha || actualSha !== expectedSha) return null;
-    }
-    const sourceChart = JSON.parse(text);
-    return signal?.aborted ? null : convertRuntimeChartObject(sourceChart, chartEntry);
+    const bytes = await response.arrayBuffer();
+    if (signal?.aborted || bytes.byteLength !== length) return null;
+    const digest = await globalThis.crypto.subtle.digest("SHA-256", bytes);
+    const actualSha = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+    if (signal?.aborted || actualSha !== expectedSha) return null;
+    const sourceChart = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+    return convertRuntimeChartObject(sourceChart, chartEntry);
   } catch {
     return null;
   }

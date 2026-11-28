@@ -64,6 +64,23 @@ jobs:
           TAG: ${{ steps.meta.outputs.tag }}
         run: python scripts/check-release-state.py --tag "$TAG"
 
+      - name: Identify the commit behind an existing release tag
+        id: tag_target
+        if: steps.existing.outputs.tag_exists == 'true'
+        env:
+          TAG: ${{ steps.meta.outputs.tag }}
+          TARGET_SHA: ${{ github.event.workflow_run.head_sha }}
+          RELEASE_EXISTS: ${{ steps.existing.outputs.release_exists }}
+        run: |
+          refs="$(git ls-remote --exit-code --tags origin "refs/tags/$TAG" "refs/tags/$TAG^{}")"
+          tag_sha="$(awk '/\^\{\}$/ { peeled=$1; next } { direct=$1 } END { print peeled ? peeled : direct }' <<< "$refs")"
+          [[ "$tag_sha" =~ ^[0-9a-f]{40}$ ]]
+          echo "sha=$tag_sha" >> "$GITHUB_OUTPUT"
+          if [ "$RELEASE_EXISTS" != 'true' ] && [ "$tag_sha" != "$TARGET_SHA" ]; then
+            echo "::error::Existing $TAG targets $tag_sha. Publishing $TARGET_SHA needs a new version."
+            exit 1
+          fi
+
       - name: Extract release notes
         if: steps.existing.outputs.release_exists != 'true'
         env:
@@ -109,6 +126,7 @@ jobs:
             echo "- version: ${{ steps.meta.outputs.version }}"
             echo "- tag: ${{ steps.meta.outputs.tag }}"
             echo "- deployed commit: ${{ github.event.workflow_run.head_sha }}"
+            echo "- release tag commit: ${{ steps.tag_target.outputs.sha || github.event.workflow_run.head_sha }}"
             echo "- tag previously existed: ${{ steps.existing.outputs.tag_exists }}"
             echo "- release previously existed: ${{ steps.existing.outputs.release_exists }}"
           } >> "$GITHUB_STEP_SUMMARY"

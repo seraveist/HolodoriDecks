@@ -28,8 +28,8 @@ on:
         default: true
         type: boolean
   schedule:
-    # 11:00 and 23:00 KST every day (02:00 and 14:00 UTC).
-    - cron: "0 2,14 * * *"
+    # 11:23 and 23:23 KST every day, away from the top of the hour.
+    - cron: "23 2,14 * * *"
 
 permissions:
   actions: write
@@ -47,6 +47,7 @@ env:
 
 jobs:
   sync:
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && inputs.dry_run)
     # The official Octo catalogues reject hosted Ubuntu egress. Use the same
     # standard hosted macOS runner as master sync for game-asset collection.
     runs-on: macos-15
